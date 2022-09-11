@@ -35,6 +35,5 @@ Manifest.toml
 *.fls
 *.log
 *.out
-*.pdf
 *.synctex.gz
 *.toc
