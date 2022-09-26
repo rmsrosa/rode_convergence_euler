@@ -211,7 +211,7 @@ It is well known that the Euler-Maruyama method of approximating a random ordina
 
 \section{Introduction}
 
-Here, we consider the following initial value problem for a \textbf{random ordinary differential equation (RODE)}:
+We consider the following initial value problem for a \textbf{random ordinary differential equation (RODE)}:
 \begin{equation}
   \label{rodeeq}
   \begin{cases}
@@ -219,7 +219,7 @@ Here, we consider the following initial value problem for a \textbf{random ordin
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where $\{Y_t\}$ is a (real) stochastic process with continuous sample paths, $f:[0, \infty) \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous, and $X_0$ is a real random variable on a sample space $\Omega$.
+where $\{Y_t\}$ is a real stochastic process with continuous sample paths; $f:[0, \infty) \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and $X_0$ is a real random variable. The sample space is denoted $\Omega$. A similar result holds for systems of random ordinary equations, as discussed later in the article, but we start with the scalar case to keep the ideas simple and clear.
 
 The Euler-Maruyama method for solving this initial value problem in a time interval $[0, T]$ consists in considering a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. Then, the Euler-Maruyama scheme takes the form
 \begin{equation}
@@ -237,7 +237,7 @@ One of our interests is to drive the equation with an \textbf{It\^o process} $\{
   \label{itoprocess}
   \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
 \end{equation}
-where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$.
+where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$. We are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, and we allow $A_t$ and $B_t$ to actually be given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be a geometric Brownian process or some function of a Wiener or geometric Brownian process.
 
 In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula is applicable and yields
 \begin{multline}
@@ -246,7 +246,7 @@ In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o 
 \end{multline}
 for every fixed $x\in \mathbb{R}$.
 
-We show that, if $\{A_t\}_t$, $\{B_t\}_t$ are uniformly bounded on $[0, T]$ (uniformly for all sample paths) and $f$, $\partial_t f$, $\partial_x f$, $\partial_y f$, and $\partial_{yy}f$ are uniformly bounded on $[0, T]\times \mathbb{R}\times \mathbb{R}$, then the Euler-Maruyama method is of strong order 1, i.e. there exists $C>0$ such that
+We show that, if the expectations of $\{A_t\}_t$ and $\{B_t\}_t$ are uniformly bounded in time on $[0, T]$ and $\partial_t f$, $\partial_x f$, $\partial_y f$, and $\partial_{yy}f$ are uniformly bounded on $[0, T]\times \mathbb{R}\times \mathbb{R}$, then the Euler-Maruyama method is of strong order 1, i.e. there exists $C>0$ such that
 \begin{equation}
   \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t, \qquad \forall N \in \mathbb{N},  \Delta t = \frac{T}{N},
 \end{equation}
@@ -259,7 +259,6 @@ We summarize here the main tricks we use to accomplish such error estimate:
   \item We do not estimate this problematic term locally at each time step;
   \item Instead, we add up the difference equation for the time steps and write the error in terms of a time integral of this rough part of the noise;
   \item We then use the It\^o isometry to estimate this integral term by $\Delta t$;
-  \item We use a variation of the discrete Gronwall Lemma to estimate the added up inequality.
 \end{enumerate}
 
 In order to make the main idea clear cut, here are the options we have for estimating the rough part of the noise:
@@ -268,15 +267,15 @@ In order to make the main idea clear cut, here are the options we have for estim
     $$
     \mathbb{E}[|e_j|] \lesssim \Delta t^{3/2},
     $$
-    as usual, then adding them up leads to 
+    as usual for a $1/2$-H\"older noise, then adding them up leads to 
     $$
       \sum \mathbb{E}[|e_j|] \lesssim N\Delta t^{3/2} = T\Delta t^{1/2}.
     $$
     \item If we use the It\^o isometry locally, we still get the local error as
     $$
-      \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t^3 \right)^{1/2} = \Delta t^{3/2},
+      \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t^{2(3/2)} \right)^{1/2} = \Delta t^{3/2},
     $$
-    and adding that up still leads to an error of order $\Delta t^{1/2}$.
+    and adding that up still leads to an error of order $\Delta t^{\theta}$.
     \item If, instead, we first add the terms up, then $\sum e_j$ becomes an integral over $[0, T]$ with respect to the Wiener noise, so that we can use the It\^o isometry on the added up term and obtain
     \begin{multline*}
       \mathbb{E}\left[ \left| \sum e_j \right| \right] \lesssim \left(\mathbb{E}\left[ \left| \sum e_j \right|^2 \right]\right)^{1/2} = \left( \sum \mathbb{E}[|e_j|^2] \right)^{1/2} \\
@@ -289,13 +288,17 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 We assume $f=f(t, x, y)$ is twice continuously differentiable with
 \begin{align}
-  \label{Mfassumption} M_f & = \sup_{t, x, y} |f(t, x, y)| < \infty, \\
   \label{Ltassumption} L_t & = \sup_{t, x, y} |\partial_t f(t, x, y)| < \infty \\
   \label{Lxassumption} L_x & = \sup_{t, x, y} |\partial_x f(t, x, y)| < \infty \\
   \label{Lyassumption} L_y & = \sup_{t, x, y} |\partial_y f(t, x, y)| < \infty \\
   \label{Lyyassumption} L_{yy} & = \sup_{t, x, y} |\partial_y^2 f(t, x, y)| < \infty,
 \end{align}
-where the suprema are taken for $(t, x, y) \in [0, T] \times \mathbb{R} \times \mathbb{R}$.
+where the suprema are taken for $(t, x, y) \in [0, T] \times \mathbb{R} \times \mathbb{R}$. The first three condition \eqref{Ltassumption}, \eqref{Lxassumption}, and \eqref{Lyassumption} imply that $f$ has an at most linear growth:
+\begin{equation}
+    \label{Mfassumption}
+    \sup_{t, x, y} |f(t, x, y)| \leq M_0 + L(|t| + |x| + |y|),
+\end{equation}
+for suitable nonnegative constants $M_0, L$.
 
 We also assume the drift and diffusion of the It\^o process $\{Y_t\}_t$ are uniformly bounded,
 \begin{align}
@@ -306,22 +309,16 @@ where the suprema are taken for $t\in [0, T]$ and for samples in all sample spac
 
 \subsection{A single step}
 
-Here we obtain an expression for a time step, from $t$ to $t + \Delta t$, which will be suitable for a proper estimate later on.
+Here we obtain an expression for a single time step which will be suitable for a proper estimate later on. For the sake of notational simplicity, we consider a single time step from a time $t$ to a time $t + \tau$. Later on we take $t=t_{j-1}$ and $\tau = \Delta t$, with $t_j = t_{j-1}+\Delta t$.
 
-The exact solution satisfies, for any $\tau \geq 0$, and, in particular, for $0\leq \tau \leq \Delta t$, 
+The exact solution satisfies, for any $t, \tau \geq 0$, 
 $$
 X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
 $$
 The Euler-Maruyama step is given by
 $$
-X_{t+\Delta t}^n = X_t^n + \Delta t f(t, X_t^n, Y_t).
+X_{t+\tau}^n = X_t^n + \tau f(t, X_t^n, Y_t).
 $$
-If we consider a linear interpolation, we can also write
-$$
-X_{t + \tau}^n = X_t^n + \tau f(t, X_t^n, Y_t),
-$$
-for $0\leq \tau \leq \Delta t$.
-
 Subtracting, we obtain
 $$
 X_{t + \tau} - X_{t + \tau}^n = X_t - X_t^n + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^n, Y_t) \right)\;\mathrm{d}s.
@@ -545,6 +542,16 @@ with $e_0 = 0$, where $a, b > 0$. Then,
   which completes the induction.
 \end{proof}
 
+\section{Special cases}
+
+\subsection{Non-homogeneous term of bounded variation}
+
+Consider a RODE of the form
+\[
+\frac{\mathrm{d}X_t}{\mathrm{d}t} = g(t, Y_t, X_t) + h(t, Y_t),    
+\]
+where $g$ is globally Lipschitz and $t \mapsto h(t, Y_t)$ is of bounded variation.
+
 \section{Numerical examples}
 
 \subsection{Lower-order converge}
@@ -560,6 +567,70 @@ $$
 where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes values strictly within $(0, 1)$ and, hence, $\sin(t/Z)$ can have arbitrarily high frequencies and, hence, go through the critic value $y = 0$ extremely often.
 
 \textcolor{red}{(Need to remove the Heun method and do more tests)}.
+
+\section*{Appendix}
+
+The heart of the matter is the following. Think of $\tau$ as the time-step $\Delta t$, but we use $\tau$ for simplicity. Let $y=y(t)$ be a $\theta$-H\"older continuous function, with H\"older constant $C$. Then, we can do the usual ``local''-type estimate
+\begin{align*}
+    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| & \leq \int_0^T \left|y(t + \tau) - y(t) \right| \;\mathrm{d}t \\
+    & \leq C\int_0^T \tau^{\theta} \;\mathrm{d}t \\
+    & = C\tau^{\theta}T,
+\end{align*}
+which yields an order $\theta$ approximation, with respect to the ``time step" $\tau$.
+
+However, we can also integrate first, so that
+\begin{align*}
+    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| & = \left|\int_0^T y(t + \tau) \;\mathrm{d}t - \int_0^T y(t) \;\mathrm{d}t \right| \\ 
+    & = \left| \int_\tau^{T+\tau} y(t) \;\mathrm{d}t - \int_0^T y(t) \;\mathrm{d}t \right| \\
+    & = \left| \int_T^{T+\tau} y(t) \;\mathrm{d}t - \int_0^\tau y(t) \;\mathrm{d}t \right| \\
+    & = \left| y(T)\tau + \int_T^{T+\tau} (y(t) - y(T)) \;\mathrm{d}t \right. \\ 
+    & \qquad\qquad \left. - y(0)\tau - \int_0^\tau (y(t) - y(0)) \;\mathrm{d}t \right| \\
+    & \leq |y(T) - y(0)|\tau + C\int_T^{T+\tau} |t - T|^\theta \;\mathrm{d}t + |y(0)|\tau + \int_0^\tau t^\theta \;\mathrm{d}t \\
+    & \leq |y(T) - y(0)|\tau + \frac{C}{1+\theta}\tau^{1+\theta} + \frac{C}{1+\theta}\tau^{1+\theta} \\
+    & \leq CT^{\theta}\tau + \frac{2C}{1+\theta}\tau^{1+\theta}.
+\end{align*}
+Hence,
+\[
+    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| \leq C\tau \left(T^\theta + \frac{2}{1+\theta}\tau^\theta\right),
+\]
+which reveals the order 1 convergence.
+
+Well, but, actually, we don't have $y(t+\tau) - y(t)$ in the integrand. We have $y(t) - y(\tau^n(t))$, where $\tau^n(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^n(t) = \max\{j\tau; \; j\tau \leq t, j\}$.
+Then we need to estimate
+$$
+\left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right|.
+$$
+In this case,
+\begin{align*}
+    \left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right| & \leq \left(\int_0^T \left|y(t) - y(\tau^m(t))\right|^{1/\theta} \;\mathrm{d}t \right)^\theta\left(\int_0^T 1^{1/(1-\theta)} \;\mathrm{d}t\right)^{1 - \theta} \\
+    & \leq \left(\int_0^T \left|C\tau^\theta\right|^{1/\theta} \;\mathrm{d}t \right)^\theta T^{1 - \theta} \\
+    & \leq CT^\theta \tau^\theta T^{1-\theta}.
+\end{align*}
+Thus,
+\begin{equation}
+    \left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right| \leq C T \tau^\theta.
+\end{equation}
+Ops, we should find another way. And even if we find a way, keep in mind that what we really have is a term $t \mapsto y(t, x(t))$ and what we need to estimate is
+\[
+    \int_0^T \left(y(t, x(\tau^n(t)) - y(\tau^n(t), x(\tau^n(t)))\right)\;\mathrm{d}t.
+\]
+The It\^o isometry is a very special thing, that let us pass the square to the inside of the integral. So we should look for other ways. For instance, if it is separable, $y(t, x) = g(t)F(x)$, with $g(t)$ of a scalar with bounded variation (the part $F(x)$ may be a vector and the equation be a system), and  $g(t) = g_1(t) - g_2(t)$ with each nondecreasing term $g_1$, $g_2$ H\"older continuous with exponent $\theta$, than we can write
+$$
+y(t, x(\tau^n(t)) - y(\tau^n(t), x(\tau^n(t))) = (g_1(t) - g_1(\tau^n(t)))x(\tau^n(t)) - (g_2(t) - g_2(\tau^n(t)))x(\tau^n(t)),
+$$
+squeeze each term,
+$$
+g_1(t) - g_1(\tau^n(t)) \leq g_1(t) - g_1(t - \tau), \quad g_2(t) - g_2(\tau^n(t)) \leq g_2(t) - g_2(t - \tau),
+$$
+and hopefully mimick the first estimate where we only had $y(t)$, but even that is not clear because of the presence of $x(\tau^n(t))$ that prevents us to write the little integrals as a single integral over the whole interval. But we need to try.
+
+\dontshow{For the power function $t \mapsto t^\theta$, for $t \geq 0$, with $0<\theta\leq 1$, we have, for $t > s \geq 0$,
+\begin{align*}
+    \frac{|t^{\theta} - s^{\theta}|}{|t - s|^\theta} = \frac{\left|1 - \left(\frac{s}{t}\right)^\theta\right|}{\left|1 - \left(\frac{s}{t}\right)\right|^\theta} \leq \frac{\left|1 - \left(\frac{s}{t}\right)\right|}{\left|1 - \left(\frac{s}{t}\right)\right|} = 1,
+\end{align*}
+where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \theta \leq 1$, and, similarly, that $(1 - s/t)^\theta \geq (1 - s/t)$. This shows that $t \mapsto t^\theta$ is $\theta$-H\"older continuous with H\"older constant $1$.
+}
+
 
 \section*{Acknowledgments}
 
