@@ -215,13 +215,13 @@ We consider the following initial value problem for a \textbf{random ordinary di
 \begin{equation}
   \label{rodeeq}
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), \qquad t \geq 0, \\
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), \qquad 0 \leq t \leq T, \\
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where $\{Y_t\}$ is a real stochastic process with continuous sample paths; $f:[0, \infty) \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and $X_0$ is a real random variable. The sample space is denoted $\Omega$. A similar result holds for systems of random ordinary equations, as discussed later in the article, but we start with the scalar case to keep the ideas simple and clear.
+where $\{Y_t\}_{t\in I}$ is a real stochastic process with continuous sample paths on the time interval $I=[0, T]$; $f:I \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and $X_0$ is a real random variable. The sample space is denoted by $\Omega$. A similar result holds for systems of random ordinary equations, as discussed later in the article, but we start with the scalar case to keep the ideas simple and clear.
 
-The Euler-Maruyama method for solving this initial value problem in a time interval $[0, T]$ consists in considering a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. Then, the Euler-Maruyama scheme takes the form
+The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. Then, the Euler-Maruyama scheme for the approximation takes the form
 \begin{equation}
   \label{emscheme}
   X_{t_j}^N = X_{t_{j-1}}^N + \Delta t f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
