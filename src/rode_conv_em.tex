@@ -204,14 +204,14 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that in many common situations the strong convergence is actually of order 1, even if the sample paths are still $\theta$-H\"older continuous. This includes the case of an It\^o process noise with finite mean drift and diffusion. The estimate follows from not estimating part of the local error and, instead, adding up the local steps and estimating the compound error via the It\^o formula and the It\^o isometry. We complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in many common situations, it is possible to exploit ``hidden'' conditions and prove that the strong convergence is actually of order 1, even if the sample paths are still $\theta$-H\"older continuous. This includes the case of an It\^o process noise with finite mean drift and diffusion (e.g. a Wiener, or an Orstein-Uhlenbeck, or a Geometric Brownian process) and the case of a linear equation with an arbitrary H\"older noise present only in the non-homogeneous term. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. We complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-We consider the following initial value problem for a \textbf{random ordinary differential equation (RODE)}:
+Consider the following initial value problem for a \textbf{random ordinary differential equation (RODE)}:
 \begin{equation}
   \label{rodeeq}
   \begin{cases}
@@ -219,9 +219,9 @@ We consider the following initial value problem for a \textbf{random ordinary di
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process with continuous sample paths on the time interval $I=[0, T]$; the evolution law function $f:I \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and the initial condition $X_0$ is a real random variable. The sample space is denoted by $\Omega$. A similar result holds for systems of random ordinary equations, as discussed later in the article, but we start with the scalar case to keep the ideas simple and clear.
+where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process with continuous sample paths on the time interval $I=[0, T]$; the evolution law function $f:I \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and the initial condition $X_0$ is a real random variable. The sample space is denoted by $\Omega$. We also treat systems of random ordinary equations, as discussed later in the article, but we start with the scalar case, in order to present the main ideas.
 
-The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. Then, the Euler-Maruyama scheme for the approximation takes the form
+The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
 \begin{equation}
   \label{emscheme}
   X_{t_j}^N = X_{t_{j-1}}^N + \Delta t f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
@@ -231,13 +231,38 @@ with the initial condition
   \label{iccondition}
   X_0^N = X_0.
 \end{equation}
+Notice both $\Delta t = \Delta t_N = T/N$ and $t_j = t_j^N = j\Delta t_N = jT/N$ depend on $N$, but we sometimes do not make this dependency explicit, for the sake of notational simplicity.
 
-One of our interests is to drive the equation with an \textbf{It\^o process} $\{Y_t\}_{t\geq 0}$, satisfying
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under suitable conditions on $f=f(t, x, y)$, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
+\begin{equation}
+    \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
+\end{equation}
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cite{}).
+
+Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous. This is the case, for instance, when the noise is an It\^o noise. Another case is when the equation is linear and the H\"older-continuous noise is only present in the non-homogeneous term.
+
+For the linear case, we assume, more precisely, that the equation is of the form
+\begin{equation}
+    \label{linearrodeeq}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = g(t) X_t + h(t, Y_t), \qquad 0 \leq t \leq T, \\
+        \left. X_t \right|_{t = 0} = X_0.
+    \end{cases}
+\end{equation}
+
+For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq},
+\begin{equation}
+    \begin{cases}
+      \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), \qquad 0 \leq t \leq T, \\
+      \left. X_t \right|_{t = 0} = X_0,
+    \end{cases}
+  \end{equation}
+with a noise defined as an \textbf{It\^o process} $\{Y_t\}_{t\geq 0}$, satisfying
 \begin{equation}
   \label{itoprocess}
   \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
 \end{equation}
-where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$. We are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, and we allow $A_t$ and $B_t$ to actually be given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be a geometric Brownian process or some function of a Wiener or geometric Brownian process.
+where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$. We are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, and we allow $A_t$ and $B_t$ to actually be given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be an Orstein-Uhlenbeck process or a geometric Brownian process.
 
 In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula is applicable and yields
 \begin{multline}
@@ -286,6 +311,159 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 \section{Strong order of convergence}
 
+We assume $f=f(t, x, y)$ is continuous in all variables and is Lipschitz continuous in each variable, i.e. there exist constants $L_t, L_x, L_y \geq 0$ such that
+\begin{align}
+  \label{Ltassumption} |f(t_1, x, y) - f(t_2, x, y)| & \leq L_t |t_1-t_2|, \\
+  \label{Lxassumption} |f(t, x_1, y) - f(t, x_2, y)| & \leq L_x |x_1 - x_2|, \\
+  \label{Lyassumption} |f(t, x, y_1) - f(t, x, y_2)| & \leq L_y |y_1 - y_2|,
+\end{align}
+for all $t, t_1, t_2 \in I$, $x, x_1, x_2 \in \mathbb{R}$ and $y, y_1, y_2\in \mathbb{R}$. By the continuity of $f=f(t, x, y)$, we also have
+$$
+M_0 = \sup_{t\in I} |f(t, 0, 0)| < \infty.
+$$
+These conditions imply that $f$ has an at most linear growth in $x$ and $y$:
+\begin{equation}
+    \label{Mfestimate}
+    |f(t, x, y)| \leq M_0 + L_x|x| + L_y|y|,
+\end{equation}
+for every $(t, x, y) \in [0, T] \times \mathbb{R} \times \mathbb{R}$.
+
+We assume the initial condition has a bounded first moment:
+\begin{equation}
+    \label{EX0assumption}
+    \mathbb{E}[|X_0|] \leq C_0 < \infty.
+\end{equation}
+
+As for the noise, we assume, for now, that
+\begin{equation}
+    \label{EYtassumption}
+    \mathbb{E}[|Y_t|] \leq M_Y, \qquad \forall t\in [0, T].
+\end{equation}
+
+\subsection{Estimate on the solution}
+
+With the assumed regularity on $f=f(t, x, y)$, the solutions of \eqref{rodeeq} are pathwise solutions, so that
+$$
+X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s.
+$$
+
+Using \eqref{Mfestimate}, we estimate each solution with
+$$
+    |X_t|  \leq |X_0| + \int_0^t (M_0 + L_x |X_s| + L_y |Y_s|) \;\mathrm{d}s.
+$$
+Using Gronwall's lemma, we find
+\begin{equation}
+    \label{Xtestimate}
+    |X_t| \leq \left( |X_0| + M_0 t  + L_y \int_0^t |Y_s| \;\mathrm{d}s\right) e^{L_x t}, \quad t \in [0, T].
+\end{equation}
+In particular, taking the expectation, 
+$$
+    \mathbb{E}[|X_t|] \leq \left( \mathbb{E}[|X_0|] + M_0 t  + L_y \int_0^t \mathbb{E}[|Y_s|] \;\mathrm{d}s\right) e^{L_x t}, \quad t \in [0, T].
+$$
+
+Using hypotheses \eqref{EX0assumption} and \eqref{EYtassumption}, we find that
+$$
+\mathbb{E}[|X_t|] \leq \left( C_0 + (M_0 + L_y M_Y) t \right) e^{L_x t}, \quad t \in [0, T].
+$$
+hence,
+\begin{equation}
+    \label{EXtestimate}
+    \mathbb{E}[|X_t|] \leq M_X, \qquad t \in [0, T],
+\end{equation}
+with
+\begin{equation}
+    \label{MXt}
+    M_X = (C_0 + (M_0 + L_y M_Y)T)e^{L_x T}.
+\end{equation}
+
+
+Similarly, we write, for $t \geq t_0 > 0$,
+$$
+X_t - X_{t_0} = \int_{t_0}^t f(s, X_s, Y_s) \;\mathrm{d}s.
+$$
+Using \eqref{Mfestimate}, we estimate
+\begin{align*}
+    |X_t - X_{t_0}| & \leq \int_{t_0}^t \left(M_0 + L_x |X_s| + L_y|Y_s| \right)\;\mathrm{d}s \\
+    & \leq L_x \int_{t_0}^t |X_s| \;\mathrm{d}s + L_y\int_{t_0}^t |Y_s|\;\mathrm{d}s + M_0(t - t_0).
+\end{align*}
+
+Using \eqref{Xtestimate}, we obtain
+\begin{equation}
+    |X_t - X_{t_0}| \leq L_x \int_{t_0}^t \left( |X_0| + M_0 s  + L_y \int_0^s |Y_\sigma| \;\mathrm{d}\sigma\right) e^{L_x s} \;\mathrm{d}s + L_y\int_{t_0}^t |Y_s|\;\mathrm{d}s + M_0(t - t_0)
+\end{equation}
+
+\subsection{A single step}
+
+Here we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$, which will be suitable for a proper estimate later on.
+
+For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t$, so that $t_j = t + \tau$. The exact solution satisfies
+$$
+X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
+$$
+The Euler-Maruyama step is given by
+$$
+X_{t+\tau}^N = X_t^N + \tau f(t, X_t^N, Y_t).
+$$
+Subtracting, we obtain
+$$
+X_{t + \tau} - X_{t + \tau}^N = X_t - X_t^N + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
+$$
+
+We arrange the integrand as
+\begin{align*}
+f(s, X_s, Y_s) - f(t, X_t^N, Y_t) = & f(s, X_s, Y_s) - f(s, X_t, Y_s) \\ 
+ & + f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \\
+ & + f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t).
+\end{align*}
+
+This yields
+\begin{equation}
+    \label{singlestep}
+    \begin{aligned}
+    X_{t + \tau} - X_{t + \tau}^N  = & X_t - X_t^N \\
+    = &  \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(s, X_t, Y_s) \right)\;\mathrm{d}s \\ 
+    & + \int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right)\;\mathrm{d}s \\
+    & + \int_t^{t + \tau} \left( f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
+    \end{aligned}
+\end{equation}
+
+\subsection{Local estimate}
+
+For the first term, we use \eqref{Lxassumption}, so that
+$$
+    |f(s, X_s, Y_s) - f(s, X_t, Y_s)| \leq L_x |X_s - X_t|.
+$$
+Hence,
+$$
+    \left|\int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(s, X_t, Y_s) \right)\;\mathrm{d}s \right| \leq L_x \int_t^{t+\tau} |X_s - X_t| \;\mathrm{d}s.
+$$
+
+For the second term, we use again \eqref{Lxassumption}, so that
+$$
+    |f(s, X_t, Y_s) - f(s, X_t^N, Y_s)| \leq L_x |X_t - X_t^N|.
+$$
+In this case,
+$$
+    \left|\int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_x \tau |X_t - X_t^N|.
+$$
+
+We do not estimate the third term.
+
+\subsection{Global estimate}
+
+Now we iterate the time steps. Here we use the previous estimates and go back to the notation $t = t_{j-1}$ and $t + \tau = t_j$. Identity \eqref{singlestep} reads
+
+\begin{align*}
+    X_{t_j} - X_{t_j}^N  = & X_{t_{j-1}} - X_{t_{j-1}}^N \\
+    = &  \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
+    & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}, Y_s) - f(s, X_{t_{j-1}}^N, Y_s) \right)\;\mathrm{d}s \\
+    & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
+\end{align*}
+
+
+
+\section{Strong order of convergence}
+
 We assume $f=f(t, x, y)$ is twice continuously differentiable with
 \begin{align}
   \label{Ltassumption} L_t & = \sup_{t, x, y} |\partial_t f(t, x, y)| < \infty \\
@@ -317,74 +495,74 @@ X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
 $$
 The Euler-Maruyama step is given by
 $$
-X_{t+\tau}^n = X_t^n + \tau f(t, X_t^n, Y_t).
+X_{t+\tau}^N = X_t^N + \tau f(t, X_t^N, Y_t).
 $$
 Subtracting, we obtain
 $$
-X_{t + \tau} - X_{t + \tau}^n = X_t - X_t^n + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^n, Y_t) \right)\;\mathrm{d}s.
+X_{t + \tau} - X_{t + \tau}^N = X_t - X_t^N + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
 $$
 
 We arrange the integrand as
 \begin{align*}
-f(s, X_s, Y_s) - f(t, X_t^n, Y_t) = & f(s, X_s, Y_s) - f(s, X_t, Y_s) \\ 
- & + f(s, X_t, Y_s) - f(s, X_t^n, Y_s) \\
- & + f(s, X_t^n, Y_s) - f(t, X_t^n, Y_t).
+f(s, X_s, Y_s) - f(t, X_t^N, Y_t) = & f(s, X_s, Y_s) - f(s, X_t, Y_s) \\ 
+ & + f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \\
+ & + f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t).
 \end{align*}
 
 This yields
 \begin{align*}
-X_{t + \tau} - X_{t + \tau}^n  = & X_t - X_t^n \\
+X_{t + \tau} - X_{t + \tau}^N  = & X_t - X_t^N \\
 = &  \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(s, X_t, Y_s) \right)\;\mathrm{d}s \\ 
- & + \int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^n, Y_s) \right)\;\mathrm{d}s \\
- & + \int_t^{t + \tau} \left( f(s, X_t^n, Y_s) - f(t, X_t^n, Y_t) \right)\;\mathrm{d}s.
+ & + \int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right)\;\mathrm{d}s \\
+ & + \int_t^{t + \tau} \left( f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
 \end{align*}
 
-For the integral of the last pair of terms, we use the It\^o formula on $Z_s = f(s, X_t^n, Y_s)$ and write
+For the integral of the last pair of terms, we use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write
 \begin{align*}
-\int_t^{t + \tau} & \left(f(s, X_t^n, Y_s) - f(t, X_t^n, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
-& = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^n, Y_\xi) + A_\xi \partial_y f(\xi, X_t^n, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^n, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}t \\ 
-& \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^n, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
+\int_t^{t + \tau} & \left(f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
+& = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}t \\ 
+& \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
 \end{align*}
 Using Fubini's Theorem, the last integral is rewritten as
 \begin{multline}
 \label{fubini}
-\int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^n, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
-  = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^n, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
-  = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^n, Y_\xi) \;\mathrm{d}W_\xi.
+\int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
+  = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+  = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
 \end{multline}
 
 We rearrange these terms and write, for $\tau = \Delta t$ and $t = t_{j-1} = (j-1)\Delta t$,
 \begin{equation}
 \label{stepexpression}
-X_{t_j} - X_{t_j}^n  = X_{t_{j-1}} - X_{t_{j-1}}^n  + I_{j-1}^{1} + I_{j-1}^{2} + I_{j-1}^{3},
+X_{t_j} - X_{t_j}^N  = X_{t_{j-1}} - X_{t_{j-1}}^N  + I_{j-1}^{1} + I_{j-1}^{2} + I_{j-1}^{3},
 \end{equation}
 where
 $$
-I_j^{1} = \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^n, Y_s) \right)\;\mathrm{d}s,
+I_j^{1} = \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s) \right)\;\mathrm{d}s,
 $$
 \begin{multline*}
   I_j^2 =  \int_{t_j}^{t_{j+1}}  \left( f(s, X_s, Y_s) - f(s, X_{t_j}, Y_s) \right)\;\mathrm{d}s \\ 
- +  \int_{t_j}^{t_{j+1}} \int_{t_j}^s \left(\partial_\xi f(\xi, X_{t_j}^n, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^n, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^n, Y_\xi) \right) \;\mathrm{d}t,
+ +  \int_{t_j}^{t_{j+1}} \int_{t_j}^s \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}t,
 \end{multline*}
 and
 $$
-I_j^3 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^n, Y_\xi) \;\mathrm{d}W_\xi.
+I_j^3 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi) \;\mathrm{d}W_\xi.
 $$
 
 \subsection{Local estimates}
 
 The term $I_j^1$ is estimated using that $f=f(t, x, y)$ is globally Lipschitz in $x$, so that
 $$
-\left| f(s, X_t, Y_s) - f(s, X_t^n, Y_s) \right| \leq L_x |X_t - X_t^n|.
+\left| f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right| \leq L_x |X_t - X_t^N|.
 $$
 Hence,
 \begin{multline*}
-\left|  \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^n, Y_s)  \right) \;\mathrm{d}s \right| \leq   \int_{t_j}^{t_{j+1}} \left| f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^n, Y_s)  \right| \;\mathrm{d} s \\ \leq L_x |X_{t_j} - X_{t_j}^n| \Delta t.
+\left|  \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right) \;\mathrm{d}s \right| \leq   \int_{t_j}^{t_{j+1}} \left| f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right| \;\mathrm{d} s \\ \leq L_x |X_{t_j} - X_{t_j}^N| \Delta t.
 \end{multline*}
 This means
 \begin{equation}
 \label{I1estimate}
-\left| I_j^1 \right| \leq L_x |X_{t_j} - X_{t_j}^n| \Delta t.
+\left| I_j^1 \right| \leq L_x |X_{t_j} - X_{t_j}^N| \Delta t.
 \end{equation}
 
 For $I_j^2$, the first term is estimated as
@@ -399,7 +577,7 @@ This yields, upon integration,
 
 The double integral is estimated as
 \begin{multline}
-   \left|  \int_{t_j}^{t_{j+1}}  \int_\xi^{t_{j+1}} \left(\partial_\xi f(\xi, X_{t_j}^n, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^n, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^n, Y_\xi) \right) \;\mathrm{d}t \right| \\
+   \left|  \int_{t_j}^{t_{j+1}}  \int_\xi^{t_{j+1}} \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}t \right| \\
    \leq \int_{t_j}^{t_{j+1}}  \int_\xi^{t_{j+1}} \left(L_t + M_A L_y  + \frac{M_B^2}{2}L_{yy} \right) \;\mathrm{d}t \\
    = \frac{1}{2}\tau^2\left(L_t + M_A L_y  + \frac{M_B^2}{2}L_{yy} \right).
 \end{multline}
@@ -416,13 +594,13 @@ $$
 \begin{rmk}\tiny
 Notice that, at this point, we did not estimate the last integral, otherwise we are not able to obtain the strong order 1 estimate, only 1/2. Indeed, if we use Fubini and the It\^o isometry in the last integral, we find
 \begin{align*}
-  \mathbb{E} & \left[ \left( \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^n, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s \right)^2\right] = \mathbb{E} \left[ \left( \int_t^{t + \tau} \int_\xi^{t+\tau} B_\xi \partial_y f(\xi, X_t^n, Y_\xi) \;\mathrm{d}s\;\mathrm{d}W_\xi \right)^2\right] \\
-  & = \int_t^{t + \tau} \mathbb{E} \left[ \left( \int_\xi^{t+\tau} B_\xi \partial_y f(\xi, X_t^n, Y_\xi) \;\mathrm{d}s \right)^2\right] \;\mathrm{d}\xi  \leq  \int_t^{t + \tau}  \left( \int_\xi^{t+\tau} M_B^2 L_y \;\mathrm{d}s \right)^2\;\mathrm{d}\xi \\
+  \mathbb{E} & \left[ \left( \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s \right)^2\right] = \mathbb{E} \left[ \left( \int_t^{t + \tau} \int_\xi^{t+\tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s\;\mathrm{d}W_\xi \right)^2\right] \\
+  & = \int_t^{t + \tau} \mathbb{E} \left[ \left( \int_\xi^{t+\tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \right)^2\right] \;\mathrm{d}\xi  \leq  \int_t^{t + \tau}  \left( \int_\xi^{t+\tau} M_B^2 L_y \;\mathrm{d}s \right)^2\;\mathrm{d}\xi \\
   & \leq  \int_t^{t + \tau}  M_B^2 L_y (t + \tau - \xi)^2\;\mathrm{d}\xi  = \left. - \frac{1}{3} M_B^2 L_y^2 (t + \tau - \xi)^3 \right]_t^{t+\tau}  = \frac{1}{3} M_B^2 L_y^2 \tau^3,
 \end{align*}
 so that
 \begin{equation}
-\sqrt{\mathbb{E} \left[ \left( \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^n, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s \right)^2\right]} \leq \frac{\sqrt{3}}{3} M_B L_y \tau^{3/2}.
+\sqrt{\mathbb{E} \left[ \left( \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s \right)^2\right]} \leq \frac{\sqrt{3}}{3} M_B L_y \tau^{3/2}.
 \end{equation}
 After adding up $n$ times, we end up with a $\tau^{1/2}$ estimate, which is not sufficient.
 \end{rmk}
@@ -431,17 +609,17 @@ After adding up $n$ times, we end up with a $\tau^{1/2}$ estimate, which is not 
 
 The third term $I_j^3$ is not estimated for each $j$ separately. Instead, we estimate its summation over $j$. Notice
 \begin{multline*}
-\sum_{i=0}^{j-1} I_i^3 = \sum_{i=0}^{j-1} \int_{t_i}^{t_{i+1}} (t_{i+1} - \xi) B_\xi \partial_y f(\xi, X_{t_i}^n, Y_\xi)  \;\mathrm{d}W_\xi \\
- = \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^n, Y_\xi) \;\mathrm{d}W_\xi,
+\sum_{i=0}^{j-1} I_i^3 = \sum_{i=0}^{j-1} \int_{t_i}^{t_{i+1}} (t_{i+1} - \xi) B_\xi \partial_y f(\xi, X_{t_i}^N, Y_\xi)  \;\mathrm{d}W_\xi \\
+ = \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi,
 \end{multline*}
 where $[r]$ denotes the largest integer below a real number $r$.
 
 For this term, we estimate its strong norm, i.e. first moment. This is estimated using the Lyapunov inequality, the It\^o formula and the It\^o isometry, as follows
 \begin{align*}
-  \mathbb{E}&\left[ \left| \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^n, Y_\xi) \;\mathrm{d}W_\xi\right| \right] \\
-   & \leq \mathbb{E}\left[ \left( \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^n, Y_\xi)\;\mathrm{d}W_\xi \right)^2 \right]^{1/2} \\
-   & =  \left(\int_0^{t_j} \mathbb{E}\left[ \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^n, Y_\xi)\right)^2 \right]\;\mathrm{d}\xi \right)^{1/2}\\
-   & \leq \left(\int_0^{t_j} \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right)^2\mathbb{E}\left[ \left( B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^n, Y_\xi)\right)^2 \right]\right) \;\mathrm{d}\xi \right)^{1/2}\\
+  \mathbb{E}&\left[ \left| \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi\right| \right] \\
+   & \leq \mathbb{E}\left[ \left( \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\;\mathrm{d}W_\xi \right)^2 \right]^{1/2} \\
+   & =  \left(\int_0^{t_j} \mathbb{E}\left[ \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\;\mathrm{d}\xi \right)^{1/2}\\
+   & \leq \left(\int_0^{t_j} \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right)^2\mathbb{E}\left[ \left( B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\right) \;\mathrm{d}\xi \right)^{1/2}\\
    & \leq \left(\int_0^{t_j} \Delta t^2 M_B^2 L_y^2 \;\mathrm{d}\xi \right)^{1/2}.
 \end{align*}
 
@@ -453,21 +631,21 @@ Thus,
 
 \subsection{Iterating the steps}
 
-Iterating \eqref{stepexpression} and assuming that $X_0^n = X_0$, we find
+Iterating \eqref{stepexpression} and assuming that $X_0^N = X_0$, we find
 \begin{equation}
   \label{iteratedexpression}
-  X_{t_j} - X_{t_j}^n = \sum_{i=0}^{j-1} I_j^1 + \sum_{i=0}^{j-1} I_j^2 + \sum_{i=0}^{j-1} I_j^3.
+  X_{t_j} - X_{t_j}^N = \sum_{i=0}^{j-1} I_j^1 + \sum_{i=0}^{j-1} I_j^2 + \sum_{i=0}^{j-1} I_j^3.
 \end{equation}
 
 We estimate the first moment as
 \begin{equation}
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq \sum_{i=0}^{j-1} \mathbb{E}\left[| I_j^1|\right] + \sum_{i=0}^{j-1} \mathbb{E}\left[|I_j^2 |\right] + \mathbb{E}\left[ \left| \sum_{i=0}^{j-1} I_j^3 \right| \right].
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq \sum_{i=0}^{j-1} \mathbb{E}\left[| I_j^1|\right] + \sum_{i=0}^{j-1} \mathbb{E}\left[|I_j^2 |\right] + \mathbb{E}\left[ \left| \sum_{i=0}^{j-1} I_j^3 \right| \right].
 \end{equation}
 Using \eqref{I1estimate}, \eqref{I2estimate}, and \eqref{I3estimate}, we obtain
 \begin{multline}
 \label{iteratedestimate}
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq L_x \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_j} - X_{t_j}^n|\right]\Delta t + \sum_{i=0}^{j-1} C\Delta t^2 + M_B L_y t_j \Delta t \\
- \leq L_x \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_i} - X_{t_i}^n|\right]\Delta t + C_T \Delta t,
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_x \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right]\Delta t + \sum_{i=0}^{j-1} C\Delta t^2 + M_B L_y t_j \Delta t \\
+ \leq L_x \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_i} - X_{t_i}^N|\right]\Delta t + C_T \Delta t,
 \end{multline}
 where
 $$
@@ -476,11 +654,11 @@ $$
 
 Now, we show by induction that
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq C_T e^{L_x t_j}\Delta t .
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_x t_j}\Delta t .
 $$
 This is trivially true for $j=0$. Now suppose it is true up to $j-1$. It follows from \eqref{iteratedestimate} that
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq L_x \sum_{i=0}^{j-1} C_T \Delta t e^{L_x t_i}\Delta t + C_T \Delta t = C_T \Delta t\left( 1 + L_x \Delta t \sum_{i=0}^{j-1}  e^{L_x t_i} \right).
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_x \sum_{i=0}^{j-1} C_T \Delta t e^{L_x t_i}\Delta t + C_T \Delta t = C_T \Delta t\left( 1 + L_x \Delta t \sum_{i=0}^{j-1}  e^{L_x t_i} \right).
 $$
 Using that $1 + r \leq e^r$, with $r=L_x\Delta t$ and $t_i + \Delta t = t_{i+1}$, we see that
 $$
@@ -488,11 +666,11 @@ L_x \Delta t \leq e^{L_x \Delta t} - 1,
 $$
 which telescopes the sum and yields
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq C_T \Delta t\left( 1 + (e^{L_x \Delta t} - 1)\sum_{i=0}^{j-1}  e^{L_x t_i} \right) = C_T \Delta t  \left(1 + (e^{L_x j\Delta t} - 1) \right).
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T \Delta t\left( 1 + (e^{L_x \Delta t} - 1)\sum_{i=0}^{j-1}  e^{L_x t_i} \right) = C_T \Delta t  \left(1 + (e^{L_x j\Delta t} - 1) \right).
 $$
 Hence,
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^n |\right] \leq C_T e^{L_x t_j}\Delta t ,
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_x t_j}\Delta t ,
 $$
 which completes the induction. Hence, we have proved the following result.
 
@@ -595,7 +773,7 @@ Hence,
 \]
 which reveals the order 1 convergence.
 
-Well, but, actually, we don't have $y(t+\tau) - y(t)$ in the integrand. We have $y(t) - y(\tau^n(t))$, where $\tau^n(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^n(t) = \max\{j\tau; \; j\tau \leq t, j\}$.
+Well, but, actually, we don't have $y(t+\tau) - y(t)$ in the integrand. We have $y(t) - y(\tau^N(t))$, where $\tau^N(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^N(t) = \max\{j\tau; \; j\tau \leq t, j\}$.
 Then we need to estimate
 $$
 \left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right|.
@@ -612,17 +790,17 @@ Thus,
 \end{equation}
 Ops, we should find another way. And even if we find a way, keep in mind that what we really have is a term $t \mapsto y(t, x(t))$ and what we need to estimate is
 \[
-    \int_0^T \left(y(t, x(\tau^n(t)) - y(\tau^n(t), x(\tau^n(t)))\right)\;\mathrm{d}t.
+    \int_0^T \left(y(t, x(\tau^N(t)) - y(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t.
 \]
 The It\^o isometry is a very special thing, that let us pass the square to the inside of the integral. So we should look for other ways. For instance, if it is separable, $y(t, x) = g(t)F(x)$, with $g(t)$ of a scalar with bounded variation (the part $F(x)$ may be a vector and the equation be a system), and  $g(t) = g_1(t) - g_2(t)$ with each nondecreasing term $g_1$, $g_2$ H\"older continuous with exponent $\theta$, than we can write
 $$
-y(t, x(\tau^n(t)) - y(\tau^n(t), x(\tau^n(t))) = (g_1(t) - g_1(\tau^n(t)))x(\tau^n(t)) - (g_2(t) - g_2(\tau^n(t)))x(\tau^n(t)),
+y(t, x(\tau^N(t)) - y(\tau^N(t), x(\tau^N(t))) = (g_1(t) - g_1(\tau^N(t)))x(\tau^N(t)) - (g_2(t) - g_2(\tau^N(t)))x(\tau^N(t)),
 $$
 squeeze each term,
 $$
-g_1(t) - g_1(\tau^n(t)) \leq g_1(t) - g_1(t - \tau), \quad g_2(t) - g_2(\tau^n(t)) \leq g_2(t) - g_2(t - \tau),
+g_1(t) - g_1(\tau^N(t)) \leq g_1(t) - g_1(t - \tau), \quad g_2(t) - g_2(\tau^N(t)) \leq g_2(t) - g_2(t - \tau),
 $$
-and hopefully mimick the first estimate where we only had $y(t)$, but even that is not clear because of the presence of $x(\tau^n(t))$ that prevents us to write the little integrals as a single integral over the whole interval. But we need to try.
+and hopefully mimick the first estimate where we only had $y(t)$, but even that is not clear because of the presence of $x(\tau^N(t))$ that prevents us to write the little integrals as a single integral over the whole interval. But we need to try.
 
 \dontshow{For the power function $t \mapsto t^\theta$, for $t \geq 0$, with $0<\theta\leq 1$, we have, for $t > s \geq 0$,
 \begin{align*}
