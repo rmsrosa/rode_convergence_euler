@@ -313,13 +313,14 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    The Euler-Maruyama approximation \eqref{emscheme}-\eqref{iccondition} for the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    The Euler-Maruyama approximation \eqref{emscheme} for the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
-            X_{t_j} - X_{t_j}^N & = \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+            X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
+            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
             & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
-            & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(t, X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
+            & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
         \end{aligned}
     \end{equation}
     for $j = 1, \ldots, N,$ where $\tau^N$ is the piecewise constant jump function along the time mesh:
@@ -365,19 +366,24 @@ Going back to the notation $t = t_{j-1}$ and $t + \tau = t_j$, the above identit
         X_{t_j} - X_{t_j}^N  = & X_{t_{j-1}} - X_{t_{j-1}}^N \\
         = &  \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
         & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}, Y_s) - f(s, X_{t_{j-1}}^N, Y_s) \right)\;\mathrm{d}s \\
-        & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
+        & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
     \end{aligned}
 \end{equation}
 
-Now we iterate the time steps \eqref{singlestep} to find, using the initial condition \eqref{iccondition} that $X_0^N = X_0$,
+Now we iterate the time steps \eqref{singlestep} to find that
 \begin{align*}
-    X_{t_j} - X_{t_j}^N & = \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
+    X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
+    & \qquad + \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
     & \qquad + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}, Y_s) - f(s, X_{t_{i-1}}^N, Y_s) \right)\;\mathrm{d}s \\
-    & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
+    & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
 \end{align*}
 
 Using the jump function $\tau^N$, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
 \end{proof}
+
+\section{Basic estimate}
+
+Here we derive a general estimate that will be the basis for the estimates in specific cases.
 
 \section{Strong order of convergence}
 
