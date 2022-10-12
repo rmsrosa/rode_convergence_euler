@@ -186,15 +186,15 @@
 
 \title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Conditions for the strong order 1 convergence of the Euler-Maruyama approximation for Random ODEs}
 
-\author[R. Rosa]{Ricardo M. S. Rosa}
+\author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
-%\author[R. Temam]{Roger M. Temam}
+\author[P. E. Kloeden]{Peter E. Kloeden}
 
 \address[Ricardo M. S. Rosa]{Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro, Brazil}
-%\address[Roger M. Temam]{Indiana University, Bloomington, IN, USA}
+\address[Peter E. Kloeden]{Mathematics Department, University of Tubingen, Germany}
 
-\email[R. Rosa]{rrosa@im.ufrj.br}
-%\email[R. Temam]{temam@indiana.edu}
+\email[R. M. S. Rosa]{rrosa@im.ufrj.br}
+\email[P. E. Kloeden]{kloeden@math.uni-frankfurt.de}
 
 \date{\today}
 
@@ -313,7 +313,7 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    The Euler-Maruyama approximation \eqref{emscheme} for the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Suppose $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times \mathbb{R}$. Then, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -331,7 +331,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-First, we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$. For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t$, so that $t_j = t + \tau$. The exact solution satisfies
+First, we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$. For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
 $$
 X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
 $$
@@ -383,7 +383,66 @@ Using the jump function $\tau^N$, we may rewrite the above expression as in \eqr
 
 \section{Basic estimate}
 
-Here we derive a general estimate that will be the basis for the estimates in specific cases.
+Here we derive an estimate, under minimal hypotheses, that will be the basis for the estimates in specific cases.
+
+\begin{lem}
+    Suppose $f=f(t, x, y)$ is continuous on $I\times \mathbb{R}\times\mathbb{R}$ and is uniformly globally Lipschitz continuous on $x$, i.e. there exists a constant $L_x \geq 0$ such that
+    \begin{equation}
+        \label{Lxassumptionbasic}
+        |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
+    \end{equation}
+    Then, the global error \eqref{globalerrorintegralformula} is estimated as
+    \begin{equation}
+        \label{Etjbasicbound}
+        \begin{aligned}
+            |X_{t_j} - X_{t_j}^N| & \leq \left( |X_0 - X_0^N| + L_x \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s \right. \\
+            & \qquad \left. \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \right) e^{L_x t_j}.
+        \end{aligned}
+    \end{equation}
+    for $j=1, \ldots, N$, where $\tau^N$ is given by \eqref{tauNt}.
+\end{lem}
+
+\begin{proof}
+    We estimate the first two integrals in \eqref{globalerrorintegralformula}. For the first one, we use \eqref{Lxassumptionbasic}, so that
+    $$
+        |f(s, X_s, Y_s) - f(s, X_t, Y_s)| \leq L_x |X_s - X_t|,
+    $$
+    for $t, s \in [0, T]$, and, in particular, for $t = \tau^N(s)$. Hence,
+    $$
+        \left|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right| \leq L_x \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s.
+    $$
+    
+    For the second term, we use again \eqref{Lxassumption}, so that
+    $$
+        |f(s, X_t, Y_s) - f(s, X_t^N, Y_s)| \leq L_x |X_t - X_t^N|,
+    $$
+    again for any $t, s \in [0, T]$, and, in particular, for $t = \tau^N(s)$. Hence,
+    \begin{multline*}
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_x \int_0^{t_j} |X_{\tau^N(s)} - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
+        \leq L_x\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t.
+    \end{multline*}
+    
+    With these two estimates, we bound \eqref{globalerrorintegralformula} as
+    \begin{align*}
+        |X_{t_j} - X_{t_j}^N| & \leq |X_0 - X_0^N| \\
+        & \qquad + L_x \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s  \\ 
+        & \qquad + L_x\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t \\
+        & \qquad + \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|.
+    \end{align*}
+    Using the discrete version of the Gronwall Lemma, we prove \eqref{Etjbasicbound}.
+\end{proof}
+
+\section{The case of an It\^o noise}
+
+\section{The case of a separable equation}
+
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, and, instead, we assume the term $f(t, x, y)$ can be written as
+$$
+    f(t, x, y) = g_1(t, y)h(t, x) + g_2(t, y)
+$$
+In particular, this applies to linear equations.
+
+We assume $h$ is uniformly globally Lipschitz in both $x$ and $t$.
 
 \section{Strong order of convergence}
 
