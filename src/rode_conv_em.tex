@@ -913,6 +913,8 @@ We may, nevertheless, assume that, for each sample path, $t \mapsto g^Y(t) = g(t
 \]
 But in order for this to be meaningful, we need to show that some reasonable/interesting examples satisfy these conditions, e.g. we should try $g(t, Y_t) = Y_t$ with some transport noise $Y_t = (\sin(\Omega t))^{1/3}$ or a process with Takagi-Landsberg sample paths with varing Hurst coefficients, or whatever.
 
+Well, well, well, this trick is of no use. By assuming that $g(t)$ is the difference of monotone functions, than $g$ is differentiable almost everywhere. It is not quite the same as saying that it is Lipschitz, not even absolutely continuous or of bounded variation. Think of that classical example that $g$ is constant almost everywhere, hence $g' = 0$ almost everywhere, and $\int_0^1 g'(s) \;\mathrm{d}s = 0$, but $g(1) > g(0)$. I am not sure there is an equivalent way, or characterization, of saying that a function is the difference of monotone functions. We may just assume that. This, in particular, includes $\sqrt{t}$, $t\geq 0$, and should include $\sin(\omega t)^{1/3}$, etc..
+
 \dontshow{For the power function $t \mapsto t^\theta$, for $t \geq 0$, with $0<\theta\leq 1$, we have, for $t > s \geq 0$,
 \begin{align*}
     \frac{|t^{\theta} - s^{\theta}|}{|t - s|^\theta} = \frac{\left|1 - \left(\frac{s}{t}\right)^\theta\right|}{\left|1 - \left(\frac{s}{t}\right)\right|^\theta} \leq \frac{\left|1 - \left(\frac{s}{t}\right)\right|}{\left|1 - \left(\frac{s}{t}\right)\right|} = 1,
