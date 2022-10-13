@@ -204,7 +204,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in many common situations, it is possible to exploit ``hidden'' conditions and prove that the strong convergence is actually of order 1, even if the sample paths are still $\theta$-H\"older continuous. This includes the case of an It\^o process noise with finite mean drift and diffusion (e.g. a Wiener, or an Orstein-Uhlenbeck, or a Geometric Brownian process) and the case of a linear equation with an arbitrary H\"older noise present only in the non-homogeneous term. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. We complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions and prove that the strong convergence is actually of order 1, even if the sample paths are still $\theta$-H\"older continuous. This includes the case of an It\^o process noise with finite mean drift and diffusion (which includes a Wiener, or an Orstein-Uhlenbeck, or a Geometric Brownian process) and the case when $f$ has a separable homogeneous part .... The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. We complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
@@ -864,21 +864,57 @@ Ops, we should find another way. And even if we find a way, keep in mind that wh
 \[
     \int_0^T \left(y(t, x(\tau^N(t)) - y(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t.
 \]
-The It\^o isometry is a very special thing, that let us pass the square to the inside of the integral. So we should look for other ways. For instance, if it is separable, $y(t, x) = g(t)F(x)$, with $g(t)$ of a scalar with bounded variation (the part $F(x)$ may be a vector and the equation be a system), and  $g(t) = g_1(t) - g_2(t)$ with each nondecreasing term $g_1$, $g_2$ H\"older continuous with exponent $\theta$, than we can write
+
+
+Suppose $f$ has a separable homogeneous part, i.e.
 $$
-y(t, x(\tau^N(t)) - y(\tau^N(t), x(\tau^N(t))) = (g_1(t) - g_1(\tau^N(t)))x(\tau^N(t)) - (g_2(t) - g_2(\tau^N(t)))x(\tau^N(t)),
+  f(t, x) = g(t)h(x) + g_0(t),
 $$
-squeeze each term,
+and that $g$ and $g_0$ are the differences between two nondecreasing functions:
 $$
-g_1(t) - g_1(\tau^N(t)) \leq g_1(t) - g_1(t - \tau), \quad g_2(t) - g_2(\tau^N(t)) \leq g_2(t) - g_2(t - \tau),
+  g(t) = g_u(t) - g_d(t), \qquad g_0(t) = g_{0u}(t) - g_{0d}(t).
 $$
-and hopefully mimick the first estimate where we only had $y(t)$, but even that is not clear because of the presence of $x(\tau^N(t))$ that prevents us to write the little integrals as a single integral over the whole interval. But we need to try.
+with all such functions being $\theta$-H\"older continuous. For simplicity, we will consider $g_0 = 0$, but a nonzero $g_0$ can be handled in a similar way, as discussed below.
+
+So, the idea is to write the global error as
+\begin{align*}
+    \int_0^T  &  \left(f(t, x(\tau^N(t)) - f(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t  \\
+    & = \int_0^T \left(g_u(t)h(x(\tau^N(t))) - g_u(\tau^N(t))h(x(\tau^N(t)))\right)\;\mathrm{d}t  \\
+    & \qquad - \int_0^T \left(g_d(t)h(x(\tau^N(t))) - g_d(\tau^N(t))h(x(\tau^N(t)))\right)\;\mathrm{d}t \\
+    & = \int_0^T (g_u(t) - g_u(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t  \\
+    & \qquad - \int_0^T (g_d(t) - g_d(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t 
+\end{align*}
+and estimate the integral in each $g_i$, $i=u, d$, by
+\[
+  \left|\int_0^T (g_i(t) - g_i(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t  \right|
+  \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\}\int_0^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t.
+\]
+
+Now, the remaining integral we split at time $t_1 = \Delta t$ and use the H\"older continuity and the monotonicity:
+\begin{align*}
+  \int_0^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t & = \int_0^{t_1} (g_i(t) - g_i(0))\;\mathrm{d}t + \int_{t_1}^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t \\
+    & \leq \int_0^{\Delta t} t^{2\theta}\;\mathrm{d}t + \int_{\Delta t}^T (g_i(t) - g_i(t - \Delta t))\;\mathrm{d}t \\
+    & \leq \frac{\Delta t^{1 + 2\theta}}{1 + 2\theta} + G_i(T) - G_i(T - \Delta t) - G_i(\Delta t) + G_i(0),
+\end{align*}
+where
+\[
+  G_i(t) = \int_0^t g_i(s) \;\mathrm{d}s,
+\]
+which is Lipschitz continuous. Hence,
+\[
+  \int_0^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t \leq \frac{\Delta t^{1 + 2\theta}}{1 + 2\theta} + 2 \Delta t.
+\]
+Therefore,
+\[
+  \left|\int_0^T \left(f(t, x(\tau^N(t)) - f(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t \right| \leq C\Delta t,
+\]
+for a suitable constant $C$.
 
 \dontshow{For the power function $t \mapsto t^\theta$, for $t \geq 0$, with $0<\theta\leq 1$, we have, for $t > s \geq 0$,
 \begin{align*}
     \frac{|t^{\theta} - s^{\theta}|}{|t - s|^\theta} = \frac{\left|1 - \left(\frac{s}{t}\right)^\theta\right|}{\left|1 - \left(\frac{s}{t}\right)\right|^\theta} \leq \frac{\left|1 - \left(\frac{s}{t}\right)\right|}{\left|1 - \left(\frac{s}{t}\right)\right|} = 1,
 \end{align*}
-where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \theta \leq 1$, and, similarly, that $(1 - s/t)^\theta \geq (1 - s/t)$. This shows that $t \mapsto t^\theta$ is $\theta$-H\"older continuous with H\"older constant $1$.
+where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \theta \leq 1$, and, similarly, that $(1 - s/t)^\theta \geq (1 - s/t)$. This shows that $t \mapsto t^\theta$ is H\"older continuous with H\"older exponent $\theta$ and H\"older constant $1$.
 }
 
 
