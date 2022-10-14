@@ -443,9 +443,9 @@ As mentioned in the Introduction, $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ 
 
 We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the It\^o formula \eqref{itoformula} is applicable.
 
-\section{The case of a separable equation with monotonicity}
+\section{The case of a monotonic bound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing terms with finite expected growth.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth.
 
 More precisely, we have the following result:
 \begin{lem}
@@ -500,7 +500,11 @@ More precisely, we have the following result:
 \end{proof}
 
 \begin{thm}
-    Suppose that for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
+    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, and that $\sup_{t\in [0, T]}\mathbb{E}[|X_t|] < \infty$. Suppose, further, that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
+    \[
+        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G(s) - G(t)) h(x) + G_0(s) - G_0(t),
+    \]
+    where $\{G(t)\}_{t\in I}$ and $\{G_0(t)\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function such that, for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
     \[
         \mathbb{E}\left[\left(\sup_{t\in [0, T]}h(X_t)\right)^p\right] < \infty, \quad \mathbb{E}[(G(T) - G(0))^q] < \infty, \quad \mathbb{E}[G_0(T) - G_0(0)] < \infty,
     \]
@@ -510,6 +514,17 @@ More precisely, we have the following result:
     \end{equation}
     for a suitable constant $C \geq 0$.
 \end{thm}
+
+\section{Applications}
+
+In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, exhibit a strong order one convergence.
+
+\subsection{Drug delivery}
+
+\subsection{Earthquake model}
+
+
+\subsection{Blah}
 
 \section{Strong order of convergence}
 
@@ -878,98 +893,27 @@ Using \eqref{Xtestimate}, we obtain
 
 \section*{Appendix}
 
-The heart of the matter is the following. Think of $\tau$ as the time-step $\Delta t$, but we use $\tau$ for simplicity. Let $y=y(t)$ be a $\theta$-H\"older continuous function, with H\"older constant $C$. Then, we can do the usual ``local''-type estimate
+The heart of the matter is the following. Think of $\tau$ as the time-step $\Delta t$, but we use $\tau$ for simplicity. Let $g=g(t)$ be a $\theta$-H\"older continuous function, with H\"older constant $C$. Then, we can do the usual ``local''-type estimate
 \begin{align*}
-    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| & \leq \int_0^T \left|y(t + \tau) - y(t) \right| \;\mathrm{d}t \\
+    \left|\int_0^T \left(g(t + \tau) - g(t) \right) \;\mathrm{d}t \right| & \leq \int_0^T \left|g(t + \tau) - g(t) \right| \;\mathrm{d}t \\
     & \leq C\int_0^T \tau^{\theta} \;\mathrm{d}t \\
     & = C\tau^{\theta}T,
 \end{align*}
-which yields an order $\theta$ approximation, with respect to the ``time step" $\tau$.
-
-However, we can also integrate first, so that
+which yields an order $\theta$ approximation, with respect to the ``time step" $\tau$. However, we can also integrate first, so that
 \begin{align*}
-    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| & = \left|\int_0^T y(t + \tau) \;\mathrm{d}t - \int_0^T y(t) \;\mathrm{d}t \right| \\ 
-    & = \left| \int_\tau^{T+\tau} y(t) \;\mathrm{d}t - \int_0^T y(t) \;\mathrm{d}t \right| \\
-    & = \left| \int_T^{T+\tau} y(t) \;\mathrm{d}t - \int_0^\tau y(t) \;\mathrm{d}t \right| \\
-    & = \left| y(T)\tau + \int_T^{T+\tau} (y(t) - y(T)) \;\mathrm{d}t \right. \\ 
-    & \qquad\qquad \left. - y(0)\tau - \int_0^\tau (y(t) - y(0)) \;\mathrm{d}t \right| \\
-    & \leq |y(T) - y(0)|\tau + C\int_T^{T+\tau} |t - T|^\theta \;\mathrm{d}t + |y(0)|\tau + \int_0^\tau t^\theta \;\mathrm{d}t \\
-    & \leq |y(T) - y(0)|\tau + \frac{C}{1+\theta}\tau^{1+\theta} + \frac{C}{1+\theta}\tau^{1+\theta} \\
-    & \leq CT^{\theta}\tau + \frac{2C}{1+\theta}\tau^{1+\theta}.
+    \left|\int_0^T \left(g(t + \tau) - g(t) \right) \;\mathrm{d}t \right| & = \left|\int_0^T g(t + \tau) \;\mathrm{d}t - \int_0^T g(t) \;\mathrm{d}t \right| \\ 
+    & = \left| \int_\tau^{T+\tau} g(t) \;\mathrm{d}t - \int_0^T g(t) \;\mathrm{d}t \right| \\
+    & = \left| \int_T^{T+\tau} g(t) \;\mathrm{d}t - \int_0^\tau g(t) \;\mathrm{d}t \right| \\
+    & \leq 2\max_t|g(t)| \tau,
 \end{align*}
-Hence,
-\[
-    \left|\int_0^T \left(y(t + \tau) - y(t) \right) \;\mathrm{d}t \right| \leq C\tau \left(T^\theta + \frac{2}{1+\theta}\tau^\theta\right),
-\]
-which reveals the order 1 convergence.
+which reveals the order 1 convergence, even without assuming that $g$ is H\"older.
 
-Well, but, actually, we don't have $y(t+\tau) - y(t)$ in the integrand. We have $y(t) - y(\tau^N(t))$, where $\tau^N(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^N(t) = \max\{j\tau; \; j\tau \leq t, j\}$.
-Then we need to estimate
-$$
-\left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right|.
-$$
-In this case,
-\begin{align*}
-    \left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right| & \leq \left(\int_0^T \left|y(t) - y(\tau^m(t))\right|^{1/\theta} \;\mathrm{d}t \right)^\theta\left(\int_0^T 1^{1/(1-\theta)} \;\mathrm{d}t\right)^{1 - \theta} \\
-    & \leq \left(\int_0^T \left|C\tau^\theta\right|^{1/\theta} \;\mathrm{d}t \right)^\theta T^{1 - \theta} \\
-    & \leq CT^\theta \tau^\theta T^{1-\theta}.
-\end{align*}
-Thus,
-\begin{equation}
-    \left|\int_0^T \left(y(t) - y(\tau^m(t)) \right) \;\mathrm{d}t \right| \leq C T \tau^\theta.
-\end{equation}
-Ops, we should find another way. And even if we find a way, keep in mind that what we really have is a term $t \mapsto y(t, x(t))$ and what we need to estimate is
-\[
-    \int_0^T \left(y(t, x(\tau^N(t)) - y(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t.
-\]
-
-
-Suppose $f$ has a separable homogeneous part, i.e.
-$$
-  f(t, x) = g(t)h(x) + g_0(t),
-$$
-and that $g$ and $g_0$ are the differences between two nondecreasing functions:
-$$
-  g(t) = g_u(t) - g_d(t), \qquad g_0(t) = g_{0u}(t) - g_{0d}(t).
-$$
-For simplicity, we will consider $g_0 = 0$, but a nonzero $g_0$ can be handled in a similar way, as discussed below.
-
-So, the idea is to write the global error as
-\begin{align*}
-    \int_0^T  &  \left(f(t, x(\tau^N(t)) - f(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t  \\
-    & = \int_0^T \left(g_u(t)h(x(\tau^N(t))) - g_u(\tau^N(t))h(x(\tau^N(t)))\right)\;\mathrm{d}t  \\
-    & \qquad - \int_0^T \left(g_d(t)h(x(\tau^N(t))) - g_d(\tau^N(t))h(x(\tau^N(t)))\right)\;\mathrm{d}t \\
-    & = \int_0^T (g_u(t) - g_u(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t  \\
-    & \qquad - \int_0^T (g_d(t) - g_d(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t 
-\end{align*}
-and estimate the integral in each $g_i$, $i=u, d$, by
-\[
-  \left|\int_0^T (g_i(t) - g_i(\tau^N(t)))h(x(\tau^N(t)))\;\mathrm{d}t  \right|
-  \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\}\int_0^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t.
-\]
-
-Now, the remaining integral we split at time $t_1 = \Delta t$ and use the monotonicity:
-\begin{align*}
-  \int_0^T (g_i(t) - g_i(\tau^N(t)))\;\mathrm{d}t & = \int_0^T g_i(t) \;\mathrm{d}t - \int_0^{t_1} g_i(\tau^N(t))\;\mathrm{d}t - \int_{t_1}^T g_i(\tau^N(t))\;\mathrm{d}t \\
-    & \leq \int_0^T g_i(t) \;\mathrm{d}t - \int_0^{\Delta t} g_i(0)\;\mathrm{d}t - \int_{\Delta t}^T g_i(t-\Delta t)\;\mathrm{d}t \\
-    & = \int_0^T g_i(t) \;\mathrm{d}t - \int_0^{\Delta t} g_i(0)\;\mathrm{d}t - \int_{0}^{T-\Delta t} g_i(t)\;\mathrm{d}t \\
-    & = \int_{T-\Delta t}^T g_i(t) \;\mathrm{d}t - g_i(0)\Delta t \\
-    & \leq (g_i(T) - g_i(0))\Delta t.
-\end{align*}
-
-Therefore,
-\begin{multline}
-  \left|\int_0^T \left(f(t, x(\tau^N(t)) - f(\tau^N(t), x(\tau^N(t)))\right)\;\mathrm{d}t \right| \\
-  \leq (g_u(T) - g_u(0) + g_d(T) - g_d(0))\sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\}\Delta t.
-\end{multline}
-
-But we are not quite there. This is sufficient for an ODE, but not for a RODE, when the time dependency includes the noise, $f = f(t, x, y)$, i.e. we actually need to handle $t \mapsto f(t, X_{\tau^N(t)}, Y_t) = g(t, Y_t)h(X_{\tau^N(t)})$. In this case, the decomposition $g = g_u - g_d$ depends on $\{Y_t\}_{t\in I}$ in a nontrivial way.
-
-We may, nevertheless, assume that, for each sample path, $t \mapsto g^Y(t) = g(t, Y_t(\omega))$ itself decomposes into a difference between two nondecreasing functions and then we assume they have bounded first moments:
-\[
-\mathbb{E}\left[(g_i^Y(T) - g_i^Y(0))\right] < \infty.
-\]
-But in order for this to be meaningful, we need to show that some reasonable and interesting examples satisfy these conditions, e.g. we should try $g(t, Y_t) = Y_t$ with some transport noise $Y_t = (\sin(\Omega t))^{1/3}$ or a process with Takagi-Landsberg sample paths with varing Hurst coefficients, or whatever.
+For the discretization, however, we don't have $g(t+\tau) - g(t)$, but actually steps $g(t) - g(\tau^N(t))$, where $\tau^N(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^N(t) = \max\{j\tau; \; j\tau \leq t, j\}$. And there is also the dependency on the solution $X_t$ itself, leading to the steps $f(t, X_{\tau^N(t)}, Y_t) - f(\tau^N(t), X_{\tau^N(t)}, Y_{\tau^N(t)})$. The idea, then, is to assume that these steps can be bound by
+\begin{multline*}
+  |f(t, X_{\tau^N(t)}, Y_t) - f(\tau^N(t), X_{\tau^N(t)}, Y_{\tau^N(t)})| \\
+  \leq (G(t) - G(\tau^N(t)))h(X_{\tau^N(t)}) + G_0(t) - G_0(\tau^N(t)),
+\end{multline*}
+where the bounding process $G(t)$ (usually $G(t) = g(t, Y_t)$ for some $g=g(t, y)$, but not necessarily) is assumed to have monotone nondecreasing sample paths. In this case, an estimate similar to the above can be obtained, and the strong order 1 convergence, achieved.
 
 Keep in mind that assuming that $g(t)$ is the difference of monotone functions, then $g$ is differentiable almost everywhere, but that is not quite the same as saying that it is Lipschitz, not even absolutely continuous nor of bounded variation. Think of that classical example that $g$ is constant almost everywhere, hence $g' = 0$ almost everywhere, and $\int_0^1 g'(s) \;\mathrm{d}s = 0$, but $g(1) > g(0)$. In fact, there is an important case that falls into this category which is the renewal-reward process, that has jump discontinuities and each sample path can be written as the difference between two monotonically nondecreasing jump functions. More general point-process such as the Hawkes process used, e.g. in earthquake models should also work. These are great examples!
 
