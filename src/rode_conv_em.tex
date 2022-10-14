@@ -235,7 +235,7 @@ Notice both $\Delta t = \Delta t_N = T/N$ and $t_j = t_j^N = j\Delta t_N = jT/N$
 
 When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under suitable conditions on $f=f(t, x, y)$, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
 \begin{equation}
-    \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
+    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cite{}).
 
@@ -273,7 +273,7 @@ for every fixed $x\in \mathbb{R}$.
 
 We show that, if the expectations of $\{A_t\}_t$ and $\{B_t\}_t$ are uniformly bounded in time on $[0, T]$ and $\partial_t f$, $\partial_x f$, $\partial_y f$, and $\partial_{yy}f$ are uniformly bounded on $[0, T]\times \mathbb{R}\times \mathbb{R}$, then the Euler-Maruyama method is of strong order 1, i.e. there exists $C>0$ such that
 \begin{equation}
-  \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t, \qquad \forall N \in \mathbb{N},  \Delta t = \frac{T}{N},
+    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see Theorem \ref{EMstrongorder1}).
 
@@ -443,15 +443,73 @@ As mentioned in the Introduction, $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ 
 
 We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the It\^o formula \eqref{itoformula} is applicable.
 
-\section{The case of a separable equation}
+\section{The case of a separable equation with monotonicity}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, and, instead, we assume the term $f(t, x, y)$ can be written as
-$$
-    f(t, x, y) = g_1(t, y)h(t, x) + g_2(t, y)
-$$
-In particular, this applies to linear equations.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing terms with finite expected growth.
 
-We assume $h$ is uniformly globally Lipschitz in both $x$ and $t$.
+More precisely, we have the following result:
+\begin{lem}
+    Suppose that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
+    \[
+        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G(s) - G(t)) h(x) + G_0(s) - G_0(t),
+    \]
+    where $\{G(t)\}_{t\in I}$ and $\{G_0(t)\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function. Then,
+    \begin{multline*}
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
+         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G(T) - G(0)) + G_0(T) - G_0(0) \right)\Delta t. 
+    \end{multline*}
+\end{lem}
+
+\begin{proof}
+    From the assumption on $f=f(t, x, y)$ we have
+    \begin{multline*}
+        |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \\ 
+        \leq (G(s) - G(\tau^N(s)))h(X_{\tau^N(s)}^N) + G_0(s) - G_0(\tau^N(s))
+    \end{multline*}
+    
+    Thus, we have
+    \begin{multline*}
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
+         \leq \int_0^T \left((G(t) - G(\tau^N(t)))h(X_{\tau^N(t)}) + G_0(t) - G_0(\tau^N(t))\right)\;\mathrm{d}t.
+    \end{multline*}
+    The first term in the integration is estimated as
+    \begin{multline*}
+        \int_0^T (G(t) - G(\tau^N(t)))h(X_{\tau^N(t)})\;\mathrm{d}t \\
+        \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\} \int_0^T (G(t) - G(\tau^N(t)))\;\mathrm{d}t
+    \end{multline*}
+
+    Now, the remaining integral we split at time $t_1 = \Delta t$ and use the monotonicity:
+    \begin{align*}
+        \int_0^T (G(t) - G(\tau^N(t)))\;\mathrm{d}t & = \int_0^T G(t) \;\mathrm{d}t - \int_0^{t_1} G(\tau^N(t))\;\mathrm{d}t - \int_{t_1}^T G(\tau^N(t))\;\mathrm{d}t \\
+        & \leq \int_0^T G(t) \;\mathrm{d}t - \int_0^{\Delta t} G(0)\;\mathrm{d}t - \int_{\Delta t}^T G(t-\Delta t)\;\mathrm{d}t \\
+        & = \int_0^T G(t) \;\mathrm{d}t - \int_0^{\Delta t} G(0)\;\mathrm{d}t - \int_{0}^{T-\Delta t} G(t)\;\mathrm{d}t \\
+        & = \int_{T-\Delta t}^T G(t) \;\mathrm{d}t - G(0)\Delta t \\
+        & \leq (G(T) - G(0))\Delta t.
+    \end{align*}
+
+    Similarly,
+    \[
+        \int_0^T (G_0(t) - G_0(\tau^N(t)))\;\mathrm{d}t \leq (G_0(T) - G_0(0))\Delta t
+    \]
+
+    Therefore,
+    \begin{multline*}
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
+         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G(T) - G(0)) + G_0(T) - G_0(0) \right)\Delta t. 
+    \end{multline*}
+\end{proof}
+
+\begin{thm}
+    Suppose that for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
+    \[
+        \mathbb{E}\left[\left(\sup_{t\in [0, T]}h(X_t)\right)^p\right] < \infty, \quad \mathbb{E}[(G(T) - G(0))^q] < \infty, \quad \mathbb{E}[G_0(T) - G_0(0)] < \infty,
+    \]
+    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    \begin{equation}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a suitable constant $C \geq 0$.
+\end{thm}
 
 \section{Strong order of convergence}
 
@@ -913,7 +971,7 @@ We may, nevertheless, assume that, for each sample path, $t \mapsto g^Y(t) = g(t
 \]
 But in order for this to be meaningful, we need to show that some reasonable and interesting examples satisfy these conditions, e.g. we should try $g(t, Y_t) = Y_t$ with some transport noise $Y_t = (\sin(\Omega t))^{1/3}$ or a process with Takagi-Landsberg sample paths with varing Hurst coefficients, or whatever.
 
-Well, well, well, this trick is of no use. By assuming that $g(t)$ is the difference of monotone functions, than $g$ is differentiable almost everywhere. It is not quite the same as saying that it is Lipschitz, not even absolutely continuous or of bounded variation. Think of that classical example that $g$ is constant almost everywhere, hence $g' = 0$ almost everywhere, and $\int_0^1 g'(s) \;\mathrm{d}s = 0$, but $g(1) > g(0)$. I am not sure there is an equivalent way, or characterization, of saying that a function is the difference of monotone functions. We may just assume that. This, in particular, includes $\sqrt{t}$, $t\geq 0$, and should include $\sin(\omega t)^{1/3}$, etc..
+Keep in mind that assuming that $g(t)$ is the difference of monotone functions, then $g$ is differentiable almost everywhere, but that is not quite the same as saying that it is Lipschitz, not even absolutely continuous nor of bounded variation. Think of that classical example that $g$ is constant almost everywhere, hence $g' = 0$ almost everywhere, and $\int_0^1 g'(s) \;\mathrm{d}s = 0$, but $g(1) > g(0)$. In fact, there is an important case that falls into this category which is the renewal-reward process, that has jump discontinuities and each sample path can be written as the difference between two monotonically nondecreasing jump functions. More general point-process such as the Hawkes process used, e.g. in earthquake models should also work. These are great examples!
 
 \dontshow{For the power function $t \mapsto t^\theta$, for $t \geq 0$, with $0<\theta\leq 1$, we have, for $t > s \geq 0$,
 \begin{align*}
