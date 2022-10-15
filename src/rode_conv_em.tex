@@ -451,12 +451,12 @@ More precisely, we have the following result:
 \begin{lem}
     Suppose that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
     \[
-        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G(s) - G(t)) h(x) + G_0(s) - G_0(t),
+        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G_s - G_t) h(x) + G^0_s - G^0_t,
     \]
-    where $\{G(t)\}_{t\in I}$ and $\{G_0(t)\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function. Then,
+    where $\{G_t\}_{t\in I}$ and $\{G^0_t\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function. Then,
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G(T) - G(0)) + G_0(T) - G_0(0) \right)\Delta t. 
+         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G_T - G_0) + G^0_T - G^0_0 \right)\Delta t. 
     \end{multline*}
 \end{lem}
 
@@ -464,49 +464,49 @@ More precisely, we have the following result:
     From the assumption on $f=f(t, x, y)$ we have
     \begin{multline*}
         |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \\ 
-        \leq (G(s) - G(\tau^N(s)))h(X_{\tau^N(s)}^N) + G_0(s) - G_0(\tau^N(s))
+        \leq (G_s - G_{\tau^N(s)})h(X_{\tau^N(s)}^N) + G^0_s - G^0_{\tau^N(s)}
     \end{multline*}
     
     Thus, we have
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \int_0^T \left((G(t) - G(\tau^N(t)))h(X_{\tau^N(t)}) + G_0(t) - G_0(\tau^N(t))\right)\;\mathrm{d}t.
+         \leq \int_0^T \left((G_t - G_{\tau^N(t)})h(X_{\tau^N(t)}) + G^0_t - G^0_{\tau^N(t)}\right)\;\mathrm{d}t.
     \end{multline*}
     The first term in the integration is estimated as
     \begin{multline*}
-        \int_0^T (G(t) - G(\tau^N(t)))h(X_{\tau^N(t)})\;\mathrm{d}t \\
-        \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\} \int_0^T (G(t) - G(\tau^N(t)))\;\mathrm{d}t
+        \int_0^T (G_t - G_{\tau^N(t)})h(X_{\tau^N(t)})\;\mathrm{d}t \\
+        \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\} \int_0^T (G_t - G_{\tau^N(t)})\;\mathrm{d}t
     \end{multline*}
 
     Now, the remaining integral we split at time $t_1 = \Delta t$ and use the monotonicity:
     \begin{align*}
-        \int_0^T (G(t) - G(\tau^N(t)))\;\mathrm{d}t & = \int_0^T G(t) \;\mathrm{d}t - \int_0^{t_1} G(\tau^N(t))\;\mathrm{d}t - \int_{t_1}^T G(\tau^N(t))\;\mathrm{d}t \\
-        & \leq \int_0^T G(t) \;\mathrm{d}t - \int_0^{\Delta t} G(0)\;\mathrm{d}t - \int_{\Delta t}^T G(t-\Delta t)\;\mathrm{d}t \\
-        & = \int_0^T G(t) \;\mathrm{d}t - \int_0^{\Delta t} G(0)\;\mathrm{d}t - \int_{0}^{T-\Delta t} G(t)\;\mathrm{d}t \\
-        & = \int_{T-\Delta t}^T G(t) \;\mathrm{d}t - G(0)\Delta t \\
-        & \leq (G(T) - G(0))\Delta t.
+        \int_0^T (G_t - G_{\tau^N(t)})\;\mathrm{d}t & = \int_0^T G_t \;\mathrm{d}t - \int_0^{t_1} G_{\tau^N(t)}\;\mathrm{d}t - \int_{t_1}^T G_{\tau^N(t)}\;\mathrm{d}t \\
+        & \leq \int_0^T G_t \;\mathrm{d}t - \int_0^{\Delta t} G_0\;\mathrm{d}t - \int_{\Delta t}^T G_{t-\Delta t}\;\mathrm{d}t \\
+        & = \int_0^T G_t \;\mathrm{d}t - \int_0^{\Delta t} G_0\;\mathrm{d}t - \int_{0}^{T-\Delta t} G_t\;\mathrm{d}t \\
+        & = \int_{T-\Delta t}^T G_t \;\mathrm{d}t - G_0\Delta t \\
+        & \leq (G_T - G_0)\Delta t.
     \end{align*}
 
     Similarly,
     \[
-        \int_0^T (G_0(t) - G_0(\tau^N(t)))\;\mathrm{d}t \leq (G_0(T) - G_0(0))\Delta t
+        \int_0^T (G^0_t - G^0_{\tau^N(t)})\;\mathrm{d}t \leq (G^0_T - G^0_0)\Delta t
     \]
 
     Therefore,
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G(T) - G(0)) + G_0(T) - G_0(0) \right)\Delta t. 
+         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G_T - G_0) + G^0_T - G^0_0 \right)\Delta t. 
     \end{multline*}
 \end{proof}
 
 \begin{thm}
     Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, and that $\sup_{t\in [0, T]}\mathbb{E}[|X_t|] < \infty$. Suppose, further, that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
     \[
-        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G(s) - G(t)) h(x) + G_0(s) - G_0(t),
+        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G_s - G_t) h(x) + G^0_s - G^0_t,
     \]
-    where $\{G(t)\}_{t\in I}$ and $\{G_0(t)\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function such that, for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
+    where $\{G_t\}_{t\in I}$ and $\{G^0_t\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function such that, for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
     \[
-        \mathbb{E}\left[\left(\sup_{t\in [0, T]}h(X_t)\right)^p\right] < \infty, \quad \mathbb{E}[(G(T) - G(0))^q] < \infty, \quad \mathbb{E}[G_0(T) - G_0(0)] < \infty,
+        \mathbb{E}\left[\left(\sup_{t\in [0, T]}h(X_t)\right)^p\right] < \infty, \quad \mathbb{E}[(G_T - G_0)^q] < \infty, \quad \mathbb{E}[G^0_T - G^0_0] < \infty,
     \]
     Then, the Euler-Maruyama scheme is of strong order 1, i.e.
     \begin{equation}
@@ -514,6 +514,17 @@ More precisely, we have the following result:
     \end{equation}
     for a suitable constant $C \geq 0$.
 \end{thm}
+
+\begin{rmk}
+    In many applications, it is possible to bound
+    $$
+        f(t, x, Y_t) \leq C(1 + |x| + |Y_t|) \leq C(1 + |x| + G_t)
+    $$
+    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing and we just need a bound
+    $$
+        \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^q] < \infty
+    $$
+\end{rmk}
 
 \section{Applications}
 
@@ -523,8 +534,9 @@ In this section, we describe a few explicit examples that fall into one of the c
 
 \subsection{Earthquake model}
 
+\subsection{Point-process noise}
 
-\subsection{Blah}
+
 
 \section{Strong order of convergence}
 
@@ -911,9 +923,9 @@ which reveals the order 1 convergence, even without assuming that $g$ is H\"olde
 For the discretization, however, we don't have $g(t+\tau) - g(t)$, but actually steps $g(t) - g(\tau^N(t))$, where $\tau^N(t)$ picks the largest $j\tau$ smaller than or equal to $t$, i.e. $\tau^N(t) = \max\{j\tau; \; j\tau \leq t, j\}$. And there is also the dependency on the solution $X_t$ itself, leading to the steps $f(t, X_{\tau^N(t)}, Y_t) - f(\tau^N(t), X_{\tau^N(t)}, Y_{\tau^N(t)})$. The idea, then, is to assume that these steps can be bound by
 \begin{multline*}
   |f(t, X_{\tau^N(t)}, Y_t) - f(\tau^N(t), X_{\tau^N(t)}, Y_{\tau^N(t)})| \\
-  \leq (G(t) - G(\tau^N(t)))h(X_{\tau^N(t)}) + G_0(t) - G_0(\tau^N(t)),
+  \leq (G_t - G_{\tau^N(t)})h(X_{\tau^N(t)}) + G^0_t - G^0_{\tau^N(t)},
 \end{multline*}
-where the bounding process $G(t)$ (usually $G(t) = g(t, Y_t)$ for some $g=g(t, y)$, but not necessarily) is assumed to have monotone nondecreasing sample paths. In this case, an estimate similar to the above can be obtained, and the strong order 1 convergence, achieved.
+where the bounding process $G_t$ (usually $G_t = g(t, Y_t)$ for some $g=g(t, y)$, but not necessarily) is assumed to have monotone nondecreasing sample paths. In this case, an estimate similar to the above can be obtained, and the strong order 1 convergence, achieved.
 
 Keep in mind that assuming that $g(t)$ is the difference of monotone functions, then $g$ is differentiable almost everywhere, but that is not quite the same as saying that it is Lipschitz, not even absolutely continuous nor of bounded variation. Think of that classical example that $g$ is constant almost everywhere, hence $g' = 0$ almost everywhere, and $\int_0^1 g'(s) \;\mathrm{d}s = 0$, but $g(1) > g(0)$. In fact, there is an important case that falls into this category which is the renewal-reward process, that has jump discontinuities and each sample path can be written as the difference between two monotonically nondecreasing jump functions. More general point-process such as the Hawkes process used, e.g. in earthquake models should also work. These are great examples!
 
