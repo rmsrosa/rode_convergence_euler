@@ -518,11 +518,15 @@ More precisely, we have the following result:
 \begin{rmk}
     In many applications, it is possible to bound
     $$
-        f(t, x, Y_t) \leq C(1 + |x| + |Y_t|) \leq C(1 + |x| + G_t)
+        f(t, x, y) \leq C(1 + |x|^a + |y|^b),
     $$
-    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing and we just need a bound
+    for suitable $a, b \geq 1$, in which case
     $$
-        \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^q] < \infty
+        f(t, X_\tau, Y_t) \leq C(1 + |X_\tau|^a + G_t^b)
+    $$
+    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing, and we just need the bounds
+    $$
+    \mathbb{E}[(|X_t|)^a] < \infty, \qquad \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^b] < \infty.
     $$
 \end{rmk}
 
