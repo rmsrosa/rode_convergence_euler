@@ -443,70 +443,69 @@ As mentioned in the Introduction, $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ 
 
 We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the It\^o formula \eqref{itoformula} is applicable.
 
-\section{The case of a monotonic bound}
+\section{The case of a monotonic sample path bound}
 
 Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth.
 
 More precisely, we have the following result:
 \begin{lem}
-    Suppose that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
-    \[
-        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G_s - G_t) h(x) + G^0_s - G^0_t,
-    \]
-    where $\{G_t\}_{t\in I}$ and $\{G^0_t\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function. Then,
-    \begin{multline*}
-        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G_T - G_0) + G^0_T - G^0_0 \right)\Delta t. 
-    \end{multline*}
+    Suppose that, for all $0 \leq \tau \leq s \leq T$,
+    \begin{equation}
+      \label{monotonicbound}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
+    \end{equation}
+    where $\{G_t\}_{t\in I}$ is a real random processes with monotonically non-decreasing sample paths. Then,
+    \begin{equation}
+      \label{intfboundbyG}
+        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t,
+    \end{equation}
+    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
 \end{lem}
 
 \begin{proof}
-    From the assumption on $f=f(t, x, y)$ we have
-    \begin{multline*}
-        |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \\ 
-        \leq (G_s - G_{\tau^N(s)})h(X_{\tau^N(s)}^N) + G^0_s - G^0_{\tau^N(s)}
-    \end{multline*}
-    
-    Thus, we have
-    \begin{multline*}
-        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \int_0^T \left((G_t - G_{\tau^N(t)})h(X_{\tau^N(t)}) + G^0_t - G^0_{\tau^N(t)}\right)\;\mathrm{d}t.
-    \end{multline*}
-    The first term in the integration is estimated as
-    \begin{multline*}
-        \int_0^T (G_t - G_{\tau^N(t)})h(X_{\tau^N(t)})\;\mathrm{d}t \\
-        \leq \sup_{t\in [0, T]}\{|h(x(\tau^N(t))|\} \int_0^T (G_t - G_{\tau^N(t)})\;\mathrm{d}t
-    \end{multline*}
-
-    Now, the remaining integral we split at time $t_1 = \Delta t$ and use the monotonicity:
-    \begin{align*}
-        \int_0^T (G_t - G_{\tau^N(t)})\;\mathrm{d}t & = \int_0^T G_t \;\mathrm{d}t - \int_0^{t_1} G_{\tau^N(t)}\;\mathrm{d}t - \int_{t_1}^T G_{\tau^N(t)}\;\mathrm{d}t \\
-        & \leq \int_0^T G_t \;\mathrm{d}t - \int_0^{\Delta t} G_0\;\mathrm{d}t - \int_{\Delta t}^T G_{t-\Delta t}\;\mathrm{d}t \\
-        & = \int_0^T G_t \;\mathrm{d}t - \int_0^{\Delta t} G_0\;\mathrm{d}t - \int_{0}^{T-\Delta t} G_t\;\mathrm{d}t \\
-        & = \int_{T-\Delta t}^T G_t \;\mathrm{d}t - G_0\Delta t \\
-        & \leq (G_T - G_0)\Delta t.
-    \end{align*}
-
-    Similarly,
+    Let $N\in \mathbb{R}$. From the assumption \eqref{monotonicbound} we have
     \[
-        \int_0^T (G^0_t - G^0_{\tau^N(t)})\;\mathrm{d}t \leq (G^0_T - G^0_0)\Delta t
+        |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq G_s - G_{\tau^N(s)},
+    \]
+    for every $0\leq s \leq T$. Thus, upon integration,
+    \[
+        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s.
+    \]
+    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
+    \begin{align*}
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & = \int_0^t (G_s - G_0) \;\mathrm{d}s.
+    \end{align*}
+    Using the monotonicity,
+    \[
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t.
+    \]
+    When $\Delta t \leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t$ and write
+    \[ 
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s = \int_0^t G_s \;\mathrm{d}s - \int_0^{t_1} G_{\tau^N(s)}\;\mathrm{d}s - \int_{t_1}^t G_{\tau^N(s)}\;\mathrm{d}s
+    \]
+    Using the monotonicity together with the fact that $s - \Delta t \leq \tau^N(s) \leq s$ for all $\Delta t \leq s \leq T$,
+    \begin{align*}
+        \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{\Delta t}^t G_{s-\Delta t}\;\mathrm{d}s \\
+        & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t} G_s\;\mathrm{d}s \\
+        & = \int_{t-\Delta t}^t G_s \;\mathrm{d}s - G_0\Delta t.
+    \end{align*}
+    Using again the monotonicity yields
+    \[ 
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t}^t G_t \;\mathrm{d}s - G_0\Delta t = (G_t - G_0)\Delta t.
     \]
 
-    Therefore,
-    \begin{multline*}
-        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \\
-         \leq \left(\sup_{t\in [0, T]}\{|h(X_{\tau^N(s)})|\}(G_T - G_0) + G^0_T - G^0_0 \right)\Delta t. 
-    \end{multline*}
+    Putting the estimates together proves \eqref{intfboundbyG}.
 \end{proof}
 
 \begin{thm}
-    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, and that $\sup_{t\in [0, T]}\mathbb{E}[|X_t|] < \infty$. Suppose, further, that, for all $0 \leq t \leq s \leq T$ and all $x\in \mathbb{R}$,
+    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, and that $\sup_{t\in [0, T]}\mathbb{E}[|X_t|] < \infty$. Suppose, further, that, for all $0 \leq \tau \leq s \leq T$,
+    \begin{equation}
+      \label{thmmonotonicbound}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
+    \end{equation}
+    where $\{G_t\}_{t\in I}$ is a real random processes with monotonically non-decreasing sample paths and such that
     \[
-        |f(s, x, Y_s) - f(t, x, Y_t)| \leq (G_s - G_t) h(x) + G^0_s - G^0_t,
-    \]
-    where $\{G_t\}_{t\in I}$ and $\{G^0_t\}_{t\in I}$ are real random processes with monotonically increasing sample paths and $h$ is a nonnegative function such that, for some $1\leq p, q \leq \infty$ with $1/p + 1/q = 1$, it holds
-    \[
-        \mathbb{E}\left[\left(\sup_{t\in [0, T]}h(X_t)\right)^p\right] < \infty, \quad \mathbb{E}[(G_T - G_0)^q] < \infty, \quad \mathbb{E}[G^0_T - G^0_0] < \infty,
+        \mathbb{E}[(G_T - G_0)] < \infty.
     \]
     Then, the Euler-Maruyama scheme is of strong order 1, i.e.
     \begin{equation}
