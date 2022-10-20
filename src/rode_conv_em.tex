@@ -331,7 +331,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-First, we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$. For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
+First, we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$. For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
 $$
 X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
 $$
@@ -473,7 +473,7 @@ More precisely, we have the following result:
     \[
         \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s.
     \]
-    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
+    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
     \begin{align*}
       \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & = \int_0^t (G_s - G_0) \;\mathrm{d}s.
     \end{align*}
@@ -481,11 +481,11 @@ More precisely, we have the following result:
     \[
       \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t.
     \]
-    When $\Delta t \leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t$ and write
+    When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
     \[ 
       \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s = \int_0^t G_s \;\mathrm{d}s - \int_0^{t_1} G_{\tau^N(s)}\;\mathrm{d}s - \int_{t_1}^t G_{\tau^N(s)}\;\mathrm{d}s
     \]
-    Using the monotonicity together with the fact that $s - \Delta t \leq \tau^N(s) \leq s$ for all $\Delta t \leq s \leq T$,
+    Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
     \begin{align*}
         \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{\Delta t}^t G_{s-\Delta t}\;\mathrm{d}s \\
         & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t} G_s\;\mathrm{d}s \\
@@ -493,7 +493,7 @@ More precisely, we have the following result:
     \end{align*}
     Using again the monotonicity yields
     \[ 
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t}^t G_t \;\mathrm{d}s - G_0\Delta t = (G_t - G_0)\Delta t.
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t}^t G_t \;\mathrm{d}s - G_0\Delta t_N= (G_t - G_0)\Delta t.
     \]
 
     Putting the estimates together proves \eqref{intfboundbyG}.
@@ -529,7 +529,7 @@ More precisely, we have the following result:
 \begin{proof}
   Under the supplied hypotheses, Proposition \ref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate.
   
-  For the first integral term, since $s - \tau^N(s) \leq \Delta t$ and using the control on $s \mapsto f(s, X_s, Y_s)$, we observe that
+  For the first integral term, since $s - \tau^N(s) \leq \Delta t_N$ and using the control on $s \mapsto f(s, X_s, Y_s)$, we observe that
   \begin{align*}
     \left|X_s - X_{\tau^N(s)}\right| & = \left|\int_{\tau^N(s)}^s f(\sigma, X_\sigma, Y_\sigma)\;\mathrm{d}\sigma\right| \\
     & \leq \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma.
