@@ -386,6 +386,7 @@ Using the jump function $\tau^N$, we may rewrite the above expression as in \eqr
 Here we derive an estimate, under minimal hypotheses, that will be the basis for the estimates in specific cases.
 
 \begin{lem}
+    \label{lembasicestimate}
     Suppose $f=f(t, x, y)$ is continuous on $I\times \mathbb{R}\times\mathbb{R}$ and is uniformly globally Lipschitz continuous on $x$, i.e. there exists a constant $L_x \geq 0$ such that
     \begin{equation}
         \label{Lxassumptionbasic}
@@ -449,12 +450,13 @@ Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, b
 
 More precisely, we have the following result:
 \begin{lem}
+    \label{lemmonotonicbound}
     Suppose that, for all $0 \leq \tau \leq s \leq T$,
     \begin{equation}
       \label{monotonicbound}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
     \end{equation}
-    where $\{G_t\}_{t\in I}$ is a real random processes with monotonically non-decreasing sample paths. Then,
+    where $\{G_t\}_{t\in I}$ is a real random process with monotonically non-decreasing sample paths. Then,
     \begin{equation}
       \label{intfboundbyG}
         \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t,
@@ -498,20 +500,77 @@ More precisely, we have the following result:
 \end{proof}
 
 \begin{thm}
-    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, and that $\sup_{t\in [0, T]}\mathbb{E}[|X_t|] < \infty$. Suppose, further, that, for all $0 \leq \tau \leq s \leq T$,
+  \label{thmmonotonicbound}
+    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$. Suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
-      \label{thmmonotonicbound}
+      |f(s, X_s, Y_s)| \leq F_t,
+    \end{equation}
+    and
+    \begin{equation}
+      \label{thmhypmonotonicbound}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
     \end{equation}
-    where $\{G_t\}_{t\in I}$ is a real random processes with monotonically non-decreasing sample paths and such that
+    where $\{F_t\}_{t\in I}$ and $\{G_t\}_{t\in I}$ are real random process with $\{G_t\}_{t\in I}$ having monotonically non-decreasing sample paths. Suppose, finally, that
     \[
-        \mathbb{E}[(G_T - G_0)] < \infty.
+        \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty, \qquad \mathbb{E}[(G_T - G_0)] < \infty.
     \]
-    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
+      \label{thmmonotonicboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
-    for a suitable constant $C \geq 0$.
+    for a constant $C \geq 0$ given by
+    \begin{equation}
+      \label{thmmonotonicboundconstant}
+      C = \left(\frac{T}{2}\sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s + \mathbb{E}[(G_{T} - G_0)] \right)e^{L_x T}.
+    \end{equation}
+\end{thm}
+
+\begin{proof}
+  Under the supplied hypotheses, Proposition \ref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate.
+  
+  For the first integral term, since $s - \tau^N(s) \leq \Delta t$ and using the control on $s \mapsto f(s, X_s, Y_s)$, we observe that
+  \begin{align*}
+    \left|X_s - X_{\tau^N(s)}\right| & = \left|\int_{\tau^N(s)}^s f(\sigma, X_\sigma, Y_\sigma)\;\mathrm{d}\sigma\right| \\
+    & \leq \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma.
+  \end{align*}
+  For the second integral, we apply Lemma \ref{lemmonotonicbound} and use the estimate \eqref{intfboundbyG}. Putting the two estimates together, we bound the global error by
+  \[
+    |X_{t_j} - X_{t_j}^N| \leq \left( \int_0^{t_j} \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s + (G_t - G_0)\Delta t_N\right) e^{L_x t_j}.
+  \]
+  Taking the expectation, we find that
+  \begin{align*}
+    \mathbb{E}\left[ |X_{t_j} - X_{t_j}^N|\right] & \leq \left( \frac{t_j}{2}K \Delta t_N + \mathbb{E}[(G_{t_j} - G_0)]\Delta t_N\right) e^{L_x t_j} \\
+    & \leq \left( \frac{T}{2}K + \mathbb{E}[(G_{T} - G_0)]\right) e^{L_x T}\Delta t_N,
+  \end{align*}
+  where
+  \[
+    K = \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s,
+  \]
+  which proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
+\end{proof}
+
+One typical case in which a bound such as that in Theorem \ref{thmmonotonicbound} is possible is that of linear equation. More generally, we may assume $f$ is separable in a certain sense:
+
+\begin{thm}
+  Suppose that $f=f(t, x, y)$ is of the form
+  \begin{equation}
+    \label{lineareqform}
+    f(t, x, y) = a(t, y)h(t, x) + b(t, y),
+  \end{equation}
+  where $a=a(t, y)$, $h=(t, x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
+  \[
+    |a(t, Y_t)| \leq A_t, \quad |b(t, Y_t)| \leq B_t,
+  \]
+  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ are stochastic processes with monotonic non-decreasing sample paths. Suppose that
+  \[
+    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[(\sup |h(t, X_t)|)] < \infty.
+  \]
+  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+  \begin{equation}
+    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+  \end{equation}
+  for a suitable constant $C \geq 0$.
 \end{thm}
 
 \begin{rmk}
