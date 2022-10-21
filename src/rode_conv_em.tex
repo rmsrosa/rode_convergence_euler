@@ -432,7 +432,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
         \label{Etjbasicbound}
         \begin{aligned}
             |X_{t_j} - X_{t_j}^N| & \leq \left( |X_0 - X_0^N| + L_x \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s \right. \\
-            & \qquad \left. \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \right) e^{L_x t_j}.
+            & \qquad \left. \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right) e^{L_x t_j}.
         \end{aligned}
     \end{equation}
     for $j=1, \ldots, N$, where $\tau^N$ is given by \eqref{tauNt}.
@@ -547,41 +547,47 @@ We also assume that $(t, y) \mapsto f(t, x, y)$ is twice continuously differenti
 \end{multline}
 for every fixed $x\in \mathbb{R}$.
 
-\subsection{Integral estimate}
+We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following result.
 
-We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. We need to estimate the last term.
+\begin{thm}
+    Not sure yet but we want to bound
+    \begin{equation}
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|
+    \end{equation}
+\end{thm}
 
-For the last term, we use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq t < t + \tau \leq T$,
-\begin{align*}
-\int_t^{t + \tau} & \left(f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
-& = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}t \\ 
-& \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
-\end{align*}
-Using Fubini's Theorem, the last integral is rewritten as
-\begin{multline}
-\label{fubini}
-\int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
-  = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
-  = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
-\end{multline}
+\begin{proof}
+    For the last term in \eqref{Etjbasicbound}, we use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq t < t + \tau \leq T$,
+    \begin{align*}
+        \int_t^{t + \tau} & \left(f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
+        & = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}t \\ 
+        & \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
+    \end{align*}
+    Using Fubini's Theorem, the last integral is rewritten as
+    \begin{multline}
+        \label{fubini}
+        \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
+        = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+        = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
+    \end{multline}
 
-We rearrange these terms and write, for $\tau = \Delta t$ and $t = t_{j-1} = (j-1)\Delta t$,
-\[
-  \int_{t_j}^{t_{j+1}} \left(f(s, X_{t_j}^N, Y_s) - f(t, X_{t_j}^N, Y_t) \right)\;\mathrm{d}s
-\]
-where
-$$
-I_j^{1} = \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s) \right)\;\mathrm{d}s,
-$$
-\begin{multline*}
-  I_j^2 =  \int_{t_j}^{t_{j+1}}  \left( f(s, X_s, Y_s) - f(s, X_{t_j}, Y_s) \right)\;\mathrm{d}s \\ 
- +  \int_{t_j}^{t_{j+1}} \int_{t_j}^s \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}t,
-\end{multline*}
-and
-$$
-I_j^3 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi) \;\mathrm{d}W_\xi.
-$$
-
+    We rearrange these terms and write, for $\tau = \Delta t$ and $t = t_{j-1} = (j-1)\Delta t$,
+    \[
+        \int_{t_j}^{t_{j+1}} \left(f(s, X_{t_j}^N, Y_s) - f(t, X_{t_j}^N, Y_t) \right)\;\mathrm{d}s
+    \]
+    where
+    $$
+        I_j^{1} = \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s) \right)\;\mathrm{d}s,
+    $$
+    \begin{multline*}
+        I_j^2 =  \int_{t_j}^{t_{j+1}}  \left( f(s, X_s, Y_s) - f(s, X_{t_j}, Y_s) \right)\;\mathrm{d}s \\ 
+        +  \int_{t_j}^{t_{j+1}} \int_{t_j}^s \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}t,
+    \end{multline*}
+    and
+    $$
+        I_j^3 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi) \;\mathrm{d}W_\xi.
+    $$
+\end{proof}
 
 \section{The case of a monotonic sample path bound}
 \label{secmonotonicbound}
@@ -792,7 +798,7 @@ For the integral of the last pair of terms, we use the It\^o formula on $Z_s = f
 \end{align*}
 Using Fubini's Theorem, the last integral is rewritten as
 \begin{multline}
-\label{fubini}
+\label{oldfubini}
 \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
   = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
   = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
@@ -800,8 +806,8 @@ Using Fubini's Theorem, the last integral is rewritten as
 
 We rearrange these terms and write, for $\tau = \Delta t$ and $t = t_{j-1} = (j-1)\Delta t$,
 \begin{equation}
-\label{stepexpression}
-X_{t_j} - X_{t_j}^N  = X_{t_{j-1}} - X_{t_{j-1}}^N  + I_{j-1}^{1} + I_{j-1}^{2} + I_{j-1}^{3},
+    \label{stepexpression}
+    X_{t_j} - X_{t_j}^N  = X_{t_{j-1}} - X_{t_{j-1}}^N  + I_{j-1}^{1} + I_{j-1}^{2} + I_{j-1}^{3},
 \end{equation}
 where
 $$
