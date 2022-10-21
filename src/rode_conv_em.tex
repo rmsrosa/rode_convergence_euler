@@ -317,7 +317,7 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$.
 
-We assume that $f$ is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, i.e.
+We assume that $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e.
 There exists $L_x > 0$ such that
     \begin{equation}
         \label{Lxassumptionbasic}
@@ -325,7 +325,7 @@ There exists $L_x > 0$ such that
     \end{equation}
 We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the \emph{Carath\'eodory conditions.} More precisely, we assume that
 \begin{enumerate}
-    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous in $x\in \mathbb{R}$, for each $t\in I$ and each realization $Y_t = Y_t(\omega)$;
+    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous on $x\in \mathbb{R}$, for each $t\in I$ and each realization $Y_t = Y_t(\omega)$;
     \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
     \item The bound $|f(t, x, Y_t)| \leq m(t, R)$ holds for all $t\in I$ and all $|x| \leq R$, where $t\mapsto m(t, R)$ is absolutely continuous on $t\in [0, T]$, for each $R>0$.
 \end{enumerate}
@@ -345,7 +345,7 @@ which are, themselves, measurable.
 
 This yields a well-defined stochastic process $\{X_t\}_{t\in I}$ as a pathwise solution of the RODE \eqref{rodeeq}.
 
-When $f=f(t, x, y)$ is continuous in all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral.
+When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral.
 
 \section{Integral formula for the global pathwise error}
 
@@ -1015,7 +1015,7 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 
 \section{Estimate on the solution}
 
-We assume $f=f(t, x, y)$ is continuous in all variables and is Lipschitz continuous in each variable, i.e. there exist constants $L_t, L_x, L_y \geq 0$ such that
+We assume $f=f(t, x, y)$ is continuous on all variables and is Lipschitz continuous on each variable, i.e. there exist constants $L_t, L_x, L_y \geq 0$ such that
 \begin{align}
   |f(t_1, x, y) - f(t_2, x, y)| & \leq L_t |t_1-t_2|, \\
   |f(t, x_1, y) - f(t, x_2, y)| & \leq L_x |x_1 - x_2|, \\
