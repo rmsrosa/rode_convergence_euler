@@ -201,7 +201,7 @@
 %\thanks{This work was partly supported by the CNPq, Bras\'{\i}lia, Brazil and by the NSF grant ???.}
 
 \subjclass[2000]{76D05, 76D06, 35Q30, 37L99}
-\keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process}.
+\keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
 It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
@@ -254,6 +254,8 @@ In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\
 a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t.
 \]
 
+We show that if \textcolor{red}{describe the conditions needed in Section \ref{secmonotonicbound}}, then 
+
 For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq},
 \begin{equation}
     \begin{cases}
@@ -263,17 +265,14 @@ For the It\^o noise case, we consider a general equation of the form \eqref{rode
   \end{equation}
 with a noise defined as an \textbf{It\^o process} $\{Y_t\}_{t\geq 0}$, satisfying
 \begin{equation}
-  \label{itoprocess}
   \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
 \end{equation}
-where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$. We are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, and we allow $A_t$ and $B_t$ to actually be given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be an Orstein-Uhlenbeck process or a geometric Brownian process.
+We are not solving for $Y_t$, nor approximating it numerically, otherwise we would actually need to consider a system of stochastic differential equations. Instead, we assume it is a known process that can be computed analytically, such as a Wiener process, an Orstein-Uhlenbeck process, or a geometric Brownian motion. With those in mind, we allow $A_t$ and $B_t$ to be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$.
 
-In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula is applicable and yields
+In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula yields
 \begin{multline}
-  \label{itoformula}
-  \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + A_t \partial_y f(t, x, Y_t)  + \frac{B_t^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + B_t \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
+  \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + A_t \partial_y f(t, x, Y_t)  + \frac{B_t^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + B_t \partial_y f(t, x, Y_t)\;\mathrm{d}W_t.
 \end{multline}
-for every fixed $x\in \mathbb{R}$.
 
 We show that, if the expectations of $\{A_t\}_t$ and $\{B_t\}_t$ are uniformly bounded in time on $[0, T]$ and $\partial_t f$, $\partial_x f$, $\partial_y f$, and $\partial_{yy}f$ are uniformly bounded on $[0, T]\times \mathbb{R}\times \mathbb{R}$, then the Euler-Maruyama method is of strong order 1, i.e. there exists $C>0$ such that
 \begin{equation}
@@ -471,16 +470,26 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \section{The case of an It\^o noise}
 
-Here, we assume noise $\{Y_t\}_{t\in I}$ is defined as an It\^o process, i.e. satisfying \eqref{itoprocess}, and we assume $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ satisfy
+Here, we assume the noise $\{Y_t\}_{t\in I}$ is an \textbf{It\^o process}, i.e. satisfying
+\begin{equation}
+  \label{itoprocess}
+  \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
+\end{equation}
+where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ are stochastic processes adapted to the $\{W_t\}_{t\geq 0}$. We are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, and we allow $A_t$ and $B_t$ to be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be an Orstein-Uhlenbeck process or a geometric Brownian process. At this point, we only assume that $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ satisfy
 \begin{equation}
     \label{EAtEBtbound}
     \mathbb{E}[|A_t|] \leq M_A, \quad \mathbb{E}[|B_t|] \leq M_B, \qquad \forall t \in [0, T].
 \end{equation}
-As mentioned in the Introduction, $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ may depend on $Y_t$ itself, such as in an Orstein-Uhlenbeck process or a geometric Brownian motion process.
 
-We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the It\^o formula \eqref{itoformula} is applicable.
+We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the It\^o formula is applicable and yields
+\begin{multline}
+  \label{itoformula}
+  \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + A_t \partial_y f(t, x, Y_t)  + \frac{B_t^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + B_t \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
+\end{multline}
+for every fixed $x\in \mathbb{R}$.
 
 \section{The case of a monotonic sample path bound}
+\label{secmonotonicbound}
 
 Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical point processes, such as renewal-reward processes, Hawkes process, and such.
 
