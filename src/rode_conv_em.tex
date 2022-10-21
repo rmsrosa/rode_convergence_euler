@@ -184,7 +184,7 @@
 
 % Article info
 
-\title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Conditions for the strong order 1 convergence of the Euler-Maruyama approximation for Random ODEs}
+\title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Conditions for the strong order 1 convergence of the Euler-Maruyama approximation for Random Ordinary Differential Equations}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
@@ -204,7 +204,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions and prove that the strong convergence is actually of order 1, even if the sample paths are still $\theta$-H\"older continuous. This includes the case of an It\^o process noise with finite mean drift and diffusion (which includes a Wiener, or an Orstein-Uhlenbeck, or a Geometric Brownian process) and the case when $f$ has a separable homogeneous part .... The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. We complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noise (such as Wiener, Orstein-Uhlenbeck, or Geometric Brownian process) and to jump-type processes (such as renewal-reward and Hawkes processes). The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a jump process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
