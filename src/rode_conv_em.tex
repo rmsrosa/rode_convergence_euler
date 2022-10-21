@@ -516,6 +516,16 @@ As for the second term, that just concerns the solution itself, not the approxim
     Taking the expectation in \eqref{estimatesecondterminglobalerrorintegral} and using the assumption of $\{F_t\}_{t\in I}$ yields \eqref{expectedestimatesecondterminglobalerrorintegral}.
 \end{proof}
 
+\begin{rmk}
+    A typical example that fits within the conditions of Lemma \ref{estimatesecondterminglobalerror} is when $f=f(t, x, y)$ has a power law growth of the form,
+    \[
+      |f(t, x, y)| \leq C(1 + |x|^a + |y|^b), \qquad \forall\,(t, x, y) \in [0, T] \times \mathbb{R}\times\mathbb{R},
+    \]
+    with $a, b \geq 1$, and the corresponding moments of the solution and the noise are bounded, i.e.
+    \[
+      \sup_{t\in I}\mathbb{E}[|X_t|^a]  < \infty, \qquad \sup_{t\in I}\mathbb{E}[|X_t|^b] < \infty.
+    \]
+\end{rmk}
 
 \section{The case of an It\^o noise}
 
