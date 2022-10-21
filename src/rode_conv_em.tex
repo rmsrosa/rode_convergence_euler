@@ -204,7 +204,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a jump process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
@@ -239,7 +239,7 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cite{}).
 
-Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or, in some situation, even have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise. Another case is when the equation is semi-separable and the noise is a jump process.
+Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, and when the equation is semi-separable and the noise is a point process.
 
 More precisely, for the semi-separable case, we assume $f$ is of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$, so the RODE takes the form
 \begin{equation}
@@ -249,12 +249,10 @@ More precisely, for the semi-separable case, we assume $f$ is of the form $f(t, 
         \left. X_t \right|_{t = 0} = X_0.
     \end{cases}
 \end{equation}
-We assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded monotonically, i.e.
+In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded monotonically, which typically happens for point processes, i.e.
 \[
-a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t
+a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t.
 \]
-
-
 
 For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq},
 \begin{equation}
@@ -484,7 +482,7 @@ We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the 
 
 \section{The case of a monotonic sample path bound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical jump-type processes, such as renewal-reward processes, Hawkes process, and such.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical point processes, such as renewal-reward processes, Hawkes process, and such.
 
 More precisely, we have the following result:
 \begin{lem}
