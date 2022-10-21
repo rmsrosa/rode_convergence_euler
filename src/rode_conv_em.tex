@@ -317,27 +317,37 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 \section{Pathwise solution}
 
-We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-value stochastic process $\{Y_t\}_{t\in I}$.
+We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$.
 
-We assume that $f$ is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$ and that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions. More precisely, we assume that
-\begin{enumerate}
-    \item There exists $L_x > 0$ such that
+We assume that $f$ is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$, i.e.
+There exists $L_x > 0$ such that
     \begin{equation}
         \label{Lxassumptionbasic}
         |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
     \end{equation}
-    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous in $x\in \mathbb{R}$, for each $t\in I$ and each sample path $t\mapsto Y_t(\omega)$ of $\{Y_t\}_{t\in I}$.
-    \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$.
+We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions. More precisely, we assume that
+\begin{enumerate}
+    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous in $x\in \mathbb{R}$, for each $t\in I$ and each realization $Y_t = Y_t(\omega)$;
+    \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
     \item The bound $|f(t, x, Y_t)| \leq m(t, R)$ holds for all $t\in I$ and all $|x| \leq R$, where $t\mapsto m(t, R)$ is absolutely continuous on $t\in [0, T]$, for each $R>0$.
 \end{enumerate}
 
 Under these assumptions, the integral equation
-$$
-X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
-$$
+\begin{equation}
+    \label{integralrodeform}
+    X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
+\end{equation}
 has a unique solution, for each sample $X_0 = X_0(\omega)$ of the initial condition and sample path $t\mapsto Y_t(\omega)$ of the noise process.
 
+The mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable since it can be seen as the pointwise limit of the Picard iterations
+\[
+X_t^n = X_0 + \int_0^t f(s, X_s^{n-1}, Y_s)\;\mathrm{d}s, \qquad n \in \mathbb{N}, \quad X_t^0 = X_0,
+\]
+which are, themselves, measurable.
+
 This yields a well-defined stochastic process $\{X_t\}_{t\in I}$ as a pathwise solution of the RODE \eqref{rodeeq}.
+
+When $f=f(t, x, y)$ is continuous in all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral.
 
 \section{Integral formula for the global pathwise error}
 
