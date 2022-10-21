@@ -325,7 +325,7 @@ There exists $L_x > 0$ such that
     \end{equation}
 We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the \emph{Carath\'eodory conditions.} More precisely, we assume that
 \begin{enumerate}
-    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous on $x\in \mathbb{R}$, for each $t\in I$ and each realization $Y_t = Y_t(\omega)$;
+    \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
     \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
     \item The bound $|f(t, x, Y_t)| \leq m(t, R)$ holds for all $t\in I$ and all $|x| \leq R$, where $t\mapsto m(t, R)$ is absolutely continuous on $t\in [0, T]$, for each $R>0$.
 \end{enumerate}
@@ -549,13 +549,13 @@ for every fixed $x\in \mathbb{R}$.
 
 We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
 
-\begin{thm}
-    Assuming whatever is needed, we have
+\begin{lem}
+    Suppose $f=f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for each $(t, y)\in [0, T]\times \mathbb{R}$ and is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Then,
     \begin{equation}
         \label{rewritenoiseterm}
         \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = I^1 + I^2,
     \end{equation}
-    where
+    for each $j = 0, 1, \ldots, N$, where
     \begin{multline*}
         I^1 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) \\
         \left(\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right) \;\mathrm{d}s
@@ -564,7 +564,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
     \[
         I^2 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) \;\mathrm{d}W_s.
     \]
-\end{thm}
+\end{lem}
 
 \begin{proof}
     We use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq t < t + \tau \leq T$,
@@ -602,18 +602,30 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
     Summing them up in $j$ and writing $s$ for $\xi$ leads to \eqref{rewritenoiseterm}.
 \end{proof}
 
+\begin{lem}
+    Suppose $f=f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for each $(t, y)\in [0, T]\times \mathbb{R}$ and is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that
+    \begin{multline*}
+        \int_0^{T}
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s < \infty
+    \end{multline*}
+    and
+    \[
+        \int_0^{t_j} \mathbb{E}\left[\left|B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s < \infty.
+    \]
+    Then,
+    \begin{equation}
+        \label{rewrittennoisetermbound}
+        \int_0^{t_j} \mathbb{E}\left[\left| f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right|\right]\;\mathrm{d}s \leq C\Delta_N
+    \end{equation}
+    for each $j = 0, 1, \ldots, N$, and a suitable constant $C>0$.
+\end{lem}
+
 \begin{proof}
     \emph{First term.}
 
     \emph{Second term.}
 
-    The second term $I_j^2$ is not estimated for each $j$ separately. Instead, we estimate its summation over $j$. Notice
-    \begin{multline*}
-        \sum_{i=0}^{j-1} I_i^3 = \sum_{i=0}^{j-1} \int_{t_i}^{t_{i+1}} (t_{i+1} - \xi) B_\xi \partial_y f(\xi, X_{t_i}^N, Y_\xi)  \;\mathrm{d}W_\xi \\
-        = \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi,
-    \end{multline*}
-    where $[r]$ denotes the largest integer below a real number $r$.
-
+    
     For this term, we estimate its strong norm, i.e. first moment. This is estimated using the Lyapunov inequality, the It\^o formula and the It\^o isometry, as follows
     \begin{align*}
         \mathbb{E}&\left[ \left| \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi\right| \right] \\
