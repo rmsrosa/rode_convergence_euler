@@ -547,29 +547,45 @@ We also assume that $(t, y) \mapsto f(t, x, y)$ is twice continuously differenti
 \end{multline}
 for every fixed $x\in \mathbb{R}$.
 
-We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following result.
+We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
 
 \begin{thm}
-    Not sure yet but we want to bound
+    Assuming whatever is needed, we have
     \begin{equation}
-        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|
+        \label{rewritenoiseterm}
+        \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = I^1 + I^2,
     \end{equation}
+    where
+    \begin{multline*}
+        I^1 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) \\
+        \left(\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right) \;\mathrm{d}s
+    \end{multline*}
+    and
+    \[
+        I^2 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) \;\mathrm{d}W_s.
+    \]
 \end{thm}
 
 \begin{proof}
     We use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq t < t + \tau \leq T$,
     \begin{align*}
         \int_t^{t + \tau} & \left(f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
-        & = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}t \\ 
+        & = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}\xi\;\mathrm{d}s \\ 
         & \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
     \end{align*}
-    Using Fubini's Theorem, the last integral is rewritten as
-    \begin{multline}
-        \label{fubini}
+
+    Using Fubini's Theorem, the first double integral is rewritten as
+    \begin{multline*}
+        \int_t^{t + \tau} \int_\xi^{t+\tau} \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}\xi \\
+        = \int_t^{t + \tau} (t+\tau - \xi) \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}\xi.
+    \end{multline*}
+
+    Using now Fubini's Theorem on the last integral, we find
+    \begin{multline*}
         \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
         = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
         = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
-    \end{multline}
+    \end{multline*}
 
     Thus, for $\tau = \Delta t$, $t = t_{j-1} = (j-1)\Delta t$, and $t + \tau = t_{j-1} + \Delta t_N = t_j$, we have
     \[
@@ -577,12 +593,41 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
     \]
     where
     \[
-        I_j^1 =  \int_{t_j}^{t_{j+1}} \int_{t_j}^s \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}t,
+        I_j^1 = \int_{t_j}^{t_{j+1}} (t_{j+1} - \xi) \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}\xi,
     \]
     and
     $$
         I_j^2 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi) \;\mathrm{d}W_\xi.
     $$
+    Summing them up in $j$ and writing $s$ for $\xi$ leads to \eqref{rewritenoiseterm}.
+\end{proof}
+
+\begin{proof}
+    \emph{First term.}
+
+    \emph{Second term.}
+
+    The second term $I_j^2$ is not estimated for each $j$ separately. Instead, we estimate its summation over $j$. Notice
+    \begin{multline*}
+        \sum_{i=0}^{j-1} I_i^3 = \sum_{i=0}^{j-1} \int_{t_i}^{t_{i+1}} (t_{i+1} - \xi) B_\xi \partial_y f(\xi, X_{t_i}^N, Y_\xi)  \;\mathrm{d}W_\xi \\
+        = \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi,
+    \end{multline*}
+    where $[r]$ denotes the largest integer below a real number $r$.
+
+    For this term, we estimate its strong norm, i.e. first moment. This is estimated using the Lyapunov inequality, the It\^o formula and the It\^o isometry, as follows
+    \begin{align*}
+        \mathbb{E}&\left[ \left| \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi\right| \right] \\
+        & \leq \mathbb{E}\left[ \left( \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\;\mathrm{d}W_\xi \right)^2 \right]^{1/2} \\
+        & =  \left(\int_0^{t_j} \mathbb{E}\left[ \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\;\mathrm{d}\xi \right)^{1/2}\\
+        & \leq \left(\int_0^{t_j} \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right)^2\mathbb{E}\left[ \left( B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\right) \;\mathrm{d}\xi \right)^{1/2}\\
+        & \leq \left(\int_0^{t_j} \Delta t^2 M_B^2 L_y^2 \;\mathrm{d}\xi \right)^{1/2}.
+    \end{align*}
+
+    Thus,
+    \begin{equation}
+        \label{I3estimate}
+        \mathbb{E}\left[ \left| \sum_{i=0}^{j-1} I_j^3 \right| \right] \leq M_B L_y t_j^{1/2} \Delta t.
+    \end{equation}
 \end{proof}
 
 \section{The case of a monotonic sample path bound}
@@ -873,30 +918,6 @@ so that
 \end{equation}
 After adding up $n$ times, we end up with a $\tau^{1/2}$ estimate, which is not sufficient.
 \end{rmk}
-
-\subsection{Integral estimate}
-
-The third term $I_j^3$ is not estimated for each $j$ separately. Instead, we estimate its summation over $j$. Notice
-\begin{multline*}
-\sum_{i=0}^{j-1} I_i^3 = \sum_{i=0}^{j-1} \int_{t_i}^{t_{i+1}} (t_{i+1} - \xi) B_\xi \partial_y f(\xi, X_{t_i}^N, Y_\xi)  \;\mathrm{d}W_\xi \\
- = \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi,
-\end{multline*}
-where $[r]$ denotes the largest integer below a real number $r$.
-
-For this term, we estimate its strong norm, i.e. first moment. This is estimated using the Lyapunov inequality, the It\^o formula and the It\^o isometry, as follows
-\begin{align*}
-  \mathbb{E}&\left[ \left| \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi) \;\mathrm{d}W_\xi\right| \right] \\
-   & \leq \mathbb{E}\left[ \left( \int_0^{t_j} \left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\;\mathrm{d}W_\xi \right)^2 \right]^{1/2} \\
-   & =  \left(\int_0^{t_j} \mathbb{E}\left[ \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right) B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\;\mathrm{d}\xi \right)^{1/2}\\
-   & \leq \left(\int_0^{t_j} \left(\left([\xi/\Delta t + 1]\Delta t - \xi\right)^2\mathbb{E}\left[ \left( B_\xi \partial_y f(\xi, X_{[\xi/\Delta t]\Delta t}^N, Y_\xi)\right)^2 \right]\right) \;\mathrm{d}\xi \right)^{1/2}\\
-   & \leq \left(\int_0^{t_j} \Delta t^2 M_B^2 L_y^2 \;\mathrm{d}\xi \right)^{1/2}.
-\end{align*}
-
-Thus,
-\begin{equation}
-  \label{I3estimate}
-  \mathbb{E}\left[ \left| \sum_{i=0}^{j-1} I_j^3 \right| \right] \leq M_B L_y t_j^{1/2} \Delta t.
-\end{equation}
 
 \subsection{Iterating the steps}
 
