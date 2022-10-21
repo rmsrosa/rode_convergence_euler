@@ -316,6 +316,7 @@ In order to make the main idea clear cut, here are the options we have for estim
 \end{enumerate}
 
 \section{Pathwise solution}
+\label{secpathwisesolution}
 
 We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$.
 
@@ -325,7 +326,7 @@ There exists $L_x > 0$ such that
         \label{Lxassumptionbasic}
         |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
     \end{equation}
-We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions. More precisely, we assume that
+We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the \emph{Carath\'eodory conditions.} More precisely, we assume that
 \begin{enumerate}
     \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous in $x\in \mathbb{R}$, for each $t\in I$ and each realization $Y_t = Y_t(\omega)$;
     \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
@@ -353,7 +354,7 @@ When $f=f(t, x, y)$ is continuous in all three variables, as well as uniformly g
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    Suppose $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times \mathbb{R}$. Then, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution}. Then, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -371,54 +372,56 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-First, we obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$. For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
-$$
-X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
-$$
-The Euler-Maruyama step is given by
-$$
-X_{t+\tau}^N = X_t^N + \tau f(t, X_t^N, Y_t).
-$$
-Subtracting, we obtain
-$$
-X_{t + \tau} - X_{t + \tau}^N = X_t - X_t^N + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
-$$
+    Under the Carath\'eodory conditions, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$.
+    
+    For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
+    $$
+    X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
+    $$
+    The Euler-Maruyama step is given by
+    $$
+    X_{t+\tau}^N = X_t^N + \tau f(t, X_t^N, Y_t).
+    $$
+    Subtracting, we obtain
+    $$
+    X_{t + \tau} - X_{t + \tau}^N = X_t - X_t^N + \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
+    $$
 
-We arrange the integrand as
-\begin{align*}
-f(s, X_s, Y_s) - f(t, X_t^N, Y_t) = & f(s, X_s, Y_s) - f(s, X_t, Y_s) \\ 
- & + f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \\
- & + f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t).
-\end{align*}
+    We arrange the integrand as
+    \begin{align*}
+    f(s, X_s, Y_s) - f(t, X_t^N, Y_t) = & f(s, X_s, Y_s) - f(s, X_t, Y_s) \\ 
+    & + f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \\
+    & + f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t).
+    \end{align*}
 
-This yields
-\begin{align*}
-    X_{t + \tau} - X_{t + \tau}^N  = & X_t - X_t^N \\
-    = &  \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(s, X_t, Y_s) \right)\;\mathrm{d}s \\ 
-    & + \int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right)\;\mathrm{d}s \\
-    & + \int_t^{t + \tau} \left( f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
-\end{align*}
+    This yields
+    \begin{align*}
+        X_{t + \tau} - X_{t + \tau}^N  = & X_t - X_t^N \\
+        = &  \int_t^{t + \tau} \left( f(s, X_s, Y_s) - f(s, X_t, Y_s) \right)\;\mathrm{d}s \\ 
+        & + \int_t^{t + \tau} \left( f(s, X_t, Y_s) - f(s, X_t^N, Y_s) \right)\;\mathrm{d}s \\
+        & + \int_t^{t + \tau} \left( f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
+    \end{align*}
 
-Going back to the notation $t = t_{j-1}$ and $t + \tau = t_j$, the above identity reads
-\begin{equation}
-    \label{singlestep}
-    \begin{aligned}
-        X_{t_j} - X_{t_j}^N  = & X_{t_{j-1}} - X_{t_{j-1}}^N \\
-        = &  \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
-        & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}, Y_s) - f(s, X_{t_{j-1}}^N, Y_s) \right)\;\mathrm{d}s \\
-        & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
-    \end{aligned}
-\end{equation}
+    Going back to the notation $t = t_{j-1}$ and $t + \tau = t_j$, the above identity reads
+    \begin{equation}
+        \label{singlestep}
+        \begin{aligned}
+            X_{t_j} - X_{t_j}^N  = & X_{t_{j-1}} - X_{t_{j-1}}^N \\
+            = &  \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
+            & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}, Y_s) - f(s, X_{t_{j-1}}^N, Y_s) \right)\;\mathrm{d}s \\
+            & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
+        \end{aligned}
+    \end{equation}
 
-Now we iterate the time steps \eqref{singlestep} to find that
-\begin{align*}
-    X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-    & \qquad + \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
-    & \qquad + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}, Y_s) - f(s, X_{t_{i-1}}^N, Y_s) \right)\;\mathrm{d}s \\
-    & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
-\end{align*}
+    Now we iterate the time steps \eqref{singlestep} to find that
+    \begin{align*}
+        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
+        & \qquad + \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
+        & \qquad + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}, Y_s) - f(s, X_{t_{i-1}}^N, Y_s) \right)\;\mathrm{d}s \\
+        & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
+    \end{align*}
 
-Using the jump function $\tau^N$, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
+    Using the jump function $\tau^N$, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
 \end{proof}
 
 \section{Basic estimate}
@@ -427,7 +430,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Suppose $f=f(t, x, y)$ is continuous on $I\times \mathbb{R}\times\mathbb{R}$ and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_x$, as in \eqref{Lxassumptionbasic}. Then, the global error \eqref{globalerrorintegralformula} is estimated as
+    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_x$, as in \eqref{Lxassumptionbasic}. Then, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
@@ -481,12 +484,12 @@ We also assume that $f=f(t, x, y)$ is twice continuously differentiable, so the 
 
 \section{The case of a monotonic sample path bound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical jump-type processes, such as renewal-reward processes, Hawkes process, and such.
 
 More precisely, we have the following result:
 \begin{lem}
     \label{lemmonotonicbound}
-    Suppose that, for all $0 \leq \tau \leq s \leq T$,
+    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and that, for all $0 \leq \tau \leq s \leq T$,
     \begin{equation}
       \label{monotonicbound}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
@@ -536,7 +539,7 @@ More precisely, we have the following result:
 
 \begin{thm}
   \label{thmmonotonicbound}
-    Suppose that $f=f(t, x, y)$ is continuous on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$. Suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+  Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_x$, as in \eqref{Lxassumptionbasic}. Suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
       |f(s, X_s, Y_s)| \leq F_t,
     \end{equation}
@@ -545,7 +548,7 @@ More precisely, we have the following result:
       \label{thmhypmonotonicbound}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
     \end{equation}
-    where $\{F_t\}_{t\in I}$ and $\{G_t\}_{t\in I}$ are real random process with $\{G_t\}_{t\in I}$ having monotonically non-decreasing sample paths. Suppose, finally, that
+    where $\{F_t\}_{t\in I}$ and $\{G_t\}_{t\in I}$ are real random process with $\{G_t\}_{t\in I}$ having monotonically non-decreasing sample paths. Assume, finally, that
     \[
         \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty, \qquad \mathbb{E}[(G_T - G_0)] < \infty.
     \]
@@ -585,7 +588,7 @@ More precisely, we have the following result:
   which proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
 \end{proof}
 
-One typical case in which a bound such as that in Theorem \ref{thmmonotonicbound} is possible is that of a linear equation, or, more generally, that $f$ can is separable in the sense that $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$ with suitable functions. More precisely, we have the following result.
+One typical case in which a bound such as that in Theorem \ref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}, in the sense of being of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$ with suitable functions $a=a(t, y), b=b(t, y)$, and $h=h(t, x)$. More precisely, we have the following result.
 
 \begin{thm}
   Suppose that $f=f(t, x, y)$ is of the form
