@@ -219,7 +219,7 @@ Consider the following initial value problem for a \textbf{random ordinary diffe
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process with continuous sample paths on the time interval $I=[0, T]$; the evolution law function $f:I \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and the initial condition $X_0$ is a real random variable. The sample space is denoted by $\Omega$. We also treat systems of random ordinary equations, as discussed later in the article, but we start with the scalar case, in order to present the main ideas.
+where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process with \emph{integrable} sample paths on the time interval $I=[0, T]$; the evolution law function $f:I \times \mathbb{R} \times\mathbb{R} \rightarrow \mathbb{R}$ is continuous; and the initial condition $X_0$ is a real random variable. The sample space is denoted by $\Omega$. We also treat systems of random ordinary equations, as discussed later in the article, but we start with the scalar case, in order to present the main ideas.
 
 The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
 \begin{equation}
@@ -233,22 +233,28 @@ with the initial condition
 \end{equation}
 Notice both $\Delta t = \Delta t_N = T/N$ and $t_j = t_j^N = j\Delta t_N = jT/N$ depend on $N$, but we sometimes do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under suitable conditions on $f=f(t, x, y)$, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
 \begin{equation}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cite{}).
 
-Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous. This is the case, for instance, when the noise is an It\^o noise. Another case is when the equation is linear and the H\"older-continuous noise is only present in the non-homogeneous term.
+Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or, in some situation, even have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise. Another case is when the equation is semi-separable and the noise is a jump process.
 
-For the linear case, we assume, more precisely, that the equation is of the form
+More precisely, for the semi-separable case, we assume $f$ is of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$, so the RODE takes the form
 \begin{equation}
-    \label{linearrodeeq}
+    \label{semiseparablerodeeq}
     \begin{cases}
-        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = g(t) X_t + h(t, Y_t), \qquad 0 \leq t \leq T, \\
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = a(t, Y_t) h(X_t) + b(t, Y_t), \qquad 0 \leq t \leq T, \\
         \left. X_t \right|_{t = 0} = X_0.
     \end{cases}
 \end{equation}
+We assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded monotonically, i.e.
+\[
+a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t
+\]
+
+
 
 For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq},
 \begin{equation}
@@ -308,6 +314,30 @@ In order to make the main idea clear cut, here are the options we have for estim
     \end{multline*}
     and we finally get the error to be of order 1.
 \end{enumerate}
+
+\section{Pathwise solution}
+
+We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-value stochastic process $\{Y_t\}_{t\in I}$.
+
+We assume that $f$ is globally Lipschitz continuous in $x$, uniformly in $t$ and $y$ and that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions. More precisely, we assume that
+\begin{enumerate}
+    \item There exists $L_x > 0$ such that
+    \begin{equation}
+        \label{Lxassumptionbasic}
+        |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
+    \end{equation}
+    \item The mapping $x \mapsto f(t, x, Y_t)$ is continuous in $x\in \mathbb{R}$, for each $t\in I$ and each sample path $t\mapsto Y_t(\omega)$ of $\{Y_t\}_{t\in I}$.
+    \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$.
+    \item The bound $|f(t, x, Y_t)| \leq m(t, R)$ holds for all $t\in I$ and all $|x| \leq R$, where $t\mapsto m(t, R)$ is absolutely continuous on $t\in [0, T]$, for each $R>0$.
+\end{enumerate}
+
+Under these assumptions, the integral equation
+$$
+X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
+$$
+has a unique solution, for each sample $X_0 = X_0(\omega)$ of the initial condition and sample path $t\mapsto Y_t(\omega)$ of the noise process.
+
+This yields a well-defined stochastic process $\{X_t\}_{t\in I}$ as a pathwise solution of the RODE \eqref{rodeeq}.
 
 \section{Integral formula for the global pathwise error}
 
@@ -387,12 +417,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Suppose $f=f(t, x, y)$ is continuous on $I\times \mathbb{R}\times\mathbb{R}$ and is uniformly globally Lipschitz continuous on $x$, i.e. there exists a constant $L_x \geq 0$ such that
-    \begin{equation}
-        \label{Lxassumptionbasic}
-        |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
-    \end{equation}
-    Then, the global error \eqref{globalerrorintegralformula} is estimated as
+    Suppose $f=f(t, x, y)$ is continuous on $I\times \mathbb{R}\times\mathbb{R}$ and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_x$, as in \eqref{Lxassumptionbasic}. Then, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
