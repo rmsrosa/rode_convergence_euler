@@ -482,6 +482,7 @@ As for the second term, that just concerns the solution itself, not the approxim
     \label{estimatesecondterminglobalerror}
     Besides the assumptions in Lemma \ref{lembasicestimate}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
+        \label{Ftcondition}
       |f(s, X_s, Y_s)| \leq F_t,
     \end{equation}
     where $\{F_t\}_{t\in I}$ is a real random process. Then,
@@ -604,16 +605,18 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 \end{proof}
 
 \begin{lem}
+    \label{lemestimatesforI1andI2}
     Suppose $f=f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for each $(t, y)\in [0, T]\times \mathbb{R}$ and is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that
-    \begin{equation}
+    \begin{multline}
         \label{estimateforI1}
-        \int_0^{T}
-        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s < \infty
-    \end{equation}
+        K_1 = \int_0^{T}
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s \\
+        < \infty
+    \end{multline}
     and
     \begin{equation}
         \label{estimateforI2}
-        \int_0^{t_j} \mathbb{E}\left[\left|B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s < \infty.
+        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right) < \infty.
     \end{equation}
     Then,
     \begin{equation}
@@ -638,8 +641,20 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
         & \leq \Delta t_N \left(\int_{t_j}^{t_{j+1}}  \mathbb{E}\left[\left(B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)\right)^2\right] \;\mathrm{d}\xi \right)^{1/2} \\
         & \qquad \leq K_2 \Delta t_N,
     \end{align*}
-    for $K_2$ given by \eqref{estimateforI2}.
+    for $K_2$ given by \eqref{estimateforI2}. Putting the two estimates together, we find \eqref{rewrittennoisetermbound}.
 \end{proof}
+
+Gathering the conditions, we obtain the following result.
+\begin{lem}
+    Suppose $f=f(t, x, y)$ is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_x$, as in \eqref{Lxassumptionbasic} and that it is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that all the conditions in Lemma \ref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \begin{equation}
+      \label{thmitogeneralboundstrongorder}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a suitable constant $C \geq 0$
+\end{lem}
+
+The required conditions in Lemma \ref{lemestimatesforI1andI2} are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
 
 \section{The case of a monotonic sample path bound}
 \label{secmonotonicbound}
