@@ -4,8 +4,9 @@
 \hypersetup{urlcolor=blue, citecolor=red}
 
 \usepackage{amssymb,graphicx,color}
-%\usepackage[english,francais]{babel}
 \usepackage[latin1]{inputenc}
+
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
 
 %\usepackage[cal=mathpi, frak=mma, scr=rsfs]{mathalfa}
 %\usepackage[cal=mtc]{mathalfa}
@@ -24,7 +25,7 @@
 \newtheorem{cor}{Corollary}[section]
 \newtheorem{defs}{Definition}[section]
 \newtheorem{prob}{Problem}[section]
-\newtheorem{hyp}{Hypothesis}[section]
+\newtheorem{stdhyp}{Standing Hypotheses}[section]
 \theoremstyle{definition}
 \newtheorem{rmk}{Remark}[section]
 \newtheorem{fact}{Fact}[section]
@@ -255,7 +256,7 @@ In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\
 a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t.
 \]
 
-We show that if \textcolor{red}{describe the conditions needed in Section \ref{secmonotonicbound}}, then 
+We show that if \textcolor{red}{describe the conditions needed in \cref{secmonotonicbound}}, then 
 
 For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq},
 \begin{equation}
@@ -279,7 +280,7 @@ We show that, if the expectations of $\{A_t\}_t$ and $\{B_t\}_t$ are uniformly b
 \begin{equation}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see Theorem \ref{EMstrongorder1}).
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cref{EMstrongorder1}).
 
 We summarize here the main tricks we use to accomplish such error estimate:
 \begin{enumerate}
@@ -318,7 +319,8 @@ In order to make the main idea clear cut, here are the options we have for estim
 
 For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}.
 
-\begin{hyp}[Standing Hypotheses I]
+\begin{stdhyp}
+    \label{standinghypotheses}
     We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. We make the following standing hypotheses.
     \begin{enumerate}
         \item $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e. there exists a constant $L_X > 0$ such that
@@ -334,7 +336,7 @@ For the notion and main results on pathwise solution for RODEs, we refer the rea
                 \item The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with each sample path $t\mapsto M_t(\omega)$ begin absolutely continuous on $t\in [0, T]$.
             \end{enumerate}
     \end{enumerate}
-\end{hyp}
+\end{stdhyp}
 
 Under these assumptions, the integral equation
 \begin{equation}
@@ -376,7 +378,7 @@ Due to the diverse ways in which to control the solution, we leave further hypot
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution}. Then, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under the \cref{standinghypotheses}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -452,7 +454,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic}. Then, the global error \eqref{globalerrorintegralformula} is estimated as
+    Under the \cref{standinghypotheses}, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
@@ -505,7 +507,7 @@ As for the second term, that just concerns the solution itself, not the approxim
 
 \begin{lem}
     \label{estimatesecondterminglobalerror}
-    Besides the assumptions in Lemma \ref{lembasicestimate}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+    Besides the \cref{standinghypotheses}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
         \label{Ftcondition}
       |f(s, X_s, Y_s)| \leq F_t,
@@ -543,7 +545,7 @@ As for the second term, that just concerns the solution itself, not the approxim
 \end{proof}
 
 \begin{rmk}
-    A typical example that fits within the conditions of Lemma \ref{estimatesecondterminglobalerror} is when $f=f(t, x, y)$ has a power law growth of the form,
+    A typical example that fits within the conditions of \cref{estimatesecondterminglobalerror} is when $f=f(t, x, y)$ has a power law growth of the form,
     \[
       |f(t, x, y)| \leq C(1 + |x|^a + |y|^b), \qquad \forall\,(t, x, y) \in [0, T] \times \mathbb{R}\times\mathbb{R},
     \]
@@ -573,7 +575,7 @@ We also assume that $(t, y) \mapsto f(t, x, y)$ is twice continuously differenti
 \end{multline}
 for every fixed $x\in \mathbb{R}$.
 
-We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to Lemma \ref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
+We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to \cref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
 
 \begin{lem}
     \label{lemrewritenoiseterm}
@@ -652,7 +654,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 \end{lem}
 
 \begin{proof}
-    Taking the expectation of the absolute value of \eqref{rewritenoiseterm}, we see we need to estimate $\mathbb{E}[|I^1|]$ and $\mathbb{E}[|I^2|]$, defined in Lemma \ref{lemrewritenoiseterm}. The estimate of the first term is straightfoward and leads to
+    Taking the expectation of the absolute value of \eqref{rewritenoiseterm}, we see we need to estimate $\mathbb{E}[|I^1|]$ and $\mathbb{E}[|I^2|]$, defined in \cref{lemrewritenoiseterm}. The estimate of the first term is straightfoward and leads to
     \begin{align*}
         & \mathbb{E}[|I^1|] \leq \int_0^{t_j} |\tau^N(s) + \Delta t_N - s| \\
         & \qquad \qquad \left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right| \;\mathrm{d}s \\
@@ -671,7 +673,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 
 Gathering the conditions, we obtain the following result.
 \begin{lem}
-    Suppose $f=f(t, x, y)$ is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic} and that it is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that all the conditions in Lemma \ref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    Suppose $f=f(t, x, y)$ is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic} and that it is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that all the conditions in \cref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmitogeneralboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -679,7 +681,7 @@ Gathering the conditions, we obtain the following result.
     for a suitable constant $C \geq 0$
 \end{lem}
 
-The required conditions in Lemma \ref{lemestimatesforI1andI2} are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
+The required conditions in \cref{lemestimatesforI1andI2} are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
 
 \section{The case of a monotonic sample path bound}
 \label{secmonotonicbound}
@@ -689,7 +691,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, b
 More precisely, we have the following result:
 \begin{lem}
     \label{lemmonotonicbound}
-    Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and that, for all $0 \leq \tau \leq s \leq T$,
+    Besides the \cref{standinghypotheses}, suppose that, for all $0 \leq \tau \leq s \leq T$,
     \begin{equation}
       \label{monotonicbound}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
@@ -739,7 +741,7 @@ More precisely, we have the following result:
 
 \begin{thm}
   \label{thmmonotonicbound}
-  Suppose $f=f(t, x, y)$ satisfies the Carath\'eodory conditions in Section \ref{secpathwisesolution} and is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic}. Suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+  Under the \cref{standinghypotheses}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
       |f(s, X_s, Y_s)| \leq F_t,
     \end{equation}
@@ -765,11 +767,11 @@ More precisely, we have the following result:
 \end{thm}
 
 \begin{proof}
-  Under the supplied hypotheses, Proposition \ref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate. The second term is handled via Lemma \ref{estimatesecondterminglobalerror}. For the third term, we apply Lemma \ref{lemmonotonicbound} and use the estimate \eqref{intfboundbyG}. Putting the estimates together, we bound the global error by
+  Under the supplied hypotheses, \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate. The second term is handled via \cref{estimatesecondterminglobalerror}. For the third term, we apply \cref{lemmonotonicbound} and use the estimate \eqref{intfboundbyG}. Putting the estimates together, we bound the global error by
   \[
     |X_{t_j} - X_{t_j}^N| \leq \left( \int_0^{t_j} \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s + (G_t - G_0)\Delta t_N\right) e^{L_X t_j}.
   \]
-  Taking the expectation and using again Lemma \ref{estimatesecondterminglobalerror}, we find that
+  Taking the expectation and using again \cref{estimatesecondterminglobalerror}, we find that
   \begin{align*}
     \mathbb{E}\left[ |X_{t_j} - X_{t_j}^N|\right] & \leq \left( \frac{t_j}{2}K \Delta t_N + \mathbb{E}[(G_{t_j} - G_0)]\Delta t_N\right) e^{L_X t_j} \\
     & \leq \left( \frac{T}{2}K + \mathbb{E}[(G_{T} - G_0)]\right) e^{L_X T}\Delta t_N,
@@ -777,7 +779,7 @@ More precisely, we have the following result:
   where $K$ is given in \eqref{Kconstantinestimatesecondterminglobalerror}. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
 \end{proof}
 
-One typical case in which a bound such as that in Theorem \ref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}, in the sense of being of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$ with suitable functions $a=a(t, y), b=b(t, y)$, and $h=h(t, x)$. More precisely, we have the following result.
+One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}, in the sense of being of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$ with suitable functions $a=a(t, y), b=b(t, y)$, and $h=h(t, x)$. More precisely, we have the following result.
 
 \begin{thm}
   Suppose that $f=f(t, x, y)$ is of the form
