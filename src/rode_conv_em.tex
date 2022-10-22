@@ -24,6 +24,7 @@
 \newtheorem{cor}{Corollary}[section]
 \newtheorem{defs}{Definition}[section]
 \newtheorem{prob}{Problem}[section]
+\newtheorem{hyp}{Hypothesis}[section]
 \theoremstyle{definition}
 \newtheorem{rmk}{Remark}[section]
 \newtheorem{fact}{Fact}[section]
@@ -315,37 +316,47 @@ In order to make the main idea clear cut, here are the options we have for estim
 \section{Pathwise solution}
 \label{secpathwisesolution}
 
-We consider a function $f=f(t, x, y)$ defined on $[0, T]\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$.
+For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}.
 
-We assume that $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e.
-There exists $L_x > 0$ such that
-    \begin{equation}
-        \label{Lxassumptionbasic}
-        |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
-    \end{equation}
-We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the \emph{Carath\'eodory conditions.} More precisely, we assume that
-\begin{enumerate}
-    \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
-    \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
-    \item The bound $|f(t, x, Y_t)| \leq m(t, R)$ holds for all $t\in I$ and all $|x| \leq R$, where $t\mapsto m(t, R)$ is absolutely continuous on $t\in [0, T]$, for each $R>0$.
-\end{enumerate}
+\begin{hyp}[Standing Hypotheses I]
+    We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. We make the following standing hypotheses.
+    \begin{enumerate}
+        \item $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e. there exists $L_x > 0$ such that
+            \begin{equation}
+                \label{Lxassumptionbasic}
+                |f(t, x_1, y) - f(t, x_2, y)| \leq L_x |x_1 - x_2|, \qquad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
+            \end{equation}
+
+        \item We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the \emph{Carath\'eodory conditions.} More precisely, we assume that
+            \begin{enumerate}
+                \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
+                \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
+                \item The bound $|f(t, x, Y_t)| \leq M_t^{(0)} + M_t^{(1)}|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $t\mapsto M_t^{(0)}(\omega(t))$ and $t \mapsto M_t^{(1)}$ are  absolutely continuous on $t\in [0, T]$.
+            \end{enumerate}
+    \end{enumerate}
+\end{hyp}
 
 Under these assumptions, the integral equation
 \begin{equation}
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
-has a unique solution, for each sample $X_0 = X_0(\omega)$ of the initial condition and sample path $t\mapsto Y_t(\omega)$ of the noise process.
+has a unique solution, in the Lebesgue sense, for each realization $X_0 = X_0(\omega)$ of the initial condition and each sample path $t\mapsto Y_t(\omega)$ of the noise process, for $\omega\in \Omega$.
 
-The mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable since it can be seen as the pointwise limit of the Picard iterations
-\[
-X_t^n = X_0 + \int_0^t f(s, X_s^{n-1}, Y_s)\;\mathrm{d}s, \qquad n \in \mathbb{N}, \quad X_t^0 = X_0,
-\]
-which are, themselves, measurable.
-
-This yields a well-defined stochastic process $\{X_t\}_{t\in I}$ as a pathwise solution of the RODE \eqref{rodeeq}.
+The family of pathwise solutions, $(t, \omega) \mapsto X_t(\omega)$, is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
 When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral.
+
+Back to the more general case of the Carath\'eodory conditions, each sample path solution $t \mapsto X_t(\omega)$ is bounded by
+\[
+    |X_t| \leq \left(|X_0| + \int_0^T M_t^{(0)}\;\mathrm{d}t\right) e^{\int_0^t M_t^{(1)}\;\mathrm{d}t}.
+\]
+
+Notice the absolute continuity of the sample paths of $\{M_t^{(0)}\}_{t\in I}$ and $\{M_t^{(1)}\}_{t\in I}$ are not needed for this bound, but are required for the existence of sample paths solutions in the Carath\'eodory theory (see \cite[Theorem 2.3]{HanKloeden2017}).
+
+Moreover, the requirement that their sample paths be absolutely continuous is not a direct requirement on the regularity of the noise. They are just bounds. For instance, if the sample paths of the noise are just continuous, then, each sample path is uniformly bounded on the compact time interval $[0, T]$ and, hence, we can bound the sample path of the noise by the constant path given by the maximum $M(\omega) = \max_{t\in [0, T]}|Y_t(\omega)|$. If the noise is a renewal process, with sample paths with jump discontinuities, we can bound its sample paths by the piecewise linear paths joining the discontinuity values. And so on.
+
+For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. One common situation is when $\mathbb{E}[|X_0|] < \infty$, $\mathbb{E}[|M_t^{(0)}|] < \infty$ and $\sup_\omega |M_t^{(1)}| < \infty$. In special dissipative cases, depending on the structure of the equation, that might amount to only requiring $\mathbb{E}[|X_0|] < \infty$. Due to the diverse ways in which to control the solution, we leave further hypotheses to the applications.
 
 \section{Integral formula for the global pathwise error}
 
@@ -1181,8 +1192,7 @@ where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \t
 
 
 \begin{thebibliography}{25}
-
-
+  \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
 \end{thebibliography}
 
 \end{document}
