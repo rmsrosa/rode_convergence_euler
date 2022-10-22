@@ -233,11 +233,11 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
 \begin{equation}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$ (see \cite{}).
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
 Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, and when the equation is semi-separable and the noise is a point process.
 
@@ -1207,6 +1207,7 @@ where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \t
 
 \begin{thebibliography}{25}
   \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
+  \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 \end{thebibliography}
 
 \end{document}
