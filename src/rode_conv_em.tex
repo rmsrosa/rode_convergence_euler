@@ -331,7 +331,7 @@ For the notion and main results on pathwise solution for RODEs, we refer the rea
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
                 \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
-                \item The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where each sample path $t\mapsto M_t(\omega)$ is absolutely continuous on $t\in [0, T]$.
+                \item The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with each sample path $t\mapsto M_t(\omega)$ begin absolutely continuous on $t\in [0, T]$.
             \end{enumerate}
     \end{enumerate}
 \end{hyp}
@@ -341,7 +341,7 @@ Under these assumptions, the integral equation
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
-has a unique solution, in the Lebesgue sense, for each realization $X_0 = X_0(\omega)$ of the initial condition and each sample path $t\mapsto Y_t(\omega)$ of the noise process, for $\omega\in \Omega$.
+has a unique solution, in the Lebesgue sense, for each realization $X_0 = X_0(\omega)$ of the initial condition and each sample path $t\mapsto Y_t(\omega)$ of the noise process, where $\omega\in \Omega$.
 
 The family of pathwise solutions, $(t, \omega) \mapsto X_t(\omega)$, is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
@@ -349,7 +349,7 @@ When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly g
 
 Back to the more general case of the Carath\'eodory conditions, each sample path solution $t \mapsto X_t(\omega)$ is bounded by
 \[
-    |X_t| \leq \left(|X_0| + \int_0^T M_t\;\mathrm{d}t\right) e^{L_X t}.
+    |X_t| \leq \left(|X_0| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
 \]
 
 Notice the absolute continuity of the sample path of $\{M_t\}_{t\in I}$ is not needed for this bound, but is required for the existence of sample path solutions in the Carath\'eodory theory (see \cite[Theorem 2.3]{HanKloeden2017}).
@@ -358,11 +358,11 @@ Moreover, the requirement that its sample paths be absolutely continuous is not 
 
 For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. One common situation is when
 \[
-    \mathbb{E}[|X_0|] < \infty, \qquad \int_0^T \mathbb{E}[|M_t|] \;\mathrm{d}t < \infty,
+    \mathbb{E}[|X_0|] < \infty, \qquad \int_0^T \mathbb{E}[|M_s|] \;\mathrm{d}s < \infty,
 \]
 in which case
 \[
-    \mathbb{E}[|X_t|] \leq \left(\mathbb{E}[|X_0|] + \int_0^t \mathbb{E}[|M_t|]\;\mathrm{d}t\right) e^{L_X t}.
+    \mathbb{E}[|X_t|] \leq \left(\mathbb{E}[|X_0|] + \int_0^t \mathbb{E}[|M_s|]\;\mathrm{d}s\right) e^{L_X t}, \quad t\in I.
 \]
 
 In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition and only require
