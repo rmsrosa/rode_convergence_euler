@@ -206,7 +206,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, as well as to transport processes. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process or a transport process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
@@ -221,19 +221,17 @@ Consider the following initial value problem for a \textbf{random ordinary diffe
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process. The sample space is denoted by $\Omega$. We also treat systems of random ordinary equations, as discussed later in the article, but we start with the scalar case, in order to present the main ideas.
-
-The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t$, $j = 0, \ldots, N$, with fixed time step $\Delta t = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
+where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process. The sample space is denoted by $\Omega$. The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
 \begin{equation}
   \label{emscheme}
-  X_{t_j}^N = X_{t_{j-1}}^N + \Delta t f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
+  X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
 \end{equation}
 with the initial condition
 \begin{equation}
   \label{iccondition}
   X_0^N = X_0.
 \end{equation}
-Notice both $\Delta t = \Delta t_N = T/N$ and $t_j = t_j^N = j\Delta t_N = jT/N$ depend on $N$, but we sometimes do not make this dependency explicit, for the sake of notational simplicity.
+Notice both $\Delta t_N = T/N$ and $t_j = t_j^N = j\Delta t_N = jT/N$ depend on $N$, but we sometimes do not make this dependency explicit, for the sake of notational simplicity.
 
 When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
 \begin{equation}
@@ -288,28 +286,28 @@ We summarize here the main tricks we use to accomplish such error estimate:
   \item We use the It\^o formula to separate the most problematic/rough part of the noise;
   \item We do not estimate this problematic term locally at each time step;
   \item Instead, we add up the difference equation for the time steps and write the error in terms of a time integral of this rough part of the noise;
-  \item We then use the It\^o isometry to estimate this integral term by $\Delta t$;
+  \item We then use the It\^o isometry to estimate this integral term by $\Delta t_N$;
 \end{enumerate}
 
 In order to make the main idea clear cut, here are the options we have for estimating the rough part of the noise:
 \begin{enumerate}
   \item If the local error $e_j$ of the rough part of the noise, at the $j$th time step, is bounded as
     $$
-    \mathbb{E}[|e_j|] \lesssim \Delta t^{3/2},
+    \mathbb{E}[|e_j|] \lesssim \Delta t_N^{3/2},
     $$
     as usual for a $1/2$-H\"older noise, then adding them up leads to 
     $$
-      \sum \mathbb{E}[|e_j|] \lesssim N\Delta t^{3/2} = T\Delta t^{1/2}.
+      \sum \mathbb{E}[|e_j|] \lesssim N\Delta t_N^{3/2} = T\Delta t_N^{1/2}.
     $$
     \item If we use the It\^o isometry locally, we still get the local error as
     $$
-      \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t^{2(3/2)} \right)^{1/2} = \Delta t^{3/2},
+      \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t_N^{2(3/2)} \right)^{1/2} = \Delta t_N^{3/2},
     $$
-    and adding that up still leads to an error of order $\Delta t^{\theta}$.
+    and adding that up still leads to an error of order $\Delta t_N^{\theta}$.
     \item If, instead, we first add the terms up, then $\sum e_j$ becomes an integral over $[0, T]$ with respect to the Wiener noise, so that we can use the It\^o isometry on the added up term and obtain
     \begin{multline*}
       \mathbb{E}\left[ \left| \sum e_j \right| \right] \lesssim \left(\mathbb{E}\left[ \left| \sum e_j \right|^2 \right]\right)^{1/2} = \left( \sum \mathbb{E}[|e_j|^2] \right)^{1/2} \\
-      = \left( \sum \Delta t^3 \right)^{1/2} = \left( \Delta t^2 \right)^{1/2} = \Delta t.
+      = \left( \sum \Delta t_N^3 \right)^{1/2} = \left( \Delta t_N^2 \right)^{1/2} = \Delta t_N.
     \end{multline*}
     and we finally get the error to be of order 1.
 \end{enumerate}
@@ -396,7 +394,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-    Under the Carath\'eodory conditions, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t$.
+    Under the Carath\'eodory conditions, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
     $$
@@ -482,14 +480,14 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     again for any $t, s \in [0, T]$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_{\tau^N(s)} - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
-        \leq L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t.
+        \leq L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t_N.
     \end{multline*}
     
     With these two estimates, we bound \eqref{globalerrorintegralformula} as
     \begin{align*}
         |X_{t_j} - X_{t_j}^N| & \leq |X_0 - X_0^N| \\
         & \qquad + L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s  \\ 
-        & \qquad + L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t \\
+        & \qquad + L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t_N \\
         & \qquad + \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|.
     \end{align*}
     Using the discrete version of the Gronwall Lemma, we prove \eqref{Etjbasicbound}.
@@ -616,7 +614,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
         = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
     \end{multline*}
 
-    Thus, for $\tau = \Delta t$, $t = t_{j-1} = (j-1)\Delta t$, and $t + \tau = t_{j-1} + \Delta t_N = t_j$, we have
+    Thus, for $\tau = \Delta t_N$, $t = t_{j-1} = (j-1)\Delta t_N$, and $t + \tau = t_{j-1} + \Delta t_N = t_j$, we have
     \[
         \int_{t_j}^{t_{j+1}} \left(f(s, X_{t_j}^N, Y_s) - f(t, X_{t_j}^N, Y_t) \right)\;\mathrm{d}s = I_j^{1} + I_j^{2},
     \]
@@ -699,7 +697,7 @@ More precisely, we have the following result:
     where $\{G_t\}_{t\in I}$ is a real random process with monotonically non-decreasing sample paths. Then,
     \begin{equation}
       \label{intfboundbyG}
-        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t,
+        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t_N,
     \end{equation}
     for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
 \end{lem}
@@ -719,7 +717,7 @@ More precisely, we have the following result:
     \end{align*}
     Using the monotonicity,
     \[
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t.
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t_N.
     \]
     When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
     \[ 
@@ -727,13 +725,13 @@ More precisely, we have the following result:
     \]
     Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
     \begin{align*}
-        \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{\Delta t}^t G_{s-\Delta t}\;\mathrm{d}s \\
-        & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t} G_s\;\mathrm{d}s \\
-        & = \int_{t-\Delta t}^t G_s \;\mathrm{d}s - G_0\Delta t.
+        \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{\Delta t_N}^t G_{s-\Delta t_N}\;\mathrm{d}s \\
+        & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} G_s\;\mathrm{d}s \\
+        & = \int_{t-\Delta t_N}^t G_s \;\mathrm{d}s - G_0\Delta t_N.
     \end{align*}
     Using again the monotonicity yields
     \[ 
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t}^t G_t \;\mathrm{d}s - G_0\Delta t_N= (G_t - G_0)\Delta t.
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t G_t \;\mathrm{d}s - G_0\Delta t_N= (G_t - G_0)\Delta t_N.
     \]
 
     Putting the estimates together proves \eqref{intfboundbyG}.
@@ -779,7 +777,7 @@ More precisely, we have the following result:
   where $K$ is given in \eqref{Kconstantinestimatesecondterminglobalerror}. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
 \end{proof}
 
-One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}, in the sense of being of the form $f(t, x, y) = a(t, y)h(t, x) + b(t, y)$ with suitable functions $a=a(t, y), b=b(t, y)$, and $h=h(t, x)$. More precisely, we have the following result.
+One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}. More precisely, we have the following result.
 
 \begin{thm}
   Suppose that $f=f(t, x, y)$ is of the form
@@ -787,7 +785,7 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \label{lineareqform}
     f(t, x, y) = a(t, y)h(t, x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$, $h=(t, x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
+  where $a=a(t, y)$, $h=h(t, x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
   \[
     |a(t, Y_t)| \leq A_t, \quad |b(t, Y_t)| \leq B_t,
   \]
@@ -854,7 +852,7 @@ where the suprema are taken for $t\in [0, T]$ and for samples in all sample spac
 
 \subsection{A single step}
 
-Here we obtain an expression for a single time step which will be suitable for a proper estimate later on. For the sake of notational simplicity, we consider a single time step from a time $t$ to a time $t + \tau$. Later on we take $t=t_{j-1}$ and $\tau = \Delta t$, with $t_j = t_{j-1}+\Delta t$.
+Here we obtain an expression for a single time step which will be suitable for a proper estimate later on. For the sake of notational simplicity, we consider a single time step from a time $t$ to a time $t + \tau$. Later on we take $t=t_{j-1}$ and $\tau = \Delta t_N$, with $t_j = t_{j-1}+\Delta t_N$.
 
 The exact solution satisfies, for any $t, \tau \geq 0$, 
 $$
@@ -898,7 +896,7 @@ Using Fubini's Theorem, the last integral is rewritten as
   = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
 \end{multline}
 
-We rearrange these terms and write, for $\tau = \Delta t$ and $t = t_{j-1} = (j-1)\Delta t$,
+We rearrange these terms and write, for $\tau = \Delta t_N$ and $t = t_{j-1} = (j-1)\Delta t_N$,
 \begin{equation}
     \label{stepexpression}
     X_{t_j} - X_{t_j}^N  = X_{t_{j-1}} - X_{t_{j-1}}^N  + I_{j-1}^{1} + I_{j-1}^{2} + I_{j-1}^{3},
@@ -924,12 +922,12 @@ $$
 $$
 Hence,
 \begin{multline*}
-\left|  \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right) \;\mathrm{d}s \right| \leq   \int_{t_j}^{t_{j+1}} \left| f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right| \;\mathrm{d} s \\ \leq L_X |X_{t_j} - X_{t_j}^N| \Delta t.
+\left|  \int_{t_j}^{t_{j+1}} \left( f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right) \;\mathrm{d}s \right| \leq   \int_{t_j}^{t_{j+1}} \left| f(s, X_{t_j}, Y_s) - f(s, X_{t_j}^N, Y_s)  \right| \;\mathrm{d} s \\ \leq L_X |X_{t_j} - X_{t_j}^N| \Delta t_N.
 \end{multline*}
 This means
 \begin{equation}
 \label{I1estimate}
-\left| I_j^1 \right| \leq L_X |X_{t_j} - X_{t_j}^N| \Delta t.
+\left| I_j^1 \right| \leq L_X |X_{t_j} - X_{t_j}^N| \Delta t_N.
 \end{equation}
 
 For $I_j^2$, the first term is estimated as
@@ -939,7 +937,7 @@ $$
 This yields, upon integration,
 \begin{multline*}
 \left|  \int_{t_j}^{t_{j+1}} \left(f(s, X_s, Y_s) - f(s, X_{t_j}, Y_s) \right) \;\mathrm{d}s \right| \leq  \int_{t_j}^{t_{j+1}} \left| f(s, X_s, Y_s) - f(s, X_{t_j}, Y_s) \right| \;\mathrm{d} s \\
-\leq \frac{L_X M_f}{2} \Delta t^2.
+\leq \frac{L_X M_f}{2} \Delta t_N^2.
 \end{multline*}
 
 The double integral is estimated as
@@ -951,7 +949,7 @@ The double integral is estimated as
 Hence,
 \begin{equation}
 \label{I2estimate}
-\left| I_j^2 \right| \leq M\Delta t^2,
+\left| I_j^2 \right| \leq M\Delta t_N^2,
 \end{equation}
 where
 $$
@@ -987,8 +985,8 @@ We estimate the first moment as
 Using \eqref{I1estimate}, \eqref{I2estimate}, and \eqref{I3estimate}, we obtain
 \begin{multline}
 \label{iteratedestimate}
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_X \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right]\Delta t + \sum_{i=0}^{j-1} C\Delta t^2 + M_B L_Y t_j \Delta t \\
- \leq L_X \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_i} - X_{t_i}^N|\right]\Delta t + C_T \Delta t,
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_X \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right]\Delta t_N + \sum_{i=0}^{j-1} C\Delta t_N^2 + M_B L_Y t_j \Delta t_N \\
+ \leq L_X \sum_{i=0}^{j-1} \mathbb{E}\left[|X_{t_i} - X_{t_i}^N|\right]\Delta t_N + C_T \Delta t_N,
 \end{multline}
 where
 $$
@@ -997,23 +995,23 @@ $$
 
 Now, we show by induction that
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_X t_j}\Delta t .
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_X t_j}\Delta t_N .
 $$
 This is trivially true for $j=0$. Now suppose it is true up to $j-1$. It follows from \eqref{iteratedestimate} that
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_X \sum_{i=0}^{j-1} C_T \Delta t e^{L_X t_i}\Delta t + C_T \Delta t = C_T \Delta t\left( 1 + L_X \Delta t \sum_{i=0}^{j-1}  e^{L_X t_i} \right).
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq L_X \sum_{i=0}^{j-1} C_T \Delta t_N e^{L_X t_i}\Delta t_N + C_T \Delta t_N = C_T \Delta t_N\left( 1 + L_X \Delta t_N \sum_{i=0}^{j-1}  e^{L_X t_i} \right).
 $$
-Using that $1 + r \leq e^r$, with $r=L_X\Delta t$ and $t_i + \Delta t = t_{i+1}$, we see that
+Using that $1 + r \leq e^r$, with $r=L_X\Delta t_N$ and $t_i + \Delta t_N = t_{i+1}$, we see that
 $$
-L_X \Delta t \leq e^{L_X \Delta t} - 1,
+L_X \Delta t_N \leq e^{L_X \Delta t_N} - 1,
 $$
 which telescopes the sum and yields
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T \Delta t\left( 1 + (e^{L_X \Delta t} - 1)\sum_{i=0}^{j-1}  e^{L_X t_i} \right) = C_T \Delta t  \left(1 + (e^{L_X j\Delta t} - 1) \right).
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T \Delta t_N\left( 1 + (e^{L_X \Delta t_N} - 1)\sum_{i=0}^{j-1}  e^{L_X t_i} \right) = C_T \Delta t_N  \left(1 + (e^{L_X j\Delta t_N} - 1) \right).
 $$
 Hence,
 $$
- \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_X t_j}\Delta t ,
+ \mathbb{E}\left[| X_{t_j} - X_{t_j}^N |\right] \leq C_T e^{L_X t_j}\Delta t_N ,
 $$
 which completes the induction. Hence, we have proved the following result.
 
@@ -1021,7 +1019,7 @@ which completes the induction. Hence, we have proved the following result.
   \label{EMstrongorder1}
   Consider the initial value problem \eqref{rodeeq}, on a time interval $[0, T]$, with $T > 0$, and assume the noise is given by \eqref{itoprocess}, with \eqref{MAassumption} and \eqref{MBassumption}. Suppose $f=f(t, x, y)$ is twice continuously differentiable, with \eqref{Mfassumption}-\eqref{Lyyassumption}. Let $\{X_t\}_{t\geq 0}$ be the solution of \eqref{rodeeq}. Let $N\in \mathbb{N}$ and let $\{X_{t_j}^N\}_{j=0, \ldots, N}$ be the solution of the Euler-Maruyama method \eqref{emscheme}-\eqref{iccondition}. Then,
   \begin{equation}
-  \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C_T e^{L_X t_j} \Delta t, \qquad j = 0, \ldots, N, \;\forall N \in \mathbb{N},  \Delta t = \frac{T}{N},
+  \mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C_T e^{L_X t_j} \Delta t_N, \qquad j = 0, \ldots, N, \;\forall N \in \mathbb{N},  \Delta t_N = \frac{T}{N},
 \end{equation}
   where
   \begin{equation}
@@ -1172,7 +1170,7 @@ Using \eqref{Xtestimate}, we obtain
 
 \section*{Appendix}
 
-The heart of the matter is the following. Think of $\tau$ as the time-step $\Delta t$, but we use $\tau$ for simplicity. Let $g=g(t)$ be a $\theta$-H\"older continuous function, with H\"older constant $C$. Then, we can do the usual ``local''-type estimate
+The heart of the matter is the following. Think of $\tau$ as the time-step $\Delta t_N$, but we use $\tau$ for simplicity. Let $g=g(t)$ be a $\theta$-H\"older continuous function, with H\"older constant $C$. Then, we can do the usual ``local''-type estimate
 \begin{align*}
     \left|\int_0^T \left(g(t + \tau) - g(t) \right) \;\mathrm{d}t \right| & \leq \int_0^T \left|g(t + \tau) - g(t) \right| \;\mathrm{d}t \\
     & \leq C\int_0^T \tau^{\theta} \;\mathrm{d}t \\
