@@ -242,7 +242,7 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process.
+Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process or a transport process.
 
 More precisely, for the semi-separable case, we assume $f$ is of the form 
 \[
@@ -645,21 +645,26 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 \end{proof}
 
 Gathering the conditions, we obtain the following result.
-\begin{lem}
+\begin{thm}
+    \label{thmforItonoise}
     Suppose $f=f(t, x, y)$ is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic} and that it is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that all the conditions in \cref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmitogeneralboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
     for a suitable constant $C \geq 0$
-\end{lem}
+\end{thm}
 
-The required conditions in \cref{lemestimatesforI1andI2} are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
+The required conditions in \cref{thmforItonoise}, especially conditions \eqref{estimateforI1} and \eqref{estimateforI2} of \cref{lemestimatesforI1andI2}, are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
 
-\section{The case of a monotonic sample path bound}
+\begin{cor}
+    Yeah, corollaries are good.
+\end{cor}
+
+\section{The case of monotonic sample path bounds}
 \label{secmonotonicbound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical point processes, such as renewal-reward processes, Hawkes process, and such.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical point processes, such as renewal-reward processes, Hawkes process, and such.
 
 More precisely, we have the following result:
 \begin{lem}
