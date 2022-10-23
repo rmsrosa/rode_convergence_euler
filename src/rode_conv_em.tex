@@ -246,7 +246,7 @@ Our aim is to show that, in many classical examples, it is possible to exploit f
 
 More precisely, for the semi-separable case, we assume $f$ is of the form 
 \[
-    f(t, x, y) = a(t, y)h(t, x) + b(t, y).  
+    f(t, x, y) = a(t, y)h(x) + b(t, y).  
 \]
 In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded by a monotonic process, which typically happens for point processes, i.e.
 \[
@@ -764,15 +764,15 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
   Suppose that $f=f(t, x, y)$ is of the form
   \begin{equation}
     \label{lineareqform}
-    f(t, x, y) = a(t, y)h(t, x) + b(t, y),
+    f(t, x, y) = a(t, y)h(x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$, $h=h(t, x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
+  where $a=a(t, y)$, $h=h(x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
   \[
     |a(t, Y_t)| \leq A_t, \quad |b(t, Y_t)| \leq B_t,
   \]
   where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ are stochastic processes with monotonic non-decreasing sample paths. Suppose that
   \[
-    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[(\sup |h(t, X_t)|)] < \infty.
+    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[(\sup |h(X_t)|)] < \infty.
   \]
   Then, the Euler-Maruyama scheme is of strong order 1, i.e.
   \begin{equation}
@@ -780,6 +780,14 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
   \end{equation}
   for a suitable constant $C \geq 0$.
 \end{thm}
+
+\begin{proof}
+    We have
+    \begin{align*}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
+        & \leq (A_s - A_\tau)H_t + B_s - B_\tau
+    \end{align*}
+\end{proof}
 
 \begin{rmk}
     In many applications, it is possible to bound
@@ -1041,16 +1049,6 @@ with $e_0 = 0$, where $a, b > 0$. Then,
   $$
   which completes the induction.
 \end{proof}
-
-\section{Special cases}
-
-\subsection{Non-homogeneous term of bounded variation}
-
-Consider a RODE of the form
-\[
-\frac{\mathrm{d}X_t}{\mathrm{d}t} = g(t, Y_t, X_t) + h(t, Y_t),    
-\]
-where $g$ is globally Lipschitz and $t \mapsto h(t, Y_t)$ is of bounded variation.
 
 \section{Numerical examples}
 
