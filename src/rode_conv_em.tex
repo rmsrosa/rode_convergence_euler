@@ -221,7 +221,9 @@ Consider the following initial value problem for a \textbf{random ordinary diffe
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-where the noise $\{Y_t\}_{t\in I}$ is a real stochastic process. The sample space is denoted by $\Omega$. The Euler-Maruyama method for solving this initial value problem on the time interval $I = [0, T]$ consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
+on a time interval $I=[0, T]$, with $T > 0$, and where the noise $\{Y_t\}_{t\in I}$ is a given stochastic process. The sample space is denoted by $\Omega$.
+
+The Euler-Maruyama method for solving this initial value problem consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
 \begin{equation}
   \label{emscheme}
   X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
@@ -233,14 +235,14 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists $C > 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists a constant $C > 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, and when the equation is semi-separable and the noise is a point process.
+Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process.
 
 More precisely, for the semi-separable case, we assume $f$ is of the form 
 \[
@@ -248,11 +250,11 @@ More precisely, for the semi-separable case, we assume $f$ is of the form
 \]
 In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded by a monotonic process, which typically happens for point processes, i.e.
 \[
-a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq A_t, \quad a(t+\tau, Y_{t+\tau}) - a(t, Y_t) \leq B_t,
+|a(t+\tau, Y_{t+\tau}) - a(t, Y_t)| \leq A_t, \quad |b(t+\tau, Y_{t+\tau}) - b(t, Y_t)| \leq B_t,
 \]
 where $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ have monotonically non-decreasing sample paths. Under further suitable conditions (see \cref{thmsemiseparablemonotonicbound}), we show that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
 
-Even if the structure of the equation is not exactly semi-separable but it is somehow possible to bound the steps by a suitable process with monotonic non-decreasing sample paths, it is possible to prove the strong order 1 convergence (see \cref{thmmonotonicbound}).
+Even if the structure of the equation is not exactly semi-separable but it is somehow possible to bound the steps $|f(t+\tau, X_t, Y_{t+\tau}) - a(t, X_t, Y_t)|$ by a suitable process with monotonic non-decreasing sample paths, it is possible to prove the strong order 1 convergence (see \cref{thmmonotonicbound}).
 
 For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq}, with a noise defined as an \textbf{It\^o process} $\{Y_t\}_{t\geq 0}$, satisfying
 \begin{equation}
