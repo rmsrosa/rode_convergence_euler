@@ -323,9 +323,10 @@ The family of pathwise solutions, $(t, \omega) \mapsto X_t(\omega)$, is measurab
 When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral.
 
 Back to the more general case of the Carath\'eodory conditions, each sample path solution $t \mapsto X_t(\omega)$ is bounded by
-\[
+\begin{equation}
+    \label{XtboundLXMt}
     |X_t| \leq \left(|X_0| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
-\]
+\end{equation}
 
 Notice the absolute continuity of the sample path of $\{M_t\}_{t\in I}$ is not needed for this bound, but is required for the existence of sample path solutions in the Carath\'eodory theory (see \cite[Theorem 2.3]{HanKloeden2017}).
 
@@ -847,6 +848,65 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, exhibit a strong order one convergence.
 
+\subsection{Population dynamics}
+
+Our first example is the population dynamics model taken from \cite[Section 15.2]{HanKloeden2017}, given by
+\begin{equation}
+    \label{rodepopulationdynamics}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \lambda X_t (r - X_t)\cos(Y_t)
+\end{equation}
+where $\lambda, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is the Ornstein-Uhlenbeck process given by
+\[
+    \mathrm{d}Y_t = (\theta_1 - \theta_2 Y_t)\;\mathrm{d}t + \theta_3\;\mathrm{d}W_t,
+\]
+with $\theta_1, \theta_2, \theta_3 > 0$ constant and $\{W_t\}_{t\geq 0}$ being a standard Wiener process. We do not need to approximate the couple stochastic differential equation system for $(X_t, Y_t)$ since the Ornstein-Uhlenbeck process has an analytic solution, given by
+\[
+    Y_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(Y_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
+\]
+
+We suppose the initial condition is non-negative and bounded almost surely:
+\[
+    0 \leq X_0 \leq R,
+\]
+for some $R > r$. In this case, the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
+\[
+    0 \leq X_t \leq R,
+\]
+for all $t \geq 0$.
+
+The right hand side of \eqref{rodepopulationdynamics} is not globally Lipscthiz, but, since the solutions are bounded, we can consider, for the sake of analysis, the right hand side
+\[
+    f_R(t, x, y) = \begin{cases}
+        \lambda x (r - x)\cos(y), & x \leq R, \\
+        \lambda x \left(r - \frac{2Rx}{R + x}\right)\cos(y), & x > R,
+    \end{cases}
+\]
+so the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$, $R > r$, is equivalent to the RODE
+\begin{equation}
+    \label{rodepopulationdynamicstruncated}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = f_R(t, X_t, Y_t).
+\end{equation}
+
+The function $f_R=f_R(t, x, y)$ is continuous on all variables; is uniformly globally Lipschitz continuous on $x$; and satisfies the bound
+\[
+    |f_R(t, x, y)| \leq \lambda(r + R) |x|.
+\]
+Hence, the \cref{standinghypotheses} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
+\[
+    |X_t| \leq |X_0|e^{\lambda(r + R)t} \leq R e^{\lambda(r + R)T}, \qquad 0 \leq t \leq T.
+\]
+almost surely. 
+
+In particular,
+\[
+    \mathbb{E}[|Y_t|] \leq 
+\]
+
+
+
+
+
+
 \subsection{Drug delivery}
 
 \subsection{Earthquake model}
@@ -1224,8 +1284,10 @@ where we used that $(s/t)^\theta \geq (s/t)$, since $0 \leq s/t < 1$ and $0 < \t
 
 
 \begin{thebibliography}{25}
-  \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
-  \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
+    \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
+
+
+    \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
 \end{thebibliography}
 
 \end{document}
