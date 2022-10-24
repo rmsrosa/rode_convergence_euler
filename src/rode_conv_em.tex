@@ -850,18 +850,22 @@ In this section, we describe a few explicit examples that fall into one of the c
 
 \subsection{Population dynamics}
 
-Our first example is the population dynamics model taken from \cite[Section 15.2]{HanKloeden2017}, given by
+Our first example is the population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \lambda X_t (r - X_t)\cos(Y_t)
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \Lambda_t X_t (r - X_t)
 \end{equation}
-where $\lambda, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is the Ornstein-Uhlenbeck process given by
+where $r > 0$ is constant and the growth parameter $\{\Lambda_t\}_{t \geq}$ is a stochastic process given by
 \[
-    \mathrm{d}Y_t = (\theta_1 - \theta_2 Y_t)\;\mathrm{d}t + \theta_3\;\mathrm{d}W_t,
+    \Lambda_t = \lambda (1 + \varepsilon \sin(O_t)),
 \]
-with $\theta_1, \theta_2, \theta_3 > 0$ constant and $\{W_t\}_{t\geq 0}$ being a standard Wiener process. We do not need to approximate the couple stochastic differential equation system for $(X_t, Y_t)$ since the Ornstein-Uhlenbeck process has an analytic solution, given by
+where $0 < \varepsilon < 1$ and $\{O_t\}_{t \geq 0}$ is an Ornstein-Uhlenbeck process given by
 \[
-    Y_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(Y_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
+    \mathrm{d}O_t = (\theta_1 - \theta_2 O_t)\;\mathrm{d}t + \theta_3\;\mathrm{d}W_t,
+\]
+with $\theta_1, \theta_2, \theta_3 > 0$ constant and $\{W_t\}_{t\geq 0}$ being a standard Wiener process. We do not need to approximate the coupled stochastic differential equation system for $(X_t, O_t)$ since the Ornstein-Uhlenbeck process has an analytic solution, given by
+\[
+    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
 \]
 
 We suppose the initial condition is non-negative and bounded almost surely:
@@ -872,19 +876,22 @@ for some $R > r$. In this case, the pathwise solutions of \eqref{rodepopulationd
 \[
     0 \leq X_t \leq R,
 \]
-for all $t \geq 0$.
-
-The right hand side of \eqref{rodepopulationdynamics} is not globally Lipscthiz, but, since the solutions are bounded, we can consider, for the sake of analysis, the right hand side
+for all $t \geq 0$. The noise process $\{\Lambda_t\}_{t \geq 0}$ itself satisfies
 \[
-    f_R(t, x, y) = \begin{cases}
-        \lambda x (r - x)\cos(y), & x \leq R, \\
-        \lambda x \left(r - \frac{2Rx}{R + x}\right)\cos(y), & x > R,
+    0 < \lambda - \varepsilon \leq \Lambda_t \leq \lambda + \varepsilon, \qquad \forall t \geq 0.
+\]
+
+The right hand side of \eqref{rodepopulationdynamics} is not globally Lipschitz, but, since the solutions are bounded, we can consider, for the sake of analysis, the right hand side
+\[
+    f_R(t, x, \lambda) = \begin{cases}
+        \lambda x (r - x), & x \leq R, \\
+        \lambda x \left(r - \frac{2Rx}{R + x}\right), & x > R,
     \end{cases}
 \]
 so the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$, $R > r$, is equivalent to the RODE
 \begin{equation}
     \label{rodepopulationdynamicstruncated}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = f_R(t, X_t, Y_t).
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = f_R(t, X_t, \Lambda_t).
 \end{equation}
 
 The function $f_R=f_R(t, x, y)$ is continuous on all variables; is uniformly globally Lipschitz continuous on $x$; and satisfies the bound
