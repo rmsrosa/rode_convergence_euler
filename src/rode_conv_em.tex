@@ -206,7 +206,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Orstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, as well as to transport processes. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process or a transport process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, as well as to transport processes. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process or a transport process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
 \end{abstract}
 
 \maketitle
@@ -260,7 +260,7 @@ For the It\^o noise case, we consider a general equation of the form \eqref{rode
 \begin{equation}
   \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
 \end{equation}
-We are not solving for $Y_t$, nor approximating it numerically, otherwise we would actually need to consider a system of stochastic differential equations. Instead, we assume it is a known process that can be computed analytically, such as a Wiener process, an Orstein-Uhlenbeck process, or a geometric Brownian motion. With those in mind, $A_t$ and $B_t$ may be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\in I}$, but the general assumption is only given in terms of $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$.
+We are not solving for $Y_t$, nor approximating it numerically, otherwise we would actually need to consider a system of stochastic differential equations. Instead, we assume it is a known process that can be computed analytically, such as a Wiener process, an Ornstein-Uhlenbeck process, or a geometric Brownian motion. With those in mind, $A_t$ and $B_t$ may be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\in I}$, but the general assumption is only given in terms of $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$.
 
 In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula applies and we show, under suitable conditions on $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and the derivatives of $f$, that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
 
@@ -535,7 +535,7 @@ Here, we assume the noise $\{Y_t\}_{t\in I}$ is an \textbf{It\^o process}, i.e. 
   \label{itoprocess}
   \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
 \end{equation}
-where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \in I}$ and $\{B_t\}_{t \in I}$ are stochastic processes adapted to $\{W_t\}_{t\geq 0}$. As mentioned in the Introduction, we are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, with analytic solution to be used in the Euler-Maruyama approximation of \eqref{rodeeq}. In theory, $A_t$ and $B_t$ are allowed to be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be a Wiener process, an Orstein-Uhlenbeck process or a geometric Brownian process. At this point, we only assume that $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ satisfy
+where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \in I}$ and $\{B_t\}_{t \in I}$ are stochastic processes adapted to $\{W_t\}_{t\geq 0}$. As mentioned in the Introduction, we are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, with analytic solution to be used in the Euler-Maruyama approximation of \eqref{rodeeq}. In theory, $A_t$ and $B_t$ are allowed to be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be a Wiener process, an Ornstein-Uhlenbeck process or a geometric Brownian process. At this point, we only assume that $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ satisfy
 \begin{equation}
     \label{EAtEBtbound}
     \mathbb{E}[|A_t|] \leq M_A, \quad \mathbb{E}[|B_t|] \leq M_B, \qquad \forall t \in [0, T].
@@ -661,9 +661,44 @@ The required conditions in \cref{thmforItonoise}, especially conditions \eqref{e
     Yeah, corollaries are good.
 \end{cor}
 
-\begin{cor}
-    Suppose the noise $\{Y_t\}_{t\in I}$ is a Wiener process and 
-\end{cor}
+\begin{rmk}
+    When the noise $\{Y_t\}_{t\in I}$ is a Wiener process, then $A_t = 0$ and $B_t = 1$ and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
+    \begin{equation}
+        K_1 = \int_0^{T}
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \frac{1}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s
+        < \infty
+    \end{equation}
+    and
+    \begin{equation}
+        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
+    \end{equation}
+\end{rmk}
+
+\begin{rmk}
+    When the noise $\{Y_t\}_{t\in I}$ is a Ornstein-Uhlenbeck process, then $A_t = -\nu Y_t$ and $B_t = \sigma$, for $\nu\in \mathbb{R}$, $\sigma > 0$, and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
+    \begin{multline}
+        K_1 = \int_0^{T}
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) -\nu \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{\sigma^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s \\
+        < \infty
+    \end{multline}
+    and
+    \begin{equation}
+        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\sigma \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
+    \end{equation}
+\end{rmk}
+
+\begin{rmk}
+    When the noise $\{Y_t\}_{t\in I}$ is a geometric Brownian motion process, then $A_t = \mu  Y_t$ and $B_t = \sigma Y_t$, for $\mu\in \mathbb{R}$, $\sigma > 0$, and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
+    \begin{multline}
+        K_1 = \int_0^{T}
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \mu Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{\sigma^2 Y_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s \\
+        < \infty
+    \end{multline}
+    and
+    \begin{equation}
+        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\sigma Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
+    \end{equation}
+\end{rmk}
 
 \section{The case of monotonic sample path bounds}
 \label{secmonotonicbound}
