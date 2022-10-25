@@ -569,6 +569,42 @@ for every fixed $x\in \mathbb{R}$.
 We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to \cref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
 
 \begin{lem}
+  Control the steps...
+\end{lem}
+
+\begin{proof}
+    We use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq \tau < s \leq T$,
+    \begin{multline*}
+        f(s, X_\tau^N, Y_s) - f(\tau, X_\tau^N, Y_\tau) = Z_s - Z_\tau = \int_\tau^s \mathrm{d}Z_\xi \;\mathrm{d}\xi \\
+        = \int_\tau^s \partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi)  \;\mathrm{d}\xi \\
+        + \int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi.
+    \end{multline*}
+    Taking the expectation of the absolute value we see that
+    \begin{multline*}
+        \mathbb{E}[|f(s, X_\tau^N, Y_s) - f(\tau, X_\tau^N, Y_\tau)|] \\
+        \leq \int_\tau^s \mathbb{E}\left[\left|\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi)\right|\right] \;\mathrm{d}\xi \\
+        + \mathbb{E}\left[\left|\int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\right|\right].
+    \end{multline*}
+    Using the Lyapunov inequality, we have
+    \[
+        \mathbb{E}\left[\left|\int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\right|\right] \\
+        \leq \left(\mathbb{E}\left[\left(\int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\right)^{2}\right]\right)^2
+    \]
+    By the It\^o isometry,
+    \[
+        \mathbb{E}\left[\left(\int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\right)^{2}\right] = \int_\tau^s \mathbb{E}\left[\left(B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\right)^2\right]\;\mathrm{d}\xi
+    \]
+    Therefore,
+    \begin{multline*}
+        \mathbb{E}[|f(s, X_\tau^N, Y_s) - f(\tau, X_\tau^N, Y_\tau)|] \\ \leq \int_\tau^s \mathbb{E}\left[\left|\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi) + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi)\right|\right] \;\mathrm{d}\xi \\ + \left( \int_\tau^s \mathbb{E}\left[\left(B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\right)^2\right]\;\mathrm{d}\xi \right)^{1/2}.
+    \end{multline*}
+    %\begin{multine*}
+    %    \mathbb{E}\left[\left|\int_\tau^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\right|\right] \\
+    %    \leq \left(\int_\tau^s \mathbb{E}\left[\left(B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\right)^2\right]\;\mathrm{d}\xi\right)^{1/2}
+    %\end{multline*}
+\end{proof}
+
+\begin{lem}
     \label{lemrewritenoiseterm}
     Under the \cref{standinghypotheses2}, the bound
     \begin{equation}
