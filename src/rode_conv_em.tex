@@ -290,7 +290,9 @@ In order to make the main idea clear cut, here are the options we have for estim
 \section{Pathwise solution}
 \label{secpathwisesolution}
 
-For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. Our starting point is the following set of standing hypotheses, which imply that the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq}, in the sense of Carath\'eodory.
+For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We consider two sets of hypotheses, \cref{standinghypotheses1} and \cref{standinghypotheses2}, each suitable to one of the two main cases we consider, namely the case in which the steps are bounded by processes with monotonic bounds and the case with It\^o type noises.
+
+We start with the following hypotheses, which imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory.
 
 \begin{stdhyp}
     \label{standinghypotheses1}
@@ -356,6 +358,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
     \begin{enumerate}
         \item $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, in the sense of \eqref{Lxassumptionbasic}, with constant $L_X > 0$.
         \item $f = f(t, x, y)$ is continuous on $I\times \mathbb{R}\times \mathbb{R}$.
+        \item For each $x\in \mathbb{R}$, the map $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable on $I\times \mathbb{R}$.
         \item The sample paths $t\mapsto Y_t(\omega)$ of the noise process are continuous on $I$.
         \item The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with each sample path $t\mapsto M_t(\omega)$ being integrable on $t\in [0, T]$.
     \end{enumerate}
@@ -566,12 +569,12 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 
 \begin{lem}
     \label{lemrewritenoiseterm}
-    Suppose $f=f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for each $(t, y)\in [0, T]\times \mathbb{R}$ and is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Then,
+    Under the \cref{standinghypotheses2}, the bound
     \begin{equation}
         \label{rewritenoiseterm}
         \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = I^1 + I^2,
     \end{equation}
-    for each $j = 0, 1, \ldots, N$, where
+    holds for each $j = 0, 1, \ldots, N$, where
     \begin{multline*}
         I^1 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) \\
         \left(\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right) \;\mathrm{d}s
@@ -620,7 +623,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 
 \begin{lem}
     \label{lemestimatesforI1andI2}
-    Suppose $f=f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for each $(t, y)\in [0, T]\times \mathbb{R}$ and is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that
+    Under the \cref{standinghypotheses2}, suppose, moreover, that
     \begin{equation}
         \label{estimateforI1}
         \begin{aligned}
@@ -662,7 +665,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 Gathering the conditions, we obtain the following result.
 \begin{thm}
     \label{thmforItonoise}
-    Suppose $f=f(t, x, y)$ is uniformly globally Lipschitz continuous on $x$ with Lipschitz constant $L_X$, as in \eqref{Lxassumptionbasic} and that it is twice continuously differentiable on $(t, y)\in [0, T]\times \mathbb{R}$, for each $x\in \mathbb{R}$. Suppose, moreover, that all the conditions in \cref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    Under the \cref{standinghypotheses2}, suppose, moreover, that all the conditions in \cref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmitogeneralboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
