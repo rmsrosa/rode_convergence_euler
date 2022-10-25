@@ -346,9 +346,9 @@ In special \emph{dissipative} cases, depending on the structure of the equation,
     \mathbb{E}[|X_0|] < \infty.
 \]
 
-Due to the diverse ways in which to control the solution, we leave further hypotheses to the applications.
+Due to the diverse ways in which to control the solution, we leave further estimates to the applications.
 
-When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral. In this case, the existence and uniqueness of pathwise solutions of \eqref{rodeeq} holds in the classical sense and the estimate \eqref{XtboundLXMt} is still valid when the sample paths of $\{M_t\}_{t\in I}$ are integrable.
+When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the classical sense and the estimate \eqref{XtboundLXMt} is still valid, provided the sample paths of $\{M_t\}_{t\in I}$ are at leat integrable.
 
 This setting is assumed in the analysis of the case of It\^o noise. With that in mind, we define, more precisely, a second set of standing hypotheses.
 
@@ -368,7 +368,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    Under the \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -386,7 +386,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-    Under the Carath\'eodory conditions, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
+    In either case, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
     $$
@@ -444,7 +444,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
+    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
@@ -497,7 +497,7 @@ As for the second term, that just concerns the solution itself, not the approxim
 
 \begin{lem}
     \label{estimatesecondterminglobalerror}
-    Besides the \cref{standinghypotheses1}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
     \begin{equation}
         \label{Ftcondition}
       |f(s, X_s, Y_s)| \leq F_t,
@@ -509,6 +509,7 @@ As for the second term, that just concerns the solution itself, not the approxim
     \end{equation}
     If, moreover,
     \begin{equation}
+        \label{averageFtestimate}
         \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty,
     \end{equation}
     then
@@ -665,7 +666,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 Gathering the conditions, we obtain the following result.
 \begin{thm}
     \label{thmforItonoise}
-    Under the \cref{standinghypotheses2}, suppose, moreover, that all the conditions in \cref{estimatesecondterminglobalerror} hold and that \eqref{estimateforI1} and \eqref{estimateforI2} also hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    Under the \cref{standinghypotheses2}, suppose, moreover, that \eqref{Ftcondition}, \eqref{averageFtestimate}, \eqref{estimateforI1} and \eqref{estimateforI2} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmitogeneralboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -825,11 +826,11 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
   \end{equation}
   where $a=a(t, y)$, $h=h(x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
   \[
-    |a(t, Y_t)| \leq A_t, \quad |b(t, Y_t)| \leq B_t,
+    |a(s, Y_s) - a(\tau, Y_\tau)| \leq A_s - A_\tau, \quad |b(s, Y_s) - b(\tau, Y_\tau)| \leq B_s - B_\tau, \quad |h(X_t)| \leq H_t,
   \]
-  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ are stochastic processes with monotonic non-decreasing sample paths. Suppose that
+  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and $\{H_t\}_{t\in I}$ are nonnegative stochastic processes with monotonic non-decreasing sample paths. Suppose that
   \[
-    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[(\sup |h(X_t)|)] < \infty.
+    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[H_t] < \infty.
   \]
   Then, the Euler-Maruyama scheme is of strong order 1, i.e.
   \begin{equation}
@@ -842,8 +843,15 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     We have
     \begin{align*}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
-        & \leq (A_s - A_\tau)H_t + B_s - B_\tau
+        & \leq (A_s - A_\tau)H_\tau + B_s - B_\tau \\
+        & \leq A_sH_s - A_\tau H_\tau + B_s - B_\tau \\
+        & = G_s - G_\tau,
     \end{align*}
+    for $G_t = A_tH_t$. Notice $\{G_t\}_{t\geq 0}$ also has nondecreasing monotonic sample paths, and with
+    \[
+        \mathbb{E}[G_T - G_0] < \infty.
+    \]
+    Thus, \cref{thmmonotonicbound} applies and the strong order 1 convergence holds.
 \end{proof}
 
 \begin{rmk}
