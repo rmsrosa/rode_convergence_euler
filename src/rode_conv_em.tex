@@ -530,6 +530,54 @@ As for the second term, that just concerns the solution itself, not the approxim
       \left|X_s - X_{\tau^N(s)}\right| & = \left|\int_{\tau^N(s)}^s f(\sigma, X_\sigma, Y_\sigma)\;\mathrm{d}\sigma\right| \\
       & \leq \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma.
     \end{align*}
+    Integrating over $[0, t_j]$ and using integration by parts
+    \begin{align*}
+        \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s & \leq \int_0^{t_j}\int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s \\
+        & = \int_0^{t_j}\int_\sigma^{\tau^N(\sigma) + \Delta t_N} F_\sigma \;\mathrm{d}s \;\mathrm{d}\sigma \\
+        & =  \int_0^{t_j} (\tau^N(\sigma) + \Delta t_N - \sigma) F_\sigma \;\mathrm{d}\sigma.
+    \end{align*}
+
+    Taking the expectation we find
+    \begin{align*}
+        \mathbb{E}\left[\left|\int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s\right|\right] & \leq \Delta t_N \int_0^{t_j} \mathbb{E}[|F_\sigma|]\;\mathrm{d}\sigma.
+    \end{align*}
+\end{proof}
+
+\begin{lem}
+    \label{estimatesecondterminglobalerror}
+    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+    \begin{equation}
+        \label{Ftcondition}
+      |f(s, X_s, Y_s)| \leq F_t,
+    \end{equation}
+    where $\{F_t\}_{t\in I}$ is a real random process. Then,
+    \begin{equation}
+        \label{estimatesecondterminglobalerrorintegral}
+        \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s \leq \int_0^{t_j} \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s.
+    \end{equation}
+    If, moreover,
+    \begin{equation}
+        \label{averageFtestimate}
+        \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty,
+    \end{equation}
+    then
+    \begin{equation}
+        \label{expectedestimatesecondterminglobalerrorintegral}
+        \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq K \Delta t_N,
+    \end{equation}
+    where
+    \begin{equation}
+      \label{Kconstantinestimatesecondterminglobalerror}
+        K = T\sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s
+    \end{equation}
+\end{lem}
+
+\begin{proof}
+    Since $s - \tau^N(s) \leq \Delta t_N$ and using the control on $s \mapsto f(s, X_s, Y_s)$, we observe that
+    \begin{align*}
+      \left|X_s - X_{\tau^N(s)}\right| & = \left|\int_{\tau^N(s)}^s f(\sigma, X_\sigma, Y_\sigma)\;\mathrm{d}\sigma\right| \\
+      & \leq \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma.
+    \end{align*}
     This implies \eqref{estimatesecondterminglobalerrorintegral}.
 
     Taking the expectation in \eqref{estimatesecondterminglobalerrorintegral} and using the assumption of $\{F_t\}_{t\in I}$ yields \eqref{expectedestimatesecondterminglobalerrorintegral}.
