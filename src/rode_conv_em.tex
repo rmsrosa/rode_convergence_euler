@@ -476,7 +476,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
         \left|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s.
     $$
     
-    For the second term, we use again \eqref{Lxassumption}, so that
+    For the second term, we use again \eqref{Lxassumptionbasic}, so that
     $$
         |f(s, X_t, Y_s) - f(s, X_t^N, Y_s)| \leq L_X |X_t - X_t^N|,
     $$
@@ -496,7 +496,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     Using the discrete version of the Gronwall Lemma, we prove \eqref{Etjbasicbound}.
 \end{proof}
 
-The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ of order $\Delta t_N$, which is useful for lower order approximations or for the discretization of random partial differential equations.
+The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to order $\Delta t_N$, which is useful for lower order approximations or for the discretization of (random) partial differential equations.
 
 The third term in \eqref{Etjbasicbound} is the more delicate one that will be handled differently in the next sections.
 
@@ -560,13 +560,12 @@ Combining the two previous results we obtain
 \end{prop}
 
 \begin{proof}
-    \cref{lembasicestimate} and \cref{estimatesecondterminglobalerror}.
-
-    Applying \eqref{EX0condition} and \eqref{EMcondition} to the estimate \eqref{estimatesecondterminglobalerrorintegral} of \cref{estimatesecondterminglobalerror} yields
+    Under \cref{standinghypotheses1}, \cref{estimatesecondterminglobalerror} applies and estimate \eqref{estimatesecondterminglobalerrorintegral} holds.
+    Using \eqref{EX0condition} and \eqref{EMcondition}, that estimate yields
     \[
         \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[|X_s|]) \;\mathrm{d}s.
     \]
-    Using \eqref{XtboundLXMt}, we obtain
+    Using now \eqref{XtboundLXMt}, we obtain
     \begin{align*}
         \int_0^{t_j} & \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \\
         & \leq \Delta t_N \int_0^{t_j} \left(\mathbb{E}[M_s] + L_X\left(\mathbb{E}[|X_0|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \right)\;\mathrm{d}s \\
@@ -578,13 +577,13 @@ Combining the two previous results we obtain
         \label{expectedestimatesecondterminglobalerrorintegral}
         \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N\left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
     \end{equation}
-    Taking the expectation of the global error formula \eqref{Etjbasicbound} gives us
+
+    Now we turn our attention to \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} gives
     \begin{multline*}
         \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( \mathbb{E}\left[|X_0 - X_0^N|\right] + L_X \int_0^{t_j} \mathbb{E}\left[|X_s - X_{\tau^N(s)}|\right] \;\mathrm{d}s \right. \\
         \left. \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]\right) e^{L_X t_j}.
     \end{multline*}
-    Using estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N} proves \eqref{expectedestimateglobalerrorintegral}.
-    
+    Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, which completes the proof.
 \end{proof}
 
 \section{The case of monotonic sample path bounds}
