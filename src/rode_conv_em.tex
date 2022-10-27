@@ -357,6 +357,11 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
         \item $f = f(t, x, y)$ is continuous on $I\times \mathbb{R}\times \mathbb{R}$.
         \item For each $x\in \mathbb{R}$, the map $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable on $I\times \mathbb{R}$.
         \item The sample paths $t\mapsto Y_t(\omega)$ of the noise process are continuous on $I$.
+        \item The noise process $\{Y_t\}_{t\in I}$ is an It\^o noise in the sense of satisfying
+        \begin{equation}
+            \mathrm{d}Y_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
+        \end{equation}
+        where $\{W_t\}_{t\geq 0}$ is a standard Wiener process and $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ are stochastic processes adapted to $\{W_t\}_{t\geq 0}$.
     \end{enumerate}
 \end{stdhyp}
 
@@ -364,7 +369,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under the \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -440,7 +445,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, the global error \eqref{globalerrorintegralformula} is estimated as
+    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
@@ -493,7 +498,7 @@ As for the second term, that just concerns the solution itself, not the approxim
 
 \begin{lem}
     \label{estimatesecondterminglobalerror}
-    Under either the \cref{standinghypotheses1} or the \cref{standinghypotheses2}, it follows that
+    Under the \cref{standinghypotheses1}, it follows that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (M_s + L_X|X_s|) \;\mathrm{d}s.
