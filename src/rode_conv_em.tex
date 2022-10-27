@@ -313,22 +313,18 @@ We start with the following hypotheses, which imply the existence and uniqueness
     \end{enumerate}
 \end{stdhyp}
 
-Under these assumptions, the integral equation
+Under these assumptions, for each sample $\omega\in\Omega$, the integral equation
 \begin{equation}
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
-has a unique solution, in the Lebesgue sense, for each realization $X_0 = X_0(\omega)$ of the initial condition and each sample path $t\mapsto Y_t(\omega)$ of the noise process, where $\omega\in \Omega$ (see \cite[Theorem 1.1]{CoddingtonLevinson1985}).
-
-The family of pathwise solutions, $(t, \omega) \mapsto X_t(\omega)$, is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
+has a unique solution, in the Lebesgue sense, for the realization $X_0 = X_0(\omega)$ of the initial condition and the sample path $t\mapsto Y_t(\omega)$ of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
 Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
 \begin{equation}
     \label{XtboundLXMt}
     |X_t| \leq \left(|X_0| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
 \end{equation}
-
-Notice the absolute continuity of the sample path of $\{M_t\}_{t\in I}$ is not needed for this bound, but is required for the existence of sample path solutions in the Carath\'eodory theory (see \cite[Theorem 2.3]{HanKloeden2017}).
 
 For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. One common situation is when
 \[
@@ -346,7 +342,7 @@ In special \emph{dissipative} cases, depending on the structure of the equation,
 
 Due to the diverse ways in which to control the solution, we leave further estimates to the applications.
 
-When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous on $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous on $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense and the estimate \eqref{XtboundLXMt} is still valid.
+When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense and the estimate \eqref{XtboundLXMt} is still valid.
 
 This setting is assumed in the analysis of the case of It\^o noise. With that in mind, we define, more precisely, a second set of standing hypotheses.
 
@@ -536,15 +532,154 @@ As for the second term, that just concerns the solution itself, not the approxim
     Taking the expectation of both sides of \eqref{estimatesecondterminglobalerrorintegral} and using \eqref{XtboundLXMt} and \eqref{X0EMsconditions} we find \eqref{expectedestimatesecondterminglobalerrorintegral}.
 \end{proof}
 
+\section{The case of monotonic sample path bounds}
+\label{secmonotonicbound}
+
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well with the typical case of point processes, such as renewal-reward processes, Hawkes process, and such.
+
+More precisely, we have the following result:
+\begin{lem}
+    \label{lemmonotonicbound}
+    Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
+    \begin{equation}
+      \label{monotonicbound}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
+    \end{equation}
+    where $\{G_t\}_{t\in I}$ is a real random process with monotonically non-decreasing sample paths. Then,
+    \begin{equation}
+      \label{intfboundbyG}
+        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t_N,
+    \end{equation}
+    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
+\end{lem}
+
+\begin{proof}
+    Let $N\in \mathbb{R}$. From the assumption \eqref{monotonicbound} we have
+    \[
+        |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq G_s - G_{\tau^N(s)},
+    \]
+    for every $0\leq s \leq T$. Thus, upon integration,
+    \[
+        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s.
+    \]
+    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
+    \begin{align*}
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & = \int_0^t (G_s - G_0) \;\mathrm{d}s.
+    \end{align*}
+    Using the monotonicity,
+    \[
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t_N.
+    \]
+    When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
+    \[ 
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s = \int_0^t G_s \;\mathrm{d}s - \int_0^{t_1} G_{\tau^N(s)}\;\mathrm{d}s - \int_{t_1}^t G_{\tau^N(s)}\;\mathrm{d}s
+    \]
+    Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
+    \begin{align*}
+        \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{\Delta t_N}^t G_{s-\Delta t_N}\;\mathrm{d}s \\
+        & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} G_s\;\mathrm{d}s \\
+        & = \int_{t-\Delta t_N}^t G_s \;\mathrm{d}s - G_0\Delta t_N.
+    \end{align*}
+    Using again the monotonicity yields
+    \[ 
+      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t G_t \;\mathrm{d}s - G_0\Delta t_N= (G_t - G_0)\Delta t_N.
+    \]
+
+    Putting the estimates together proves \eqref{intfboundbyG}.
+\end{proof}
+
+\begin{thm}
+  \label{thmmonotonicbound}
+  Under the \cref{standinghypotheses1}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
+    \begin{equation}
+      |f(s, X_s, Y_s)| \leq F_t,
+    \end{equation}
+    and
+    \begin{equation}
+      \label{thmhypmonotonicbound}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
+    \end{equation}
+    where $\{F_t\}_{t\in I}$ and $\{G_t\}_{t\in I}$ are real random process with $\{G_t\}_{t\in I}$ having monotonically non-decreasing sample paths. Assume, finally, that
+    \[
+        \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty, \qquad \mathbb{E}[(G_T - G_0)] < \infty.
+    \]
+    Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \begin{equation}
+      \label{thmmonotonicboundstrongorder}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a constant $C \geq 0$ given by
+    \begin{equation}
+      \label{thmmonotonicboundconstant}
+      C = \left(\frac{T}{2}\sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s + \mathbb{E}[(G_{T} - G_0)] \right)e^{L_X T}.
+    \end{equation}
+\end{thm}
+
+\begin{proof}
+  Under the supplied hypotheses, \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate. The second term is handled via \cref{estimatesecondterminglobalerror}. For the third term, we apply \cref{lemmonotonicbound} and use the estimate \eqref{intfboundbyG}. Putting the estimates together, we bound the global error by
+  \[
+    |X_{t_j} - X_{t_j}^N| \leq \left( \int_0^{t_j} \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s + (G_t - G_0)\Delta t_N\right) e^{L_X t_j}.
+  \]
+  Taking the expectation and using again \cref{estimatesecondterminglobalerror}, we find that
+  \begin{align*}
+    \mathbb{E}\left[ |X_{t_j} - X_{t_j}^N|\right] & \leq \left( \frac{t_j}{2}K \Delta t_N + \mathbb{E}[(G_{t_j} - G_0)]\Delta t_N\right) e^{L_X t_j} \\
+    & \leq \left( \frac{T}{2}K + \mathbb{E}[(G_{T} - G_0)]\right) e^{L_X T}\Delta t_N,
+  \end{align*}
+  where $K$ is given in \eqref{Kconstantinestimatesecondterminglobalerror}. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
+\end{proof}
+
+One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}. More precisely, we have the following result.
+
+\begin{cor}
+    \label{thmsemiseparablemonotonicbound}
+  Suppose that $f=f(t, x, y)$ is of the form
+  \begin{equation}
+    \label{lineareqform}
+    f(t, x, y) = a(t, y)h(x) + b(t, y),
+  \end{equation}
+  where $a=a(t, y)$, $h=h(x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
+  \[
+    |a(s, Y_s) - a(\tau, Y_\tau)| \leq A_s - A_\tau, \quad |b(s, Y_s) - b(\tau, Y_\tau)| \leq B_s - B_\tau, \quad |h(X_t)| \leq H_t,
+  \]
+  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and $\{H_t\}_{t\in I}$ are nonnegative stochastic processes with monotonic non-decreasing sample paths. Suppose that
+  \[
+    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[H_t] < \infty.
+  \]
+  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+  \begin{equation}
+    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+  \end{equation}
+  for a suitable constant $C \geq 0$.
+\end{cor}
+
+\begin{proof}
+    We have
+    \begin{align*}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
+        & \leq (A_s - A_\tau)H_\tau + B_s - B_\tau \\
+        & \leq A_sH_s - A_\tau H_\tau + B_s - B_\tau \\
+        & = G_s - G_\tau,
+    \end{align*}
+    for $G_t = A_tH_t$. Notice $\{G_t\}_{t\geq 0}$ also has nondecreasing monotonic sample paths, and with
+    \[
+        \mathbb{E}[G_T - G_0] < \infty.
+    \]
+    Thus, \cref{thmmonotonicbound} applies and the strong order 1 convergence holds.
+\end{proof}
+
 \begin{rmk}
-    A typical example that fits within the conditions of \cref{estimatesecondterminglobalerror} is when $f=f(t, x, y)$ has a power law growth of the form,
-    \[
-      |f(t, x, y)| \leq C(1 + |x|^a + |y|^b), \qquad \forall\,(t, x, y) \in [0, T] \times \mathbb{R}\times\mathbb{R},
-    \]
-    with $a, b \geq 1$, and the corresponding moments of the solution and the noise are bounded, i.e.
-    \[
-      \sup_{t\in I}\mathbb{E}[|X_t|^a]  < \infty, \qquad \sup_{t\in I}\mathbb{E}[|X_t|^b] < \infty.
-    \]
+    In many applications, it is possible to bound
+    $$
+        f(t, x, y) \leq C(1 + |x|^a + |y|^b),
+    $$
+    for suitable $a, b \geq 1$, in which case
+    $$
+        f(t, X_\tau, Y_t) \leq C(1 + |X_\tau|^a + G_t^b)
+    $$
+    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing, and we just need the bounds
+    $$
+    \mathbb{E}[(|X_t|)^a] < \infty, \qquad \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^b] < \infty.
+    $$
 \end{rmk}
 
 \section{The case of an It\^o noise}
@@ -718,156 +853,6 @@ The required conditions in \cref{thmforItonoise}, especially conditions \eqref{e
     \begin{equation}
         K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\sigma Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
     \end{equation}
-\end{rmk}
-
-\section{The case of monotonic sample path bounds}
-\label{secmonotonicbound}
-
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well for typical point processes, such as renewal-reward processes, Hawkes process, and such.
-
-More precisely, we have the following result:
-\begin{lem}
-    \label{lemmonotonicbound}
-    Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
-    \begin{equation}
-      \label{monotonicbound}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
-    \end{equation}
-    where $\{G_t\}_{t\in I}$ is a real random process with monotonically non-decreasing sample paths. Then,
-    \begin{equation}
-      \label{intfboundbyG}
-        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq (G_t - G_0)\Delta t_N,
-    \end{equation}
-    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
-\end{lem}
-
-\begin{proof}
-    Let $N\in \mathbb{R}$. From the assumption \eqref{monotonicbound} we have
-    \[
-        |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq G_s - G_{\tau^N(s)},
-    \]
-    for every $0\leq s \leq T$. Thus, upon integration,
-    \[
-        \left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right| \leq \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s.
-    \]
-    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
-    \begin{align*}
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & = \int_0^t (G_s - G_0) \;\mathrm{d}s.
-    \end{align*}
-    Using the monotonicity,
-    \[
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_0^t (G_t - G_0) \;\mathrm{d}s  = (G_t - G_0)t \leq (G_t - G_0)\Delta t_N.
-    \]
-    When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
-    \[ 
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s = \int_0^t G_s \;\mathrm{d}s - \int_0^{t_1} G_{\tau^N(s)}\;\mathrm{d}s - \int_{t_1}^t G_{\tau^N(s)}\;\mathrm{d}s
-    \]
-    Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
-    \begin{align*}
-        \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s & \leq \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{\Delta t_N}^t G_{s-\Delta t_N}\;\mathrm{d}s \\
-        & = \int_0^t G_s \;\mathrm{d}s - \int_0^{\Delta t_N} G_0\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} G_s\;\mathrm{d}s \\
-        & = \int_{t-\Delta t_N}^t G_s \;\mathrm{d}s - G_0\Delta t_N.
-    \end{align*}
-    Using again the monotonicity yields
-    \[ 
-      \int_0^t (G_s - G_{\tau^N(s)})\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t G_t \;\mathrm{d}s - G_0\Delta t_N= (G_t - G_0)\Delta t_N.
-    \]
-
-    Putting the estimates together proves \eqref{intfboundbyG}.
-\end{proof}
-
-\begin{thm}
-  \label{thmmonotonicbound}
-  Under the \cref{standinghypotheses1}, suppose further that, for all $0 \leq \tau \leq s \leq T$, we have
-    \begin{equation}
-      |f(s, X_s, Y_s)| \leq F_t,
-    \end{equation}
-    and
-    \begin{equation}
-      \label{thmhypmonotonicbound}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq G_s - G_\tau,
-    \end{equation}
-    where $\{F_t\}_{t\in I}$ and $\{G_t\}_{t\in I}$ are real random process with $\{G_t\}_{t\in I}$ having monotonically non-decreasing sample paths. Assume, finally, that
-    \[
-        \sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s < \infty, \qquad \mathbb{E}[(G_T - G_0)] < \infty.
-    \]
-    Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
-    \begin{equation}
-      \label{thmmonotonicboundstrongorder}
-        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
-    \end{equation}
-    for a constant $C \geq 0$ given by
-    \begin{equation}
-      \label{thmmonotonicboundconstant}
-      C = \left(\frac{T}{2}\sup_{0 \leq \tau < t \leq T}\frac{1}{t - \tau}\int_\tau^t \mathbb{E}[F_s]\;\mathrm{d}s + \mathbb{E}[(G_{T} - G_0)] \right)e^{L_X T}.
-    \end{equation}
-\end{thm}
-
-\begin{proof}
-  Under the supplied hypotheses, \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Since $X_0^N = X_0$, the first term on the right hand side vanishes and we have two terms left to estimate. The second term is handled via \cref{estimatesecondterminglobalerror}. For the third term, we apply \cref{lemmonotonicbound} and use the estimate \eqref{intfboundbyG}. Putting the estimates together, we bound the global error by
-  \[
-    |X_{t_j} - X_{t_j}^N| \leq \left( \int_0^{t_j} \int_{\tau^N(s)}^s F_\sigma \;\mathrm{d}\sigma \;\mathrm{d}s + (G_t - G_0)\Delta t_N\right) e^{L_X t_j}.
-  \]
-  Taking the expectation and using again \cref{estimatesecondterminglobalerror}, we find that
-  \begin{align*}
-    \mathbb{E}\left[ |X_{t_j} - X_{t_j}^N|\right] & \leq \left( \frac{t_j}{2}K \Delta t_N + \mathbb{E}[(G_{t_j} - G_0)]\Delta t_N\right) e^{L_X t_j} \\
-    & \leq \left( \frac{T}{2}K + \mathbb{E}[(G_{T} - G_0)]\right) e^{L_X T}\Delta t_N,
-  \end{align*}
-  where $K$ is given in \eqref{Kconstantinestimatesecondterminglobalerror}. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
-\end{proof}
-
-One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}. More precisely, we have the following result.
-
-\begin{cor}
-    \label{thmsemiseparablemonotonicbound}
-  Suppose that $f=f(t, x, y)$ is of the form
-  \begin{equation}
-    \label{lineareqform}
-    f(t, x, y) = a(t, y)h(x) + b(t, y),
-  \end{equation}
-  where $a=a(t, y)$, $h=h(x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
-  \[
-    |a(s, Y_s) - a(\tau, Y_\tau)| \leq A_s - A_\tau, \quad |b(s, Y_s) - b(\tau, Y_\tau)| \leq B_s - B_\tau, \quad |h(X_t)| \leq H_t,
-  \]
-  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and $\{H_t\}_{t\in I}$ are nonnegative stochastic processes with monotonic non-decreasing sample paths. Suppose that
-  \[
-    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[H_t] < \infty.
-  \]
-  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
-  \begin{equation}
-    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
-  \end{equation}
-  for a suitable constant $C \geq 0$.
-\end{cor}
-
-\begin{proof}
-    We have
-    \begin{align*}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
-        & \leq (A_s - A_\tau)H_\tau + B_s - B_\tau \\
-        & \leq A_sH_s - A_\tau H_\tau + B_s - B_\tau \\
-        & = G_s - G_\tau,
-    \end{align*}
-    for $G_t = A_tH_t$. Notice $\{G_t\}_{t\geq 0}$ also has nondecreasing monotonic sample paths, and with
-    \[
-        \mathbb{E}[G_T - G_0] < \infty.
-    \]
-    Thus, \cref{thmmonotonicbound} applies and the strong order 1 convergence holds.
-\end{proof}
-
-\begin{rmk}
-    In many applications, it is possible to bound
-    $$
-        f(t, x, y) \leq C(1 + |x|^a + |y|^b),
-    $$
-    for suitable $a, b \geq 1$, in which case
-    $$
-        f(t, X_\tau, Y_t) \leq C(1 + |X_\tau|^a + G_t^b)
-    $$
-    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing, and we just need the bounds
-    $$
-    \mathbb{E}[(|X_t|)^a] < \infty, \qquad \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^b] < \infty.
-    $$
 \end{rmk}
 
 \section{Applications}
