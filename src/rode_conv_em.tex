@@ -538,6 +538,58 @@ As for the second term, that just concerns the solution itself, not the approxim
 Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well with the typical case of point processes, such as renewal-reward processes, Hawkes process, and such.
 
 More precisely, we have the following result:
+
+\begin{lem}
+    Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
+    \begin{equation}
+        \label{expectmonotonicbound}
+          \mathbb{E}\left[|f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)|\right] \leq e(s) - e(\tau),
+      \end{equation}
+      where $e = e(s)$ is a monotonically non-decreasing function in $s\in I$. Then,
+      \begin{equation}
+        \label{expectintfboundbyG}
+          \mathbb{E}\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq (e(t) - e(0))\Delta t_N,
+      \end{equation}
+      for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
+\end{lem}
+
+\begin{proof}
+    Let $N\in \mathbb{R}$. From the assumption \eqref{expectmonotonicbound} we have
+    \[
+        \mathbb{E}\left[|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})|\right] \leq e(s) - e(\tau^N(s)),
+    \]
+    for every $0\leq s \leq T$. Thus, upon integration,
+    \begin{align*}
+        \mathbb{E}&\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
+        & \qquad \leq \int_0^t \mathbb{E}\left[|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right]\;\mathrm{d}s \\
+        & \qquad \leq \int_0^t \left(e(s) - e(\tau^N(s))\right)\;\mathrm{d}s.
+    \end{align*}
+    Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
+    \begin{align*}
+      \int_0^t (e(s) - e(\tau^N(s)))\;\mathrm{d}s & = \int_0^t (e(s) - e(0)) \;\mathrm{d}s.
+    \end{align*}
+    Using the monotonicity,
+    \[
+      \int_0^t (e(s) - e(\tau^N(s)))\;\mathrm{d}s \leq \int_0^t (e(t) - e(0)) \;\mathrm{d}s  = (e(t) - e(0))t \leq (e(t) - e(0))\Delta t_N.
+    \]
+    When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
+    \[ 
+      \int_0^t (e(s) - e(\tau^N(s)))\;\mathrm{d}s = \int_0^t e(s) \;\mathrm{d}s - \int_0^{t_1} e(\tau^N(s))\;\mathrm{d}s - \int_{t_1}^t e(\tau^N(s))\;\mathrm{d}s
+    \]
+    Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
+    \begin{align*}
+        \int_0^t (e(s) - e(\tau^N(s)))\;\mathrm{d}s & \leq \int_0^t e(s) \;\mathrm{d}s - \int_0^{\Delta t_N} e(0)\;\mathrm{d}s - \int_{\Delta t_N}^t e(s-\Delta t_N)\;\mathrm{d}s \\
+        & = \int_0^t e(s) \;\mathrm{d}s - \int_0^{\Delta t_N} e(0)\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} e(s)\;\mathrm{d}s \\
+        & = \int_{t-\Delta t_N}^t e(s) \;\mathrm{d}s - e(0)\Delta t_N.
+    \end{align*}
+    Using again the monotonicity yields
+    \[ 
+      \int_0^t (e(s) - e(\tau^N(s)))\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t e(t) \;\mathrm{d}s - e(0)\Delta t_N= (e(t) - e(0))\Delta t_N.
+    \]
+
+    Putting the estimates together proves \eqref{expectintfboundbyG}.
+\end{proof}
+
 \begin{lem}
     \label{lemmonotonicbound}
     Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
@@ -923,7 +975,7 @@ With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses2} hold. Moreover
 \]
 almost surely. 
 
-Condition \eqref{Ftcondition} is satisfied with
+OLD Condition on $\{F_t\}$ SHOULD BE FIXED is satisfied with
 \[
     F_t ?!?!?!
 \]
