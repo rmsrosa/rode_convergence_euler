@@ -516,39 +516,24 @@ As for the second term, which only concerns the solution itself, not the approxi
     \[
       \left|X_s - X_{\tau^N(s)}\right| = \left|\int_{\tau^N(s)}^s f(\xi, X_\xi, Y_\xi)\;\mathrm{d}\xi\right| \leq \int_{\tau^N(s)}^s (M_\xi + L_X|X_\xi|)\;\mathrm{d}\xi.
     \]
-    Integrating over $[0, t_j]$ and using integration by parts
+    Integrating over $[0, t_j]$ and using integration by parts,
     \begin{align*}
         \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s & \leq \int_0^{t_j}\int_{\tau^N(s)}^s (M_\xi + L_X|X_\xi|) \;\mathrm{d}\xi \;\mathrm{d}s \\
         & = \int_0^{t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} (M_\xi + L_X|X_\xi|) \;\mathrm{d}s \;\mathrm{d}\xi \\
         & =  \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) (M_\xi + L_X|X_\xi|) \;\mathrm{d}\xi.
     \end{align*}
-    Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are non-negative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}
-
-    Taking the expectation of both sides of \eqref{estimatesecondterminglobalerrorintegral} and using \eqref{XtboundLXMt} and \eqref{X0EMsconditions} we find \eqref{expectedestimatesecondterminglobalerrorintegral}.
+    Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are non-negative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}.
 \end{proof}
 
 Combining the two previous results we obtain
 
 \begin{prop}
-    Under the \cref{standinghypotheses1}, suppose further that
-    \begin{enumerate}
-        \item the initial condition is strongly bounded, i.e.
-        \begin{equation}
-            \label{EX0condition}
-            \mathbb{E}[|X_0|] < \infty;
-        \end{equation}
-        \item the non-negative process $\{M_t\}_{t\in I}$ is strongly integrable, i.e.
-        \begin{equation}
-            \label{EMcondition}
-            \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty;
-        \end{equation}
-        \item for some constant $C_0 \geq 0$, 
-        \begin{equation}
-            \label{EX0X0N}
-            \mathbb{E}[|X_0 - X_0^N|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
-        \end{equation}
-    \end{enumerate}
-    Then
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
+    \begin{equation}
+        \label{EX0X0N}
+        \mathbb{E}[|X_0 - X_0^N|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
+    \end{equation}
+    Then, for every $j = 0, \ldots, N$,
     \begin{equation}
         \label{expectedestimateglobalerrorintegral}
         \begin{aligned}
@@ -561,7 +546,7 @@ Combining the two previous results we obtain
 
 \begin{proof}
     Under \cref{standinghypotheses1}, \cref{estimatesecondterminglobalerror} applies and estimate \eqref{estimatesecondterminglobalerrorintegral} holds.
-    Using \eqref{EX0condition} and \eqref{EMcondition}, that estimate yields
+    Using \eqref{EX0strongbound} and \eqref{EMtstrongbound}, that estimate yields
     \[
         \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[|X_s|]) \;\mathrm{d}s.
     \]
@@ -731,7 +716,7 @@ More precisely, we have the following result:
     \mathbb{E}\left[ |X_{t_j} - X_{t_j}^N|\right] & \leq \left( \frac{t_j}{2}K \Delta t_N + \mathbb{E}[(G_{t_j} - G_0)]\Delta t_N\right) e^{L_X t_j} \\
     & \leq \left( \frac{T}{2}K + \mathbb{E}[(G_{T} - G_0)]\right) e^{L_X T}\Delta t_N,
   \end{align*}
-  where $K$ is given in \eqref{Kconstantinestimatesecondterminglobalerror}. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
+  for a suitable $K$. This proves \eqref{thmmonotonicboundstrongorder} with the constant $C$ given by \eqref{thmmonotonicboundconstant}.
 \end{proof}
 
 One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}. More precisely, we have the following result.
@@ -908,7 +893,7 @@ We need to estimate the global error \eqref{Etjbasicbound}. The first term in th
 Gathering the conditions, we obtain the following result.
 \begin{thm}
     \label{thmforItonoise}
-    Under the \cref{standinghypotheses2}, suppose, moreover, that \eqref{X0EMsconditions}, \eqref{estimateforI1} and \eqref{estimateforI2} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    Under the \cref{standinghypotheses2}, suppose, moreover, that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{estimateforI1} and \eqref{estimateforI2} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmitogeneralboundstrongorder}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -952,8 +937,8 @@ The required conditions in \cref{thmforItonoise}, especially conditions \eqref{e
     When the noise $\{Y_t\}_{t\in I}$ is a geometric Brownian motion process, then $A_t = \mu  Y_t$ and $B_t = \sigma Y_t$, for $\mu\in \mathbb{R}$, $\sigma > 0$, and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
     \begin{multline}
         K_1 = \int_0^{T}
-        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \mu Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{\sigma^2 Y_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s \\
-        < \infty
+        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \mu Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) \right.\right. \\
+        \left.\left. + \frac{\sigma^2 Y_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s < \infty
     \end{multline}
     and
     \begin{equation}
