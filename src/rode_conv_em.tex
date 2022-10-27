@@ -25,7 +25,7 @@
 \newtheorem{cor}{Corollary}[section]
 \newtheorem{defs}{Definition}[section]
 \newtheorem{prob}{Problem}[section]
-\newtheorem{stdhyp}{Assumptions}[section]
+\newtheorem{stdhyp}{Hypothesis}[section]
 \theoremstyle{definition}
 \newtheorem{rmk}{Remark}[section]
 \newtheorem{fact}{Fact}[section]
@@ -235,7 +235,7 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists a constant $C > 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
@@ -290,7 +290,7 @@ In order to make the main idea clear cut, here are the options we have for estim
 \section{Pathwise solution}
 \label{secpathwisesolution}
 
-For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We consider two sets of hypotheses, \cref{standinghypotheses1} and \cref{standinghypotheses2}, each suitable to one of the two main cases we consider, namely the case in which the steps are bounded by processes with monotonic bounds and the case with It\^o type noises.
+For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We consider two sets of hypotheses, namely \cref{standinghypotheses1} and \cref{standinghypotheses2}, each suitable to one of the two main cases we consider, namely the case in which the steps are bounded by processes with monotonic expected values and the case with It\^o type noises.
 
 We start with the following hypotheses, which imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory.
 
@@ -298,13 +298,13 @@ We start with the following hypotheses, which imply the existence and uniqueness
     \label{standinghypotheses1}
     We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. We make the following standing hypotheses.
     \begin{enumerate}
-        \item $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e. there exists a constant $L_X > 0$ such that
+        \item \label{standinghypotheses1Lx} $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e. there exists a constant $L_X \geq 0$ such that
             \begin{equation}
                 \label{Lxassumptionbasic}
                 |f(t, x_1, y) - f(t, x_2, y)| \leq L_X |x_1 - x_2|, \quad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
             \end{equation}
 
-        \item We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
+        \item \label{standinghypotheses1Car} We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
                 \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
@@ -313,7 +313,7 @@ We start with the following hypotheses, which imply the existence and uniqueness
     \end{enumerate}
 \end{stdhyp}
 
-Under these assumptions, for each sample $\omega\in\Omega$, the integral equation
+Under these assumptions, for each sample value $\omega\in\Omega$, the integral equation
 \begin{equation}
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
@@ -326,25 +326,35 @@ Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
     |X_t| \leq \left(|X_0| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
 \end{equation}
 
-For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. One common situation is when
-\[
-    \mathbb{E}[|X_0|] < \infty, \qquad \int_0^T \mathbb{E}[|M_s|] \;\mathrm{d}s < \infty,
-\]
-in which case
-\[
-    \mathbb{E}[|X_t|] \leq \left(\mathbb{E}[|X_0|] + \int_0^t \mathbb{E}[|M_s|]\;\mathrm{d}s\right) e^{L_X t}, \quad t\in I.
-\]
+For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. With that in mind, we have the following useful result.
 
-In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition and only require
-\[
-    \mathbb{E}[|X_0|] < \infty.
-\]
+\begin{lem}
+    Under the \cref{standinghypotheses1}, suppose further that
+    \begin{equation}
+        \label{EX0strongbound}
+        \mathbb{E}[|X_0|] < \infty
+    \end{equation}
+    and
+    \begin{equation}
+        \label{EMtstrongbound}
+        \int_0^T \mathbb{E}[|M_s|] \;\mathrm{d}s < \infty
+    \end{equation}
+    Then,
+    \begin{equation}
+        \label{EXtstrongbound}
+        \mathbb{E}[|X_t|] \leq \left(\mathbb{E}[|X_0|] + \int_0^t \mathbb{E}[|M_s|]\;\mathrm{d}s\right) e^{L_X t}, \quad t\in I.
+    \end{equation}
+\end{lem}
 
-Due to the diverse ways in which to control the solution, we leave further estimates to the applications.
+\begin{proof}
+    Thanks to \eqref{XtboundLXMt}, the result is straightfoward
+\end{proof}
 
-When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense and the estimate \eqref{XtboundLXMt} is still valid.
+In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition and only require $\mathbb{E}[|X_0|] < \infty$, but we do not exploit this case here.
 
-This setting is assumed in the analysis of the case of It\^o noise. With that in mind, we define, more precisely, a second set of standing hypotheses.
+When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+
+This setting is assumed in the analysis of the case of It\^o noise. With that in mind, we define, more precisely, a second set of hypotheses, on top of the first one above.
 
 \begin{stdhyp}
     \label{standinghypotheses2}
@@ -383,7 +393,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-    In either case, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
+    Under the \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
     $$
@@ -435,7 +445,11 @@ In this section, we derive the following integral formula for the global error:
     Using the jump function $\tau^N$, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
 \end{proof}
 
-\section{Basic estimate}
+\begin{rmk}
+    Strictly speaking, we only need condition \eqref{standinghypotheses1Car} from \cref{standinghypotheses1} in order to deduce \eqref{Etjbasicbound}, but since we need \eqref{standinghypotheses1Lx} for the strong convergence anyways, it is simpler to state the result as in \cref{lembasicestimate}.
+\end{rmk}
+
+\section{Basic estimate for the global pathwise error}
 
 Here we derive an estimate, under minimal hypotheses, that will be the basis for the estimates in specific cases.
 
@@ -482,15 +496,11 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     Using the discrete version of the Gronwall Lemma, we prove \eqref{Etjbasicbound}.
 \end{proof}
 
-The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that
-\begin{equation}
-    \mathbb{E}[|X_0^N - X_0|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N},
-\end{equation}
-for some constant $C_0$, which is useful for lower order approximations or for the discretization of random partial differential equations.
+The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ of order $\Delta t_N$, which is useful for lower order approximations or for the discretization of random partial differential equations.
 
 The third term in \eqref{Etjbasicbound} is the more delicate one that will be handled differently in the next sections.
 
-As for the second term, that just concerns the solution itself, not the approximation, and for that we use the following simple but useful general result.
+As for the second term, which only concerns the solution itself, not the approximation, we use the following simple but useful general result.
 
 \begin{lem}
     \label{estimatesecondterminglobalerror}
@@ -498,21 +508,6 @@ As for the second term, that just concerns the solution itself, not the approxim
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (M_s + L_X|X_s|) \;\mathrm{d}s.
-    \end{equation}
-    If, moreover,
-    \begin{equation}
-        \label{X0EMsconditions}
-        \mathbb{E}[|X_0|] < \infty, \quad \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty
-    \end{equation}
-    then
-    \begin{equation}
-        \label{expectedestimatesecondterminglobalerrorintegral}
-        \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq K \Delta t_N,
-    \end{equation}
-    where
-    \begin{equation}
-      \label{Kconstantinestimatesecondterminglobalerror}
-        K = \left(\mathbb{E}[|X_0|] + \int_0^T \mathbb{E}[|M_\xi|]\;\mathrm{d}\xi\right)e^{L_X T}.
     \end{equation}
 \end{lem}
 
@@ -530,6 +525,66 @@ As for the second term, that just concerns the solution itself, not the approxim
     Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are non-negative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}
 
     Taking the expectation of both sides of \eqref{estimatesecondterminglobalerrorintegral} and using \eqref{XtboundLXMt} and \eqref{X0EMsconditions} we find \eqref{expectedestimatesecondterminglobalerrorintegral}.
+\end{proof}
+
+Combining the two previous results we obtain
+
+\begin{prop}
+    Under the \cref{standinghypotheses1}, suppose further that
+    \begin{enumerate}
+        \item the initial condition is strongly bounded, i.e.
+        \begin{equation}
+            \label{EX0condition}
+            \mathbb{E}[|X_0|] < \infty;
+        \end{equation}
+        \item the non-negative process $\{M_t\}_{t\in I}$ is strongly integrable, i.e.
+        \begin{equation}
+            \label{EMcondition}
+            \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty;
+        \end{equation}
+        \item for some constant $C_0 \geq 0$, 
+        \begin{equation}
+            \label{EX0X0N}
+            \mathbb{E}[|X_0 - X_0^N|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
+        \end{equation}
+    \end{enumerate}
+    Then
+    \begin{equation}
+        \label{expectedestimateglobalerrorintegral}
+        \begin{aligned}
+            \mathbb{E} & \left[|X_{t_j} - X_{t_j}^N|\right] \\
+            & \leq \left( C_0 \Delta t_N + \Delta t_N L_X \left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}\right. \\
+            & \qquad \left. \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]\right) e^{L_X t_j}.
+        \end{aligned}
+    \end{equation}
+\end{prop}
+
+\begin{proof}
+    \cref{lembasicestimate} and \cref{estimatesecondterminglobalerror}.
+
+    Applying \eqref{EX0condition} and \eqref{EMcondition} to the estimate \eqref{estimatesecondterminglobalerrorintegral} of \cref{estimatesecondterminglobalerror} yields
+    \[
+        \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[|X_s|]) \;\mathrm{d}s.
+    \]
+    Using \eqref{XtboundLXMt}, we obtain
+    \begin{align*}
+        \int_0^{t_j} & \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \\
+        & \leq \Delta t_N \int_0^{t_j} \left(\mathbb{E}[M_s] + L_X\left(\mathbb{E}[|X_0|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \right)\;\mathrm{d}s \\
+        & \leq \Delta t_N \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + L_X \int_0^{t_j}\left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \;\mathrm{d}s\right) \\
+        & = \Delta t_N \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{L_X t_j} - 1\right) \right).
+    \end{align*}
+    Thus,
+    \begin{equation}
+        \label{expectedestimatesecondterminglobalerrorintegral}
+        \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N\left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
+    \end{equation}
+    Taking the expectation of the global error formula \eqref{Etjbasicbound} gives us
+    \begin{multline*}
+        \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( \mathbb{E}\left[|X_0 - X_0^N|\right] + L_X \int_0^{t_j} \mathbb{E}\left[|X_s - X_{\tau^N(s)}|\right] \;\mathrm{d}s \right. \\
+        \left. \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]\right) e^{L_X t_j}.
+    \end{multline*}
+    Using estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N} proves \eqref{expectedestimateglobalerrorintegral}.
+    
 \end{proof}
 
 \section{The case of monotonic sample path bounds}
