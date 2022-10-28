@@ -693,18 +693,15 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         & \qquad + \int_\tau^s \left(\partial_y a(\xi, Y_\xi) h(X_\tau) + \partial_y b(\xi, Y_\xi)\right)\;\mathrm{d}Y_\xi
     \end{align*}
 
-    We have
+    Taking the absolute value and using that the first order derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded we find that
     \begin{align*}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
-        & \leq (A_s - A_\tau)H_\tau + B_s - B_\tau \\
-        & \leq A_sH_s - A_\tau H_\tau + B_s - B_\tau \\
-        & = G_s - G_\tau,
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq \int_\tau^s \left(A_T|h(X_\tau)| + B_T\right) \;\mathrm{d}\xi \\
+        & \qquad + \int_\tau^s \left(A_Y |h(X_\tau)| + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \end{align*}
-    for $G_t = A_tH_t$. Notice $\{G_t\}_{t\geq 0}$ also has nondecreasing monotonic sample paths, and with
+    Define the process $\{G_t\}_{t\in I}$ by
     \[
-        \mathbb{E}[G_T - G_0] < \infty.
+        G_t = \int_0^t \left(A_T|h(X_{\tau(\xi)})| + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y |h(X_{\tau(\xi)})| + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \]
-    Thus, \cref{thmmonotonicbound} applies and the strong order 1 convergence holds.
 \end{proof}
 
 \begin{rmk}
