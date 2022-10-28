@@ -666,24 +666,16 @@ More precisely, we have the following result:
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
 
-One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is that of a linear equation, or, when $f$ is \emph{semi-separable}. More precisely, we have the following result.
+One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is when $f$ is \emph{semi-separable}, which includes the case of a linear equation. More precisely, we have the following result.
 
 \begin{cor}
     \label{thmsemiseparablemonotonicbound}
-  Suppose that $f=f(t, x, y)$ is of the form
+  Suppose that $f=f(t, x, y)$ is semi-separable in the sense that
   \begin{equation}
     \label{lineareqform}
     f(t, x, y) = a(t, y)h(x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$, $h=h(x)$, and $b=b(t, y)$ are continous on $[0, T]\times \mathbb{R}$ and $h$ is globally Lipschitz continous in $x\in\mathbb{R}$, uniformly in $t\in I$. Assume, further, that
-  \[
-    |a(s, Y_s) - a(\tau, Y_\tau)| \leq A_s - A_\tau, \quad |b(s, Y_s) - b(\tau, Y_\tau)| \leq B_s - B_\tau, \quad |h(X_t)| \leq H_t,
-  \]
-  where $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and $\{H_t\}_{t\in I}$ are nonnegative stochastic processes with monotonic non-decreasing sample paths. Suppose that
-  \[
-    \mathbb{E}[(A_T - A_0)] < \infty, \quad \mathbb{E}[(B_T - B_0)] < \infty, \quad \mathbb{E}[H_t] < \infty.
-  \]
-  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation. Then, the Euler-Maruyama scheme is of strong order 1, i.e.
   \begin{equation}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
   \end{equation}
@@ -691,6 +683,16 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
 \end{cor}
 
 \begin{proof}
+    Since $a=a(t, y)$ is continuously differentiable and the sample paths of the noise are of bounded variation, we can write
+    \[ a(s, Y_s) - a(\tau, Y_\tau) = \int_\tau^s \partial_t a(\xi, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y a(\xi, Y_\xi)\;\mathrm{d}Y_\xi
+    \]
+    Similarly for $b=b(t, Y_t)$. Thus,
+    \begin{align*}
+        f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau) & = a(s, Y_s) - a(\tau, Y_\tau)h(X_\tau) + b(s, Y_s) - b(\tau, Y_\tau) \\
+        & = \int_\tau^s \left(\partial_t a(\xi, Y_\xi)h(X_\tau) + \partial_y b(\xi, Y_\xi)\right) \;\mathrm{d}\xi \\
+        & \qquad + \int_\tau^s \left(\partial_y a(\xi, Y_\xi) h(X_\tau) + \partial_y b(\xi, Y_\xi)\right)\;\mathrm{d}Y_\xi
+    \end{align*}
+
     We have
     \begin{align*}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq |a(s, Y_s) - a(\tau, Y_\tau)||h(X_\tau)| + |b(s, Y_s) - b(\tau, Y_\tau)| \\
