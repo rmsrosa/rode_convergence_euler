@@ -712,6 +712,14 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \[
         \mathbb{E}[|X_\xi||\mathrm{d}Y_\xi|] \leq (\mathbb{E}[|X_\xi|^p])^{1/p}(\mathbb{E}[|\mathrm{d}Y_\xi|^q])^{1/q}
     \]
+    I believe the estimate on the noise will end up affecting both terms, so we better just take $p=q=2$ and assume that
+    \[
+        \mathbb{E}[|X_0|^2] < \infty
+    \]
+    and something like
+    \[
+        \mathbb{E}\left[\int_0^T |\mathrm{d}Y_\xi|^2\right] < \infty
+    \]
 \end{proof}
 
 \section{The case of an It\^o noise}
