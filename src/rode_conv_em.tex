@@ -239,9 +239,11 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further ``hidden'' conditions that yield in fact a strong order 1 convergence, even when the sample paths are still H\"older continuous or have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process or a transport process.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process or a transport process.
 
-In the case of an It\^o noise, the sample paths are typically H\"older continuous with exponent 1/2, but the It\^o isometry reveals futher regularity that can be used to prove a strong order 1 convergence. In the case of transport process $Y_t = g(t, Y_0)$, for a random vector $Y_0 = Y_0(\omega)$, even if $g=g(t, y)$ is H\"older continuous, many common H\"older functions are actually of bounded variation, such as $g(t, y) = (yt)^{1/3}$ or even $g(t, y) = \sin(yt)^{1/3}$. The same with point-processes $Y_t = ...$, which are of bounded variation.
+Indeed, many common H\"older functions are actually of bounded variation, such as $t\mapsto t^{1/3}$ and $t\mapsto \sin(\omega t)^{1/5}$. This is a common situation when the noise is a transport process $Y_t = g(t, Y_0)$, for a random vector $Y_0 = Y_0(\omega)$. Even functions with jump discontinuities, such as those in point-processes, are of bounded variation. Being of bounded variation, it is possible to control their steps and obtain the strong order 1 convergence.
+
+In the case of an It\^o noise, the sample paths are typically H\"older continuous with exponent 1/2 and are not of bounded variation. In this case, however, the It\^o isometry reveals futher regularity that can be used to yield a strong order 1 convergence.
 
 More precisely, for the semi-separable case, we assume $f$ is of the form 
 \[
@@ -968,39 +970,25 @@ with the assumptions that
 In the case that the diffusion term $b = b(y)$ is actually independent of $y$, then the noise is an additive noise and the Euler-Maruyama scheme is of strong order 1, otherwise, it is thought to be of order 1/2 (CITATION...). Here, however, we deduce that, even if $b=b(y)$ depends on $y$, the strong convergence of the Euler-Maruyama scheme is of order 1, under the assumptions \eqref{itonoiseboundedderivativescondition}.
 
 \subsection{Population dynamics}
-
-Our first example is a population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
 \begin{equation}
-    \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Y_t X_t (r - X_t)
+    \label{rodepopulationdynamicsalt}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \mu X_t (r - X_t)cos(Y_t),
 \end{equation}
-where $r > 0$ is constant and $\{Y_t\}_{t \geq}$ is a stochastic process playing the role of a random growth parameter and given by
+where $\mu, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{itoprocess} with
 \[
-    Y_t = \lambda (1 + \varepsilon \sin(O_t)),
+    \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad 
+    \int_0^T \mathbb{E}[|B_t|] \;\mathrm{d}t < \infty, \quad
+    \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty.
 \]
-where $0 < \varepsilon < 1$ and $\{O_t\}_{t \geq 0}$ is an Ornstein-Uhlenbeck process given by
-\[
-    \mathrm{d}O_t = (\theta_1 - \theta_2 O_t)\;\mathrm{d}t + \theta_3\;\mathrm{d}W_t,
-\]
-with $\theta_1, \theta_2, \theta_3 > 0$ constant and $\{W_t\}_{t\geq 0}$ being a standard Wiener process. We do not need to approximate the coupled stochastic differential equation system for $(X_t, O_t)$ since the Ornstein-Uhlenbeck process has an analytic solution, given by
-\[
-    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
-\]
-
-We suppose the initial condition is non-negative and bounded almost surely:
-\[
-    0 \leq X_0 \leq R,
-\]
-for some $R > r$.
-
-The noise process $\{\Lambda_t\}_{t \geq 0}$ itself satisfies
-\[
-    0 < \lambda - \varepsilon \leq Y_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
-\]
+This includes a Wiener process, an Orstein-Uhlenbeck process or a geometric Brownian motion process.
 
 Define 
 \[
-    f(t, x, y) = yx(r - x)
+    f(t, x, y) = x(r - x)cos(y).
+\]
+We have
+\[
+    f(t, x, y)x = x^2(r - x)cos(y)
 \]
 and notice that $f(t, x, y)x \geq 0$, for $x \geq 0$ and $y \geq 0$, and $f(t, x, y)x \leq 0$, for $x \geq r$ and $y \geq 0$. Hence the interval $[0, R]$ in $x$ is positively invariant and the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
 \[
@@ -1008,11 +996,54 @@ and notice that $f(t, x, y)x \geq 0$, for $x \geq 0$ and $y \geq 0$, and $f(t, x
 \]
 for all $t \geq 0$.
 
-The function $f=f(t, x, y)$ is continuously differentiable infinitely many times and with
+\subsection{Population dynamics}
+
+Our first example is a population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
+\begin{equation}
+    \label{rodepopulationdynamics}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t)
+\end{equation}
+where $r > 0$ is constant and $\{Z_t\}_{t \geq}$ is a stochastic process playing the role of a random growth parameter and given by
+\[
+    Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
+\]
+where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{itoprocess} with
+\[
+    \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad 
+    \int_0^T \mathbb{E}[|B_t|] \;\mathrm{d}t < \infty, \quad
+    \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty.
+\]
+We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
+%\[
+%    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
+%\]
+
+We suppose the initial condition is non-negative and bounded almost surely:
+\[
+    0 \leq X_0 \leq R,
+\]
+for some $R > r$.
+
+The noise process $\{Z_t\}_{t \geq 0}$ itself satisfies
+\[
+    0 < \lambda - \varepsilon \leq Z_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
+\]
+
+Define 
+\[
+    f(t, x, z) = z x(r - x)
+\]
+and notice that $f(t, x, z)x \geq 0$, for $x \geq 0$ and $z \geq 0$, and $f(t, x, z)x \leq 0$, for $x \geq r$ and $z \geq 0$. Hence the interval $[0, R]$ in $x$ is positively invariant and the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
+\[
+    0 \leq X_t \leq R,
+\]
+for all $t \geq 0$.
+
+The function $f=f(t, x, z)$ is continuously differentiable infinitely many times and with
 \[
     \left|\frac{\partial f}{\partial x}(t, x, y)\right| = |y(r - 2x)|\leq 2\lambda (2R - r),
 \]
-for $|x| \leq R$ and $0 \leq y \leq 2\lambda$.
+for $|x| \leq R$ and $0 \leq z \leq 2\lambda$. In turn, the function $z = z(y) = \lambda (1 + \varepsilon \sin(y))$ is also continuously differentiable infinitely many times and is uniformly bounded along with all its derivatives.
 
 The right hand side of \eqref{rodepopulationdynamics} is not globally Lipschitz, but, for the sake of analysis, since $X_t$ and $Y_t$ are bounded, the right hand side can be modified to a twice continuously differentiable, uniformly globally Lipschitz function $\tilde f(t, x, y)$ that coincides with $f(t, x, y)$ for $(t, x, y) \in \mathbb{R}\times [0, R]\times [0, 2\lambda]$ and satisfies \eqref{Lxassumptionbasic} with
 \[
@@ -1035,6 +1066,8 @@ OLD Condition on $\{F_t\}$ SHOULD BE FIXED is satisfied with
 \[
     F_t ?!?!?!
 \]
+
+CAREFULL, WE CHANGED THE NOTATION, MUST FIX FROM HERE ON AND CHECK EVERYTHING.
 
 The It\^o formula applied to $Y_t = g(O_t)$, where $g(\eta) = \lambda (1 + \varepsilon \sin(\eta))$ implies $\{Y_t\}_{t\geq 0}$ is an It\^o process with
 \[
