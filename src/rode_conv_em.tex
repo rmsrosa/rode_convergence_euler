@@ -947,6 +947,24 @@ The required conditions in \cref{thmforItonoise}, especially conditions \eqref{e
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler-Maruyama method exhibits a strong order one convergence.
 
+\subsection{Earthquake and other impulse driven models}
+
+See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
+
+\subsection{RODE with It\^o noise}
+
+Here, we consider a class of RODEs treated in \cite[Chapter 3]{Asai2016}, namely the \eqref{rodeeq} with a noise $\{Y_t\}_{t\in I}$ satisfying
+\begin{equation}
+    \mathrm{d}Y_t = a(Y_t)\;\mathrm{d}t + b(Y_t)\;\mathrm{d}W_t
+\end{equation}
+with the assumptions that
+\begin{equation}
+    \label{itonoiseboundedderivativescondition}
+    \parbox{0.8\textwidth}{the functions $a=a(y)$, $b=b(y)$, and $f=f(t, x, y)$ are twice continuously differentiable with all partial derivatives uniformly bounded.}
+\end{equation}
+
+In the case that the diffusion term $b = b(y)$ is actually independent of $y$, then the noise is an additive noise and the Euler-Maruyama scheme is of strong order 1, otherwise, it is thought to be of order 1/2 (CITATION...). Here, however, we deduce that, even if $b=b(y)$ depends on $y$, the strong convergence of the Euler-Maruyama scheme is of order 1, under the assumptions \eqref{itonoiseboundedderivativescondition}.
+
 \subsection{Population dynamics}
 
 Our first example is a population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
@@ -1104,10 +1122,12 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 
 
 \begin{thebibliography}{25}
+    \bibitem{Asai2016} Y. Asai, \emph{Numerical Methods for Random Ordinary Differential Equations and their Appli-
+    cations in Biology and Medicine.} Dissertation, Institut für Mathematik, Goethe Universität Frankfurt am Main, 2016.
+
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
     \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
-
 
     \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
 \end{thebibliography}
