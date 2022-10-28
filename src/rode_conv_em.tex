@@ -646,7 +646,7 @@ More precisely, we have the following result:
       \label{thmmonotonicboundstrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
-    for a constant $C \geq 0$ given by
+    for a constant $C$ given by
     \begin{equation}
         \label{constmonotonicboundstrongordernew}
         C = \left(C_0 + L_X \left(\mathbb{E}[|X_0|] + \int_0^{T} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X T} + (\mathbb{E}[F_T] - \mathbb{E}[F_0])\right)e^{L_X T}
@@ -693,31 +693,26 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         & \qquad + \int_\tau^s \left(\partial_y a(\xi, Y_\xi) h(X_\tau) + \partial_y b(\xi, Y_\xi)\right)\;\mathrm{d}Y_\xi
     \end{align*}
 
-    Taking the absolute value and using that the first order derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded we find that
+    Taking the absolute value and using that the first order derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and that $h=h(x)$ is globally Lipschitz, we find that
     \begin{align*}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq \int_\tau^s \left(A_T|h(X_\tau)| + B_T\right) \;\mathrm{d}\xi \\
-        & \qquad + \int_\tau^s \left(A_Y |h(X_\tau)| + B_Y\right)\;|\mathrm{d}Y_\xi|.
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq \int_\tau^s \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi \\
+        & \qquad + \int_\tau^s \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|,
     \end{align*}
+    for suitable nonnegative constants $A_T, A_Y, B_T, B_Y, H_M,$ and $H_X$.
+
     Define the process $\{G_t\}_{t\in I}$ by
     \[
-        G_t = \int_0^t \left(A_T|h(X_{\tau(\xi)})| + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y |h(X_{\tau(\xi)})| + B_Y\right)\;|\mathrm{d}Y_\xi|.
+        G_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
+    \]
+    Any sample path of $\{G_t\}_{t\in I}$ is non-decreasing and $G_0 = 0$. The only difficulty is in showing that it has bounded expectation:
+    \[
+        \mathbb{E}[G_T] < \infty \quad ???
+    \]
+    The difficulty comes from need to estimate the term $\mathbb{E}[|X_\xi||\mathrm{d}Y_\xi|]$. This requires some
+    \[
+        \mathbb{E}[|X_\xi||\mathrm{d}Y_\xi|] \leq (\mathbb{E}[|X_\xi|^p])^{1/p}(\mathbb{E}[|\mathrm{d}Y_\xi|^q])^{1/q}
     \]
 \end{proof}
-
-\begin{rmk}
-    In many applications, it is possible to bound
-    $$
-        f(t, x, y) \leq C(1 + |x|^a + |y|^b),
-    $$
-    for suitable $a, b \geq 1$, in which case
-    $$
-        f(t, X_\tau, Y_t) \leq C(1 + |X_\tau|^a + G_t^b)
-    $$
-    where $G_t = \sup_{0 \leq s \leq t} |Y_t|$ is monotonically nondecreasing, and we just need the bounds
-    $$
-    \mathbb{E}[(|X_t|)^a] < \infty, \qquad \mathbb{E}[(\sup_{0\leq t \leq T} |Y_t|)^b] < \infty.
-    $$
-\end{rmk}
 
 \section{The case of an It\^o noise}
 
