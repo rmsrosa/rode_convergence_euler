@@ -661,7 +661,7 @@ More precisely, we have the following result:
     With assumptions \eqref{stepbound} and \eqref{expectstepmonotonic}, \cref{lemmonotonicbound} applies and the last term in \eqref{expectedestimateglobalerrorintegral} is bounded according to \eqref{expectintfboundbyG}. Using \eqref{expectintfboundbyG} in \eqref{expectedestimateglobalerrorintegral} yields
     \begin{multline*}
         \mathbb{E} \left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( C_0 \Delta t_N + \Delta t_N L_X \left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}\right. \\
-        \left. (\mathbb{E}[F_{t_j}] - \mathbb{E}[F_0])\Delta t_N\right) e^{L_X t_j}.
+        \left. + (\mathbb{E}[F_{t_j}] - \mathbb{E}[F_0])\Delta t_N\right) e^{L_X t_j}.
     \end{multline*}
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
@@ -736,6 +736,128 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         \mathbb{E}[F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
     \]
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
+\end{proof}
+
+\section{The case of an It\^o noise}
+
+In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{F_s\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmsemiseparablemonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
+\[
+    |f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau})| \leq \int_\tau^s \mathrm{d}F_\xi.
+\]
+An alternative condition is to assume that $s \mapsto f(s, X_{\tau^N(s), Y_s})$ itself is an It\^o process and, as such,
+\[
+    f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau}) = \int_\tau^s A_\xi \;\mathrm{d}\xi + \int_\tau^s B_\xi \;\mathrm{d}W_\xi.
+\]
+
+In practice, we may assume $f=f(t, x, y)$ is twice continuously differentiable in $(t, y)$ and the noise $\{Y_t\}_{t\in I}$ itself is an It\^o noise, so that, by the It\^o formula, the steps above are themselves It\^o noises.
+
+With that in mind, we first have the following result.
+\begin{lem}
+    \label{lemItostep}
+    Besides the \cref{standinghypotheses1}, suppose that $F_t = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
+    \begin{equation}
+        \label{Itostep}
+        \mathrm{d}F_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
+    \end{equation}
+    for a Wiener process $\{W_t\}_{t\in 0}$ and stochastic processes $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ adapted to $\{W_t\}_{t\geq 0}$ and such that
+    \begin{equation}
+        \label{expectItostepterms}
+        \int_0^T \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi < \infty, \quad \int_0^T \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi < \infty.
+    \end{equation}
+    Then,
+    \begin{multline}
+        \label{expectintfboundbyIto}
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
+    \end{multline}
+    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
+\end{lem}
+
+\begin{proof}
+    We write
+    \[
+        f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi.
+    \]
+    Upon integration,
+    \begin{multline*}
+        \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
+        = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s
+    \end{multline*}
+    Using integration by parts,
+    \begin{align*}
+        \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
+        & \qquad = \int_0^t (\tau^N(\xi)+\Delta t_N - \xi) A_\xi \;\mathrm{d}\xi + \int_0^t (\tau^N(\xi) + \Delta t_N - \xi) B_\xi \;\mathrm{d}W_\xi.
+    \end{align*}
+    Taking the absolute mean and using the It\^o isometry on the second term yields
+    \begin{multline*}
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \leq \int_0^t |\tau^N(\xi)+\Delta t_N - \xi| \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}.
+    \end{multline*}
+    Since $|\tau^N(\xi)+\Delta t_N - \xi| \leq \Delta t_N$, we find
+    \begin{multline*}
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
+    \end{multline*}
+    which completes the proof.
+\end{proof}
+
+\begin{thm}
+    \label{thmItostep}
+    Under the \cref{standinghypotheses1}, suppose also that
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itostep}, and \eqref{expectItostepterms} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \begin{equation}
+      \label{thmItosteptrongordernew}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a constant $C$ given by
+    \begin{multline}
+        \label{constItostepboundstrongordernew}
+        C = \left( C_0 +  L_X \left(\mathbb{E}[|X_0|] + \int_0^T \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X T}\right. \\
+        \left. + \left(\int_0^T \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^T \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right)\right) e^{L_X T}
+    \end{multline}
+\end{thm}
+
+\begin{proof}
+    Under \cref{standinghypotheses1}, the \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds.
+    
+    Thanks to \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{EX0X0N}, the \cref{propbasicestimate} applies and the global error is bounded according to \eqref{expectedestimateglobalerrorintegral}.
+    
+    With assumptions \eqref{Itostep} and \eqref{expectItostepterms}, \cref{lemItostep} applies and the last term in \eqref{expectedestimateglobalerrorintegral} is bounded according to \eqref{expectintfboundbyIto}. Using \eqref{expectintfboundbyIto} in \eqref{expectedestimateglobalerrorintegral} yields
+    \begin{multline*}
+        \mathbb{E} \left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( C_0 \Delta t_N + \Delta t_N L_X \left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}\right. \\
+        \left. + \Delta t_N \left(\int_0^{t_j} \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^{t_j} \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right)\right) e^{L_X t_j}.
+    \end{multline*}
+    Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmItosteptrongordernew}.
+\end{proof}
+
+\begin{cor}
+    \label{corItonoise}
+    Under the \cref{standinghypotheses1}, suppose also that
+    \eqref{EX0strongbound}, \eqref{EX0X0N}. Suppose, moreover, that $f=f(t, x, y)$ is twice continuously differentiable in $(t, y)$ with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise, satisfying
+    \begin{equation}
+        \label{YtItonoise}
+        \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t.
+    \end{equation}
+    with
+    \begin{equation}
+        \label{Itonoiseterms}
+        |a(t, y)| \leq A_M + A_Y |y|, \qquad |b(t, y)| \leq B_M + B_Y|y|.
+    \end{equation}
+    and
+    \begin{equation}
+        \label{YtItonoiseconditions}
+        \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty
+    \end{equation}
+    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    \begin{equation}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+  for a suitable constant $C \geq 0$.
+\end{cor}
+
+\begin{proof}
+    In view of \cref{thmItostep}, it suffices to prove \eqref{EMtstrongbound}, \eqref{Itostep}, and \eqref{expectItostepterms}. We start with \eqref{EMtstrongbound}.
 \end{proof}
 
 \section{The case of an It\^o noise}
