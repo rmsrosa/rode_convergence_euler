@@ -675,10 +675,10 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \label{lineareqform}
     f(t, x, y) = a(t, y)h(x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(Y_t; 0, T)$ on $I$, with finite 2-norm
+  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean variation
   \begin{equation}
     \label{EYtboundedsquarevariation}
-    \mathbb{E}[V(Y_t; 0, T)^2] < \infty,
+    \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
   \end{equation}
   and with
   \begin{equation}
@@ -722,7 +722,7 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \[
         M_t = A_MH_M + B_0 + B_T T + B_Y|Y_t|, \quad L_X = A_MH_X.
     \]
-    Since by assumption $\mathbb{E}[|X_0|^2] < \infty$ and $\mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(Y_t, T, 0)^2] < \infty$, it follows from \eqref{XtboundLXMt} that
+    Since by assumption $\mathbb{E}[|X_0|^2] < \infty$ and $\mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty$, it follows from \eqref{XtboundLXMt} that
     \[
         K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
     \]
@@ -733,7 +733,7 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \]
     Any sample path of $\{G_t\}_{t\in I}$ is non-decreasing and $G_0 = 0$. Moreover,
     \[
-        \mathbb{E}[G_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(Y_t, T, 0)^2].
+        \mathbb{E}[G_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
     \]
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
