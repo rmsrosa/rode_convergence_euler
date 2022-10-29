@@ -585,17 +585,17 @@ More precisely, we have the following result:
     Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
     \begin{equation}
         \label{stepbound}
-          |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq F_s - F_\tau,
+          |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq \bar F_s - \bar F_\tau,
       \end{equation}
-      where $\{F_t\}$ is a real stochastic process satisfying
+      where $\{\bar F_t\}$ is a real stochastic process satisfying
       \begin{equation}
         \label{expectstepmonotonic}
-        \mathbb{E}[|F_t|] \textrm{ is monotonic nondecreasing and bounded in } t\in I.
+        \mathbb{E}[|\bar F_t|] \textrm{ is monotonic nondecreasing and bounded in } t\in I.
       \end{equation}
       Then,
       \begin{equation}
         \label{expectintfboundbyG}
-          \mathbb{E}\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq (\mathbb{E}[F_t] - \mathbb{E}[F_0])\Delta t_N,
+          \mathbb{E}\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N,
       \end{equation}
       for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
 \end{lem}
@@ -603,36 +603,36 @@ More precisely, we have the following result:
 \begin{proof}
     Let $N\in \mathbb{R}$. From the assumption \eqref{stepbound} we have
     \[
-        \mathbb{E}\left[|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})|\right] \leq \mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}],
+        \mathbb{E}\left[|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})|\right] \leq \mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}],
     \]
     for every $0\leq s \leq T$. Thus, upon integration,
     \begin{align*}
         \mathbb{E}&\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
         & \qquad \leq \int_0^t \mathbb{E}\left[|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right]\;\mathrm{d}s \\
-        & \qquad \leq \int_0^t \left(\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}]\right)\;\mathrm{d}s.
+        & \qquad \leq \int_0^t \left(\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}]\right)\;\mathrm{d}s.
     \end{align*}
     Now we need to bound the right hand side. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
     \begin{align*}
-      \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}])\;\mathrm{d}s & = \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{0}]) \;\mathrm{d}s.
+      \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s & = \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{0}]) \;\mathrm{d}s.
     \end{align*}
     Using the monotonicity and the condition that $t \leq \Delta t_N$,
     \begin{multline*}
-      \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_0^t (\mathbb{E}[F_t] - \mathbb{E}[F_0]) \;\mathrm{d}s  \\
-      = (\mathbb{E}[F_t] - \mathbb{E}[F_0])t \leq (\mathbb{E}[F_t] - \mathbb{E}[F_0])\Delta t_N.
+      \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_0^t (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0]) \;\mathrm{d}s  \\
+      = (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])t \leq (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N.
     \end{multline*}
     When $\Delta t_N\leq t \leq T$, we split the integration of the second term at time $s = t_1 = \Delta t_N$ and write
     \[ 
-      \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}])\;\mathrm{d}s = \int_0^t \mathbb{E}[F_s] \;\mathrm{d}s - \int_0^{t_1} \mathbb{E}[F_{\tau^N(s)}]\;\mathrm{d}s - \int_{t_1}^t \mathbb{E}[F_{\tau^N(s)}]\;\mathrm{d}s
+      \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s = \int_0^t \mathbb{E}[\bar F_s] \;\mathrm{d}s - \int_0^{t_1} \mathbb{E}[\bar F_{\tau^N(s)}]\;\mathrm{d}s - \int_{t_1}^t \mathbb{E}[\bar F_{\tau^N(s)}]\;\mathrm{d}s
     \]
     Using the monotonicity together with the fact that $s - \Delta t_N\leq \tau^N(s) \leq s$ for all $\Delta t_N\leq s \leq T$,
     \begin{align*}
-        \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}])\;\mathrm{d}s & \leq \int_0^t \mathbb{E}[F_s] \;\mathrm{d}s - \int_0^{\Delta t_N} \mathbb{E}[F_0]\;\mathrm{d}s - \int_{\Delta t_N}^t \mathbb{E}[F_{s-\Delta t_N}]\;\mathrm{d}s \\
-        & = \int_0^t \mathbb{E}[F_s] \;\mathrm{d}s - \int_0^{\Delta t_N} \mathbb{E}[F_0]\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} \mathbb{E}[F_s]\;\mathrm{d}s \\
-        & = \int_{t-\Delta t_N}^t \mathbb{E}[F_s] \;\mathrm{d}s - \mathbb{E}[F_0]\Delta t_N.
+        \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s & \leq \int_0^t \mathbb{E}[\bar F_s] \;\mathrm{d}s - \int_0^{\Delta t_N} \mathbb{E}[\bar F_0]\;\mathrm{d}s - \int_{\Delta t_N}^t \mathbb{E}[\bar F_{s-\Delta t_N}]\;\mathrm{d}s \\
+        & = \int_0^t \mathbb{E}[\bar F_s] \;\mathrm{d}s - \int_0^{\Delta t_N} \mathbb{E}[\bar F_0]\;\mathrm{d}s - \int_{0}^{T-\Delta t_N} \mathbb{E}[\bar F_s]\;\mathrm{d}s \\
+        & = \int_{t-\Delta t_N}^t \mathbb{E}[\bar F_s] \;\mathrm{d}s - \mathbb{E}[\bar F_0]\Delta t_N.
     \end{align*}
     Using again the monotonicity yields
     \[ 
-      \int_0^t (\mathbb{E}[F_s] - \mathbb{E}[F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t \mathbb{E}[F_t] \;\mathrm{d}s - \mathbb{E}[F_0]\Delta t_N= (\mathbb{E}[F_t] - \mathbb{E}[F_0])\Delta t_N.
+      \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t \mathbb{E}[\bar F_t] \;\mathrm{d}s - \mathbb{E}[\bar F_0]\Delta t_N= (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N.
     \]
 
     Putting the estimates together proves \eqref{expectintfboundbyG}.
@@ -649,7 +649,7 @@ More precisely, we have the following result:
     for a constant $C$ given by
     \begin{equation}
         \label{constmonotonicboundstrongordernew}
-        C = \left(C_0 + L_X \left(\mathbb{E}[|X_0|] + \int_0^{T} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X T} + (\mathbb{E}[F_T] - \mathbb{E}[F_0])\right)e^{L_X T}
+        C = \left(C_0 + L_X \left(\mathbb{E}[|X_0|] + \int_0^{T} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X T} + (\mathbb{E}[\bar F_T] - \mathbb{E}[\bar F_0])\right)e^{L_X T}
     \end{equation}
 \end{thm}
 
@@ -661,7 +661,7 @@ More precisely, we have the following result:
     With assumptions \eqref{stepbound} and \eqref{expectstepmonotonic}, \cref{lemmonotonicbound} applies and the last term in \eqref{expectedestimateglobalerrorintegral} is bounded according to \eqref{expectintfboundbyG}. Using \eqref{expectintfboundbyG} in \eqref{expectedestimateglobalerrorintegral} yields
     \begin{multline*}
         \mathbb{E} \left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( C_0 \Delta t_N + \Delta t_N L_X \left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}\right. \\
-        \left. + (\mathbb{E}[F_{t_j}] - \mathbb{E}[F_0])\Delta t_N\right) e^{L_X t_j}.
+        \left. + (\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0])\Delta t_N\right) e^{L_X t_j}.
     \end{multline*}
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
@@ -727,13 +727,13 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
     \]
 
-    Define the process $\{F_t\}_{t\in I}$ by
+    Define the process $\{\bar F_t\}_{t\in I}$ by
     \[
-        F_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
+        \bar F_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \]
-    Any sample path of $\{F_t\}_{t\in I}$ is non-decreasing and $F_0 = 0$. Moreover,
+    Any sample path of $\{\bar F_t\}_{t\in I}$ is non-decreasing and $\bar F_0 = 0$. Moreover,
     \begin{multline*}
-        \mathbb{E}[F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T \\
+        \mathbb{E}[\bar F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T \\
         + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
     \end{multline*}
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
