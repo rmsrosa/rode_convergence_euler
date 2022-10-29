@@ -675,7 +675,17 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \label{lineareqform}
     f(t, x, y) = a(t, y)h(x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation. Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(Y_t; 0, T)$ on $I$, with finite 2-norm
+  \begin{equation}
+    \label{EYtboundedsquarevariation}
+    \mathbb{E}[V(Y_t; 0, T)^2] < \infty,
+  \end{equation}
+  and with
+  \begin{equation}
+    \label{EX0square}
+    \mathbb{E}[|X_0|^2] < \infty.
+  \end{equation}
+  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
   \begin{equation}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
   \end{equation}
@@ -700,26 +710,32 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \end{align*}
     for suitable nonnegative constants $A_T, A_Y, B_T, B_Y, H_M,$ and $H_X$.
 
+    Notice that
+    \[
+        |f(t, x, y)| \leq |a(t, y)||h(x)| + |b(t, y)| \leq A_M(H_M + H_X|x|) + B_0 + B_T T + B_Y |y|.
+    \]
+    Thus,
+    \[
+        |f(t, x, Y_t)| \leq M_t + L_X|x|,
+    \]
+    where
+    \[
+        M_t = A_MH_M + B_0 + B_T T + B_Y|Y_t|, \quad L_X = A_MH_X.
+    \]
+    Since by assumption $\mathbb{E}[|X_0|^2] < \infty$ and $\mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(Y_t, T, 0)^2] < \infty$, it follows from \eqref{XtboundLXMt} that
+    \[
+        K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
+    \]
+
     Define the process $\{G_t\}_{t\in I}$ by
     \[
         G_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \]
-    Any sample path of $\{G_t\}_{t\in I}$ is non-decreasing and $G_0 = 0$. The only difficulty is in showing that it has bounded expectation:
+    Any sample path of $\{G_t\}_{t\in I}$ is non-decreasing and $G_0 = 0$. Moreover,
     \[
-        \mathbb{E}[G_T] < \infty \quad ???
+        \mathbb{E}[G_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(Y_t, T, 0)^2].
     \]
-    The difficulty comes from need to estimate the term $\mathbb{E}[|X_\xi||\mathrm{d}Y_\xi|]$. This requires some
-    \[
-        \mathbb{E}[|X_\xi||\mathrm{d}Y_\xi|] \leq (\mathbb{E}[|X_\xi|^p])^{1/p}(\mathbb{E}[|\mathrm{d}Y_\xi|^q])^{1/q}
-    \]
-    I believe the estimate on the noise will end up affecting both terms, so we better just take $p=q=2$ and assume that
-    \[
-        \mathbb{E}[|X_0|^2] < \infty
-    \]
-    and something like
-    \[
-        \mathbb{E}\left[\int_0^T |\mathrm{d}Y_\xi|^2\right] < \infty
-    \]
+    Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
 \section{The case of an It\^o noise}
