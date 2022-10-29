@@ -763,7 +763,7 @@ With that in mind, we first have the following result.
     for a Wiener process $\{W_t\}_{t\in 0}$ and stochastic processes $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ adapted to $\{W_t\}_{t\geq 0}$ and such that
     \begin{equation}
         \label{expectItostepterms}
-        \int_0^T \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi < \infty, \quad \int_0^T \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi < \infty.
+        \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad \int_0^T \mathbb{E}[|B_t|^2] \;\mathrm{d}t < \infty.
     \end{equation}
     Then,
     \begin{multline}
@@ -907,181 +907,31 @@ With that in mind, we first have the following result.
     \]
     Therefore, we are under the condition of \eqref{standinghypotheses1}.
 
-    Now, in view of \cref{thmItostep}, it remains to prove \eqref{Itostep}, and \eqref{expectItostepterms}.
-\end{proof}
-
-\section{The case of an It\^o noise}
-
-Here, we assume the noise $\{Y_t\}_{t\in I}$ is an \textbf{It\^o process}, i.e. satisfying
-\begin{equation}
-  \label{itoprocess}
-  \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
-\end{equation}
-where $\{W_t\}_{t\geq 0}$ is a Wiener process and $\{A_t\}_{t \in I}$ and $\{B_t\}_{t \in I}$ are stochastic processes adapted to $\{W_t\}_{t\geq 0}$. As mentioned in the Introduction, we are not solving for $Y_t$, otherwise we would actually have a system of stochastic differential equations. Instead, we assume it is a known process, with analytic solution to be used in the Euler-Maruyama approximation of \eqref{rodeeq}. In theory, $A_t$ and $B_t$ are allowed to be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\geq 0}$. For example, $Y_t$ may be a Wiener process, an Ornstein-Uhlenbeck process or a geometric Brownian process. At this point, we only assume that $\{A_t\}_{t \geq 0}$ and $\{B_t\}_{t \geq 0}$ satisfy
-\begin{equation}
-    \label{EAtEBtbound}
-    \mathbb{E}[|A_t|] \leq M_A, \quad \mathbb{E}[|B_t|] \leq M_B, \qquad \forall t \in [0, T].
-\end{equation}
-
-We also assume that $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, so the It\^o formula is applicable and yields
-\begin{multline}
-  \label{itoformula}
-  \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + A_t \partial_y f(t, x, Y_t)  + \frac{B_t^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + B_t \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
-\end{multline}
-for every fixed $x\in \mathbb{R}$.
-
-We need to estimate the global error \eqref{Etjbasicbound}. The first term in the right hand side vanishes with the assumption that $X_0^N = X_0$. The second term is bounded according to \cref{estimatesecondterminglobalerror}. Our main concern here is in estimating the last term. For that, we have the following results.
-
-\begin{lem}
-    \label{lemrewritenoiseterm}
-    Under the \cref{standinghypotheses2}, the bound
-    \begin{equation}
-        \label{rewritenoiseterm}
-        \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = I^1 + I^2,
-    \end{equation}
-    holds for each $j = 0, 1, \ldots, N$, where
-    \begin{multline*}
-        I^1 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) \\
-        \left(\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right) \;\mathrm{d}s
-    \end{multline*}
-    and
-    \[
-        I^2 = \int_0^{t_j} (\tau^N(s) + \Delta t_N - s) B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) \;\mathrm{d}W_s.
-    \]
-\end{lem}
-
-\begin{proof}
-    We use the It\^o formula on $Z_s = f(s, X_t^N, Y_s)$ and write, for any $0 \leq t < t + \tau \leq T$,
-    \begin{align*}
-        \int_t^{t + \tau} & \left(f(s, X_t^N, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s  = \int_t^{t + \tau} \int_t^s \mathrm{d}Z_\xi \;\mathrm{d}s \\
-        & = \int_t^{t + \tau} \int_t^s \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}\xi\;\mathrm{d}s \\ 
-        & \quad + \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s.
-    \end{align*}
-
-    Using Fubini's Theorem, the first double integral is rewritten as
-    \begin{multline*}
-        \int_t^{t + \tau} \int_\xi^{t+\tau} \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}s\;\mathrm{d}\xi \\
-        = \int_t^{t + \tau} (t+\tau - \xi) \left(\partial_\xi f(\xi, X_t^N, Y_\xi) + A_\xi \partial_y f(\xi, X_t^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_t^N, Y_\xi) \right) \;\mathrm{d}\xi.
-    \end{multline*}
-
-    Using now Fubini's Theorem on the last integral, we find
-    \begin{multline*}
-        \int_t^{t + \tau} \int_t^s B_\xi \partial_y f(\xi, X_t^N, Y_\xi)\;\mathrm{d}W_\xi\;\mathrm{d}s 
-        = \int_t^{t + \tau} \int_\xi^{t + \tau} B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
-        = \int_t^{t+\tau} (t + \tau - \xi) B_\xi \partial_y f(\xi, X_t^N, Y_\xi) \;\mathrm{d}W_\xi.
-    \end{multline*}
-
-    Thus, for $\tau = \Delta t_N$, $t = t_{j-1} = (j-1)\Delta t_N$, and $t + \tau = t_{j-1} + \Delta t_N = t_j$, we have
-    \[
-        \int_{t_j}^{t_{j+1}} \left(f(s, X_{t_j}^N, Y_s) - f(t, X_{t_j}^N, Y_t) \right)\;\mathrm{d}s = I_j^{1} + I_j^{2},
-    \]
-    where
-    \[
-        I_j^1 = \int_{t_j}^{t_{j+1}} (t_{j+1} - \xi) \left(\partial_\xi f(\xi, X_{t_j}^N, Y_\xi) + A_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)  + \frac{B_\xi^2}{2}\partial_{yy}f(\xi, X_{t_j}^N, Y_\xi) \right) \;\mathrm{d}\xi,
-    \]
-    and
-    $$
-        I_j^2 = \int_{t_j}^{t_{j+1}}  (t_{j+1} - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi) \;\mathrm{d}W_\xi.
-    $$
-    Summing them up in $j$ and writing $s$ for $\xi$ leads to \eqref{rewritenoiseterm}.
-\end{proof}
-
-\begin{lem}
-    \label{lemestimatesforI1andI2}
-    Under the \cref{standinghypotheses2}, suppose, moreover, that
-    \begin{equation}
-        \label{estimateforI1}
-        \begin{aligned}
-            K_1 = \sup_{N\in\mathbb{N}} & \int_0^{T} \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) \right.\right. \\ 
-            & \qquad + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{B_s^2}{2} \left.\left.\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s < \infty
-        \end{aligned}
-    \end{equation}
-    and
-    \begin{equation}
-        \label{estimateforI2}
-        K_2 = \sup_{N\in \mathbb{N}}\left(\int_0^T \mathbb{E}\left[\left|B_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
-    \end{equation}
-    Then,
-    \begin{equation}
-        \label{rewrittennoisetermbound}
-        \int_0^{t_j} \mathbb{E}\left[\left| f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right|\right]\;\mathrm{d}s \leq C\Delta_N
-    \end{equation}
-    for each $j = 0, 1, \ldots, N$, and a suitable constant $C>0$.
-\end{lem}
-
-\begin{proof}
-    Taking the expectation of the absolute value of \eqref{rewritenoiseterm}, we see we need to estimate $\mathbb{E}[|I^1|]$ and $\mathbb{E}[|I^2|]$, defined in \cref{lemrewritenoiseterm}. The estimate of the first term is straightfoward and leads to
-    \begin{align*}
-        & \mathbb{E}[|I^1|] \leq \int_0^{t_j} |\tau^N(s) + \Delta t_N - s| \\
-        & \qquad \qquad \left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right| \;\mathrm{d}s \\
-        & \qquad \leq \Delta t_N \int_0^{T}\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + A_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)  + \frac{B_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right| \;\mathrm{d}s \\
-        & \qquad \leq K_1 \Delta t_N,
-    \end{align*}
-    where $K_1$ is given by \eqref{estimateforI1}. For the second term, we use the Lyapunov inequality and the It\^o isometry to find that
-    \begin{align*}
-        \mathbb{E}[|I^2|] & \leq \sqrt{\mathbb{E}[|I^2|^2]} \\
-        & = \left(\int_{t_j}^{t_{j+1}}  \mathbb{E}\left[\left((\tau^N(s) + \Delta t_N - \xi) B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)\right)^2\right] \;\mathrm{d}\xi \right)^{1/2} \\
-        & \leq \Delta t_N \left(\int_{t_j}^{t_{j+1}}  \mathbb{E}\left[\left(B_\xi \partial_y f(\xi, X_{t_j}^N, Y_\xi)\right)^2\right] \;\mathrm{d}\xi \right)^{1/2} \\
-        & \qquad \leq K_2 \Delta t_N,
-    \end{align*}
-    for $K_2$ given by \eqref{estimateforI2}. Putting the two estimates together, we find \eqref{rewrittennoisetermbound}.
-\end{proof}
-
-Gathering the conditions, we obtain the following result.
-\begin{thm}
-    \label{thmforItonoise}
-    Under the \cref{standinghypotheses2}, suppose, moreover, that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{estimateforI1} and \eqref{estimateforI2} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
-    \begin{equation}
-      \label{thmitogeneralboundstrongorder}
-        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
-    \end{equation}
-    for a suitable constant $C \geq 0$
-\end{thm}
-
-The required conditions in \cref{thmforItonoise}, especially conditions \eqref{estimateforI1} and \eqref{estimateforI2} of \cref{lemestimatesforI1andI2}, are not readily checked. We present, below, some particular cases with more explicit bounds that imply those.
-
-\begin{cor}
-    Yeah, corollaries are good.
-\end{cor}
-
-\begin{rmk}
-    When the noise $\{Y_t\}_{t\in I}$ is a Wiener process, then $A_t = 0$ and $B_t = 1$ and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
-    \begin{equation}
-        K_1 = \int_0^{T}
-        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \frac{1}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s
-        < \infty
-    \end{equation}
-    and
-    \begin{equation}
-        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
-    \end{equation}
-\end{rmk}
-
-\begin{rmk}
-    When the noise $\{Y_t\}_{t\in I}$ is a Ornstein-Uhlenbeck process, then $A_t = -\nu Y_t$ and $B_t = \sigma$, for $\nu\in \mathbb{R}$, $\sigma > 0$, and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
+    Now, in view of \cref{thmItostep}, it remains to prove that $F_t = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
     \begin{multline}
-        K_1 = \int_0^{T}
-        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) -\nu \partial_y f(s, X_{\tau^N(s)}^N, Y_s) + \frac{\sigma^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s \\
-        < \infty
-    \end{multline}
+        \label{itoformula}
+            \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
+        \end{multline}
+    for every fixed $x\in \mathbb{R}$. This means \eqref{Itostep} holds with
+    \[
+        A_t = \partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t)
+    \]
     and
-    \begin{equation}
-        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\sigma \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
-    \end{equation}
-\end{rmk}
+    \[
+        B_t = b(t, Y_t) \partial_y f(t, x, Y_t).
+    \]
+    It remains to show that $\{A_t\}_{t\in I}$ is mean integrable and that $\{B_t\}_{t\in I}$ is square mean integrable. Since $f=f(t, x, y)$ has uniformly bounded derivatives, we have
+    \[
+        |A_t| \leq L_T + L_Y(A_M + A_Y|Y_t|) + 2L_{YY}(B_M^2 + B_Y^2|Y_t|^2),
+    \]
+    and
+    \[
+        |B_t| \leq F_Y (B_M + B_Y |Y_t|),
+    \]
+    for a suitable constants $L_{YY}\geq 0$. Now, thanks to \eqref{unifboundYtIto}, we see that \eqref{expectItostepterms} is satisfied.
 
-\begin{rmk}
-    When the noise $\{Y_t\}_{t\in I}$ is a geometric Brownian motion process, then $A_t = \mu  Y_t$ and $B_t = \sigma Y_t$, for $\mu\in \mathbb{R}$, $\sigma > 0$, and the bounds \eqref{estimateforI1} and \eqref{estimateforI2} become
-    \begin{multline}
-        K_1 = \int_0^{T}
-        \mathbb{E}\left[\left|\partial_s f(s, X_{\tau^N(s)}^N, Y_s) + \mu Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s) \right.\right. \\
-        \left.\left. + \frac{\sigma^2 Y_s^2}{2}\partial_{yy}f(s, X_{\tau^N(s)}^N, Y_s) \right|\right] \;\mathrm{d}s < \infty
-    \end{multline}
-    and
-    \begin{equation}
-        K_2 = \left(\int_0^{t_j} \mathbb{E}\left[\left|\sigma Y_s \partial_y f(s, X_{\tau^N(s)}^N, Y_s)\right|^2\right] \;\mathrm{d}s\right)^{1/2} < \infty.
-    \end{equation}
-\end{rmk}
+    Therefore, all the conditions of \cref{thmItostep} are met and we deduce the strong order 1 convergence of the Euler-Maruyama method.
+\end{proof}
 
 \section{Applications}
 
@@ -1110,13 +960,8 @@ In the case that the diffusion term $b = b(y)$ is actually independent of $y$, t
     \label{rodepopulationdynamicsalt}
     \frac{\mathrm{d}X_t}{\mathrm{d}t} = \mu X_t (r - X_t)cos(Y_t),
 \end{equation}
-where $\mu, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{itoprocess} with
-\[
-    \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad 
-    \int_0^T \mathbb{E}[|B_t|] \;\mathrm{d}t < \infty, \quad
-    \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty.
-\]
-This includes a Wiener process, an Orstein-Uhlenbeck process or a geometric Brownian motion process.
+where $\mu, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}, which
+includes a Wiener process, an Orstein-Uhlenbeck process or a geometric Brownian motion process.
 
 Define 
 \[
@@ -1143,13 +988,7 @@ where $r > 0$ is constant and $\{Z_t\}_{t \geq}$ is a stochastic process playing
 \[
     Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
 \]
-where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{itoprocess} with
-\[
-    \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad 
-    \int_0^T \mathbb{E}[|B_t|] \;\mathrm{d}t < \infty, \quad
-    \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty.
-\]
-We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
+where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}. We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
 %\[
 %    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
 %\]
@@ -1213,21 +1052,7 @@ We have
 \[
     g'(\eta) = \lambda \varepsilon \cos(\eta), \quad g''(\eta) = -\lambda\varepsilon\sin(\eta)
 \]
-hence both are uniformly bounded. Therefore, condition \eqref{estimateforI1} is satisfied with
-\[
-    K_1 \leq \lambda\varepsilon \int_0^T \left( (\theta_1 - \theta_2 \mathbb{E}[|O_t|] + \frac{\theta_3^2}{2})\right) \;\mathrm{d}s < \infty,
-\]
-while \eqref{estimateforI2} is satisfied with
-\[
-    K_2 \leq \lambda\varepsilon\theta_3 T^{1/2} < \infty.
-\]
-
-Hence, all the conditions of \cref{thmforItonoise} hold and the Euler-Maruyama method is of strong order 1.
-
-
-
-
-
+hence both are uniformly bounded. Therefore, all the conditions of \cref{corItonoise} hold and the Euler-Maruyama method is of strong order 1.
 
 \subsection{Drug delivery}
 
