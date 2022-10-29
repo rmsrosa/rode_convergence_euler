@@ -732,9 +732,10 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         F_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \]
     Any sample path of $\{F_t\}_{t\in I}$ is non-decreasing and $F_0 = 0$. Moreover,
-    \[
-        \mathbb{E}[F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
-    \]
+    \begin{multline*}
+        \mathbb{E}[F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T \\
+        + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
+    \end{multline*}
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
@@ -858,6 +859,15 @@ With that in mind, we first have the following result.
 
 \begin{proof}
     In view of \cref{thmItostep}, it suffices to prove \eqref{EMtstrongbound}, \eqref{Itostep}, and \eqref{expectItostepterms}. We start with \eqref{EMtstrongbound}.
+
+    From \eqref{YtItonoise} and \eqref{Itonoiseterms}, we have
+    \[
+        Y_t = \int_0^t a(s, Y_s)\;\mathrm{d}s + \int_0^s b(t, Y_s)\;\mathrm{d}W_s.
+    \]
+    Thus, using the It\^o isometry,
+    \[
+        \mathbb{E}[|Y_t|] \leq \int_0^t (A_M + A_Y \mathbb{E}[|Y_s|])\;\mathrm{d}s + \left( \int_0^t 2(B_M^2 + B_Y^2 \mathbb{E}[|Y_s|^2])\;\mathrm{d}s\right)^{1/2}.
+    \]
 \end{proof}
 
 \section{The case of an It\^o noise}
