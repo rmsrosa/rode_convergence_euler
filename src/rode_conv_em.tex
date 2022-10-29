@@ -741,24 +741,25 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
 
 \section{The case of an It\^o noise}
 
-In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{F_s\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmsemiseparablemonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
+In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmsemiseparablemonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
 \[
-    |f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau})| \leq \int_\tau^s \mathrm{d}F_\xi.
+    |f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau})| \leq \int_\tau^s \mathrm{d}\bar F_\xi^N.
 \]
-An alternative condition is to assume that $s \mapsto f(s, X_{\tau^N(s), Y_s})$ itself is an It\^o process and, as such,
+An alternative condition considered in this section is to assume that $s \mapsto f(s, X_{\tau^N(s), Y_s})$ itself is an It\^o process and, as such,
 \[
-    f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau}) = \int_\tau^s A_\xi \;\mathrm{d}\xi + \int_\tau^s B_\xi \;\mathrm{d}W_\xi.
+    f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau}) = \int_\tau^s A_\xi \;\mathrm{d}\xi + \int_\tau^s B_\xi \;\mathrm{d}W_\xi,
 \]
+for suitable $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$.
 
 In practice, we may assume $f=f(t, x, y)$ is twice continuously differentiable in $(t, y)$ and the noise $\{Y_t\}_{t\in I}$ itself is an It\^o noise, so that, by the It\^o formula, the steps above are themselves It\^o noises.
 
 With that in mind, we first have the following result.
 \begin{lem}
     \label{lemItostep}
-    Besides the \cref{standinghypotheses1}, suppose that $F_t = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
+    Besides the \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
     \begin{equation}
         \label{Itostep}
-        \mathrm{d}F_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
+        \mathrm{d}F_t^N = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
     \end{equation}
     for a Wiener process $\{W_t\}_{t\in 0}$ and stochastic processes $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ adapted to $\{W_t\}_{t\geq 0}$ and such that
     \begin{equation}
@@ -834,10 +835,10 @@ With that in mind, we first have the following result.
 
 \begin{cor}
     \label{corItonoise}
-    Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise, satisfying
+    Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise,
     \begin{equation}
         \label{YtItonoise}
-        \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t.
+        \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t,
     \end{equation}
     with $a=a(t, y)$ and $b=b(t, y)$ continuous and satisfying
     \begin{equation}
@@ -907,7 +908,7 @@ With that in mind, we first have the following result.
     \]
     Therefore, we are under the condition of \eqref{standinghypotheses1}.
 
-    Now, in view of \cref{thmItostep}, it remains to prove that $F_t = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
+    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
     \begin{multline}
         \label{itoformula}
             \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
@@ -926,7 +927,7 @@ With that in mind, we first have the following result.
     \]
     and
     \[
-        |B_t| \leq F_Y (B_M + B_Y |Y_t|),
+        |B_t| \leq L_Y (B_M + B_Y |Y_t|),
     \]
     for a suitable constants $L_{YY}\geq 0$. Now, thanks to \eqref{unifboundYtIto}, we see that \eqref{expectItostepterms} is satisfied.
 
