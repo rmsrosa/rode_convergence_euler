@@ -727,13 +727,13 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
         K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
     \]
 
-    Define the process $\{G_t\}_{t\in I}$ by
+    Define the process $\{F_t\}_{t\in I}$ by
     \[
-        G_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
+        F_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
     \]
-    Any sample path of $\{G_t\}_{t\in I}$ is non-decreasing and $G_0 = 0$. Moreover,
+    Any sample path of $\{F_t\}_{t\in I}$ is non-decreasing and $F_0 = 0$. Moreover,
     \[
-        \mathbb{E}[G_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
+        \mathbb{E}[F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
     \]
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
