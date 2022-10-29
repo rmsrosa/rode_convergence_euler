@@ -739,6 +739,10 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
+\begin{rmk}
+    The semi-separable case is a general form that fits the conditions of \eqref{stepbound}-\eqref{expectstepmonotonic}, but other forms are possible. It suffices to \emph{bound} the steps in a semi-separable way.
+\end{rmk}
+
 \section{The case of an It\^o noise}
 
 In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmsemiseparablemonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
