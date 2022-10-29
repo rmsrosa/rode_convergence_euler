@@ -309,7 +309,7 @@ We start with the following hypotheses, which imply the existence and uniqueness
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
                 \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
-                \item The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in [0, T]$.
+                \item \label{standinghypotheses1Carboundonf} The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in [0, T]$.
             \end{enumerate}
     \end{enumerate}
 \end{stdhyp}
@@ -834,21 +834,20 @@ With that in mind, we first have the following result.
 
 \begin{cor}
     \label{corItonoise}
-    Under the \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EX0X0N}. Suppose, moreover, that $f=f(t, x, y)$ is twice continuously differentiable in $(t, y)$ with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise, satisfying
+    Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise, satisfying
     \begin{equation}
         \label{YtItonoise}
         \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t.
     \end{equation}
-    with
+    with $a=a(t, y)$ and $b=b(t, y)$ continuous and satisfying
     \begin{equation}
         \label{Itonoiseterms}
         |a(t, y)| \leq A_M + A_Y |y|, \qquad |b(t, y)| \leq B_M + B_Y|y|.
     \end{equation}
-    and
+    Assume the bounds \eqref{EX0strongbound}, \eqref{EX0X0N}, and
     \begin{equation}
-        \label{YtItonoiseconditions}
-        \int_0^T \mathbb{E}[|Y_t|] \;\mathrm{d}t < \infty
+        \label{YtItonoiseinitialcondition}
+        \mathbb{E}[|Y_0|] < \infty
     \end{equation}
     Then, the Euler-Maruyama scheme is of strong order 1, i.e.
     \begin{equation}
@@ -858,16 +857,57 @@ With that in mind, we first have the following result.
 \end{cor}
 
 \begin{proof}
-    In view of \cref{thmItostep}, it suffices to prove \eqref{EMtstrongbound}, \eqref{Itostep}, and \eqref{expectItostepterms}. We start with \eqref{EMtstrongbound}.
+    Let us start by showing that \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipscthiz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
 
     From \eqref{YtItonoise} and \eqref{Itonoiseterms}, we have
     \[
         Y_t = \int_0^t a(s, Y_s)\;\mathrm{d}s + \int_0^s b(t, Y_s)\;\mathrm{d}W_s.
     \]
-    Thus, using the It\^o isometry,
+    Using the It\^o formula, we have
     \[
-        \mathbb{E}[|Y_t|] \leq \int_0^t (A_M + A_Y \mathbb{E}[|Y_s|])\;\mathrm{d}s + \left( \int_0^t 2(B_M^2 + B_Y^2 \mathbb{E}[|Y_s|^2])\;\mathrm{d}s\right)^{1/2}.
+        \mathrm{d}Y_t^2 = \left(2a(t, Y_t) Y_t  + b(t, Y_t)^2 \right) \;\mathrm{d}t + 2b(t, Y_t) Y_t\;\mathrm{d}W_t.
     \]
+    Thus
+    \[
+        Y_t^2 = Y_0^2 + \int_0^t \left(2a(s, Y_s) Y_s  + b(t, Y_s)^2 \right) \;\mathrm{d}s + \int_0^t 2b(s, Y_s) Y_s\;\mathrm{d}W_s.
+    \]
+    Taking the expectation,
+    \[
+        \mathbb{E}[|Y_t|^2] = \mathbb{E}[|Y_0|^2] + \int_0^t \left(2a(s, Y_s) Y_s  + b(t, Y_s)^2 \right) \;\mathrm{d}s.
+    \]
+    Using \eqref{Itonoiseterms}, this yields
+    \begin{align*}
+        \mathbb{E}[|Y_t|^2] & \leq \mathbb{E}[|Y_0|^2] + \int_0^t \left(2\mathbb{E}[(A_M + A_Y |Y_s|) |Y_s|]  + \mathbb{E}[(B_M + B_Y|Y_s|)^2 \right) \;\mathrm{d}s \\
+        & \leq \mathbb{E}[|Y_0|^2] + \int_0^t \left(4(A_M^2 + (1 + A_Y) \mathbb{E}[|Y_s|^2])  + 2(B_M^2 + B_Y^2\mathbb{E}[|Y_s|^2]) \right) \;\mathrm{d}s
+    \end{align*}
+    By the Gronwall Lemma,
+    \[
+        \mathbb{E}[|Y_t|^2] \leq \left( \mathbb{E}[|Y_0|^2] + (4A_M^2 + 2B_M^2)t\right)e^{(4(1 + A_Y) + 2B_Y^2)t}.
+    \]
+    Thus,
+    \begin{equation}
+        \label{unifboundYtIto}
+        \sup_{t\in I}\mathbb{E}[|Y_t|^2] \leq \left( \mathbb{E}[|Y_0|^2] + (4A_M^2 + 2B_M^2)T\right)e^{(4(1 + A_Y) + 2B_Y^2)T}.
+    \end{equation}
+    Since $f=f(t, x, y)$ is Lipschitz in $x$ and twice continuously differentiable in $(t, y)$ with uniformly bounded first order derivatives, we have the bound
+    \[
+        |f(t, x, y)| \leq |f(0, 0, 0)| + L_X|x| + L_T|t| + L_Y|y|.
+    \]
+    Thus,
+    \[
+        |f(t, x, Y_t)| \leq M_t + L_X|x|
+    \]
+    with
+    \[
+        M_t = |f(0, 0, 0)| + L_T|t| + L_Y|y|.
+    \]
+    Thanks to \eqref{unifboundYtIto}, we see that
+    \[
+        \int_0^T M_t\;\mathrm{d}t < \infty.
+    \]
+    Therefore, we are under the condition of \eqref{standinghypotheses1}.
+
+    Now, in view of \cref{thmItostep}, it remains to prove \eqref{Itostep}, and \eqref{expectItostepterms}.
 \end{proof}
 
 \section{The case of an It\^o noise}
