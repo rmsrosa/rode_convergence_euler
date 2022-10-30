@@ -666,16 +666,16 @@ More precisely, we have the following result:
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
 
-\begin{cor}
+\begin{thm}
     \label{thmdiffmonotonicbound}
-    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$ with partial derivatives $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$, i.e.
+    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$ with partial derivatives $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$ and $y$, i.e.
     \begin{equation}
         \label{ftfylineargrowth}
-        \left|\frac{\partial f}{\partial t}(t, x, y)\right| \leq C_1 + C_2 |x|, \quad \left|\frac{\partial f}{\partial t}(t, x, y)\right| \leq C_3 + C_4 |x|,
+        \left|\partial_t f(t, x, y)\right| \leq C_1 + C_2 |x| + C_3|y|, \quad \left|\partial_y f(t, x, y)\right| \leq C_4 + C_5|x| + C_6|y|,
     \end{equation}
     in $(t, x, y)\in I\times \mathbb{R}\times \mathbb{R}$,
     for suitable constants $C_1, C_2, C_3, C_4 \geq 0$.
-    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean variation
+    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
     \begin{equation}
         \label{EYtboundedsquarevariation2}
         \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
@@ -690,9 +690,33 @@ More precisely, we have the following result:
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
     for a suitable constant $C \geq 0$.
-\end{cor}
+\end{thm}
 
 \begin{proof}
+    Notice that
+    \begin{multline*}
+        |f(t, x, y)| \leq |f(t, x, y) - f(t, 0, y)| + |f(t, 0, y) - f(0, 0, y)| + |f(0, 0, y) - f(0, 0, 0)| \\
+        \leq L_X |x| + C_1 + C_3|y| + C_4 + C_6|y|. 
+    \end{multline*}
+    Thus,
+    \[
+        |f(t, x, Y_t)| \leq M_t + L_X |x|,
+    \]
+    where
+    \[
+        M_t = C_1 + C_4 + (C_3 + C_6)|Y_t|.
+    \]
+    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}.
+    
+    Thanks to \eqref{EYtboundedsquarevariation2}, we see that
+    \[
+        \mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty
+    \]
+    so that $\{M_t\}_{t\in I}$ satisfies \eqref{EMtstrongbound}. Moreover, by assumption, \eqref{EX0strongbound} also holds, so that, from \eqref{XtboundLXMt}, we have
+    \[
+        K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
+    \]
+
     We have
     \begin{multline*}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| = \left|\int_\tau^s \partial_t f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d}Y_\xi\right| \\
@@ -709,7 +733,7 @@ One typical case in which a bound such as that in \cref{thmmonotonicbound} is po
     \label{lineareqform}
     f(t, x, y) = a(t, y)h(x) + b(t, y),
   \end{equation}
-  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean variation
+  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
   \begin{equation}
     \label{EYtboundedsquarevariation}
     \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
