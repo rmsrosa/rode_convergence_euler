@@ -582,10 +582,10 @@ More precisely, we have the following result:
 
 \begin{lem}
     \label{lemmonotonicbound}
-    Besides \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
+    Besides \cref{standinghypotheses1}, suppose that, for all $0 \leq s \leq T$,
     \begin{equation}
         \label{stepbound}
-          |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq \bar F_s - \bar F_\tau,
+          |f(s, X_{\tau^N(s)}, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
       \end{equation}
       where $\{\bar F_t\}$ is a real stochastic process satisfying
       \begin{equation}
@@ -668,7 +668,7 @@ More precisely, we have the following result:
 
 \begin{thm}
     \label{thmdiffmonotonicbound}
-    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$ with partial derivatives $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$ and $y$, i.e.
+    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with partial derivatives $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$ and $y$, i.e.
     \begin{equation}
         \label{ftfylineargrowth}
         \left|\partial_t f(t, x, y)\right| \leq C_1 + C_2 |x| + C_3|y|, \quad \left|\partial_y f(t, x, y)\right| \leq C_4 + C_5|x| + C_6|y|,
@@ -706,22 +706,29 @@ More precisely, we have the following result:
     \[
         M_t = C_1 + C_4 + (C_3 + C_6)|Y_t|.
     \]
-    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}.
-
-    Thanks to \eqref{EYtboundedsquarevariation2}, we see that
+    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, we see that
     \[
         \mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty
     \]
-    so that $\{M_t\}_{t\in I}$ satisfies \eqref{EMtstrongbound}. Moreover, by assumption, \eqref{EX0strongbound} also holds, so that, from \eqref{XtboundLXMt}, we have
+    so that $\{M_t\}_{t\in I}$ satisfies \eqref{EMtstrongbound}. By assumption, \eqref{EX0strongbound} also holds, so that, from \eqref{XtboundLXMt}, we have
     \[
         K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
     \]
 
-    We have
+    Now, in order to apply \cref{thmmonotonicbound}, it remains to verify \eqref{stepbound}-\eqref{expectstepmonotonic}. We have
     \begin{multline*}
         |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| = \left|\int_\tau^s \partial_t f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d}Y_\xi\right| \\
         \leq C_1 (s-\tau) + C_2(s-\tau) |X_\tau| + (C_3 + C_4 |X_\tau|) V(\{Y_t\}_{t\in I}; \tau, s).
     \end{multline*}
+    Thus, \eqref{stepbound} holds with
+    \[
+        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}|)t + (C_3 + C_4 |X_{\tau^N(t)}|) V(\{Y_t\}_{t\in I}; 0, t).
+    \]
+    It is clear that, not only the expectation, but all the sample paths of $\{F_t\}_{t\in I}$ are monotonic non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
+    \[
+        \mathbb{E}[\bar F_T] \leq (C_1 + C_2 K_1)T + (C_3 + C_4K_1)\mathbb{E}[V(\{Y_t\}_{t\in I}; 0, T)^2] < \infty.
+    \]
+    Thus, \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
 One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is when $f$ is \emph{semi-separable}, which includes the case of a linear equation. More precisely, we have the following result.
