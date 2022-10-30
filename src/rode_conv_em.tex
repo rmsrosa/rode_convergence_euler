@@ -330,7 +330,7 @@ Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
 For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. With that in mind, we have the following useful result.
 
 \begin{lem}
-    Under the \cref{standinghypotheses1}, suppose further that
+    Under \cref{standinghypotheses1}, suppose further that
     \begin{equation}
         \label{EX0strongbound}
         \mathbb{E}[|X_0|] < \infty
@@ -359,7 +359,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
 
 \begin{stdhyp}
     \label{standinghypotheses2}
-    We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. Besides the \cref{standinghypotheses1}, we also assume
+    We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. Besides \cref{standinghypotheses1}, we also assume
     \begin{enumerate}
         \item $f = f(t, x, y)$ is continuous on $I\times \mathbb{R}\times \mathbb{R}$.
         \item For each $x\in \mathbb{R}$, the map $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable on $I\times \mathbb{R}$.
@@ -376,7 +376,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
-    Under the \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -394,7 +394,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lem}
 
 \begin{proof}
-    Under the \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
+    Under \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     For notational simplicity, we momentarily write $t = t_{j-1}$ and $\tau = \Delta t_N$, so that $t_j = t + \tau$. The exact pathwise solution satisfies
     $$
@@ -456,7 +456,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
 
 \begin{lem}
     \label{lembasicestimate}
-    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
+    Under \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
     \begin{equation}
         \label{Etjbasicbound}
         \begin{aligned}
@@ -505,7 +505,7 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lem}
     \label{estimatesecondterminglobalerror}
-    Under the \cref{standinghypotheses1}, it follows that
+    Under \cref{standinghypotheses1}, it follows that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (M_s + L_X|X_s|) \;\mathrm{d}s.
@@ -530,7 +530,7 @@ Combining the two previous results we obtain
 
 \begin{prop}
     \label{propbasicestimate}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
+    Under \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
     \begin{equation}
         \label{EX0X0N}
         \mathbb{E}[|X_0 - X_0^N|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
@@ -582,7 +582,7 @@ More precisely, we have the following result:
 
 \begin{lem}
     \label{lemmonotonicbound}
-    Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
+    Besides \cref{standinghypotheses1}, suppose that, for all $0 \leq \tau \leq s \leq T$,
     \begin{equation}
         \label{stepbound}
           |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| \leq \bar F_s - \bar F_\tau,
@@ -640,7 +640,7 @@ More precisely, we have the following result:
 
 \begin{thm}
     \label{thmmonotonicbound}
-    Under the \cref{standinghypotheses1}, suppose also that
+    Under \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmmonotonicboundstrongordernew}
@@ -707,7 +707,7 @@ More precisely, we have the following result:
         M_t = C_1 + C_4 + (C_3 + C_6)|Y_t|.
     \]
     Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}.
-    
+
     Thanks to \eqref{EYtboundedsquarevariation2}, we see that
     \[
         \mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty
@@ -818,7 +818,7 @@ In practice, we may assume $f=f(t, x, y)$ is twice continuously differentiable i
 With that in mind, we first have the following result.
 \begin{lem}
     \label{lemItostep}
-    Besides the \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
+    Besides \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
     \begin{equation}
         \label{Itostep}
         \mathrm{d}F_t^N = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
@@ -868,7 +868,7 @@ With that in mind, we first have the following result.
 
 \begin{thm}
     \label{thmItostep}
-    Under the \cref{standinghypotheses1}, suppose also that
+    Under \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itostep}, and \eqref{expectItostepterms} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmItosteptrongordernew}
