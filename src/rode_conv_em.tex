@@ -666,6 +666,40 @@ More precisely, we have the following result:
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
 
+\begin{cor}
+    \label{thmdiffmonotonicbound}
+    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$ with partial derivatives $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$, i.e.
+    \begin{equation}
+        \label{ftfylineargrowth}
+        \left|\frac{\partial f}{\partial t}(t, x, y)\right| \leq C_1 + C_2 |x|, \quad \left|\frac{\partial f}{\partial t}(t, x, y)\right| \leq C_3 + C_4 |x|,
+    \end{equation}
+    in $(t, x, y)\in I\times \mathbb{R}\times \mathbb{R}$,
+    for suitable constants $C_1, C_2, C_3, C_4 \geq 0$.
+    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean variation
+    \begin{equation}
+        \label{EYtboundedsquarevariation2}
+        \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
+    \end{equation}
+    and with
+    \begin{equation}
+        \label{EX0square2}
+        \mathbb{E}[|X_0|^2] < \infty.
+    \end{equation}
+    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    \begin{equation}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a suitable constant $C \geq 0$.
+\end{cor}
+
+\begin{proof}
+    We have
+    \begin{multline*}
+        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| = \left|\int_\tau^s \partial_t f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d}Y_\xi\right| \\
+        \leq C_1 (s-\tau) + C_2(s-\tau) |X_\tau| + (C_3 + C_4 |X_\tau|) V(\{Y_t\}_{t\in I}; \tau, s).
+    \end{multline*}
+\end{proof}
+
 One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is when $f$ is \emph{semi-separable}, which includes the case of a linear equation. More precisely, we have the following result.
 
 \begin{cor}
