@@ -253,7 +253,7 @@ In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\
 \[
 |a(t+\tau, Y_{t+\tau}) - a(t, Y_t)| \leq A_t, \quad |b(t+\tau, Y_{t+\tau}) - b(t, Y_t)| \leq B_t,
 \]
-where $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ have monotonically non-decreasing sample paths. Under further suitable conditions (see \cref{thmsemiseparablemonotonicbound}), we show that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
+where $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ have monotonically non-decreasing sample paths. Under further suitable conditions (see \cref{thmdiffmonotonicbound}), we show that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
 
 Even if the structure of the equation is not exactly semi-separable but it is somehow possible to bound the steps $|f(t+\tau, X_t, Y_{t+\tau}) - a(t, X_t, Y_t)|$ by a suitable process with monotonic non-decreasing sample paths, it is possible to prove the strong order 1 convergence (see \cref{thmmonotonicbound}).
 
@@ -710,9 +710,9 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \]
     Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, we see that
     \[
-        \mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty
+        \mathbb{E}[|Y_t|] \leq \mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty.
     \]
-    so that $\{M_t\}_{t\in I}$ satisfies \eqref{EMtstrongbound}. By assumption, \eqref{EX0strongbound} also holds, so that, from \eqref{XtboundLXMt}, we have
+    Then, thanks to the Lyapunov inequality $\mathbb{E}[|Y_t|] \leq \mathbb{E}[|Y_t|^2]^{1/2}$, we see that $\{M_t\}_{t\in I}$ satisfies \eqref{EMtstrongbound}. By assumption, \eqref{EX0strongbound} also holds, so that, from \eqref{XtboundLXMt}, we have
     \[
         K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
     \]
@@ -733,86 +733,48 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     Thus, \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
-One typical case in which a bound such as that in \cref{thmmonotonicbound} is possible is when $f$ is \emph{semi-separable}, which includes the case of a linear equation. More precisely, we have the following result.
-
-\begin{cor}
-    \label{thmsemiseparablemonotonicbound}
-  Suppose that $f=f(t, x, y)$ is semi-separable in the sense that
-  \begin{equation}
-    \label{lineareqform}
-    f(t, x, y) = a(t, y)h(x) + b(t, y),
-  \end{equation}
-  where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
-  \begin{equation}
-    \label{EYtboundedsquarevariation}
-    \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
-  \end{equation}
-  and with
-  \begin{equation}
-    \label{EX0square}
-    \mathbb{E}[|X_0|^2] < \infty.
-  \end{equation}
-  Then, the Euler-Maruyama scheme is of strong order 1, i.e.
-  \begin{equation}
-    \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
-  \end{equation}
-  for a suitable constant $C \geq 0$.
-\end{cor}
-
-\begin{proof}
-    Since $a=a(t, y)$ is continuously differentiable and the sample paths of the noise are of bounded variation, we can write
-    \[ a(s, Y_s) - a(\tau, Y_\tau) = \int_\tau^s \partial_t a(\xi, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y a(\xi, Y_\xi)\;\mathrm{d}Y_\xi
-    \]
-    Similarly for $b=b(t, Y_t)$. Thus,
-    \begin{align*}
-        f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau) & = a(s, Y_s) - a(\tau, Y_\tau)h(X_\tau) + b(s, Y_s) - b(\tau, Y_\tau) \\
-        & = \int_\tau^s \left(\partial_t a(\xi, Y_\xi)h(X_\tau) + \partial_y b(\xi, Y_\xi)\right) \;\mathrm{d}\xi \\
-        & \qquad + \int_\tau^s \left(\partial_y a(\xi, Y_\xi) h(X_\tau) + \partial_y b(\xi, Y_\xi)\right)\;\mathrm{d}Y_\xi
-    \end{align*}
-
-    Taking the absolute value and using that the first order derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and that $h=h(x)$ is globally Lipschitz, we find that
-    \begin{align*}
-        |f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)| & \leq \int_\tau^s \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi \\
-        & \qquad + \int_\tau^s \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|,
-    \end{align*}
-    for suitable nonnegative constants $A_T, A_Y, B_T, B_Y, H_M,$ and $H_X$.
-
-    Notice that
+\begin{rmk}
+    The conditions \eqref{EYtboundedsquarevariation2} and \eqref{EX0square2} on the finite mean square of the total variation of the noise and of the initial condition can be relaxed provided we have a better control on the growth of the $\partial_y f(t, x, y)$ with respect to $x$. More precisely, if
     \[
-        |f(t, x, y)| \leq |a(t, y)||h(x)| + |b(t, y)| \leq A_M(H_M + H_X|x|) + B_0 + B_T T + B_Y |y|.
+        |\partial_y f(t, x, y)| \leq C_4 + C_5|x|^{p-1} + C_6|y|,
     \]
-    Thus,
+    and
     \[
-        |f(t, x, Y_t)| \leq M_t + L_X|x|,
+        \mathbb{E}[V(\{Y_t\}_{t\in I}; T, 0)^p] < \infty,
     \]
-    where
+    along with
     \[
-        M_t = A_MH_M + B_0 + B_T T + B_Y|Y_t|, \quad L_X = A_MH_X.
+        \mathbb{E}[|X_0|^p] < \infty,
     \]
-    Since by assumption $\mathbb{E}[|X_0|^2] < \infty$ and $\mathbb{E}[|Y_t|^2] \leq \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty$, it follows from \eqref{XtboundLXMt} that
+    with $1 \leq p < \infty$, then the process $\{\bar F_t\}_{t\in I}$ becomes
     \[
-        K_X = \sup_{t\in I}\mathbb{E}[|X_t|^2] < \infty.
+        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}|)t + (C_3 + C_4 |X_{\tau^N(t)}|^{p-1}) V(\{Y_t\}_{t\in I}; 0, t).
     \]
-
-    Define the process $\{\bar F_t\}_{t\in I}$ by
+    Applying the H\"older inequality yields
     \[
-        \bar F_t = \int_0^t \left(A_T(H_M + H_X|X_\xi|) + B_T\right) \;\mathrm{d}\xi + \int_0^t \left(A_Y (H_M + H_X|X_\xi|) + B_Y\right)\;|\mathrm{d}Y_\xi|.
+        \bar F_t \leq (C_1 + C_2 |X_{\tau^N(t)}|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) + C_4 \frac{p-1}{p}|X_{\tau^N(t)}|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
     \]
-    Any sample path of $\{\bar F_t\}_{t\in I}$ is non-decreasing and $\bar F_0 = 0$. Moreover,
-    \begin{multline*}
-        \mathbb{E}[\bar F_T] \leq \left(A_T(H_M + H_XK_X) + B_T\right)T \\
-        + \left(A_Y (H_M + H_XK_X) + B_Y\right)\mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2].
-    \end{multline*}
-    Hence, we are under the conditions of \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
-\end{proof}
+    With that, the required conditions on $\{\bar F_t\}_{t\in I}$ are met and we are allowed to apply \cref{thmmonotonicbound} and deduce the strong order 1 convergence of the Euler-Maruyama method.
+\end{rmk}
 
 \begin{rmk}
-    The semi-separable case is a general form that fits the conditions of \eqref{stepbound}-\eqref{expectstepmonotonic}, but other forms are possible. It suffices to \emph{bound} the steps in a semi-separable way.
+    One particular example that fits the conditions of \cref{thmdiffmonotonicbound} is when $f=f(t, x, y)$ is semi-separable, i.e.
+    \begin{equation}
+        \label{lineareqform}
+        f(t, x, y) = a(t, y)h(x) + b(t, y),
+    \end{equation}
+    where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$.
+    
+    Since $a=a(t, x)$ is uniformly bounded and $h=h(x)$ is globally Lipschitz continuous, it follows that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$. Moreover, it is continuously differentiable in $(t, y)$, with partial derivatives $\partial_t f$ and $\partial_y f$ given by
+    \[
+        \partial_t f = \partial_t a(t, y) h(x) + \partial_t b(t, y), \qquad \partial_y f = \partial_y a(t, y) h(x) + \partial_t b(t, y)
+    \]
+    Since the partial derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and $h$ is Lipstchiz, it follows that the partial derivatives $\partial_t f$ and $\partial_y f$ have at most linear growth. Thus,  \eqref{ftfylineargrowth} is satisfies.
 \end{rmk}
 
 \section{The case of an It\^o noise}
 
-In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmsemiseparablemonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
+In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmdiffmonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
 \[
     |f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau})| \leq \int_\tau^s \mathrm{d}\bar F_\xi^N.
 \]
