@@ -203,7 +203,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to It\^o process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process), which have H\"older continuous sample paths; to point-process noises (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, and to transport-type processes. The order 1 convergence is based on two main ideas: First of all, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process, in which case we exploit the Iso isometry on the global error term.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
 \end{abstract}
 
 \maketitle
@@ -239,11 +239,11 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is an It\^o noise, or a point process or a transport process.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process.
 
-The first main of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
+The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
 \begin{equation}
-    \label{lembasicestimate}
+    \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
         X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
         & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
@@ -251,7 +251,9 @@ The first main of the proof is to not estimate the local error and, instead, wor
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
 \end{equation}
-for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$. The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globallly Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$ (see \cref{tauNt}).
+
+The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globallly Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{equation}
     \label{Etjbasicboundintro}
     \begin{aligned}
@@ -260,18 +262,19 @@ for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jum
     \end{aligned}
 \end{equation}
 
-The only problematic term is the last one. The classical analysis is to use an assumed $\theta$-H\^older regularity of noise and estimate the local error as
+The only problematic, noise-sensitive term is the last one. The classical analysis is to use an assumed $\theta$-H\"older regularity of the noise sample paths and estimate the local error as
 \[
-    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq C\Delta t^{\theta}.
+    \mathbb{E}\left[\left|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right|\right] \leq C\Delta t^{\theta}.
 \]
-Instead, we keep the global error formula and assume the steps of $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ are somehow integrable. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\ in I}$ satisfy
+Instead, we look at the whole global error formula \eqref{lemglobalerrorintegralformulaintro} and assume, for the last term, that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable sense. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\ in I}$ satisfy
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
-either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation. The second one fits the case of an It\^o noise. In any case, we bound the global error term using integration by parts,
+either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o noise. In any case, we bound the global error term using integration by parts,
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
-    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi.
+    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi \\
+    & = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
 \end{align*}
 Then, we find that
 \begin{multline*}
@@ -280,13 +283,15 @@ Then, we find that
 \end{multline*}
 which yields the strong order 1 convergence provided the remaining expectation is finite.
 
-In the case of an It\^o integral, this is exactly what we assume, because the It\^o integral is not order preserving. The bound on the remaining expectation is obtained via It\^o isometry. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
+In the case of an It\^o integral, this is exactly what we assume, because the It\^o integral is not order preserving; the bound on the remaining expectation is obtained via It\^o isometry. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
 \[
     |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
 \]
-Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check. These two cases are treated in \cref{secmonotonicbound} (see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (see \cref{lemItostep} and \cref{thmItostep}).
+Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check. These two cases are treated in \cref{secmonotonicbound} (for the bounded variation case; see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (for the It\^o noise case; see \cref{lemItostep} and \cref{thmItostep}).
 
 The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
+
+We end the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence.
 
 \section{Pathwise solution}
 \label{secpathwisesolution}
