@@ -232,14 +232,43 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with the time step, i.e. there exists a constant $C \geq 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even have jump discontinuities. This is the case, for instance, when the noise is an It\^o noise, or when the equation is semi-separable and the noise is a point process or a transport process.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is an It\^o noise, or a point process or a transport process.
+
+The first main of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
+\begin{equation}
+    \label{lembasicestimate}
+    \begin{aligned}
+        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
+        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+        & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
+        & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
+    \end{aligned}
+\end{equation}
+for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$. The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globallly Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+\begin{equation}
+    \label{Etjbasicboundintro}
+    \begin{aligned}
+        |X_{t_j} - X_{t_j}^N| & \leq \left( |X_0 - X_0^N| + L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s \right. \\
+        & \qquad \left. \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right) e^{L_X t_j}.
+    \end{aligned}
+\end{equation}
+
+The only problematic term is the last one. The classical analysis is to use an assumed $\theta$-H\^older regularity of noise and estimate the local error as
+\[
+    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq C\Delta t^{\theta}.
+\]
+Instead, we keep the global error formula and assume either of two assumptions on the stochastic process $\{F_t\}_{t \geq 0}$ given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$:
+\begin{enumerate}
+    \item blah
+    \item bleh 
+\end{enumerate}
 
 Indeed, many common H\"older functions are actually of bounded variation, such as $t\mapsto t^{1/3}$ and $t\mapsto \sin(\omega t)^{1/5}$. This is a common situation when the noise is a transport process $Y_t = g(t, Y_0)$, for a random vector $Y_0 = Y_0(\omega)$. Even functions with jump discontinuities, such as those in point-processes, are of bounded variation. Being of bounded variation, it is possible to control their steps and obtain the strong order 1 convergence.
 
@@ -376,6 +405,7 @@ This setting is assumed in the analysis of the case of It\^o noise. With that in
 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
+    \label{lemglobalerrorintegralformula}
     Under \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
