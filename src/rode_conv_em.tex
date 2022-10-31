@@ -276,78 +276,17 @@ either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The
 Then, we find that
 \begin{multline*}
     \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] = \Delta t_N \mathbb{E}\left[F_{t_j} - F_0\right],
+    \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right],
 \end{multline*}
-which yields the strong order 1 convergence.
+which yields the strong order 1 convergence provided the remaining expectation is finite.
 
-That is the main idea. In the case of an It\^o integral, that is exactly what we assume, because the It\^o integral is not order preserving. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ directly but with a bound on the step of the form
+In the case of an It\^o integral, this is exactly what we assume, because the It\^o integral is not order preserving. The bound on the remaining expectation is obtained via It\^o isometry. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
 \[
-    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
+    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
 \]
-where only this bounding process $\{\bar F_t\}_{t\in I}$.
+Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check. These two cases are treated in \cref{secmonotonicbound} (see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (see \cref{lemItostep} and \cref{thmItostep}).
 
-and then 
-either of two assumptions on the stochastic process $\{F_t\}_{t \geq 0}$ given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$:
-\begin{enumerate}
-    \item The sample paths of $\{F_t\}_{t\in I}$ are of bounded variation $V(\{F_t\}_I; I)$, with finite mean $\mathbb{E}[V(\{F_t\}_I; I)] < \infty$ (see \cref{lemItostep} and \cref{thmItostep} and notice we actually require less than that, but that is the main idea); or
-    \item The process $\{F_t\}_{t\in I}$ is an It\^o process, $\mathrm{d}F_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t$, with $t \mapsto \mathbb{E}[A_t]$ integrable on $I$ and $t\mapsto \mathbb{E}[B_t]$ square integrable on $I$ (see \cref{lemItostep} and \cref{thmItostep}).
-\end{enumerate}
-
-In the first case, we control the steps with
-\[
-    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_s^t \;\mathrm{d}F_\xi
-\]
-In the second case, we control the steps with
-\[
-    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_s^t A_\xi \;\mathrm{d}\xi + \int_s^t B_\xi \;\mathrm{d}W_\xi.
-\]
-
-Indeed, many common H\"older functions are actually of bounded variation, such as $t\mapsto t^{1/3}$ and $t\mapsto \sin(\omega t)^{1/5}$. This is a common situation when the noise is a transport process $Y_t = g(t, Y_0)$, for a random vector $Y_0 = Y_0(\omega)$. Even functions with jump discontinuities, such as those in point-processes, are of bounded variation. Being of bounded variation, it is possible to control their steps and obtain the strong order 1 convergence.
-
-In the case of an It\^o noise, the sample paths are typically H\"older continuous with exponent 1/2 and are not of bounded variation. In this case, however, the It\^o isometry reveals futher regularity that can be used to yield a strong order 1 convergence.
-
-More precisely, for the semi-separable case, we assume $f$ is of the form 
-\[
-    f(t, x, y) = a(t, y)h(x) + b(t, y).  
-\]
-In this case, we assume the processes $\{a(t, Y_t)\}_{t\in I}$ and $\{b(t, Y_t)\}_{t\in I}$ have their steps bounded by a monotonic process, which typically happens for point processes, i.e.
-\[
-|a(t+\tau, Y_{t+\tau}) - a(t, Y_t)| \leq A_t, \quad |b(t+\tau, Y_{t+\tau}) - b(t, Y_t)| \leq B_t,
-\]
-where $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ have monotonically non-decreasing sample paths. Under further suitable conditions (see \cref{thmdiffmonotonicbound}), we show that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
-
-Even if the structure of the equation is not exactly semi-separable but it is somehow possible to bound the steps $|f(t+\tau, X_t, Y_{t+\tau}) - a(t, X_t, Y_t)|$ by a suitable process with monotonic non-decreasing sample paths, it is possible to prove the strong order 1 convergence (see \cref{thmmonotonicbound}).
-
-For the It\^o noise case, we consider a general equation of the form \eqref{rodeeq}, with a noise defined as an \textbf{It\^o process} $\{Y_t\}_{t\geq 0}$, satisfying
-\begin{equation}
-  \mathrm{d}Y_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t,
-\end{equation}
-We are not solving for $Y_t$, nor approximating it numerically, otherwise we would actually need to consider a system of stochastic differential equations. Instead, we assume it is a known process that can be computed analytically, such as a Wiener process, an Ornstein-Uhlenbeck process, or a geometric Brownian motion. With those in mind, $A_t$ and $B_t$ may be originally given in terms of $\{W_t\}_{t\geq 0}$ and $\{Y_t\}_{t\in I}$, but the general assumption is only given in terms of $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$.
-
-In the case that $f=f(t, x, y)$ is twice continuously differentiable, the It\^o formula applies and we show, under suitable conditions on $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ and the derivatives of $f$, that the Euler-Maruyama method is of strong order 1, i.e. \eqref{strongordertheta} holds with $\theta=1$.
-
-In order to make the main idea clear cut, here are the options we have for estimating the error:
-\begin{enumerate}
-  \item If the local error $e_j$, at the $j$th time step, is bounded as
-    $$
-    \mathbb{E}[|e_j|] \lesssim \Delta t_N^{3/2},
-    $$
-    as usual for a $1/2$-H\"older noise, then adding them up leads to 
-    $$
-      \sum \mathbb{E}[|e_j|] \lesssim N\Delta t_N^{3/2} = T\Delta t_N^{1/2}.
-    $$
-    \item If we use the It\^o isometry locally, we still get the local error as
-    $$
-      \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t_N^{2(3/2)} \right)^{1/2} = \Delta t_N^{3/2},
-    $$
-    and adding that up still leads to an error of order $\Delta t_N^{\theta}$.
-    \item If, instead, we first add the terms up, then $\sum e_j$ becomes an integral over $I$ with respect to the Wiener noise, so that we can use the It\^o isometry on the added up term and obtain
-    \begin{multline*}
-      \mathbb{E}\left[ \left| \sum e_j \right| \right] \lesssim \left(\mathbb{E}\left[ \left| \sum e_j \right|^2 \right]\right)^{1/2} = \left( \sum \mathbb{E}[|e_j|^2] \right)^{1/2} \\
-      = \left( \sum \Delta t_N^3 \right)^{1/2} = \left( \Delta t_N^2 \right)^{1/2} = \Delta t_N.
-    \end{multline*}
-    and we finally get the error to be of order 1.
-\end{enumerate}
+The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
 
 \section{Pathwise solution}
 \label{secpathwisesolution}
@@ -835,6 +774,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
 \end{rmk}
 
 \section{The case of an It\^o noise}
+\label{secItonoise}
 
 In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmdiffmonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
 \[
@@ -928,8 +868,8 @@ With that in mind, we first have the following result.
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmItosteptrongordernew}.
 \end{proof}
 
-\begin{cor}
-    \label{corItonoise}
+\begin{thm}
+    \label{thmItonoise}
     Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise,
     \begin{equation}
         \label{YtItonoise}
@@ -950,7 +890,7 @@ With that in mind, we first have the following result.
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
   for a suitable constant $C \geq 0$.
-\end{cor}
+\end{thm}
 
 \begin{proof}
     Let us start by showing that \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipscthiz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
@@ -1148,7 +1088,7 @@ We have
 \[
     g'(\eta) = \lambda \varepsilon \cos(\eta), \quad g''(\eta) = -\lambda\varepsilon\sin(\eta)
 \]
-hence both are uniformly bounded. Therefore, all the conditions of \cref{corItonoise} hold and the Euler-Maruyama method is of strong order 1.
+hence both are uniformly bounded. Therefore, all the conditions of \cref{thmItonoise} hold and the Euler-Maruyama method is of strong order 1.
 
 \subsection{Drug delivery}
 
