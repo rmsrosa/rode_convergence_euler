@@ -183,7 +183,7 @@
 
 % Article info
 
-\title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Conditions for the strong order 1 convergence of the Euler-Maruyama approximation for Random Ordinary Differential Equations}
+\title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Strong order 1 convergence of the Euler-Maruyama method for Random Ordinary Differential Equations}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
@@ -203,7 +203,7 @@
 \keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, w)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit ``hidden'' conditions on the noise and prove that the strong convergence is actually of order 1, regardless of much regularity on the sample paths. This applies to It\^o process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process), which are H\"older continuous, and to point processes (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, as well as to transport processes. The order 1 convergence follows from not estimating directly the local error, but, instead, adding up the local steps and estimating the compound error. In the case of an It\^o noise, the compound error is then estimated via It\^o formula and the It\^o isometry. In the case of a point process or a transport process, a monotonic bound is exploited. We HOPEFULLY complement the result by giving examples where some of the conditions are not met and the order of convergence seems indeed to be less than 1.
+It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to It\^o process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process), which have H\"older continuous sample paths; to point-process noises (such as Poisson point processes and Hawkes self-exciting processes), which are not even continuous and have jump-type discontinuities, and to transport-type processes. The order 1 convergence is based on two main ideas: First of all, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process, in which case we exploit the Iso isometry on the global error term.
 \end{abstract}
 
 \maketitle
@@ -280,7 +280,7 @@ In order to make the main idea clear cut, here are the options we have for estim
       \mathbb{E}[|e_j|] \leq \mathbb{E}[|e_j|^2]^{1/2} \lesssim \left(\Delta t_N^{2(3/2)} \right)^{1/2} = \Delta t_N^{3/2},
     $$
     and adding that up still leads to an error of order $\Delta t_N^{\theta}$.
-    \item If, instead, we first add the terms up, then $\sum e_j$ becomes an integral over $[0, T]$ with respect to the Wiener noise, so that we can use the It\^o isometry on the added up term and obtain
+    \item If, instead, we first add the terms up, then $\sum e_j$ becomes an integral over $I$ with respect to the Wiener noise, so that we can use the It\^o isometry on the added up term and obtain
     \begin{multline*}
       \mathbb{E}\left[ \left| \sum e_j \right| \right] \lesssim \left(\mathbb{E}\left[ \left| \sum e_j \right|^2 \right]\right)^{1/2} = \left( \sum \mathbb{E}[|e_j|^2] \right)^{1/2} \\
       = \left( \sum \Delta t_N^3 \right)^{1/2} = \left( \Delta t_N^2 \right)^{1/2} = \Delta t_N.
@@ -302,14 +302,14 @@ We start with the following hypotheses, which imply the existence and uniqueness
         \item \label{standinghypotheses1Lx} $f$ is globally Lipschitz continuous on $x$, uniformly in $t$ and $y$, i.e. there exists a constant $L_X \geq 0$ such that
             \begin{equation}
                 \label{Lxassumptionbasic}
-                |f(t, x_1, y) - f(t, x_2, y)| \leq L_X |x_1 - x_2|, \quad \forall t \in [0, T], \;\forall x_1, x_2, y\in\mathbb{R}.
+                |f(t, x_1, y) - f(t, x_2, y)| \leq L_X |x_1 - x_2|, \quad \forall t \in I, \;\forall x_1, x_2, y\in\mathbb{R}.
             \end{equation}
 
         \item \label{standinghypotheses1Car} We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
-                \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in [0, T]$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
-                \item \label{standinghypotheses1Carboundonf} The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in [0, T]$.
+                \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
+                \item \label{standinghypotheses1Carboundonf} The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in I$.
             \end{enumerate}
     \end{enumerate}
 \end{stdhyp}
@@ -472,7 +472,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     $$
         |f(s, X_s, Y_s) - f(s, X_t, Y_s)| \leq L_X |X_s - X_t|,
     $$
-    for $t, s \in [0, T]$, and, in particular, for $t = \tau^N(s)$. Hence,
+    for $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     $$
         \left|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s.
     $$
@@ -481,7 +481,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     $$
         |f(s, X_t, Y_s) - f(s, X_t^N, Y_s)| \leq L_X |X_t - X_t^N|,
     $$
-    again for any $t, s \in [0, T]$, and, in particular, for $t = \tau^N(s)$. Hence,
+    again for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_{\tau^N(s)} - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
         \leq L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t_N.
@@ -763,7 +763,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         \label{lineareqform}
         f(t, x, y) = a(t, y)h(x) + b(t, y),
     \end{equation}
-    where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $[0, T]\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$.
+    where $a=a(t, y)$ and $b=b(t, y)$ are continuously differentiable on $I\times \mathbb{R}$ with uniformly bounded first derivatives, $a=a(t, y)$ itself is uniformly bounded, and $h=h(x)$ is globally Lipschitz continous on $\mathbb{R}$.
     
     Since $a=a(t, x)$ is uniformly bounded and $h=h(x)$ is globally Lipschitz continuous, it follows that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$. Moreover, it is continuously differentiable in $(t, y)$, with partial derivatives $\partial_t f$ and $\partial_y f$ given by
     \[
