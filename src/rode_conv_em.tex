@@ -296,9 +296,7 @@ We end the paper with a few explicit examples and their numerical implementation
 \section{Pathwise solution}
 \label{secpathwisesolution}
 
-For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We consider two sets of hypotheses, namely \cref{standinghypotheses1} and \cref{standinghypotheses2}, each suitable to one of the two main cases we consider, namely the case in which the steps are bounded by processes with monotonic expected values and the case with It\^o type noises.
-
-We start with the following hypotheses, which imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory.
+For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
 
 \begin{stdhyp}
     \label{standinghypotheses1}
@@ -312,14 +310,14 @@ We start with the following hypotheses, which imply the existence and uniqueness
 
         \item \label{standinghypotheses1Car} We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
             \begin{enumerate}
-                \item The mapping $x \mapsto f(t, x, y)$ is continuous on $x\in \mathbb{R}$, for almost every $(t, y)\in I\times \mathbb{R}$;
-                \item The mapping $t \mapsto f(t, x, Y_t)$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
+                \item The mapping $x \mapsto f(t, x, Y_t(\omega))$ is continuous on $x\in \mathbb{R}$, for almost every $(t, \omega)\in I\times \Omega$;
+                \item The mapping $t \mapsto f(t, x, Y_t(\omega))$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
                 \item \label{standinghypotheses1Carboundonf} The bound $|f(t, x, Y_t)| \leq M_t + L_X|x|$ holds for all $t\in I$ and all $x\in\mathbb{R}$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in I$.
             \end{enumerate}
     \end{enumerate}
 \end{stdhyp}
 
-Under these assumptions, for each sample value $\omega\in\Omega$, the integral equation
+Under these assumptions, for each sample value in $\Omega$, the integral equation
 \begin{equation}
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
@@ -356,26 +354,13 @@ For the strong convergence of the Euler-Maruyama approximation, we also need to 
     Thanks to \eqref{XtboundLXMt}, the result is straightfoward
 \end{proof}
 
-In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition and only require $\mathbb{E}[|X_0|] < \infty$, but we do not exploit this case here.
+\begin{rmk}
+    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+\end{rmk}
 
-When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
-
-This setting is assumed in the analysis of the case of It\^o noise. With that in mind, we define, more precisely, a second set of hypotheses, on top of the first one above.
-
-\begin{stdhyp}
-    \label{standinghypotheses2}
-    We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}\times\mathbb{R}$ and a real-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$. Besides \cref{standinghypotheses1}, we also assume
-    \begin{enumerate}
-        \item $f = f(t, x, y)$ is continuous on $I\times \mathbb{R}\times \mathbb{R}$.
-        \item For each $x\in \mathbb{R}$, the map $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable on $I\times \mathbb{R}$.
-        \item The sample paths $t\mapsto Y_t(\omega)$ of the noise process are continuous on $I$.
-        \item The noise process $\{Y_t\}_{t\in I}$ is an It\^o noise in the sense of satisfying
-        \begin{equation}
-            \mathrm{d}Y_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
-        \end{equation}
-        where $\{W_t\}_{t\geq 0}$ is a standard Wiener process and $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ are stochastic processes adapted to $\{W_t\}_{t\geq 0}$.
-    \end{enumerate}
-\end{stdhyp}
+\begin{rmk}
+    In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[|X_0|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincide with the original equation in the region of interest. But we leave these cases to be handled in the applications.
+\end{rmk}
 
 \section{Integral formula for the global pathwise error}
 
@@ -1072,7 +1057,7 @@ Thus, the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$ almost sur
     \frac{\mathrm{d}X_t}{\mathrm{d}t} = \tilde f(t, X_t, Y_t).
 \end{equation}
 
-With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses2} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
+With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
 \[
     |X_t| \leq |X_0|e^{2\lambda (2R - r)t} \leq R e^{2\lambda (2R - r)T}, \qquad 0 \leq t \leq T.
 \]
