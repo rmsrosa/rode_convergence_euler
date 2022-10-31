@@ -280,6 +280,12 @@ Then, we find that
 \end{multline*}
 which yields the strong order 1 convergence.
 
+That is the main idea. In the case of an It\^o integral, that is exactly what we assume, because the It\^o integral is not order preserving. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ directly but with a bound on the step of the form
+\[
+    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
+\]
+where only this bounding process $\{\bar F_t\}_{t\in I}$.
+
 and then 
 either of two assumptions on the stochastic process $\{F_t\}_{t \geq 0}$ given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$:
 \begin{enumerate}
