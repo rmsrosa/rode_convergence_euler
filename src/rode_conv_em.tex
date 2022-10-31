@@ -264,11 +264,37 @@ The only problematic term is the last one. The classical analysis is to use an a
 \[
     |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq C\Delta t^{\theta}.
 \]
-Instead, we keep the global error formula and assume either of two assumptions on the stochastic process $\{F_t\}_{t \geq 0}$ given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$:
+Instead, we keep the global error formula and assume the steps of $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ are somehow integrable. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\ in I}$ satisfy
+\[
+    F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
+\]
+either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation. The second one fits the case of an It\^o noise. In any case, we bound the global error term using integration by parts,
+\begin{align*}
+    \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
+    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi.
+\end{align*}
+Then, we find that
+\begin{multline*}
+    \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
+    \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] = \Delta t_N \mathbb{E}\left[F_{t_j} - F_0\right],
+\end{multline*}
+which yields the strong order 1 convergence.
+
+and then 
+either of two assumptions on the stochastic process $\{F_t\}_{t \geq 0}$ given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$:
 \begin{enumerate}
-    \item blah
-    \item bleh 
+    \item The sample paths of $\{F_t\}_{t\in I}$ are of bounded variation $V(\{F_t\}_I; I)$, with finite mean $\mathbb{E}[V(\{F_t\}_I; I)] < \infty$ (see \cref{lemItostep} and \cref{thmItostep} and notice we actually require less than that, but that is the main idea); or
+    \item The process $\{F_t\}_{t\in I}$ is an It\^o process, $\mathrm{d}F_t = A_t \;\mathrm{d}t + B_t \;\mathrm{d}W_t$, with $t \mapsto \mathbb{E}[A_t]$ integrable on $I$ and $t\mapsto \mathbb{E}[B_t]$ square integrable on $I$ (see \cref{lemItostep} and \cref{thmItostep}).
 \end{enumerate}
+
+In the first case, we control the steps with
+\[
+    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_s^t \;\mathrm{d}F_\xi
+\]
+In the second case, we control the steps with
+\[
+    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_s^t A_\xi \;\mathrm{d}\xi + \int_s^t B_\xi \;\mathrm{d}W_\xi.
+\]
 
 Indeed, many common H\"older functions are actually of bounded variation, such as $t\mapsto t^{1/3}$ and $t\mapsto \sin(\omega t)^{1/5}$. This is a common situation when the noise is a transport process $Y_t = g(t, Y_0)$, for a random vector $Y_0 = Y_0(\omega)$. Even functions with jump discontinuities, such as those in point-processes, are of bounded variation. Being of bounded variation, it is possible to control their steps and obtain the strong order 1 convergence.
 
