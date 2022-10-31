@@ -963,20 +963,6 @@ In this section, we describe a few explicit examples that fall into one of the c
 
 See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
 
-\subsection{RODE with It\^o noise}
-
-Here, we consider a class of RODEs treated in \cite[Chapter 3]{Asai2016}, namely the \eqref{rodeeq} with a noise $\{Y_t\}_{t\in I}$ satisfying
-\begin{equation}
-    \mathrm{d}Y_t = a(Y_t)\;\mathrm{d}t + b(Y_t)\;\mathrm{d}W_t
-\end{equation}
-with the assumptions that
-\begin{equation}
-    \label{itonoiseboundedderivativescondition}
-    \parbox{0.8\textwidth}{the functions $a=a(y)$, $b=b(y)$, and $f=f(t, x, y)$ are twice continuously differentiable with all partial derivatives uniformly bounded.}
-\end{equation}
-
-
-
 \subsection{Population dynamics}
 
 Our first example is a population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
@@ -988,7 +974,7 @@ where $r > 0$ is constant and $\{Z_t\}_{t \geq}$ is a stochastic process playing
 \[
     Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
 \]
-where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}. We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
+where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}-\eqref{Itonoiseterms}. We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
 %\[
 %    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
 %\]
@@ -1016,7 +1002,7 @@ for all $t \geq 0$.
 
 The function $f=f(t, x, z)$ is continuously differentiable infinitely many times and with
 \[
-    \left|\frac{\partial f}{\partial x}(t, x, y)\right| = |y(r - 2x)|\leq 2\lambda (2R - r),
+    \left|\frac{\partial f}{\partial x}(t, x, z)\right| = |z(r - 2x)|\leq 2\lambda (2R - r),
 \]
 for $|x| \leq R$ and $0 \leq z \leq 2\lambda$. In turn, the function $z = z(y) = \lambda (1 + \varepsilon \sin(y))$ is also continuously differentiable infinitely many times and is uniformly bounded along with all its derivatives.
 
@@ -1037,22 +1023,7 @@ With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses1} hold. Moreover
 \]
 almost surely. 
 
-OLD Condition on $\{F_t\}$ SHOULD BE FIXED is satisfied with
-\[
-    F_t ?!?!?!
-\]
-
-CAREFULL, WE CHANGED THE NOTATION, MUST FIX FROM HERE ON AND CHECK EVERYTHING.
-
-The It\^o formula applied to $Y_t = g(O_t)$, where $g(\eta) = \lambda (1 + \varepsilon \sin(\eta))$ implies $\{Y_t\}_{t\geq 0}$ is an It\^o process with
-\[
-    \mathrm{d}Y_t = \left((\theta_1 - \theta_2 O_t)g'(O_t) + \frac{\theta_3^2}{2}g''(O_t)\right)\;\mathrm{d}t + \theta_3 g'(O_t)\;\mathrm{d}W_t.
-\]
-We have
-\[
-    g'(\eta) = \lambda \varepsilon \cos(\eta), \quad g''(\eta) = -\lambda\varepsilon\sin(\eta)
-\]
-hence both are uniformly bounded. Therefore, all the conditions of \cref{thmItonoise} hold and the Euler-Maruyama method is of strong order 1.
+Therefore, all the conditions of \cref{thmItonoise} hold and the Euler-Maruyama method is of strong order 1.
 
 \subsection{Drug delivery}
 
@@ -1112,7 +1083,7 @@ Y_t = \sin(t/Z)^{1/3},
 $$
 where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes values strictly within $(0, 1)$ and, hence, $\sin(t/Z)$ can have arbitrarily high frequencies and, hence, go through the critic value $y = 0$ extremely often.
 
-\textcolor{red}{(Need to remove the Heun method and do more tests)}.
+\textcolor{red}{(Need to remove the Heun method and do more tests and examples)}.
 
 \section*{Acknowledgments}
 
