@@ -434,7 +434,7 @@ In this section, we derive the following integral formula for the global error:
         & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
     \end{align*}
 
-    Using the jump function $\tau^N$, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
+    Using the jump function $\tau^N$ defined by \eqref{tauNt}, we may rewrite the above expression as in \eqref{globalerrorintegralformula}.
 \end{proof}
 
 \begin{rmk}
@@ -443,7 +443,7 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimate for the global pathwise error}
 
-Here we derive an estimate, under minimal hypotheses, that will be the basis for the estimates in specific cases.
+Here we derive an estimate, under minimal hypotheses, that is the basis for the estimates in specific cases.
 
 \begin{lem}
     \label{lembasicestimate}
@@ -472,7 +472,7 @@ Here we derive an estimate, under minimal hypotheses, that will be the basis for
     $$
         |f(s, X_t, Y_s) - f(s, X_t^N, Y_s)| \leq L_X |X_t - X_t^N|,
     $$
-    again for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
+    for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
         \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_{\tau^N(s)} - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
         \leq L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t_N.
@@ -721,7 +721,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \mathbb{E}[\bar F_T] \leq (C_1 + C_2 K_1)T + (C_3 + C_4K_1)\mathbb{E}[V(\{Y_t\}_{t\in I}; 0, T)^2] < \infty.
     \]
-    Thus, \cref{thmmonotonicbound} and we deduce the strong order 1 convergence of the Euler-Maruyama method.
+    Thus, \cref{thmmonotonicbound} applies and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
 \begin{rmk}
@@ -766,17 +766,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
 \section{The case of an It\^o noise}
 \label{secItonoise}
 
-In \cref{lemmonotonicbound}, we assumed a control of the steps of $s \mapsto f(s, X_{\tau^N(s), Y_s})$ by the steps of a process $\{\bar F_s^N\}_s$ with non-decreasing expectation. A particular case, presented in \cref{thmdiffmonotonicbound}, is when the steps are controlled by the steps of a process with bounded variation. In this case, we find that
-\[
-    |f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau})| \leq \int_\tau^s \mathrm{d}\bar F_\xi^N.
-\]
-An alternative condition considered in this section is to assume that $s \mapsto f(s, X_{\tau^N(s), Y_s})$ itself is an It\^o process and, as such,
-\[
-    f(s, X_{\tau^N(s), Y_s}) - f(\tau, X_{\tau^N(\tau), Y_\tau}) = \int_\tau^s A_\xi \;\mathrm{d}\xi + \int_\tau^s B_\xi \;\mathrm{d}W_\xi,
-\]
-for suitable $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$.
-
-In practice, we may assume $f=f(t, x, y)$ is twice continuously differentiable in $(t, y)$ and the noise $\{Y_t\}_{t\in I}$ itself is an It\^o noise, so that, by the It\^o formula, the steps above are themselves It\^o noises.
+Here, as explained in the Introduction, we assume the process given by $F_t = f(s, X_{\tau^N(s), Y_s})$ is an It\^o process, which, in applications, follows from assuming that $f=f(t, x, y)$ is sufficiently regular and that the noise $\{Y_t\}_{t\in I}$ is itself an It\^o process.
 
 With that in mind, we first have the following result.
 \begin{lem}
@@ -829,6 +819,7 @@ With that in mind, we first have the following result.
     which completes the proof.
 \end{proof}
 
+Combining the estimate in \cref{lemItostep} with the previous estimate for the global error we obtain the following main result.
 \begin{thm}
     \label{thmItostep}
     Under \cref{standinghypotheses1}, suppose also that
@@ -858,6 +849,7 @@ With that in mind, we first have the following result.
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmItosteptrongordernew}.
 \end{proof}
 
+In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from assuming sufficent regularity on $f=f(t, x, y)$ and an It\^o noise, as given by the following result.
 \begin{thm}
     \label{thmItonoise}
     Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o noise,
@@ -959,6 +951,10 @@ With that in mind, we first have the following result.
     Therefore, all the conditions of \cref{thmItostep} are met and we deduce the strong order 1 convergence of the Euler-Maruyama method.
 \end{proof}
 
+\begin{rmk}
+    In the case that the diffusion term $b = b(t, y)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and the Euler-Maruyama scheme is of strong order 1, otherwise, it has always been regarded to be of order 1/2 (CITATION...). Here, however, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler-Maruyama scheme is actually of order 1.    
+\end{rmk}
+
 \section{Applications}
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler-Maruyama method exhibits a strong order one convergence.
@@ -979,29 +975,7 @@ with the assumptions that
     \parbox{0.8\textwidth}{the functions $a=a(y)$, $b=b(y)$, and $f=f(t, x, y)$ are twice continuously differentiable with all partial derivatives uniformly bounded.}
 \end{equation}
 
-In the case that the diffusion term $b = b(y)$ is actually independent of $y$, then the noise is an additive noise and the Euler-Maruyama scheme is of strong order 1, otherwise, it is thought to be of order 1/2 (CITATION...). Here, however, we deduce that, even if $b=b(y)$ depends on $y$, the strong convergence of the Euler-Maruyama scheme is of order 1, under the assumptions \eqref{itonoiseboundedderivativescondition}.
 
-\subsection{Population dynamics}
-\begin{equation}
-    \label{rodepopulationdynamicsalt}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \mu X_t (r - X_t)cos(Y_t),
-\end{equation}
-where $\mu, r > 0$ are constant and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}, which
-includes a Wiener process, an Orstein-Uhlenbeck process or a geometric Brownian motion process.
-
-Define 
-\[
-    f(t, x, y) = x(r - x)cos(y).
-\]
-We have
-\[
-    f(t, x, y)x = x^2(r - x)cos(y)
-\]
-and notice that $f(t, x, y)x \geq 0$, for $x \geq 0$ and $y \geq 0$, and $f(t, x, y)x \leq 0$, for $x \geq r$ and $y \geq 0$. Hence the interval $[0, R]$ in $x$ is positively invariant and the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
-\[
-    0 \leq X_t \leq R,
-\]
-for all $t \geq 0$.
 
 \subsection{Population dynamics}
 
@@ -1057,7 +1031,7 @@ Thus, the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$ almost sur
     \frac{\mathrm{d}X_t}{\mathrm{d}t} = \tilde f(t, X_t, Y_t).
 \end{equation}
 
-With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
+With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses1} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
 \[
     |X_t| \leq |X_0|e^{2\lambda (2R - r)t} \leq R e^{2\lambda (2R - r)T}, \qquad 0 \leq t \leq T.
 \]
