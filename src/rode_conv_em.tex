@@ -183,7 +183,7 @@
 
 % Article info
 
-\title[Strong order 1 convergence of Euler-Maruyama for Random ODEs]{Strong order 1 convergence of the Euler-Maruyama method for Random Ordinary Differential Equations}
+\title[Strong order 1 convergence of Euler for Random ODEs]{Strong order 1 convergence of the Euler method for Random Ordinary Differential Equations}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
@@ -200,10 +200,10 @@
 %\thanks{This work was partly supported by the CNPq, Bras\'{\i}lia, Brazil and by the NSF grant ???.}
 
 \subjclass[2000]{76D05, 76D06, 35Q30, 37L99}
-\keywords{random ordinary differential equations, Euler-Maruyama method, strong convergence, It\^o process, point process}.
+\keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler-Maruyama method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
+It is well known that the Euler method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
 \end{abstract}
 
 \maketitle
@@ -220,7 +220,7 @@ Consider the following initial value problem for a \textbf{random ordinary diffe
 \end{equation}
 on a time interval $I=[0, T]$, with $T > 0$, and where the noise $\{Y_t\}_{t\in I}$ is a given stochastic process. The sample space is denoted by $\Omega$.
 
-The Euler-Maruyama method for solving this initial value problem consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler-Maruyama scheme takes the form
+The Euler method for solving this initial value problem consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler scheme takes the form
 \begin{equation}
   \label{emscheme}
   X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
@@ -232,7 +232,7 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler-Maruyama scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
@@ -253,7 +253,7 @@ The first main idea of the proof is to not estimate the local error and, instead
 \end{equation}
 for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$ (see \cref{tauNt}).
 
-The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globallly Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globally Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{equation}
     \label{Etjbasicboundintro}
     \begin{aligned}
@@ -330,7 +330,7 @@ Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
     |X_t| \leq \left(|X_0| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
 \end{equation}
 
-For the strong convergence of the Euler-Maruyama approximation, we also need to control the expectation of the solution above, among other things. With that in mind, we have the following useful result.
+For the strong convergence of the Euler approximation, we also need to control the expectation of the solution above, among other things. With that in mind, we have the following useful result.
 
 \begin{lem}
     Under \cref{standinghypotheses1}, suppose further that
@@ -355,7 +355,7 @@ For the strong convergence of the Euler-Maruyama approximation, we also need to 
 \end{proof}
 
 \begin{rmk}
-    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipscthiz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
 \end{rmk}
 
 \begin{rmk}
@@ -367,7 +367,7 @@ For the strong convergence of the Euler-Maruyama approximation, we also need to 
 In this section, we derive the following integral formula for the global error:
 \begin{lem}
     \label{lemglobalerrorintegralformula}
-    Under \cref{standinghypotheses1}, the Euler-Maruyama approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -391,7 +391,7 @@ In this section, we derive the following integral formula for the global error:
     $$
     X_{t + \tau} = X_t + \int_t^{t + \tau} f(s, X_s, Y_s) \;\mathrm{d}s.
     $$
-    The Euler-Maruyama step is given by
+    The Euler step is given by
     $$
     X_{t+\tau}^N = X_t^N + \tau f(t, X_t^N, Y_t).
     $$
@@ -567,7 +567,7 @@ Combining the two previous results we obtain
 \section{The case of monotonic sample path bounds}
 \label{secmonotonicbound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well with the typical case of point processes, such as renewal-reward processes, Hawkes process, and such.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well with the typical case of point processes, such as renewal-reward processes, Hawkes process, and the like.
 
 More precisely, we have the following result:
 
@@ -632,7 +632,7 @@ More precisely, we have the following result:
 \begin{thm}
     \label{thmmonotonicbound}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmmonotonicboundstrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -678,7 +678,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         \label{EX0square2}
         \mathbb{E}[|X_0|^2] < \infty.
     \end{equation}
-    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    Then, the Euler scheme is of strong order 1, i.e.
     \begin{equation}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
@@ -721,7 +721,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \mathbb{E}[\bar F_T] \leq (C_1 + C_2 K_1)T + (C_3 + C_4K_1)\mathbb{E}[V(\{Y_t\}_{t\in I}; 0, T)^2] < \infty.
     \]
-    Thus, \cref{thmmonotonicbound} applies and we deduce the strong order 1 convergence of the Euler-Maruyama method.
+    Thus, \cref{thmmonotonicbound} applies and we deduce the strong order 1 convergence of the Euler method.
 \end{proof}
 
 \begin{rmk}
@@ -745,7 +745,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \bar F_t \leq (C_1 + C_2 |X_{\tau^N(t)}|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) + C_4 \frac{p-1}{p}|X_{\tau^N(t)}|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
     \]
-    With that, the required conditions on $\{\bar F_t\}_{t\in I}$ are met and we are allowed to apply \cref{thmmonotonicbound} and deduce the strong order 1 convergence of the Euler-Maruyama method.
+    With that, the required conditions on $\{\bar F_t\}_{t\in I}$ are met and we are allowed to apply \cref{thmmonotonicbound} and deduce the strong order 1 convergence of the Euler method.
 \end{rmk}
 
 \begin{rmk}
@@ -760,7 +760,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \partial_t f = \partial_t a(t, y) h(x) + \partial_t b(t, y), \qquad \partial_y f = \partial_y a(t, y) h(x) + \partial_t b(t, y)
     \]
-    Since the partial derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and $h$ is Lipstchiz, it follows that the partial derivatives $\partial_t f$ and $\partial_y f$ have at most linear growth. Thus,  \eqref{ftfylineargrowth} is satisfies.
+    Since the partial derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and $h$ is Lipschitz, it follows that the partial derivatives $\partial_t f$ and $\partial_y f$ have at most linear growth. Thus,  \eqref{ftfylineargrowth} is satisfies.
 \end{rmk}
 
 \section{The case of an It\^o noise}
@@ -776,7 +776,7 @@ With that in mind, we first have the following result.
         \label{Itostep}
         \mathrm{d}F_t^N = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
     \end{equation}
-    for a Wiener process $\{W_t\}_{t\in 0}$ and stochastic processes $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ adapted to $\{W_t\}_{t\geq 0}$ and such that
+    for a Wiener process $\{W_t\}_{t\geq 0}$ and stochastic processes $\{A_t\}_{t\in I}$, $\{B_t\}_{t\in I}$ adapted to $\{W_t\}_{t\geq 0}$ and such that
     \begin{equation}
         \label{expectItostepterms}
         \int_0^T \mathbb{E}[|A_t|] \;\mathrm{d}t < \infty, \quad \int_0^T \mathbb{E}[|B_t|^2] \;\mathrm{d}t < \infty.
@@ -823,7 +823,7 @@ Combining the estimate in \cref{lemItostep} with the previous estimate for the g
 \begin{thm}
     \label{thmItostep}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itostep}, and \eqref{expectItostepterms} hold. Then, the Euler-Maruyama scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itostep}, and \eqref{expectItostepterms} hold. Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
     \begin{equation}
       \label{thmItosteptrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -867,7 +867,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
         \label{YtItonoiseinitialcondition}
         \mathbb{E}[|Y_0|] < \infty
     \end{equation}
-    Then, the Euler-Maruyama scheme is of strong order 1, i.e.
+    Then, the Euler scheme is of strong order 1, i.e.
     \begin{equation}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
@@ -875,7 +875,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
 \end{thm}
 
 \begin{proof}
-    Let us start by showing that \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipscthiz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
+    Let us start by showing that \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
 
     From \eqref{YtItonoise} and \eqref{Itonoiseterms}, we have
     \[
@@ -948,16 +948,16 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
     \]
     for a suitable constants $L_{YY}\geq 0$. Now, thanks to \eqref{unifboundYtIto}, we see that \eqref{expectItostepterms} is satisfied.
 
-    Therefore, all the conditions of \cref{thmItostep} are met and we deduce the strong order 1 convergence of the Euler-Maruyama method.
+    Therefore, all the conditions of \cref{thmItostep} are met and we deduce the strong order 1 convergence of the Euler method.
 \end{proof}
 
 \begin{rmk}
-    In the case that the diffusion term $b = b(t, y)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and the Euler-Maruyama scheme is of strong order 1, otherwise, it has always been regarded to be of order 1/2 (CITATION...). Here, however, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler-Maruyama scheme is actually of order 1.    
+    In the case that the diffusion term $b = b(t, y)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and the Euler scheme is of strong order 1, otherwise, it has always been regarded to be of order 1/2 (CITATION...). Here, however, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
 \end{rmk}
 
 \section{Applications}
 
-In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler-Maruyama method exhibits a strong order one convergence.
+In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler method exhibits a strong order one convergence.
 
 \subsection{Earthquake and other impulse driven models}
 
@@ -1023,7 +1023,7 @@ With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses1} hold. Moreover
 \]
 almost surely. 
 
-Therefore, all the conditions of \cref{thmItonoise} hold and the Euler-Maruyama method is of strong order 1.
+Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is of strong order 1.
 
 \subsection{Drug delivery}
 
@@ -1033,7 +1033,7 @@ Therefore, all the conditions of \cref{thmItonoise} hold and the Euler-Maruyama 
 
 \appendix{}
 
-\section{Discrete Grownwall Lemma}
+\section{Discrete Gronwall Lemma}
 
 We end this section by abstracting away the Gronwall type inequality we use \textcolor{red}{(this is probably written somewhere, and I need to find the source)}:
 \begin{lem}
@@ -1086,7 +1086,6 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 \textcolor{red}{(Need to remove the Heun method and do more tests and examples)}.
 
 \section*{Acknowledgments}
-
 
 \begin{thebibliography}{25}
     \bibitem{Asai2016} Y. Asai, \emph{Numerical Methods for Random Ordinary Differential Equations and their Appli-
