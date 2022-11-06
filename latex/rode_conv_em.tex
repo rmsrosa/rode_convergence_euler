@@ -270,7 +270,7 @@ Instead, we look at the whole global error formula \eqref{lemglobalerrorintegral
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
-either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o noise. In any case, we bound the global error term using integration by parts,
+either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o noise. In any case, we bound the global error term using the Fubini Theorem,
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi \\
@@ -508,7 +508,7 @@ As for the second term, which only concerns the solution itself, not the approxi
     \[
       \left|X_s - X_{\tau^N(s)}\right| = \left|\int_{\tau^N(s)}^s f(\xi, X_\xi, Y_\xi)\;\mathrm{d}\xi\right| \leq \int_{\tau^N(s)}^s (M_\xi + L_X|X_\xi|)\;\mathrm{d}\xi.
     \]
-    Integrating over $[0, t_j]$ and using integration by parts,
+    Integrating over $[0, t_j]$ and using Fubini's theorem to exchange the order of integration,
     \begin{align*}
         \int_0^{t_j}\left|X_s - X_{\tau^N(s)}\right| \;\mathrm{d}s & \leq \int_0^{t_j}\int_{\tau^N(s)}^s (M_\xi + L_X|X_\xi|) \;\mathrm{d}\xi \;\mathrm{d}s \\
         & = \int_0^{t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} (M_\xi + L_X|X_\xi|) \;\mathrm{d}s \;\mathrm{d}\xi \\
@@ -800,13 +800,13 @@ With that in mind, we first have the following result.
         \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
         = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s
     \end{multline*}
-    Using integration by parts,
+    Exchanging the order of integration, according to Fubini's theorem, yields
     \begin{align*}
         \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
         & \qquad = \int_0^t (\tau^N(\xi)+\Delta t_N - \xi) A_\xi \;\mathrm{d}\xi + \int_0^t (\tau^N(\xi) + \Delta t_N - \xi) B_\xi \;\mathrm{d}W_\xi.
     \end{align*}
-    Taking the absolute mean and using the It\^o isometry on the second term yields
+    Taking the absolute mean and using the It\^o isometry on the second term gives
     \begin{multline*}
         \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \int_0^t |\tau^N(\xi)+\Delta t_N - \xi| \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}.
