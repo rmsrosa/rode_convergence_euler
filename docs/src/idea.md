@@ -1,1 +1,1 @@
-## Main idea of the proof
+## Main idea

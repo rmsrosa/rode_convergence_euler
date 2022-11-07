@@ -6,10 +6,10 @@ makedocs(
         "Overview" => "index.md",
         "Theory" => [
             "Main results" => "results.md",
-            "Idea of the proof" => "idea.md"
+            "Main idea" => "idea.md"
         ],
         "Examples" => [
-            "Nonhomogenous Wiener term" => "wiener_nonhomogeneous.md"
+            "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md"
         ]
     ],
     authors = "Ricardo Rosa and Peter Kloeden",
