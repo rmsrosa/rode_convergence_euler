@@ -63,7 +63,7 @@ Hence, given the realizations of a Wiener noise on the mesh points,
 
 The first summation telescopes out and, since $W_0 = 0$, we are left with
 ```math
-\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} + \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 ```
 
 Thus, we estimate the error by calculating the difference from the numerical approximation to the above expectation.
@@ -76,28 +76,24 @@ First we load the necessary packages
 using DiffEqNoiseProcess, StochasticDiffEq, Plots, DiffEqDevTools, Random
 ```
 
-We set the number of simulations for the Monte Carlo estimate of the error:
-```@example linrode
-N = 1000
-```
-
 ### Setting up the problem
 
 Now we set up the RODE problem.
 
-We define the right-hand-side $f=f(u, t, p, W)$ of the equation, in the form
+We define the equation in the form
 ```math
 \frac{\mathrm{d}u}{\mathrm{d}t} = f(u, t, p, W)
 ```
 
-so that
+so that the right hand side becomes
 ```math
-f(u, t, p, W) = p * u + W,
+f(u, t, p, W) = pu + W,
 ```
 with $p = -1.0$.
 
 ```@example linrode
 f(u, p, t, W) = p * u + W
+p = -1.0
 ```
 
 Next we define the function that yields the analytic solution for a given computed solution `sol`, that contains the noise `sol.W` and the info about the (still to be defined) RODE problem `prob`.
@@ -109,9 +105,6 @@ function f_analytic!(sol)
     u0 = sol.prob.u0
     p = sol.prob.p
     push!(sol.u_analytic, u0)
-
-    t(i) = sol.W.t[i]
-    W(i) = sol.W.W[i]
 
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
     expintegral1 = 1.0
@@ -137,11 +130,10 @@ ff = RODEFunction(
 )
 ```
 
-Now we set up the RODE problem, with initial condition `X0 = 1.0`, parameter `p = -1.0` and time span `tspan = (0.0, 1.0)`:
+Now we set up the RODE problem, with initial condition `X0 = 1.0`, and time span `tspan = (0.0, 1.0)`:
 
 ```@example linrode
 X0 = 1.0
-p = - 1.0
 tspan = (0.0, 1.0)
 
 prob = RODEProblem(ff, X0, tspan, p)
@@ -151,14 +143,14 @@ prob = RODEProblem(ff, X0, tspan, p)
 
 Just for the sake of illustration, we solve for a solution path, using the Euler method, which in SciML is provided as `RandomEM()`, and with a fixed time step `dt = 1/100`:
 ```@example linrode
-sol = solve(prob, RandomEM(), dt = 1/100)
+sol = solve(prob, RandomEM(), dt = 1/100, seed = 123)
 ```
 
 and display the result
 ```@example linrode
 plot(
     sol,
-    title = "Sample path of \$X_t = -X_t + W_t\$",
+    title = "Sample path of \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
     titlefont = 12,
     xaxis = "\$t\$",
     yaxis = "\$x\$",
@@ -177,11 +169,84 @@ enssol = solve(ensprob, RandomEM(), dt = 1/100, trajectories=1000)
 ```
 
 ```@example linrode
-enssumm = EnsembleSummary(enssol; quantiles=[0.05,0.95])
+enssumm = EnsembleSummary(enssol; quantiles=[0.25,0.75])
 plot(enssumm,
-    title = "Ensemble of solution paths of \$X_t = -X_t + W_t\$",
+    title = "Ensemble of solution paths of \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$\nwith 50% confidence interval",
     titlefont = 12,
     xaxis = "\$t\$",
     yaxis = "\$x\$"
 )
+```
+
+## Order of convergence
+
+Now, we use the development tools in [SciML/DiffEqDevTools](https://github.com/SciML/DiffEqDevTools.jl) to set up a set of ensemble solves and obtain the order of convergence from them.
+
+The `WorkPrecisionSet` with `error_estimate=:l∞`, that we use, actually compute the strong norm in the form
+```math
+\mathbb{E}[\max_{i = 0, \ldots, n} |X_i - X_i^N|].
+```
+instead of the form
+```math
+\max_{i=0, \ldots, n}\mathbb{E}[|X_i - X_i^N|].
+```
+
+For that, we choose a sequence of time steps and check how the error decays along the sequence.
+
+```@example linrode
+reltols = 1.0 ./ 10.0 .^ (1:5)
+abstols = reltols
+dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+setups = [
+    Dict(:alg=>RandomEM(), :dts => dts)
+]
+N = 5_000
+wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
+```
+
+There is already a plot recipe for the result of a `WorkPrecisionSet` that displays the order of convergence:
+```@example linrode
+plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
+```
+
+## Benchmark
+
+We complement the above convergence order with a benchmark comparing the Euler method with the tamed Euler method and the Heun method. They all seem to achieve strong order 1, but with the Heun method being a bit more efficient.
+
+```@example linrode
+reltols = 1.0 ./ 10.0 .^ (1:5)
+abstols = reltols
+dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+setups = [
+    Dict(:alg=>RandomEM(), :dts => dts)
+    Dict(:alg=>RandomTamedEM(), :dts => dts)
+    Dict(:alg=>RandomHeun(), :dts => dts)
+]
+wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
+plot(wp, title="Benchmark with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12)
+```
+
+Built-in recipe for order of convergence.
+```@example linrode
+plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
+```
+
+## More
+
+```@example linrode
+reltols = 1.0 ./ 10.0 .^ (1:5)
+abstols = reltols
+dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+setups = [
+    Dict(:alg=>RandomEM(), :dts => dts)
+    Dict(:alg=>RandomTamedEM(), :dts => dts)
+    Dict(:alg=>RandomHeun(), :dts => dts)
+]
+wps = WorkPrecisionSet(EnsembleProblem(prob),abstols,reltols,setups;trajectories=20, numruns=100,maxiters=1e7,error_estimate=:l∞)
+plot(wps, title="Benchmark with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12)
+```
+
+Built-in recipe for order of convergence.
+```@example linrode
+plot(wps, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
 ```
