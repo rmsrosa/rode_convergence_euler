@@ -140,7 +140,7 @@ function f_analytic!(sol)
     end
 end
 
-function f_analytic_old!(sol)
+function f_analytic!(sol)
     empty!(sol.u_analytic)
 
     u0 = sol.prob.u0
@@ -148,17 +148,13 @@ function f_analytic_old!(sol)
     push!(sol.u_analytic, u0)
 
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
-    expdelta = exp(-(sol.W.t[2] - sol.W.t[1]))
+    delta = sol.W.t[2] - sol.W.t[1]
+    expdelta = exp(-delta)
     integral = 0.0
-    integral3 = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        expaux = exp(p * (ti - ti1))
-        expintegral1 *= expaux
-        integral2 = expaux * (integral2 + (Wi + Wi1) * (ti - ti1) / 2)
-        #integral2 = expaux * (integral2 - (Wi - Wi1) / (ti - ti1) * (exp(-p * ti) - exp(-p * ti1)))
-        #integral3 += Wi - Wi-1
-        push!(sol.u_analytic, u0 * expintegral1 + integral2 + integral3)
+        integral = expdelta * integral + (Wi - Wi1) * (1 - expdelta) / delta
+        push!(sol.u_analytic, u0 * exp(-ti) + Wi + integral)
         ti1, Wi1 = ti, Wi
     end
 end
