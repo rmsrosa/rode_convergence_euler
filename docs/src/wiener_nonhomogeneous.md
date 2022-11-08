@@ -63,7 +63,7 @@ Hence, given the realizations of a Wiener noise on the mesh points,
 
 The first summation telescopes out and, since $W_0 = 0$, we are left with
 ```math
-\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - e^{-t_j}\sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{-t_i}\right).
 ```
 
 Thus, we estimate the error by calculating the difference from the numerical approximation to the above expectation.
@@ -128,14 +128,11 @@ function f_analytic!(sol)
     push!(sol.u_analytic, u0)
 
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
-    expintegral1 = 1.0
-    integral2 = 0.0
+    integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        expaux = exp(p * (ti - ti1))
-        expintegral1 *= expaux
-        integral2 = expaux * (integral2 + (Wi + Wi1) * (ti - ti1) / 2)        
-        push!(sol.u_analytic, u0 * expintegral1 + integral2 + integral3)
+        integral += exp(ti) * Wi - exp(ti1) * Wi1 - (Wi - Wi1) / (ti - ti1) * (exp(ti) - exp(ti1))
+        push!(sol.u_analytic, exp(-ti) * (u0 + integral))
         ti1, Wi1 = ti, Wi
     end
 end
@@ -148,13 +145,11 @@ function f_analytic!(sol)
     push!(sol.u_analytic, u0)
 
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
-    delta = sol.W.t[2] - sol.W.t[1]
-    expdelta = exp(-delta)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral = expdelta * integral + (Wi - Wi1) * (1 - expdelta) / delta
-        push!(sol.u_analytic, u0 * exp(-ti) + Wi + integral)
+        integral += - (Wi - Wi1) / (ti - ti1) * (exp(ti) - exp(ti1))
+        push!(sol.u_analytic, Wi + exp(-ti) * (u0 + integral))
         ti1, Wi1 = ti, Wi
     end
 end
