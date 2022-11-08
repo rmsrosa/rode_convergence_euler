@@ -43,27 +43,27 @@ Thus,
 so that
 ```math
 \begin{align*}
-\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s & = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} + \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}B_s \\
-& \qquad + \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}s.
+\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s & = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} - \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}B_s \\
+& \qquad - \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}s.
 \end{align*}
 ```
 
 Taking the expectation, using that the expectation of an Itô integral with respect to a Brownian bridge with zero endpoints is zero, and using that the values at the mesh points are given, we find that
 ```math
-\mathbb{E}\left[ \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s\right] = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} + \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}\left[ \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s\right] = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} - \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 ```
 
 Hence, given the realizations of a Wiener noise on the mesh points,
 ```math
 \begin{align*}
 \mathbb{E}[X_{t_j}] & = e^{-t_j}X_0 + \sum_{i=0}^{j-1} \left(e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i}\right) \\
-& \qquad + \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+& \qquad - \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 \end{align*}
 ```
 
 The first summation telescopes out and, since $W_0 = 0$, we are left with
 ```math
-\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} + \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 ```
 
 Thus, we estimate the error by calculating the difference from the numerical approximation to the above expectation.
@@ -115,7 +115,7 @@ function f_analytic!(sol)
         expaux = exp(p * (ti - ti1))
         expintegral1 *= expaux
         integral2 = expaux * (integral2 + (Wi + Wi1) * (ti - ti1) / 2)
-        #integral2 = expaux * (integral2 + (Wi - Wi1) / (ti - ti1) * (exp(- p * ti) - exp( - p * ti1)))
+        #integral2 = expaux * (integral2 - (Wi - Wi1) / (ti - ti1) * (exp(-p * ti) - exp(-p * ti1)))
         #integral3 += Wi - Wi-1
         push!(sol.u_analytic, u0 * expintegral1 + integral2 + integral3)
         ti1, Wi1 = ti, Wi
