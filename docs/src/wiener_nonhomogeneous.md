@@ -109,12 +109,15 @@ function f_analytic!(sol)
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
     expintegral1 = 1.0
     integral2 = 0.0
+    integral3 = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
         expaux = exp(p * (ti - ti1))
         expintegral1 *= expaux
         integral2 = expaux * (integral2 + (Wi + Wi1) * (ti - ti1) / 2)
-        push!(sol.u_analytic, u0 * expintegral1 + integral2)
+        #integral2 = expaux * (integral2 + (Wi - Wi1) / (ti - ti1) * (exp(- p * ti) - exp( - p * ti1)))
+        #integral3 += Wi - Wi-1
+        push!(sol.u_analytic, u0 * expintegral1 + integral2 + integral3)
         ti1, Wi1 = ti, Wi
     end
 end
@@ -141,7 +144,7 @@ prob = RODEProblem(ff, X0, tspan, p)
 
 ### An illustrative sample path
 
-Just for the sake of illustration, we solve for a solution path, using the Euler method, which in SciML is provided as `RandomEM()`, and with a fixed time step `dt = 1/100`:
+Just for the sake of illustration, we solve for a solution path, using the Euler method, which in SciML is provided as `RandomEM()`, and with a fixed time step. We fix the `seed` just for the sake of reproducibility:
 ```@example linrode
 sol = solve(prob, RandomEM(), dt = 1/100, seed = 123)
 ```
@@ -191,16 +194,21 @@ instead of the form
 \max_{i=0, \ldots, n}\mathbb{E}[|X_i - X_i^N|].
 ```
 
-For that, we choose a sequence of time steps and check how the error decays along the sequence.
+For that, we choose a sequence of time steps and relative and absolute tolerances to check how the error decays along the sequence.
 
 ```@example linrode
 reltols = 1.0 ./ 10.0 .^ (1:5)
 abstols = reltols
 dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+N = 1_000
+```
+
+With that, we set up and solve the `WorkPrecisionSet`:
+```@example linrode
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts)
 ]
-N = 5_000
+
 wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
 ```
 
@@ -214,9 +222,6 @@ plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\
 We complement the above convergence order with a benchmark comparing the Euler method with the tamed Euler method and the Heun method. They all seem to achieve strong order 1, but with the Heun method being a bit more efficient.
 
 ```@example linrode
-reltols = 1.0 ./ 10.0 .^ (1:5)
-abstols = reltols
-dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts)
     Dict(:alg=>RandomTamedEM(), :dts => dts)
@@ -233,20 +238,17 @@ plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\
 
 ## More
 
-```@example linrode
-reltols = 1.0 ./ 10.0 .^ (1:5)
-abstols = reltols
-dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+```julia linrode
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts)
     Dict(:alg=>RandomTamedEM(), :dts => dts)
     Dict(:alg=>RandomHeun(), :dts => dts)
 ]
-wps = WorkPrecisionSet(EnsembleProblem(prob),abstols,reltols,setups;trajectories=20, numruns=100,maxiters=1e7,error_estimate=:l∞)
+wps = WorkPrecisionSet(EnsembleProblem(prob),abstols,reltols,setups;trajectories=20, numruns=10,maxiters=1e7,error_estimate=:l∞)
 plot(wps, title="Benchmark with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12)
 ```
 
 Built-in recipe for order of convergence.
-```@example linrode
+```julia linrode
 plot(wps, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
 ```
