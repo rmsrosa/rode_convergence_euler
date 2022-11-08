@@ -30,43 +30,64 @@ B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 ```
 is a Brownian bridge on the interval $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$. Notice that
 ```math
-\mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t.
+\mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t.
 ```
 
 Thus,
 ```math
 \begin{align*}
 \mathrm{d}(e^{-(t_j-t)}W_t) & = e^{-(t_j-t)}W_t\;\mathrm{d}t + e^{-(t_j-t)}\;\mathrm{d}W_t \\
-& = e^{-(t_j-t)}W_t\;\mathrm{d}t + e^{-(t_j-t)} \left(\mathrm{d}B_t + \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t\right),
+& = e^{-(t_j-t)}W_t\;\mathrm{d}t + e^{-(t_j-t)} \left(\mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t\right),
 \end{align*}
 ```
 so that
 ```math
 \begin{align*}
 \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s & = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} - \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}B_s \\
-& \qquad - \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}s.
+& \qquad - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} e^{-(t_j - s)}\;\mathrm{d}s.
 \end{align*}
 ```
 
 Taking the expectation, using that the expectation of an Itô integral with respect to a Brownian bridge with zero endpoints is zero, and using that the values at the mesh points are given, we find that
 ```math
-\mathbb{E}\left[ \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s\right] = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} - \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}\left[ \int_{t_i}^{t_{i+1}} e^{-(t_j - s)}W_s\;\mathrm{d}s\right] = e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i} - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 ```
 
 Hence, given the realizations of a Wiener noise on the mesh points,
 ```math
 \begin{align*}
 \mathbb{E}[X_{t_j}] & = e^{-t_j}X_0 + \sum_{i=0}^{j-1} \left(e^{-(t_j-t_{i+1})}W_{t_{i+1}} - e^{-(t_j-t_i)}W_{t_i}\right) \\
-& \qquad - \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+& \qquad - \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 \end{align*}
 ```
 
 The first summation telescopes out and, since $W_0 = 0$, we are left with
 ```math
-\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - \sum_{i=0}^{j-1} \frac{W_{t_{t+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
+\mathbb{E}[X_{t_j}] = e^{-t_j}X_0 + W_{t_j} - \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right).
 ```
 
 Thus, we estimate the error by calculating the difference from the numerical approximation to the above expectation.
+
+The summation above can be computed recursively. Indeed, if
+```math
+I_j = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right),
+```
+then
+```math
+I_0 = 0
+```
+and, for $j = 1, \ldots, n$,
+```math
+\begin{aligned}
+I_j & = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right) \\
+& = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{-(t_j - t_{j})} - e^{-(t_j - t_{j-1})}\right) + \sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right) \\
+& = \frac{W_{t_j}-W_{t_{j-1}}}{\Delta t_N}\left( 1 - e^{-\Delta t_N}\right) + e^{-(t_j - t_{j-1})}\sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_{j-1} - t_{i+1})} - e^{-(t_{j-1} - t_i)}\right),
+\end{aligned}
+```
+so that
+```math
+I_j = \frac{W_{t_{j}}-W_{t_{j-1}}}{\Delta t_N}\left( 1 - e^{-\Delta t_N}\right) + e^{-\Delta t_N} I_{j-1}.
+```
 
 ## Numerical approximation
 
