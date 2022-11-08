@@ -70,7 +70,7 @@ Thus, we estimate the error by calculating the difference from the numerical app
 
 The summation above can be computed recursively. Indeed, if
 ```math
-I_j = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right),
+I_j = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right),
 ```
 then
 ```math
@@ -79,14 +79,13 @@ I_0 = 0
 and, for $j = 1, \ldots, n$,
 ```math
 \begin{aligned}
-I_j & = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right) \\
-& = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{-(t_j - t_{j})} - e^{-(t_j - t_{j-1})}\right) + \sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_j - t_{i+1})} - e^{-(t_j - t_i)}\right) \\
-& = \frac{W_{t_j}-W_{t_{j-1}}}{\Delta t_N}\left( 1 - e^{-\Delta t_N}\right) + e^{-(t_j - t_{j-1})}\sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{-(t_{j-1} - t_{i+1})} - e^{-(t_{j-1} - t_i)}\right),
+I_j & = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right) \\
+& = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{t_{j}} - e^{t_{j-1}}\right) + \sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right),
 \end{aligned}
 ```
 so that
 ```math
-I_j = \frac{W_{t_{j}}-W_{t_{j-1}}}{\Delta t_N}\left( 1 - e^{-\Delta t_N}\right) + e^{-\Delta t_N} I_{j-1}.
+I_j = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{t_{j}} - e^{t_{j-1}}\right) + I_{j-1}.
 ```
 
 ## Numerical approximation
@@ -120,23 +119,6 @@ p = -1.0
 Next we define the function that yields the analytic solution for a given computed solution `sol`, that contains the noise `sol.W` and the info about the (still to be defined) RODE problem `prob`.
 
 ```@example linrode
-function f_analytic!(sol)
-    empty!(sol.u_analytic)
-
-    u0 = sol.prob.u0
-    p = sol.prob.p
-    push!(sol.u_analytic, u0)
-
-    ti1, Wi1 = sol.W.t[1], sol.W.W[1]
-    integral = 0.0
-    for i in 2:length(sol)
-        ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += exp(ti) * Wi - exp(ti1) * Wi1 - (Wi - Wi1) / (ti - ti1) * (exp(ti) - exp(ti1))
-        push!(sol.u_analytic, exp(-ti) * (u0 + integral))
-        ti1, Wi1 = ti, Wi
-    end
-end
-
 function f_analytic!(sol)
     empty!(sol.u_analytic)
 
