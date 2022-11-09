@@ -82,22 +82,13 @@ using StochasticDiffEq, DiffEqDevTools, Plots, Random
 
 ### Setting up the problem
 
-Now we set up the RODE problem.
-
-We define the equation in the form
+Now we set up the RODE problem. In [SciML/DifferentialEquations](https://diffeq.sciml.ai/stable/), the [Rode Problems](https://diffeq.sciml.ai/stable/types/rode_types/) are given in the form
 ```math
 \frac{\mathrm{d}u}{\mathrm{d}t} = f(u, t, p, W)
 ```
-
-so that the right hand side becomes
-```math
-f(u, t, p, W) = pu + W,
-```
-with $p = -1.0$.
-
+In our example, the right hand side takes the form
 ```@example nonhomlinrode
-f(u, p, t, W) = p * u + W
-p = -1.0
+f(u, p, t, W) = u + W
 ```
 
 Next we define the function that yields the (expected) analytic solution for a given computed solution `sol`, that contains the noise `sol.W` and the info about the (still to be defined) RODE problem `prob`.
@@ -129,7 +120,6 @@ function f_analytic!(sol)
     empty!(sol.u_analytic)
 
     u0 = sol.prob.u0
-    p = sol.prob.p
     push!(sol.u_analytic, u0)
 
     ti1, Wi1 = sol.W.t[1], sol.W.W[1]
@@ -159,7 +149,7 @@ Now we set up the RODE problem, with initial condition `X0 = 1.0`, and time span
 X0 = 1.0
 tspan = (0.0, 1.0)
 
-prob = RODEProblem(ff, X0, tspan, p)
+prob = RODEProblem(ff, X0, tspan)
 ```
 
 ### An illustrative sample path
