@@ -28,7 +28,7 @@ On each mesh interval, we use that
 ```math
 B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 ```
-is a Brownian bridge on the interval $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$. Notice that
+is a Brownian bridge on the interval $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$ (see [Almost Sure: Brownian Bridges](https://almostsuremath.com/2021/03/29/brownian-bridges/) for more on Brownian bridges). Notice that
 ```math
 \mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t.
 ```
