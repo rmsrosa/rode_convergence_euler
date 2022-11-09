@@ -9,7 +9,8 @@ makedocs(
             "Main idea" => "idea.md"
         ],
         "Examples" => [
-            "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md"
+            "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md",
+            "Homogenous sine Wiener noise" => "sin_wiener_homogeneous.md"
         ]
     ],
     authors = "Ricardo Rosa and Peter Kloeden",
