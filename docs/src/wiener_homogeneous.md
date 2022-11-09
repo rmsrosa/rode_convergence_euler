@@ -48,7 +48,7 @@ where
 ```math
 Z_i = - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s.
 ```
-Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable with zero expectation and variation ....
+Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable with zero expectation and variance ... 
 
 ## Numerical approximation
 
