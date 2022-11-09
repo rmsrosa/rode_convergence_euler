@@ -10,6 +10,7 @@ makedocs(
         ],
         "Examples" => [
             "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md",
+            "Homogenous Wiener noise" => "wiener_homogeneous.md",
             "Homogenous sine Wiener noise" => "sin_wiener_homogeneous.md"
         ]
     ],
