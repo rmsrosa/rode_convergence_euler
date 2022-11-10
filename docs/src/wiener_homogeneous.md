@@ -48,7 +48,14 @@ where
 ```math
 Z_i = - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s.
 ```
-Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable with zero expectation and variance ... 
+Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable (being the limit of Riemann sums, which are linear combinations of the normal variables $\Delta B_s$) with zero expectation. Its variance can be computed using the It\^o isometry, which also applies to Brownian bridges:
+```math
+\mathbb{E}[Z_i^2] = \int_{t_i}^{t_{i+1}} s^2 \;\mathrm{d}s = \frac{t_{i+1}^3 - t_i^3}{3}.
+```
+Thus,
+```math
+Z_i \sim \mathcal{N}\left(0, \frac{t_{i+1}^3 - t_i^3}{3}\right) = \frac{\sqrt{t_{i+1}^3 - t_i^3}}{\sqrt{3}}\mathbb{N}(0, 1).
+```
 
 ## Numerical approximation
 
@@ -99,8 +106,8 @@ function f_analytic!(sol)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += - (Wi - Wi1) / (ti - ti1) * (exp(ti) - exp(ti1))
-        push!(sol.u_analytic, Wi + exp(-ti) * (u0 + integral))
+        integral += - (Wi + Wi1) * (ti - ti1) / 2 + 0 * randn() * sqrt((ti^3 - ti1^3) / 3)
+        push!(sol.u_analytic, u0 * exp(integral))
         ti1, Wi1 = ti, Wi
     end
 end
