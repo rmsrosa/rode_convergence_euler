@@ -22,39 +22,57 @@ Similarly to the example of [Nonhomogenous Wiener noise](wiener_nonhomogeneous.m
 
 As before, on each mesh interval, we consider the Brownian bridge on the interval $[t_i, t_{i+1}]$,
 ```math
-B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
+B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 ```
 which yields
 ```math
-\mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t.
+\mathrm{d}W_t = \mathrm{d}B_t^i + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t.
 ```
 
 This time, we use that
 ```math
 \begin{align*}
 \mathrm{d}(tW_t) & = W_t\;\mathrm{d}t + t\;\mathrm{d}W_t \\
-& = W_t\;\mathrm{d}t + t \left(\mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t\right),
+& = W_t\;\mathrm{d}t + t \left(\mathrm{d}B_t^i + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t\right),
 \end{align*}
 ```
 so that
 ```math
 \begin{align*}
-\int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = t_{i+1}W_{t_{i+1}} - t_iW_{t_i} - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} s\;\mathrm{d}s \\
-& = t_{i+1}W_{t_{i+1}} - t_iW_{t_i} - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\frac{t_{i+1}^2 - t_i^2}{2} \\
+\int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = t_{i+1}W_{t_{i+1}} - t_iW_{t_i} - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s^i - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\int_{t_i}^{t_{i+1}} s\;\mathrm{d}s \\
+& = t_{i+1}W_{t_{i+1}} - t_iW_{t_i} - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s^i - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\frac{t_{i+1}^2 - t_i^2}{2} \\
 & = \frac{1}{2}(W_{t_{i+1}}+W_{t_i})(t_{i+1}-t_i) + Z_i,
 \end{align*}
 ```
 where
 ```math
-Z_i = - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s.
+Z_i = - \int_{t_i}^{t_{i+1}} s\;\mathrm{d}B_s^i.
 ```
-Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable (being the limit of Riemann sums, which are linear combinations of the normal variables $\Delta B_s$) with zero expectation. Its variance can be computed using the It\^o isometry, which also applies to Brownian bridges:
+Notice the first term is precisely the trapezoidal rule. Morever, $Z_i$ is a normal variable (being the limit of Riemann sums, which are linear combinations of the normal variables $\Delta B_s^i$) with zero expectation. Its variance can be computed using the Itô isometry, which also applies to Brownian bridges:
 ```math
 \mathbb{E}[Z_i^2] = \int_{t_i}^{t_{i+1}} s^2 \;\mathrm{d}s = \frac{t_{i+1}^3 - t_i^3}{3}.
 ```
 Thus,
 ```math
-Z_i \sim \mathcal{N}\left(0, \frac{t_{i+1}^3 - t_i^3}{3}\right) = \frac{\sqrt{t_{i+1}^3 - t_i^3}}{\sqrt{3}}\mathbb{N}(0, 1).
+Z_i \sim \mathcal{N}\left(0, \frac{t_{i+1}^3 - t_i^3}{3}\right) = \frac{\sqrt{t_{i+1}^3 - t_i^3}}{\sqrt{3}}\mathcal{N}(0, 1).
+```
+
+Thus, the exact solution at the mesh points can be computed in the form
+```math
+X_{t_j} = e^{\int_0^{t_j} W_s \;\mathrm{d}s}X_0,
+```
+with
+```math
+\int_0^{t_j} W_s \;\mathrm{d}s = \sum_{i=0}^{j-1} \left(\frac{1}{2}(W_{t_{i+1}}+W_{t_i})(t_{i+1}-t_i) + Z_i\right),
+```
+where
+```math
+Z_i \sim \frac{\sqrt{t_{i+1}^3 - t_i^3}}{\sqrt{3}}\mathcal{N}(0, 1).
+```
+
+For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
+```math
+\mathbb{E}[e^Z_i] = e^{(t_{i+1}^3 - t_i^3)/6}.
 ```
 
 ## Numerical approximation
@@ -73,25 +91,19 @@ f(u, p, t, W) = W * u
 
 Next we define the function that yields the (expected) analytic solution for a given computed solution `sol`, that contains the noise `sol.W` and the info about the (still to be defined) RODE problem `prob`.
 
-In the numerical implementation of the expected exact solution, the summation in the expression can be computed recursively. Indeed, if
+In the numerical implementation of the expected exact solution, the summation in the expression for the time integral of the Wiener noise can be computed recursively. Indeed, if
 ```math
-I_j = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right),
+I_j = \sum_{i=0}^{j-1} \left(\frac{1}{2}(W_{t_{i+1}}+W_{t_i})(t_{i+1}-t_i) + Z_i\right),
 ```
 then $I_0 = 0$ and, for $j = 1, \ldots, n$,
 ```math
-\begin{aligned}
-I_j & = \sum_{i=0}^{j-1} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right) \\
-& = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{t_{j}} - e^{t_{j-1}}\right) + \sum_{i=0}^{j-2} \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left( e^{t_{i+1}} - e^{t_i}\right),
-\end{aligned}
+I_j = \frac{1}{2}(W_{t_{j}}+W_{t_{j-1}})(t_{j}-t_{j-1}) + Z_{j-1} + I_{j-1},
 ```
-so that
-```math
-I_j = \frac{W_{t_{j}}-W_{t_{j-1}}}{t_{j}-t_{j-1}}\left( e^{t_{j}} - e^{t_{j-1}}\right) + I_{j-1}.
-```
+with a new $Z_{j-1}$ drawn from a normal distribution at each iteration.
 
 Then, we set $X_{t_j}$ to
 ```math
-X_{t_j} = W_{t_j} + e^{-t_j}\left(X_0 + I_j\right).
+X_{t_j} = e^{I_j}X_0.
 ```
 
 This is implemented below.
@@ -106,8 +118,8 @@ function f_analytic!(sol)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += - (Wi + Wi1) * (ti - ti1) / 2 + 0 * randn() * sqrt((ti^3 - ti1^3) / 3)
-        push!(sol.u_analytic, u0 * exp(integral))
+        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti^3 - ti1^3) / 6 + 0 * randn() * sqrt((ti^3 - ti1^3) / 3)
+        push!(sol.u_analytic, u0 * exp(integral + ti^3 / 6))
         ti1, Wi1 = ti, Wi
     end
 end
