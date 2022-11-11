@@ -31,12 +31,12 @@ prob = RODEProblem(ff, X0, tspan)
 
 prob_func = (prob,i,repeat) -> (remake(prob, u0 = 1.0 + 0.2 * randn()))
 ensprob = EnsembleProblem(prob; prob_func)
-
+#= 
 enssol = solve(ensprob, RandomEM(), dt = 1/100, trajectories=1000)
 
 summsol = EnsembleSummary(enssol; quantiles=[0.05,0.95])
 
-plot(summsol, ylims=(-1.0, 2.0))
+plot(summsol, ylims=(-1.0, 2.0)) =#
 
 #
 
@@ -48,12 +48,12 @@ setups = [
     Dict(:alg=>RandomHeun(), :dts => dts)
 ]
 N = 10_000
-wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
+#= wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
 
 plot(wp)
 
 plot(wp, view=:dt_convergence)
-
+ =#
 #
 
 wp = WorkPrecisionSet(ensprob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:L∞)
