@@ -293,7 +293,7 @@ The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily
 
 We end the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence.
 
-\section{Pathwise solution}
+\section{Pathwise solutions}
 \label{secpathwisesolution}
 
 For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
@@ -322,7 +322,7 @@ Under these assumptions, for each sample value in $\Omega$, the integral equatio
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
-has a unique solution, in the Lebesgue sense, for the realization $X_0 = X_0(\omega)$ of the initial condition and the sample path $t\mapsto Y_t(\omega)$ of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
+has a unique solution, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$, of the initial condition, and $t\mapsto Y_t(\omega)$, of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
 Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
 \begin{equation}
