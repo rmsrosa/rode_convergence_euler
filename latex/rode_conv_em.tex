@@ -980,7 +980,16 @@ Of course, it is possible to mix the two cases.
     \end{equation}
 \end{thm}
 
-We ommit the proof since it is just a combination of \cref{lemmonotonicbound} and \cref{lemItostep}.
+We ommit the proof since it is just a combination of \cref{lemmonotonicbound} and \cref{lemItostep}. As a consequence, we also have the following results, which is a combination of 
+
+\begin{thm}
+    \label{thmmixedcasepractical}
+    Suppose that $f=f(t, x, y)$ is twice continuously differentiable with uniformly bounded derivatives. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are made of two components, one of bounded variation with finite quadratic mean, as in \eqref{EYtboundedsquarevariation2}, and another an It\^o noise satisfying \eqref{YtItonoise} and \eqref{YtItonoiseinitialcondition}. Assume, moreover, that \eqref{EX0square2} holds. Then, the Euler scheme is of strong order 1, i.e.
+    \begin{equation}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a suitable constant $C \geq 0$.
+\end{thm}
 
 \section{Applications}
 
