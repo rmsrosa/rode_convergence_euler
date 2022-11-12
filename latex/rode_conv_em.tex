@@ -955,6 +955,33 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
     In the case that the diffusion term $b = b(t, y)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and the Euler scheme is of strong order 1, otherwise, it has always been regarded to be of order 1/2 (CITATION...). Here, however, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
 \end{rmk}
 
+\section{The mixed case}
+\label{secmixed}
+
+Of course, it is possible to mix the two cases.
+
+\begin{thm}
+    \label{thmmixedcase}
+    Under \cref{standinghypotheses1}, suppose also that
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itostep} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$, i.e.
+    \begin{equation}
+        \label{stepHbound}
+        |H_s^N - H_{\tau^N(s)}^N| \leq \bar H_s^N - \bar H_{\tau^N(s)}^N
+    \end{equation}
+    with
+    \begin{equation}
+      \label{expectstepHmonotonic}
+      \mathbb{E}[|\bar H_t|] \textrm{ is monotonic nondecreasing and bounded in } t\in I.
+    \end{equation}
+    Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e. there exists a constant $C\geq 0$ such that
+    \begin{equation}
+      \label{thmmixedtrongordernew}
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N}.
+    \end{equation}
+\end{thm}
+
+We ommit the proof since it is just a combination of \cref{lemmonotonicbound} and \cref{lemItostep}.
+
 \section{Applications}
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler method exhibits a strong order one convergence.
