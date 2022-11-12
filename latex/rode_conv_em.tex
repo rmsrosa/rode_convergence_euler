@@ -986,16 +986,16 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler method exhibits a strong order one convergence.
 
-\subsection{Earthquake and other impulse driven models}
+\subsection{Linear homogeneous equation}
 
-See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
+\subsection{Linear inhomogeneous equation}
 
-\subsection{Population dynamics}
+\subsection{Population dynamics with harvest}
 
-Our first example is a population dynamics model modified from \cite[Section 15.2]{HanKloeden2017},
+Here, we consider a population dynamics modelled by a logistic equation with a Wiener noise specific growth (loosely inspired by \cite[Section 15.2]{HanKloeden2017})and extra harvest term with a point process noise:
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t)
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) + H_t
 \end{equation}
 where $r > 0$ is constant and $\{Z_t\}_{t \geq}$ is a stochastic process playing the role of a random growth parameter and given by
 \[
@@ -1052,11 +1052,9 @@ almost surely.
 
 Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is of strong order 1.
 
-\subsection{Drug delivery}
+\subsection{Earthquake and other impulse driven models}
 
-\subsection{Earthquake model}
-
-\subsection{Point-process noise}
+See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
 
 \appendix{}
 
