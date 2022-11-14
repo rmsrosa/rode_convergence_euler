@@ -995,25 +995,86 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler method exhibits a strong order one convergence.
 
+For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for $\omega_1, \ldots, \omega_M$ and taking the maximum in time of the average of their absolute differences at the mesh points:
+\begin{equation}
+    \textrm{strong error } = \max_{j=0, \ldots, n} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^N(\omega_m)\right|
+\end{equation}
+
+We follow two approaches, depending on whether we have an explicit formula for the exact solutions or not. In the first case, we first compute a numerical approximation, which includes computing the noise term at the mesh points, $\{Y_{t_j}\}_{j=0, \ldots, n}$, and then we use this points to compute the exact solution.
+
+In the second case, we first compute the sample paths of the noise on a very fine time mesh and then we use this to compute the numerical approximation from the values at the coarse mesh and also to compute an approximation of the exact solution from the fine mesh.
+
 \subsection{Linear homogeneous equation}
+
+We start by considering the Euler approximation of one of the simplest random ordinary differential equation, that of a linear homogenous equation with a Wiener process as the coefficient:
+\begin{equation}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
+        \left. X_t \right|_{t = 0} = X_0,
+      \end{cases}
+\end{equation}
+This has the explicit solution
+\begin{equation}
+    X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
+\end{equation}
+We cannot compute the integral $\int_0^{t_j} W_s\;\mathrm{d}s$ exactly just from the values $W_{t_j}$ of the noise on the mesh points, but we can get a more explicit formula for it.
+
+First we break down the sum into parts:
+\begin{equation}
+    \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s.
+\end{equation}
+On each mesh interval, we use that
+\begin{equation}
+    B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
+\end{equation}
+is a Brownian bridge on the interval $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$. Then,
+\begin{align*}
+    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} \left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
+    & = \frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i,
+\end{align*}
+where
+\[
+    Z_i = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s.
+\]
+Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
+\[
+    \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
+\]
+Hence,
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
+    & = \int_0^\tau \int_0^\tau \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \int_0^\tau \left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \int_0^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \frac{t^2}{2}\;\mathrm{d}t + \int_0^\tau t(\tau - t)\;\mathrm{d}t - \int_0^\tau \frac{t\tau^2}{2\tau}\;\mathrm{d}t \\
+    & = \frac{\tau^3}{12}.
+\end{align*}
+
+
+Thus,
+\begin{equation}
+    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
+\end{equation}
+
+For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
+\begin{equation}
+    \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
+\end{equation}
 
 \subsection{Linear inhomogeneous equation}
 
 \subsection{Population dynamics with harvest}
 
-Here, we consider a population dynamics modelled by a logistic equation with a Wiener noise specific growth (loosely inspired by \cite[Section 15.2]{HanKloeden2017})and extra harvest term with a point process noise:
+Here, we consider a population dynamics modelled by a logistic equation (loosely inspired by \cite[Section 15.2]{HanKloeden2017}) with harvest:
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) + H_t
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) - H_t
 \end{equation}
-where $r > 0$ is constant and $\{Z_t\}_{t \geq}$ is a stochastic process playing the role of a random growth parameter and given by
+where $r > 0$ is constant, $\{Z_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative point process playing the role of the harvest term. More specifically, $\{Z_t\}_{t \geq 0}$ is given by
 \[
     Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
 \]
-where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is an It\^o noise process satisfying \eqref{YtItonoise}-\eqref{Itonoiseterms}. We assume $Y_t$ has an analytic formula so we do not need to approximate the coupled stochastic differential equation system for $(X_t, Y_t)$. This setting includes a Wiener process, an Orstein-Uhlenbeck process and a geometric Brownian motion process. 
-%\[
-%    O_t = \frac{\theta_1}{\theta_2} + e^{-\theta_2 (t - s)}\left(O_s - \frac{\theta_1}{\theta_2}\right) + \theta_3\int_s^t e^{-\theta_2 (t - \sigma)}\;\mathrm{d}W_\sigma.
-%\]
+where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is a geometric Brownian motion process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}, and $\{H_t\}_{t\geq 0}$ is a point process of the form ...
 
 We suppose the initial condition is non-negative and bounded almost surely:
 \[

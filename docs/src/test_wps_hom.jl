@@ -12,7 +12,7 @@ function f_analytic!(sol)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti^3 - ti1^3) / 6 + 0 * randn() * sqrt((ti^3 - ti1^3) / 3)
+        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti^3 - ti1^3) / 6 + randn() * sqrt((ti - ti1)^3 / 12)
         push!(sol.u_analytic, u0 * exp(integral))
         ti1, Wi1 = ti, Wi
     end
@@ -47,7 +47,7 @@ setups = [
     Dict(:alg=>RandomEM(), :dts => dts),
     Dict(:alg=>RandomHeun(), :dts => dts)
 ]
-N = 10_000
+N = 1_000
 #= wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
 
 plot(wp)

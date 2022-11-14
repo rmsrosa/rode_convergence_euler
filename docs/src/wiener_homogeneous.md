@@ -118,7 +118,7 @@ function f_analytic!(sol)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti^3 - ti1^3) / 6 + 0 * randn() * sqrt((ti^3 - ti1^3) / 3)
+        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti - ti1)^3 / 24 + randn() * sqrt((ti - ti1)^3 / 12)
         push!(sol.u_analytic, u0 * exp(integral + ti^3 / 6))
         ti1, Wi1 = ti, Wi
     end
@@ -169,7 +169,7 @@ ensprob = EnsembleProblem(prob)
 ```
 
 ```@example homlinrode
-enssol = solve(ensprob, RandomEM(), dt = 1/100, trajectories=1000)
+enssol = solve(ensprob, RandomEM(), dt = 1/100, trajectories=100)
 ```
 
 ```@example homlinrode
@@ -201,7 +201,7 @@ For that, we choose a sequence of time steps and relative and absolute tolerance
 reltols = 1.0 ./ 10.0 .^ (1:5)
 abstols = reltols
 dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
-N = 1_000
+N = 100
 ```
 
 With that, we set up and solve the `WorkPrecisionSet`:

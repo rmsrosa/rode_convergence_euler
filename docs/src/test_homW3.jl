@@ -7,7 +7,7 @@ rng = Xoshiro(123)
 t0 = 0.0
 tf = 2.0
 Nmax = 2^16
-M = 10_000
+M = 1_000
 
 nsteps = collect(2^n for n in 8:-1:3)
 Ns = collect(div(Nmax, nstep) for nstep in nsteps)
@@ -32,7 +32,7 @@ for m in 1:M
 
     for n in 2:Nmax
         # It += Wt[n-1] * dt
-        It += (Wt[n] + Wt[n-1]) * dt / 2
+        It += (Wt[n] + Wt[n-1]) * dt / 2 + randn() * sqrt(dt^3) / 12
         Yt[n] = x0 * exp(It)
     end
 
