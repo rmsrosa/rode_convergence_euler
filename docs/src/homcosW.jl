@@ -22,7 +22,7 @@ Yt = Vector{Float64}(undef, Nmax+1)
 # Euler approximation
 XEt = [Vector{Float64}(undef, N) for N in Ns]
  # Heun approximation
- XHt = [Vector{Float64}(undef, N)for N in Ns]
+XHt = [Vector{Float64}(undef, N) for N in Ns]
 
 @time for m in 1:M
     x0 = 1.0 # randn()
@@ -37,7 +37,7 @@ XEt = [Vector{Float64}(undef, N) for N in Ns]
 
     for n in 2:Nmax+1
         # It += -cos(5 * Wt[n-1]) * dt 
-        It += -(cos(5 * Wt[n]) + cos(5 *Wt[n-1])) * dt / 2 trapezoidal
+        It += -(cos(5 * Wt[n]) + cos(5 *Wt[n-1])) * dt / 2 # trapezoidal
         Yt[n] = x0 * exp(It)
     end
 
