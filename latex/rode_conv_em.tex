@@ -203,7 +203,7 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, point process}.
 
 \begin{abstract}
-It is well known that the Euler method of approximating a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that, in common situations, it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
 \end{abstract}
 
 \maketitle
@@ -1062,7 +1062,7 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 \begin{equation}
     \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
 \end{equation}
-This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{Z_i}$ for a more reliable estimate.
+This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{\sum_i Z_i}$ for a more reliable estimate.
 
 Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
 \begin{equation}
@@ -1088,6 +1088,10 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
     \label{figlinearhomogeneousrode}
     \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$.}
 \end{figure}
+
+\begin{rmk}
+The extra multiplicative exponential term involving $\sum_i Z_i$ is estimate to be of the order $\mathbb{E}[|\sum_i Z_i|]$, which is of the order of $\Delta t_N$...
+\end{rmk}
 
 \subsection{Linear inhomogeneous equation}
 
