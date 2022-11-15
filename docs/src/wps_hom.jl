@@ -12,7 +12,7 @@ function f_analytic!(sol)
     integral = 0.0
     for i in 2:length(sol)
         ti, Wi = sol.W.t[i], sol.W.W[i]
-        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti^3 - ti1^3) / 6 + randn() * sqrt((ti - ti1)^3 / 12)
+        integral += (Wi + Wi1) * (ti - ti1) / 2 + 0 * (ti - ti1)^3 / 24 + sqrt((ti - ti1)^3 / 12) * randn()
         push!(sol.u_analytic, u0 * exp(integral))
         ti1, Wi1 = ti, Wi
     end
@@ -48,12 +48,31 @@ setups = [
     Dict(:alg=>RandomHeun(), :dts => dts)
 ]
 N = 1_000
-#= wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
+wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
 
 plot(wp)
 
 plot(wp, view=:dt_convergence)
- =#
+
 #
 
-wp = WorkPrecisionSet(ensprob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:L∞)
+# wp = WorkPrecisionSet(ensprob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:L∞)
+
+#
+
+using Statistics
+m = 10_000
+n = 1
+dt = 1/n
+
+am = exp(sum((dt)^3 / 24 for _ in 1:n))
+am == exp(dt^2/24)
+
+b = [exp(sum(sqrt((dt)^3 / 12) * randn() for _ in 1:n)) for _ in 1:m]
+bm = mean(b)
+bv = var(b)
+
+ci = √(bv/m)
+
+bm - 2ci < am < bm + 2ci
+bm - ci < am < bm + ci

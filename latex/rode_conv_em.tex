@@ -1008,6 +1008,7 @@ In the second case, we first compute the sample paths of the noise on a very fin
 
 We start by considering the Euler approximation of one of the simplest random ordinary differential equation, that of a linear homogenous equation with a Wiener process as the coefficient:
 \begin{equation}
+    \label{linearhomogeneousrode}
     \begin{cases}
         \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
         \left. X_t \right|_{t = 0} = X_0,
@@ -1017,17 +1018,18 @@ This has the explicit solution
 \begin{equation}
     X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
 \end{equation}
-We cannot compute the integral $\int_0^{t_j} W_s\;\mathrm{d}s$ exactly just from the values $W_{t_j}$ of the noise on the mesh points, but we can get a more explicit formula for it.
+
+When we compute an approximate solution via Euler's method, however, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, on the mesh points. We cannot compute the exact integral $\int_0^{t_j} W_s\;\mathrm{d}s$ just from these values, and, in fact, an exact solutions is not uniquely defined from them. We can, however, find its exact distribution and use that to draw feasible exact solutions and use them to estimate the error.
 
 First we break down the sum into parts:
 \begin{equation}
     \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s.
 \end{equation}
-On each mesh interval, we use that
+On each mesh interval $[t_i, t_{i+1}]$, we consider the process
 \begin{equation}
     B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 \end{equation}
-is a Brownian bridge on the interval $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$. Then,
+which is a Brownian bridge on that mesh interval, vanishing at the extremes, and  independent of $W_{t_i}$ and $W_{t_{i+1}}$. Then,
 \begin{align*}
     \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} \left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
     & = \frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i,
@@ -1036,7 +1038,7 @@ where
 \[
     Z_i = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s.
 \]
-Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
+Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$ to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
 \[
     \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
 \]
@@ -1050,9 +1052,9 @@ Hence,
     & = \frac{\tau^3}{12}.
 \end{align*}
 
-
-Thus,
+Back to $Z_i$, this means that
 \begin{equation}
+    \label{linearhomogeneousZidistribution}
     Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
 \end{equation}
 
@@ -1060,6 +1062,32 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 \begin{equation}
     \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
 \end{equation}
+This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{Z_i}$ for a more reliable estimate.
+
+Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
+\begin{equation}
+    X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+\end{equation}
+for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
+\begin{figure}
+    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutios compatible with the given realizations of the noise on the mesh points.}
+\end{figure}
+
+The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+
+\begin{table}
+    \label{tablinearhomogeneousrode}
+    \begin{tabular}[htb]{l|l|l}
+        1 & 2 & 3 \\
+        4 & 5 & 6
+    \end{tabular}
+    \caption{blah}
+\end{table}
+
+\begin{figure}[htb]
+    \label{figlinearhomogeneousrode}
+    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$.}
+\end{figure}
 
 \subsection{Linear inhomogeneous equation}
 
