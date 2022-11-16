@@ -1066,10 +1066,12 @@ This is the contribution of this random variable to the mean of the exact soluti
 
 Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
 \begin{equation}
+    \label{Xtlinearhomogeneousrode}
     X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
+    \label{samplepathslinearhomogeneousrode}
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutios compatible with the given realizations of the noise on the mesh points.}
 \end{figure}
 
@@ -1092,19 +1094,26 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 \begin{rmk}
 The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to be, since these random variables are independent, of order 
 \begin{multline*}
-    \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \\
-    \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
+    \mathbb{E}\left[\left|e^{\sum_i Z_i} - 1\right|\right] \sim \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} \\
+    = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
 \end{multline*}
 hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods. In fact, the Heun method, which also seems to be of strong order 1, converges with strong order 2 to the average solution when given the noise at the mesh points, i.e.
-\[
-    X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + (t_{i+1}-t_i)^3/24\right)},
-\]
+\begin{equation}
+    \label{barXtlinearhomogeneousrode}
+    \bar X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + (t_{i+1}-t_i)^3/24\right)},
+\end{equation}
 or to the approximation discarding this term altogether, i.e.
-\[
-    X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i)\right)},
-\]
-but it falls down to strong order 1 when the correct distribution for the exact solution is considered.
+\begin{equation}
+    \label{tildeXtlinearhomogeneousrode}
+    \tilde X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i)\right)},
+\end{equation}
+but it falls down to strong order 1 when the correct distribution \eqref{Xtlinearhomogeneousrode} for the exact solution is considered. This highlights the importance of using either the right distribution to check the order of convergence, or a higher order approximation. The focus of this article is on the Euler method, not Heun's, so we do not pursuit this point further. We limit ourselves to display the Figure \ref{figheunconvergence}, on which our observations above are based.
 \end{rmk}
+
+\begin{figure}[htb]
+    \label{figheunconvergence}
+    \caption{Order of convergence of the Heun method for the equation $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$, towards sample paths of (i) exact solutions as in \eqref{Xtlinearhomogeneousrode}; (ii) average solutions as in \eqref{barXtlinearhomogeneousrode}; (iii) approximate solutions as in \eqref{barXtlinearhomogeneousrode}.}
+\end{figure}
 
 \subsection{Linear inhomogeneous equation}
 
