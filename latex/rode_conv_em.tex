@@ -1090,7 +1090,20 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 \end{figure}
 
 \begin{rmk}
-The extra multiplicative exponential term involving $\sum_i Z_i$ is estimate to be of the order $\mathbb{E}[|\sum_i Z_i|]$, which is of the order of $\Delta t_N$...
+The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to be, since these random variables are independent, of order 
+\begin{multline*}
+    \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \\
+    \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
+\end{multline*}
+hence of strong order 1 in $\Delta t_N$. Therefore, this term does not play much role in the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods. In fact, the Heun method converges with strong order 2 to the average solution (given the noise at the mesh points)
+\[
+    X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + (t_{i+1}-t_i)^3/24\right)},
+\]
+or to the approximation
+\[
+    X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i)\right)},
+\]
+but it falls down to strong order 1 when the correct distribution for the exact solution is considered.
 \end{rmk}
 
 \subsection{Linear inhomogeneous equation}
