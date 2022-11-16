@@ -1035,9 +1035,9 @@ which is a Brownian bridge on that mesh interval, vanishing at the extremes, and
     & = \frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i,
 \end{align*}
 where
-\[
+\begin{equation}
     Z_i = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s.
-\]
+\end{equation}
 Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$ to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
 \[
     \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
@@ -1107,7 +1107,7 @@ or to the approximation discarding this term altogether, i.e.
     \label{tildeXtlinearhomogeneousrode}
     \tilde X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i)\right)},
 \end{equation}
-but it falls down to strong order 1 when the correct distribution \eqref{Xtlinearhomogeneousrode} for the exact solution is considered. This highlights the importance of using either the right distribution to check the order of convergence, or a higher order approximation. The focus of this article is on the Euler method, not Heun's, so we do not pursuit this point further. We limit ourselves to display the Figure \ref{figheunconvergence}, on which our observations above are based.
+but it falls down to strong order 1 when the correct distribution \eqref{Xtlinearhomogeneousrode} for the exact solution is considered. This highlights the importance of using either the right distribution to check the order of convergence, or a higher order approximation. The focus of this article is on the Euler method, not Heun's, so we do not pursuit this point further. We limit ourselves to displaying the Figure \ref{figheunconvergence}, on which our observations above are based.
 \end{rmk}
 
 \begin{figure}[htb]
