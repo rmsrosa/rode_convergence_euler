@@ -13,21 +13,21 @@ using Random
 using Statistics
 rng = Xoshiro(123)
 
-t0 = 0.0
-tf = 1.0
-Nmax = 2^16
-M = 1_000
+function prepare_for_errors(t0 = 0.0, tf = 1.0, Nmax = 2^16, M = 1_000, npowers = 12:-1:5)
 
-nsteps = collect(2^n for n in 12:-1:5)
-Ns = collect(div(Nmax, nstep) for nstep in nsteps)
+    nsteps = collect(2^n for n in npowers)
+    Ns = collect(div(Nmax, nstep) for nstep in nsteps)
 
-trajerrors = zeros(last(Ns), length(Ns))
-errors = zeros(length(Ns))
-deltas = Vector{Float64}(undef, length(Ns))
+    trajerrors = zeros(last(Ns), length(Ns))
+    # errors = zeros(length(Ns))
+    deltas = Vector{Float64}(undef, length(Ns))
 
-Wt = Vector{Float64}(undef, Nmax)
-Yt = Vector{Float64}(undef, Nmax)
-Xt = Vector{Float64}(undef, last(Ns))
+    Wt = Vector{Float64}(undef, Nmax)
+    Yt = Vector{Float64}(undef, Nmax)
+    Xt = Vector{Float64}(undef, last(Ns))
+
+    return nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt
+end
 
 function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
     for _ in 1:M
@@ -61,46 +61,15 @@ function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas,
             end
         end
     end
+    trajerrors ./= M
+    nothing
 end
+
+@time nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt = prepare_for_errors()
 
 @time get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
-@time for m in 1:M
-    x0 = randn(rng)
-
-    Wt[1] = 0.0
-
-    Yt[1] = x0
-    It = 0.0
-
-    dt = tf / (Nmax - 1)
-
-    for n in 2:Nmax
-        Wt[n] = Wt[n-1] + √dt * randn(rng)
-        It += (Wt[n] + Wt[n-1]) * dt / 2 + randn() * sqrt(dt^3) / 12
-        Yt[n] = x0 * exp(It)
-    end
-
-    for (i, (nstep, N)) in enumerate(zip(nsteps, Ns))
-
-        dt = (tf - t0) / (N - 1)
-        deltas[i] = dt
-
-        Xt[1] = x0
-
-        for n in 2:N
-            Xt[n] = Xt[n-1] .* (
-                1 + Wt[1 + nstep * (n - 1)] * dt
-            )
-            trajerrors[n, i] += abs(Xt[n] - Yt[1 + (n-1) * nstep])
-        end
-    end
-end
-
-trajerrors ./= M
-
-errors = [mean(@view(trajerrors[1:N, i])) for (i, N) in enumerate(Ns)]
-# errors ./= M
+errors = maximum(trajerrors, dims=1)[1,:]
 
 lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
 linear_fit = exp(lc) * deltas .^ p
