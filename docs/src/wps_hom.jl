@@ -42,17 +42,18 @@ plot(summsol, ylims=(-1.0, 2.0)) =#
 
 reltols = 1.0 ./ 10.0 .^ (1:5)
 abstols = reltols
-dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
+dts = 1.0./2.0.^((1:length(reltols)) .+ 4)
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts),
     Dict(:alg=>RandomHeun(), :dts => dts)
 ]
-N = 1_000
+N = 100_000
 wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_estimate=:l∞)
 
-plot(wp)
-
-plot(wp, view=:dt_convergence)
+begin
+    display(plot(wp))
+    display(plot(wp, view=:dt_convergence))
+end
 
 #
 

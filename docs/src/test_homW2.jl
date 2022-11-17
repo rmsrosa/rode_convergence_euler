@@ -6,12 +6,12 @@ t0 = 0.0
 x0 = 1.0
 Nmax = 2^16
 
-f = (u, t, p, W) -> W * u
+# f = (u, t, p, W) -> W * u
     
 M = 10_000
-tf = 2.0
+tf = 1.0
 
-nsteps = collect(2^n for n in 12:-1:8)
+nsteps = collect(2^n for n in 11:-1:7)
 Ns = collect(div(Nmax, nstep) for nstep in nsteps)
 
 Wt = Matrix{Float64}(undef, Nmax, M)
