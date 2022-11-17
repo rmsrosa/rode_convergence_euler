@@ -1005,6 +1005,7 @@ We follow two approaches, depending on whether we have an explicit formula for t
 In the second case, we first compute the sample paths of the noise on a very fine time mesh and then we use this to compute the numerical approximation from the values at the coarse mesh and also to compute an approximation of the exact solution from the fine mesh.
 
 \subsection{Linear homogeneous equation}
+\label{seclinearhomogeneousrode}
 
 We start by considering the Euler approximation of one of the simplest random ordinary differential equation, that of a linear homogenous equation with a Wiener process as the coefficient:
 \begin{equation}
@@ -1116,6 +1117,92 @@ but it falls down to strong order 1 when the correct distribution \eqref{Xtlinea
 \end{figure}
 
 \subsection{Linear inhomogeneous equation}
+
+
+We now consider the following linear equation with noise in the nonhomogenous term:
+\begin{equation}
+    \label{linearnonhomogeneousrode}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = -X_t + W_t, \qquad 0 \leq t \leq T, \\
+        \left. X_t \right|_{t = 0} = X_0,
+      \end{cases}
+\end{equation}
+This has the explicit solution
+\begin{equation}
+    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}W_s\;\mathrm{d}s.
+\end{equation}
+
+As in \cref{seclinearhomogeneousrode}, when we compute an approximate solution via Euler's method, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, on the mesh points. We can find the exact distribution for $\int_0^{t_j} e^{s} W_s\;\mathrm{d}s$ given the values of the noise at the mesh points and use that to draw feasible exact solutions to estimate the strong error.
+
+First we break down the sum into parts:
+\begin{equation}
+    \int_0^{t_j} e^s W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s.
+\end{equation}
+On each mesh interval $[t_i, t_{i+1}]$, we consider, again, the Brownian bridge
+\begin{equation}
+    B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i}).
+\end{equation}
+Then,
+\begin{align*}
+    \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} e^s\left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
+    & = W_{t_{i+1}}e^{t_{i+1}} - W_{t_i}e^{t_i} - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i,
+\end{align*}
+where
+\begin{equation}
+    Z_i = \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s.
+\end{equation}
+As before, the second term is a Gaussian with zero mean, and we need to compute its variance to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
+\[
+    \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
+\]
+Hence,
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau e^s e^t B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
+    & = \int_0^\tau \int_0^\tau e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \int_0^\tau e^s e^t\left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \int_0^t e^s e^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau e^s e^t t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau e^s e^t \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau e^t(te^t-e^t+1)\;\mathrm{d}t + \int_0^\tau te^t(e^\tau - e^t)\;\mathrm{d}t - \int_0^\tau \frac{te^t}{\tau}\left(\tau e^\tau - e^\tau + 1\right)\;\mathrm{d}t \\
+    & = \frac{\tau^3}{12}.
+\end{align*}
+
+Back to $Z_i$, this means that
+\begin{equation}
+    \label{linearnonhomogeneousZidistribution}
+    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
+\end{equation}
+
+For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
+\begin{equation}
+    \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
+\end{equation}
+This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{\sum_i Z_i}$ for a more reliable estimate.
+
+Hence, once an Euler approximation of \eqref{linearnonhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
+\begin{equation}
+    \label{Xtlinearnonhomogeneousrode}
+    X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+\end{equation}
+for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearnonhomogeneousZidistribution}. Figure \ref{samplepathslinearnonhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
+\begin{figure}
+    \label{samplepathslinearnonhomogeneousrode}
+    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutios compatible with the given realizations of the noise on the mesh points.}
+\end{figure}
+
+The Table \ref{tablinearnonhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearnonhomogeneousrode} illustrates the order of convergence.
+
+\begin{table}
+    \label{tablinearnonhomogeneousrode}
+    \begin{tabular}[htb]{l|l|l}
+        1 & 2 & 3 \\
+        4 & 5 & 6
+    \end{tabular}
+    \caption{blah}
+\end{table}
+
+\begin{figure}[htb]
+    \label{figlinearnonhomogeneousrode}
+    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$.}
+\end{figure}
 
 \subsection{Population dynamics with harvest}
 
