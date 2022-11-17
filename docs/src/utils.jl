@@ -1,8 +1,40 @@
-# This solves dX_t/dt = -cos(5W_t) X_t as in Grune-Kloeden
+# This implements the convergence 
 
 using Plots
 using Random
 rng = Xoshiro(123)
+
+function Wiener_noise(rng::AbstractRNG, t0, t1, W0, n)
+    dt = (t1 - t0) / n
+    Wt = Vector{typeof(W_0)}(undef, n+1)
+    Wt[1] = W0
+    for j in 2:n+1
+        Wt[j] = Wt[j-1] + √dt * randn(rng)
+    end
+end
+
+function Wiener_noise!(rng::AbstractRNG, Wt::Vector, W0, dt)
+    Wt[1] = W0
+    for j in 2:length(Wt)
+        Wt[j] = Wt[j-1] + √dt * randn(rng)
+    end
+end
+
+function Wiener_noise!(rng::AbstractRNG, Wt::Matrix, W0, dt)
+    Wt[1, :] .= W0
+    for j in 2:size(Wt, 1)
+        Wt[j, :] .= Wt[j-1, :] + √dt * randn(rng, size(Wt, 2))
+    end
+end
+
+function get_errors(t0, tf, Ns, deltas)
+    errors = zeros(length(deltas))
+    Ns = Int.(round.((tf - t0) ./ deltas))
+    Xt = [Vector{Float64}(undef, length=N) for N in Ns]
+    Yt = [Vector{Float64}(undef, length=N) for N in Ns]
+    Wt = [Vector{Float64}(undef, length=N) for N in Ns]
+end
+
 
 t0 = 0.0
 tf = 1.0
@@ -16,8 +48,7 @@ errorsE = zeros(length(Ns)) # errors for Euler
 errorsH = zeros(length(Ns)) # errors for Heun
 deltas = Vector{Float64}(undef, length(Ns))
 
-Wt = Vector{Float64}(undef, Nmax+1)
-Wt[1] = 0.0
+
 Yt = Vector{Float64}(undef, Nmax+1)
 # Euler approximation
 XEt = [Vector{Float64}(undef, N) for N in Ns]
