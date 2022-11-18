@@ -68,7 +68,7 @@ function get_errors(rng, t0, tf, Nmax, Ns, M)
 
     lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
 
-    return deltas, errors, trajerrors, lc, p
+    return deltas, errors, trajerrors, lc, p, Yt, Xt, XNt
 end
 
 function table_errors(Ns, deltas, errors)
