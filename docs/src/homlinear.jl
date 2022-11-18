@@ -20,7 +20,7 @@ Nmax = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, Nmax, Ns, M)
 
 table = table_errors(Ns, deltas, errors)
 

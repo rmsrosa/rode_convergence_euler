@@ -8,14 +8,14 @@ function prepare_variables(Nmax, Ns)
     deltas = Vector{Float64}(undef, length(Ns))
     trajerrors = zeros(last(Ns), length(Ns))
 
-    Wt = Vector{Float64}(undef, Nmax)
     Yt = Vector{Float64}(undef, Nmax)
-    Xt = Vector{Float64}(undef, last(Ns))
+    Xt = Vector{Float64}(undef, Nmax)
+    XNt = Vector{Float64}(undef, last(Ns))
 
-    return nsteps, deltas, trajerrors, Wt, Yt, Xt
+    return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+function get_errors!(rng, Yt, Xt, XNt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
     for _ in 1:M
         # draw initial condition
         x0 = randn(rng)
@@ -24,17 +24,17 @@ function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas,
         dt = tf / (Nmax - 1)
 
         # get noise sample path
-        Wt[1] = 0.0
+        Yt[1] = 0.0
         for n in 2:Nmax
-            Wt[n] = Wt[n-1] + √dt * randn(rng)
+            Yt[n] = Yt[n-1] + √dt * randn(rng)
         end
 
         # get exact pathwise solution
-        Yt[1] = x0
+        Xt[1] = x0
         It = 0.0
         for n in 2:Nmax
-            It += (Wt[n] + Wt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
-            Yt[n] = x0 * exp(It)
+            It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
+            Xt[n] = x0 * exp(It)
         end
 
         # solve approximate solutions at selected time steps
@@ -43,13 +43,13 @@ function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas,
             dt = (tf - t0) / (N - 1)
             deltas[i] = dt
 
-            Xt[1] = x0
+            XNt[1] = x0
 
             for n in 2:N
-                Xt[n] = Xt[n-1] .* (
-                    1 + Wt[1 + nstep * (n - 1)] * dt
+                XNt[n] = XNt[n-1] .* (
+                    1 + Yt[1 + nstep * (n - 1)] * dt
                 )
-                trajerrors[n, i] += abs(Xt[n] - Yt[1 + (n-1) * nstep])
+                trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
             end
         end
     end
@@ -60,9 +60,9 @@ function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas,
 end
 
 function get_errors(rng, t0, tf, Nmax, Ns, M)
-    nsteps, deltas, trajerrors, Wt, Yt, Xt = prepare_variables(Nmax, Ns)
+    nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
 
-    get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+    get_errors!(rng, Yt, Xt, XNt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
