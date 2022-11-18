@@ -1081,15 +1081,23 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 \begin{table}
     \label{tablinearhomogeneousrode}
     \begin{tabular}[htb]{l|l|l}
-        1 & 2 & 3 \\
-        4 & 5 & 6
+        N & dt & error \\
+        16 & 0.0667 & 0.0416 \\
+        32 & 0.0159 & 0.0201 \\
+        64 & 0.0323 & 0.0101 \\
+        128 & 0.00787 & 0.00516 \\
+        256 & 0.00392 & 0.00261 \\
+        512 & 0.00196 & 0.00129 \\
+        1024 & 0.000978 & 0.000637 \\
+        2048 & 0.000489 & 0.000314 \\
     \end{tabular}
-    \caption{blah}
+    \caption{Mesh points (N), time steps (dt), and strong error (error).}
 \end{table}
 
 \begin{figure}[htb]
     \label{figlinearhomogeneousrode}
-    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$.}
+    \includegraphics[scale=0.75]{img/order_linearhomogenous.png}
+    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024, 2048$.}
 \end{figure}
 
 \begin{rmk}

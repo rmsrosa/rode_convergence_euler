@@ -1,119 +1,99 @@
-# This implements the convergence 
-
 using Plots
 using Random
-rng = Xoshiro(123)
 
-function Wiener_noise(rng::AbstractRNG, t0, t1, W0, n)
-    dt = (t1 - t0) / n
-    Wt = Vector{typeof(W_0)}(undef, n+1)
-    Wt[1] = W0
-    for j in 2:n+1
-        Wt[j] = Wt[j-1] + √dt * randn(rng)
-    end
+function prepare_error_computation(Nmax, npowers)
+
+    nsteps = collect(2^n for n in npowers)
+    Ns = collect(div(Nmax, nstep) for nstep in nsteps)
+
+    trajerrors = zeros(last(Ns), length(Ns))
+    deltas = Vector{Float64}(undef, length(Ns))
+
+    Wt = Vector{Float64}(undef, Nmax)
+    Yt = Vector{Float64}(undef, Nmax)
+    Xt = Vector{Float64}(undef, last(Ns))
+
+    return nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt
 end
 
-function Wiener_noise!(rng::AbstractRNG, Wt::Vector, W0, dt)
-    Wt[1] = W0
-    for j in 2:length(Wt)
-        Wt[j] = Wt[j-1] + √dt * randn(rng)
-    end
-end
+function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+    for _ in 1:M
+        # draw initial condition
+        x0 = randn(rng)
 
-function Wiener_noise!(rng::AbstractRNG, Wt::Matrix, W0, dt)
-    Wt[1, :] .= W0
-    for j in 2:size(Wt, 1)
-        Wt[j, :] .= Wt[j-1, :] + √dt * randn(rng, size(Wt, 2))
-    end
-end
+        # time step for noise and exact solutions
+        dt = tf / (Nmax - 1)
 
-function get_errors(t0, tf, Ns, deltas)
-    errors = zeros(length(deltas))
-    Ns = Int.(round.((tf - t0) ./ deltas))
-    Xt = [Vector{Float64}(undef, length=N) for N in Ns]
-    Yt = [Vector{Float64}(undef, length=N) for N in Ns]
-    Wt = [Vector{Float64}(undef, length=N) for N in Ns]
-end
-
-
-t0 = 0.0
-tf = 1.0
-Nmax = 2^15 # Grune & Kloeden used Nmax = 1_000_000, which is about 2^20 = 1_048_576
-M = 10_000 # Grune & Kloeden used M=1 just a single step
-
-nsteps = collect(2^n for n in 9:-1:5)
-Ns = collect(div(Nmax, nstep) for nstep in nsteps)
-
-errorsE = zeros(length(Ns)) # errors for Euler
-errorsH = zeros(length(Ns)) # errors for Heun
-deltas = Vector{Float64}(undef, length(Ns))
-
-
-Yt = Vector{Float64}(undef, Nmax+1)
-# Euler approximation
-XEt = [Vector{Float64}(undef, N) for N in Ns]
- # Heun approximation
-XHt = [Vector{Float64}(undef, N) for N in Ns]
-
-@time for m in 1:M
-    x0 = 1.0 # randn()
-
-    dt = tf / (Nmax - 1)
-    for n in 2:Nmax+1
-        Wt[n] = Wt[n-1] + √dt * randn(rng)
-    end
-
-    Yt[1] = x0
-    It = 0.0
-
-    for n in 2:Nmax+1
-        # It += -cos(5 * Wt[n-1]) * dt 
-        It += -(cos(5 * Wt[n]) + cos(5 *Wt[n-1])) * dt / 2 # trapezoidal
-        Yt[n] = x0 * exp(It)
-    end
-
-    for (i, (nstep, N)) in enumerate(zip(nsteps, Ns))
-        tt = range(t0, tf, length = N)
-        dt = Float64(tt.step)
-        deltas[i] = dt
-
-        XEt[i][1] = x0
-        XHt[i][1] = x0
-
-        for n in 2:N
-            XEt[i][n] = XEt[i][n-1] .* (
-                1 - cos(5 * Wt[1 + nstep * (n - 1)]) * dt
-            )
-            XHaux = XHt[i][n-1] * (
-                1 - cos(5 * Wt[1 + nstep * (n - 1)]) * dt
-            )
-            XHt[i][n] = XHt[i][n-1] + (
-                - cos(5 * Wt[1 + nstep * (n - 1)]) * XHt[i][n-1] - cos(5 * Wt[1 + nstep * n]) * XHaux
-            ) * dt / 2
+        # get noise sample path
+        Wt[1] = 0.0
+        for n in 2:Nmax
+            Wt[n] = Wt[n-1] + √dt * randn(rng)
         end
 
-        errorsE[i] += maximum(abs, XEt[i] - @view(Yt[1:nstep:end-1]))
-        errorsH[i] += maximum(abs, XHt[i] - @view(Yt[1:nstep:end-1]))
+        # get exact pathwise solution
+        Yt[1] = x0
+        It = 0.0
+        for n in 2:Nmax
+            It += (Wt[n] + Wt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
+            Yt[n] = x0 * exp(It)
+        end
+
+        # solve approximate solutions at selected time steps
+        for (i, (nstep, N)) in enumerate(zip(nsteps, Ns))
+
+            dt = (tf - t0) / (N - 1)
+            deltas[i] = dt
+
+            Xt[1] = x0
+
+            for n in 2:N
+                Xt[n] = Xt[n-1] .* (
+                    1 + Wt[1 + nstep * (n - 1)] * dt
+                )
+                trajerrors[n, i] += abs(Xt[n] - Yt[1 + (n-1) * nstep])
+            end
+        end
     end
-    if mod(m, 100) == 0
-        @info "$(round(100 * m/M))%"
-    end
+
+    # normalize errors
+    trajerrors ./= M
+    nothing
 end
 
-errorsE ./= M
-errorsH ./= M
+function get_errors(rng, t0, tf, Nmax, npowers, M)
+    nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt = prepare_error_computation(Nmax, npowers)
 
-lcE, pE = [one.(deltas) log.(deltas)] \ log.(errorsE)
-linear_fitE = exp(lcE) * deltas .^ pE
+    get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
-lcH, pH = [one.(deltas) log.(deltas)] \ log.(errorsH)
-linear_fitH = exp(lcH) * deltas .^ pH
+    errors = maximum(trajerrors, dims=1)[1,:]
 
-begin
-    plt = plot(xscale = :log10, yscale = :log10, xaxis = "Δt", ylims = [0.1, 10.0] .* extrema(errorsE), yaxis = "erro", title = "Strong error for \$\\mathrm{d}X_t/\\mathrm{d}t = -\\cos(5W_t) X_t\$, with \$X_0 = 1.0\$\n\$[0, T] = \$[$t0, $tf], M = $M samples\nNmax = $Nmax, Ns = $Ns", titlefont = 10, legend = :topleft)
-    scatter!(plt, deltas, errorsE, marker = :star, label = "strong error Euler order p = $(round(pE, digits=2))")
-    plot!(plt, deltas, linear_fitE, linestyle = :dash, label = "linear fit Euler")
-    scatter!(plt, deltas, errorsH, marker = :star, label = "strong error Heun order p = $(round(pH, digits=2))")
-    plot!(plt, deltas, linear_fitH, linestyle = :dash, label = "linear fit Heun")
+    lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
+
+    return deltas, Ns, errors, lc, p
+end
+
+function table_errors(Ns, deltas, errors)
+    table = "N & dt & error \\\\\n"
+    for (N, dt, error) in zip(Ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
+        table *= "$N & $dt & $error \\\\\n"
+    end
+    return table
+end
+
+function plot_error(deltas, errors, lc, p, t0, tf, M; filename=nothing)
+    fit = exp(lc) * deltas .^ p
+    plt = plot(xscale = :log10, yscale = :log10, xaxis = "Δt", ylims = [0.1, 10.0] .* extrema(errors), yaxis = "error", title = "Strong error p = $(round(p, digits=2)) with $M samples\nof the Euler method for \$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$\n\$X_0 \\sim \\mathcal{N}(0, 1)\$, on \$[0, T] = [$t0, $tf]\$", titlefont = 12, legend = :topleft)
+    scatter!(plt, deltas, errors, marker = :star, label = "strong errors")
+    plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit p = $(round(p, digits=2))")
     display(plt)
+    filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
+end
+
+function error_evolution(deltas, trajerrors, t0, tf, filename=nothing)
+    plt = plot(title = "Evolution of the strong error", titlefont=12, legend=:topleft)
+    for (i, N) in enumerate(Ns)
+        plot!(range(t0, tf, length=N), trajerrors[1:N, i], label="\$\\mathrm{d}t = $(round(deltas[i], sigdigits=2))\$")
+    end
+    display(plt)
+    filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
 end

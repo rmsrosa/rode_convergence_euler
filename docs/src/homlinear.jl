@@ -10,81 +10,22 @@
 
 using Plots
 using Random
-using Statistics
+
+include("utils.jl")
+
 rng = Xoshiro(123)
+t0 = 0.0
+tf = 1.0
+Nmax = 2^16
+npowers = 12:-1:5
+M = 1_000
 
-function prepare_for_errors(t0 = 0.0, tf = 1.0, Nmax = 2^16, M = 1_000, npowers = 12:-1:5)
+deltas, Ns, errors, lc, p = get_errors(rng, t0, tf, Nmax, npowers, M)
 
-    nsteps = collect(2^n for n in npowers)
-    Ns = collect(div(Nmax, nstep) for nstep in nsteps)
+table = table_errors(Ns, deltas, errors)
 
-    trajerrors = zeros(last(Ns), length(Ns))
-    # errors = zeros(length(Ns))
-    deltas = Vector{Float64}(undef, length(Ns))
+println(table)
 
-    Wt = Vector{Float64}(undef, Nmax)
-    Yt = Vector{Float64}(undef, Nmax)
-    Xt = Vector{Float64}(undef, last(Ns))
+plot_error(deltas, errors, lc, p, t0, tf, M, filename = "order_linearhomogenous.png")
 
-    return nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt
-end
-
-function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
-    for _ in 1:M
-        x0 = randn(rng)
-
-        Wt[1] = 0.0
-
-        Yt[1] = x0
-        It = 0.0
-
-        dt = tf / (Nmax - 1)
-
-        for n in 2:Nmax
-            Wt[n] = Wt[n-1] + √dt * randn(rng)
-            It += (Wt[n] + Wt[n-1]) * dt / 2 + randn() * sqrt(dt^3) / 12
-            Yt[n] = x0 * exp(It)
-        end
-
-        for (i, (nstep, N)) in enumerate(zip(nsteps, Ns))
-
-            dt = (tf - t0) / (N - 1)
-            deltas[i] = dt
-
-            Xt[1] = x0
-
-            for n in 2:N
-                Xt[n] = Xt[n-1] .* (
-                    1 + Wt[1 + nstep * (n - 1)] * dt
-                )
-                trajerrors[n, i] += abs(Xt[n] - Yt[1 + (n-1) * nstep])
-            end
-        end
-    end
-    trajerrors ./= M
-    nothing
-end
-
-@time nsteps, Ns, deltas, trajerrors, Wt, Yt, Xt = prepare_for_errors()
-
-@time get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
-
-errors = maximum(trajerrors, dims=1)[1,:]
-
-lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
-linear_fit = exp(lc) * deltas .^ p
-
-begin
-    plt = plot(xscale = :log10, yscale = :log10, xaxis = "Δt", ylims = [0.1, 10.0] .* extrema(errors), yaxis = "error", title = "Strong error p = $(round(p, digits=2)) with $M samples\nof the Euler method for \$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$\n\$X_0 \\sim \\mathcal{N}(0, 1)\$, on \$[0, T] = [$t0, $tf]\$", titlefont = 12, legend = :topleft)
-    scatter!(plt, deltas, errors, marker = :star, label = "strong errors")
-    plot!(plt, deltas, linear_fit, linestyle = :dash, label = "linear fit p = $(round(p, digits=2))")
-    display(plt)
-end
-
-begin
-    plt = plot(title = "Evolution of the strong error", titlefont=12, legend=:topleft)
-    for (i, N) in enumerate(Ns)
-        plot!(range(t0, tf, length=N), trajerrors[1:N, i], label="\$\\mathrm{d}t = $(round(deltas[i], sigdigits=2))\$")
-    end
-    display(plt)
-end
+error_evolution(deltas, trajerrors, t0, tf)
