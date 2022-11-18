@@ -20,12 +20,19 @@ Nmax = 2^16
 npowers = 12:-1:5
 M = 1_000
 
-deltas, Ns, errors, lc, p = get_errors(rng, t0, tf, Nmax, npowers, M)
+deltas, Ns, errors, trajerrors, lc, p = get_errors(rng, t0, tf, Nmax, npowers, M)
 
 table = table_errors(Ns, deltas, errors)
 
 println(table)
 
-plot_error(deltas, errors, lc, p, t0, tf, M, filename = "order_linearhomogenous.png")
+include("utils.jl")
+info = (
+    equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
+    tspan="\$[0, T] = [$t0, $tf]\$"
+)
+filename = "order_linearhomogenous.png"
+plot_error(deltas, errors, lc, p, M; info, filename)
 
 error_evolution(deltas, trajerrors, t0, tf)

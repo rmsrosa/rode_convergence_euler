@@ -69,7 +69,7 @@ function get_errors(rng, t0, tf, Nmax, npowers, M)
 
     lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
 
-    return deltas, Ns, errors, lc, p
+    return deltas, Ns, errors, trajerrors, lc, p
 end
 
 function table_errors(Ns, deltas, errors)
@@ -80,11 +80,12 @@ function table_errors(Ns, deltas, errors)
     return table
 end
 
-function plot_error(deltas, errors, lc, p, t0, tf, M; filename=nothing)
+function plot_error(deltas, errors, lc, p, M; info = nothing, filename=nothing)
+    title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)"
     fit = exp(lc) * deltas .^ p
-    plt = plot(xscale = :log10, yscale = :log10, xaxis = "Δt", ylims = [0.1, 10.0] .* extrema(errors), yaxis = "error", title = "Strong error p = $(round(p, digits=2)) with $M samples\nof the Euler method for \$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$\n\$X_0 \\sim \\mathcal{N}(0, 1)\$, on \$[0, T] = [$t0, $tf]\$", titlefont = 12, legend = :topleft)
-    scatter!(plt, deltas, errors, marker = :star, label = "strong errors")
-    plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit p = $(round(p, digits=2))")
+    plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", ylims = [0.1, 10.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
+    scatter!(plt, deltas, errors, marker = :star, label = "strong errors with $M samples")
+    plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))")
     display(plt)
     filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
 end
