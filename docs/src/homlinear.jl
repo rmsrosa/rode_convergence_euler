@@ -16,8 +16,8 @@ include("utils.jl")
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-Nmax = 2^16
-Ns = 2 .^ (4:11)
+Nmax = 2^18
+Ns = 2 .^ (4:10)
 M = 1_000
 
 deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, Nmax, Ns, M)
@@ -26,7 +26,7 @@ table = table_errors(Ns, deltas, errors)
 
 println(table)
 
-#include("utils.jl")
+include("utils.jl")
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",

@@ -82,7 +82,7 @@ end
 function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=nothing)
     title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)"
     fit = exp(lc) * deltas .^ p
-    plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", ylims = [0.1, 10.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
+    plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", xlims = [0.5, 2.0] .* extrema(deltas), ylims = [0.5, 2.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
     scatter!(plt, deltas, errors, marker = :star, label = "strong errors with $M samples")
     plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))")
     display(plt)
@@ -90,7 +90,7 @@ function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=not
 end
 
 function plot_t_vs_errors(deltas, trajerrors, t0, tf, filename=nothing)
-    plt = plot(title = "Evolution of the strong error", titlefont=12, legend=:topleft)
+    plt = plot(title = "Evolution in time of the strong error of the Euler method\nfor each chosen fixed time step", xlabel="\$t\$", ylabel="error", titlefont=10, legend=:topleft)
     for (i, N) in enumerate(Ns)
         plot!(range(t0, tf, length=N), trajerrors[1:N, i], label="\$\\mathrm{d}t = $(round(deltas[i], sigdigits=2))\$")
     end
