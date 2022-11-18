@@ -1,7 +1,7 @@
 using Plots
 using Random
 
-function prepare_error_computation(Nmax, Ns)
+function prepare_variables(Nmax, Ns)
 
     nsteps = div.(Nmax, Ns)
 
@@ -60,7 +60,7 @@ function get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas,
 end
 
 function get_errors(rng, t0, tf, Nmax, Ns, M)
-    nsteps, deltas, trajerrors, Wt, Yt, Xt = prepare_error_computation(Nmax, Ns)
+    nsteps, deltas, trajerrors, Wt, Yt, Xt = prepare_variables(Nmax, Ns)
 
     get_errors!(rng, Wt, Yt, Xt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
