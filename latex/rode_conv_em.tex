@@ -1080,9 +1080,9 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 
 \begin{table}
     \label{tablinearhomogeneousrode}
-    \begin{tabular}[htb]{l|l|l}
-        N & dt & error \\
-        16 & 0.0667 & 0.0416 \\
+    \begin{tabular}[htb]{|l|l|l|}
+        \hline N & dt & error \\
+        \hline \hline 16 & 0.0667 & 0.0416 \\
         32 & 0.0159 & 0.0201 \\
         64 & 0.0323 & 0.0101 \\
         128 & 0.00787 & 0.00516 \\
@@ -1090,6 +1090,7 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
         512 & 0.00196 & 0.00129 \\
         1024 & 0.000978 & 0.000637 \\
         2048 & 0.000489 & 0.000314 \\
+        \hline
     \end{tabular}
     \caption{Mesh points (N), time steps (dt), and strong error (error).}
 \end{table}
