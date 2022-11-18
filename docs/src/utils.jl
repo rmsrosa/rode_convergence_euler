@@ -80,7 +80,7 @@ function table_errors(Ns, deltas, errors)
 end
 
 function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=nothing)
-    title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)"
+    title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)\nand $(info.noise)"
     fit = exp(lc) * deltas .^ p
     plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", xlims = [0.5, 2.0] .* extrema(deltas), ylims = [0.5, 2.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
     scatter!(plt, deltas, errors, marker = :star, label = "strong errors with $M samples")

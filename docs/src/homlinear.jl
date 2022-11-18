@@ -29,6 +29,7 @@ println(table)
 include("utils.jl")
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
+    noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
     tspan="\$[0, T] = [$t0, $tf]\$"
 )
