@@ -57,3 +57,36 @@ filename = "order_linearhomogenous.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
+
+#
+using BenchmarkTools
+
+nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
+
+@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $solution!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
+
+@profview get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+
+@profview_allocs get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+
+x0 = 1.0
+
+@btime solution_by_euler!($rng, $XNt, $t0, $tf, $x0, $f, $(@view(Yt[1:first(nsteps):1+first(nsteps)*(first(Ns)-1)])))
+
+@btime $noise!($rng, $Yt)
+
+@btime $solution!($rng, $Xt, $t0, $tf, $x0, $f, $Yt)
+
+@btime solution_by_euler!($rng, $XNt, $t0, $tf, $x0, $f, $(@view(Yt[1:first(nsteps):1+first(nsteps)*(first(Ns)-1)])))
+
+function eee(Xt, XNt, M, i, N, nstep, trajerrors)
+    for n in 2:N
+        trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
+    end
+    trajerrors ./= M
+    nothing
+end
+
+@btime $X0($rng)
+
+@btime eee($Xt, $XNt, $M, $1, $(first(Ns)), $(first(nsteps)),$trajerrors)
