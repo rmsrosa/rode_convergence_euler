@@ -49,7 +49,7 @@ function prepare_variables(Nmax, Ns)
     return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
     for _ in 1:M
         # draw initial condition
         x0 = X0(rng)
@@ -81,7 +81,7 @@ end
 function get_errors(rng, t0, tf, X0, f, noise!, solution!, Nmax, Ns, M)
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
 
-    get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+    get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
