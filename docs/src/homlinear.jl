@@ -19,11 +19,23 @@ tf = 1.0
 X0 = randn
 f(x, y) = y * x
 noise! = Wiener_noise(t0, tf, 0.0)
+
+function solution!(rng, Xt, t0, tf, x0, f, Yt)
+    Nmax = length(Yt)
+    dt = (tf - t0) / (Nmax - 1)
+    Xt[1] = x0
+    It = 0.0
+    for n in 2:Nmax
+        It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
+        Xt[n] = x0 * exp(It)
+    end
+end
+
 Nmax = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, solution!, Nmax, Ns, M)
 
 #= plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
 plt = plot(range(t0, tf, length=Nmax), Xt, label="solution sample path")

@@ -12,6 +12,15 @@ function Wiener_noise(t0, tf, Y0)
     return fn
 end
 
+function solution_by_euler!(rng, Xt, t0, tf, x0, f, Yt)
+    N = length(Yt)
+    dt = (tf - t0) / (N - 1)
+    Xt[1] = x0
+    for n in 2:N
+        Xt[n] = Xt[n-1] + dt * f(Xt[n-1], Yt[n-1])
+    end
+end
+
 function prepare_variables(Nmax, Ns)
 
     nsteps = div.(Nmax, Ns)
@@ -26,7 +35,7 @@ function prepare_variables(Nmax, Ns)
     return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
     for _ in 1:M
         # draw initial condition
         x0 = X0(rng)
@@ -35,13 +44,7 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, trajerrors, M, t0, tf, Ns,
         noise!(rng, Yt)
 
         # get exact pathwise solution
-        dt = (tf - t0) / (Nmax - 1)
-        Xt[1] = x0
-        It = 0.0
-        for n in 2:Nmax
-            It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
-            Xt[n] = x0 * exp(It)
-        end
+        solution!(rng, Xt, t0, tf, x0, f, Yt)
 
         # solve approximate solutions at selected time steps
         for (i, (nstep, N)) in enumerate(zip(nsteps, Ns))
@@ -63,10 +66,10 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, trajerrors, M, t0, tf, Ns,
     nothing
 end
 
-function get_errors(rng, t0, tf, X0, f, noise!, Nmax, Ns, M)
+function get_errors(rng, t0, tf, X0, f, noise!, solution!, Nmax, Ns, M)
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
 
-    get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+    get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
