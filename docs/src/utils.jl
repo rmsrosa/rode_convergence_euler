@@ -5,8 +5,22 @@ function Wiener_noise(t0, tf, Y0)
     fn = (rng, Yt) -> begin
         Yt[begin] = Y0
         dt = (tf - t0) / (length(Yt) - 1)
+        sqrtdt = sqrt(dt)
         for n in firstindex(Yt)+1:lastindex(Yt)
-            Yt[n] = Yt[n-1] + √dt * randn(rng)
+            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
+        end
+    end
+    return fn
+end
+
+function GBM_noise(t0, tf, μ, σ,  Y0)
+    fn = (rng, Yt) -> begin
+        Yt[begin] = Y0
+        dt = (tf - t0) / (length(Yt) - 1)
+        sqrtdt = sqrt(dt)
+        a = (μ + σ^2/2)
+        for n in firstindex(Yt)+1:lastindex(Yt)
+            Yt[n] = Yt[n-1] * exp(a * dt + σ * sqrtdt * randn(rng))
         end
     end
     return fn
