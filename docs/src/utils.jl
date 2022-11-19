@@ -35,7 +35,7 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, trajerrors, M, t0, tf, Ns,
         noise!(rng, Yt)
 
         # get exact pathwise solution
-        dt = tf / (Nmax - 1)
+        dt = (tf - t0) / (Nmax - 1)
         Xt[1] = x0
         It = 0.0
         for n in 2:Nmax
