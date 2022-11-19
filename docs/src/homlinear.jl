@@ -20,7 +20,7 @@ X0 = randn
 f(x, y) = y * x
 noise! = Wiener_noise(t0, tf, 0.0)
 
-function solution!(rng, Xt, t0, tf, x0, f, Yt)
+solution! = function (rng, Xt, t0, tf, x0, f, Yt)
     Nmax = length(Yt)
     dt = (tf - t0) / (Nmax - 1)
     Xt[1] = x0
