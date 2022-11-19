@@ -1,6 +1,17 @@
 using Plots
 using Random
 
+function Wiener_noise(t0, tf, Y0)
+    fn = (rng, Yt) -> begin
+        Yt[begin] = Y0
+        dt = (tf - t0) / (length(Yt) - 1)
+        for n in firstindex(Yt)+1:lastindex(Yt)
+            Yt[n] = Yt[n-1] + √dt * randn(rng)
+        end
+    end
+    return fn
+end
+
 function prepare_variables(Nmax, Ns)
 
     nsteps = div.(Nmax, Ns)
@@ -15,21 +26,16 @@ function prepare_variables(Nmax, Ns)
     return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Yt, Xt, XNt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+function get_errors!(rng, Yt, Xt, XNt, X0, noise!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
     for _ in 1:M
         # draw initial condition
-        x0 = randn(rng)
-
-        # time step for noise and exact solutions
-        dt = tf / (Nmax - 1)
+        x0 = X0(rng)
 
         # get noise sample path
-        Yt[1] = 0.0
-        for n in 2:Nmax
-            Yt[n] = Yt[n-1] + √dt * randn(rng)
-        end
+        noise!(rng, Yt)
 
         # get exact pathwise solution
+        dt = tf / (Nmax - 1)
         Xt[1] = x0
         It = 0.0
         for n in 2:Nmax
@@ -59,16 +65,16 @@ function get_errors!(rng, Yt, Xt, XNt, trajerrors, M, t0, tf, Ns, nsteps, deltas
     nothing
 end
 
-function get_errors(rng, t0, tf, Nmax, Ns, M)
+function get_errors(rng, t0, tf, X0, noise!, Nmax, Ns, M)
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
 
-    get_errors!(rng, Yt, Xt, XNt, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
+    get_errors!(rng, Yt, Xt, XNt, X0, noise!, trajerrors, M, t0, tf, Ns, nsteps, deltas, Nmax)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
     lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
 
-    return deltas, errors, trajerrors, lc, p, Yt, Xt, XNt
+    return deltas, errors, trajerrors, lc, p
 end
 
 function table_errors(Ns, deltas, errors)

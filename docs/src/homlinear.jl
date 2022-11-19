@@ -16,16 +16,18 @@ include("utils.jl")
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
+X0 = randn
+noise! = Wiener_noise(t0, tf, 0.0)
 Nmax = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-@time deltas, errors, trajerrors, lc, p, Yt, Xt, XNt = get_errors(rng, t0, tf, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(t0, tf, X0, noise!, Nmax, Ns, M)
 
-plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
+#= plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
 plt = plot(range(t0, tf, length=Nmax), Xt, label="solution sample path")
 plot!(plt, range(t0, tf, length=last(Ns)), XNt, label="approximate sample path")
-display(plt)
+display(plt) =#
 
 table = table_errors(Ns, deltas, errors)
 
