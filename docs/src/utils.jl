@@ -69,7 +69,11 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, 
             XNt[1] = x0
 
             for n in 2:N
-                XNt[n] = XNt[n-1] + dt * f(XNt[n-1], Yt[1 + nstep * (n - 1)])
+                XNt[n] = XNt[n-1] + dt * f(XNt[n-1], Yt[1 + nstep * (n - 2)])
+            end
+            #= solution_by_euler!(rng, XNt, t0, tf, x0, f, @view(Yt[1:nstep:1+nstep*(N-1)])) =#
+
+            for n in 2:N
                 trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
             end
         end
