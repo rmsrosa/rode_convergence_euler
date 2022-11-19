@@ -991,18 +991,35 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
     for a suitable constant $C \geq 0$.
 \end{thm}
 
-\section{Applications}
+\section{Numerical examples}
 
-In this section, we describe a few explicit examples that fall into one of the cases considered above and, hence, the Euler method exhibits a strong order one convergence.
+In this section, we illustrate the strong order 1 convergence with a few explicit examples that fall into one of the cases considered above.
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for $\omega_1, \ldots, \omega_M$ and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
     \textrm{strong error } = \max_{j=0, \ldots, n} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^N(\omega_m)\right|
 \end{equation}
 
-We follow two approaches, depending on whether we have an explicit formula for the exact solutions or not. In the first case, we first compute a numerical approximation, which includes computing the noise term at the mesh points, $\{Y_{t_j}\}_{j=0, \ldots, n}$, and then we use this points to compute the exact solution.
+Here are the main variables in the examples:
+\begin{enumerate}
+    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error, typically $M=1,000$ or $M=10,000$.
+    \item The time interval $[0, T]$ for the initial-value problem, typically with $T=1.0$.
+    \item The initial condition $X_0$, which is typically $X_0 \sim \mathcal{N}(0, 1)$.
+    \item A series of time steps $\Delta_i = T/(N_i-1)$, with $N_i=2^{n_i}$, most often with $n_i=4, \ldots, 10$, hence $N_i=32, 64, \ldots, 1024$.
+    \item A number $N_{\mathrm{fine}}$ of mesh points for a fine discretization to compute a target solution path, typicall $N_{\mathrm{fine}} = \max_i{N_i^2}$, e.g. $N=2^{20} = 1,048,576$;
+    \item The target solution path is either an exact pathwise solution, when available, or a (higher-order) approximation.
+\end{enumerate}
 
-In the second case, we first compute the sample paths of the noise on a very fine time mesh and then we use this to compute the numerical approximation from the values at the coarse mesh and also to compute an approximation of the exact solution from the fine mesh.
+For each sample $m=1, \ldots, M$, we first generate a discretization $\{Y_{t_j}\}_{j=0, N_{\mathrm{fine}}}$ of a sample path of the noise on the finest grid with $N_{\mathrm{fine}}$ points. Next we use these values to construct the target solution $\{X_{t_j}\}_{j=0, N_{\mathrm{fine}}}$ still on the fine mesh. This is obtained either using the Euler approximation itself, keeping in mind that the time mesh is sufficiently fine, or by an exact distributions of the solution, when available. Next, for each time step $N_i = 2^{n_i}$ in the selected range, we compute the Euler approximation using the noise values at the corresponding coarse mesh. We compare that to the values of the target path on that coarse mesh and update the strong error
+\[
+    \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m)\right|
+\]
+at each mesh point. At the end, we take the maximum in time, for each coarse mesh to obtain the error for each mesh
+\[
+    \epsilon_i = \max_{j=0, \ldots, N_i} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m)\right|
+\]
+
+Finally, we fit $(\Delta_i, \epsilon_i)$ to $C\Delta_i^p$, for suitable $C$ and $p$, with $p$ giving the order of convergence.
 
 \subsection{Linear homogeneous equation}
 \label{seclinearhomogeneousrode}
