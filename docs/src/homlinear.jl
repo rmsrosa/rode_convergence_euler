@@ -17,12 +17,13 @@ rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
 X0 = randn
+f(x, y) = y * x
 noise! = Wiener_noise(t0, tf, 0.0)
 Nmax = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-@time deltas, errors, trajerrors, lc, p = get_errors(t0, tf, X0, noise!, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, Nmax, Ns, M)
 
 #= plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
 plt = plot(range(t0, tf, length=Nmax), Xt, label="solution sample path")
@@ -33,7 +34,7 @@ table = table_errors(Ns, deltas, errors)
 
 println(table)
 
-include("utils.jl")
+#include("utils.jl")
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
