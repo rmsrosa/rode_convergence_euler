@@ -11,26 +11,25 @@ tf = 1.0
 X0 = randn
 f(x, y) = y * x
 noise! = Wiener_noise(t0, tf, 0.0)
-
-solution! = function (rng, Xt, t0, tf, x0, f, Yt)
-    Nmax = length(Yt)
-    dt = (tf - t0) / (Nmax - 1)
+target! = function (rng, Xt, t0, tf, x0, f, Yt)
+    Ntgt = length(Yt)
+    dt = (tf - t0) / (Ntgt - 1)
     Xt[1] = x0
     It = 0.0
-    for n in 2:Nmax
+    for n in 2:Ntgt
         It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
         Xt[n] = x0 * exp(It)
     end
 end
 
-Nmax = 2^18
+Ntgt = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, solution!, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 
-#= plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
-plt = plot(range(t0, tf, length=Nmax), Xt, label="solution sample path")
+#= plot(range(t0, tf, length=Ntgt), Yt, label="noise sample path")
+plt = plot(range(t0, tf, length=Ntgt), Xt, label="solution sample path")
 plot!(plt, range(t0, tf, length=last(Ns)), XNt, label="approximate sample path")
 display(plt) =#
 
@@ -52,6 +51,6 @@ plot_t_vs_errors(deltas, trajerrors, t0, tf)
 
 using BenchmarkTools
 
-nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
+nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $solution!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
+@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)

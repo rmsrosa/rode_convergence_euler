@@ -14,9 +14,9 @@ f(x, y) = sin(y) * x
 σ = 0.2
 Y0 = 1.0
 noise! = GBM_noise(t0, tf, Y0, μ, σ)
-solution! = solution_by_euler!
+target! = solution_by_euler!
 
-Nmax = 2^20
+Ntgt = 2^20
 Ns = 2 .^ (4:10)
 M = 1_000
 
@@ -27,10 +27,10 @@ info = (
     tspan="\$[0, T] = [$t0, $tf]\$"
 )
 
-@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, solution_by_euler!, Nmax, Ns, M)
+@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 
-#= plot(range(t0, tf, length=Nmax), Yt, label="noise sample path")
-plt = plot(range(t0, tf, length=Nmax), Xt, label="solution sample path")
+#= plot(range(t0, tf, length=Ntgt), Yt, label="noise sample path")
+plt = plot(range(t0, tf, length=Ntgt), Xt, label="solution sample path")
 plot!(plt, range(t0, tf, length=last(Ns)), XNt, label="approximate sample path")
 display(plt) =#
 
@@ -40,13 +40,13 @@ println(table)
 
 #include("utils.jl")
 
-filename = "order_linearhomogenousGBM.png"
+filename = "order_linearhomogenoussinGBM.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
 
 using BenchmarkTools
 
-nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
+nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $solution!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
+@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
