@@ -75,7 +75,7 @@ function calculate_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerro
 
     # normalize errors
     trajerrors ./= M
-    nothing
+    return Yt, Xt, XNt
 end
 
 function calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
@@ -89,6 +89,44 @@ function calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 
     return deltas, errors, trajerrors, lc, p
 end
+
+function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
+
+    title = info === nothing ? "" : "Sample noise, sample target and numerical approximations for\n$(info.equation), with $(info.ic), on $(info.tspan)\nand $(info.noise)"
+
+    # generate noise sample path
+    Yt = Vector{Float64}(undef, Ntgt)
+    noise!(rng, Yt)
+    plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10)
+
+    # generate target path
+    x0 = X0(rng)
+    Xt = Vector{Float64}(undef, Ntgt)
+    target!(rng, Xt, t0, tf, x0, f, Yt)
+
+    # solve approximate solutions at selected time steps
+    nsteps = div.(Ntgt, Ns)
+    deltas = Vector{Float64}()
+    XNts = Vector{Vector{Float64}}()
+    plt = plot(range(t0, tf, length=Ntgt), Xt, label="target", linewidth = 4, title=title, titlefont=10)
+
+    for (nstep, N) in zip(nsteps, Ns)
+
+        push!(deltas, (tf - t0) / (N - 1))
+
+        XNt = Vector{Float64}(undef, N)
+        solve_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
+
+        push!(XNts, XNt)
+
+        plot!(plt, range(t0, tf, length=N), XNt, linestyle=:dash, label="\$N = $N\$")
+    end
+
+    display(plt)
+    filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
+    return Yt, Xt, XNts
+end
+
 
 function generate_error_table(Ns, deltas, errors)
     table = "N & dt & error \\\\\n"

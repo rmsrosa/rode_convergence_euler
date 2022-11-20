@@ -29,11 +29,6 @@ info = (
 
 @time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 
-#= plot(range(t0, tf, length=Ntgt), Yt, label="noise sample path")
-plt = plot(range(t0, tf, length=Ntgt), Xt, label="solution sample path")
-plot!(plt, range(t0, tf, length=last(Ns)), XNt, label="approximate sample path")
-display(plt) =#
-
 table = generate_error_table(Ns, deltas, errors)
 
 println(table)
@@ -44,6 +39,10 @@ filename = "order_linearhomogenoussinGBM.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
+
+filename = "linearhomogenoussinGBM_sample.png"
+plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
+
 
 using BenchmarkTools
 
