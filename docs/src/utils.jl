@@ -35,14 +35,6 @@ function solution_by_euler!(rng, Xt, t0, tf, x0, f, Yt)
     end
 end
 
-function solution_by_euler_alt!(rng, Xt, t0, tf, x0, f, Yt, nstep, N)
-    dt = (tf - t0) / (N - 1)
-    Xt[1] = x0
-    for n in 2:N
-        Xt[n] = Xt[n-1] + dt * f(Xt[n-1], Yt[1 + (n-1) * nstep])
-    end
-end
-
 function prepare_variables(Nmax, Ns)
 
     nsteps = div.(Nmax, Ns)
@@ -73,14 +65,7 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, solution!, trajerrors, 
 
             deltas[i] = (tf - t0) / (N - 1)
 
-            #solution_by_euler!(rng, XNt, t0, tf, x0, f, @view(Yt[1:nstep:1+nstep*(N-1)]))
-            #solution_by_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
-            solution_by_euler_alt!(rng, XNt, t0, tf, x0, f, Yt, nstep, N)
-
-            #= Xt[1] = x0
-            for n in 2:N
-                Xt[n] = Xt[n-1] + deltas[i] * f(Xt[n-1], Yt[1 + (n-1) * nstep])
-            end =#
+            solution_by_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
 
             for n in 2:N
                 trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
