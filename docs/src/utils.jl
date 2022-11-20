@@ -57,7 +57,7 @@ function prepare_variables(Nmax, Ns)
     return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+function get_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, solution!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
     for _ in 1:M
         # draw initial condition
         x0 = X0(rng)
@@ -74,13 +74,13 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, solution!, trajerrors, M, 
             deltas[i] = (tf - t0) / (N - 1)
 
             #solution_by_euler!(rng, XNt, t0, tf, x0, f, @view(Yt[1:nstep:1+nstep*(N-1)]))
-            # solution_by_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
-            #solution_by_euler_alt!(rng, XNt, t0, tf, x0, f, Yt, nstep, N)
+            #solution_by_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
+            solution_by_euler_alt!(rng, XNt, t0, tf, x0, f, Yt, nstep, N)
 
-            Xt[1] = x0
+            #= Xt[1] = x0
             for n in 2:N
                 Xt[n] = Xt[n-1] + deltas[i] * f(Xt[n-1], Yt[1 + (n-1) * nstep])
-            end
+            end =#
 
             for n in 2:N
                 trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
@@ -131,23 +131,3 @@ function plot_t_vs_errors(deltas, trajerrors, t0, tf, filename=nothing)
     display(plt)
     filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
 end
-
-
-x = collect(1:3)
-y = collect(1:9)
-
-function bar!(x, y)
-    for i in eachindex(y)
-        x[i] += y[i]
-    end
-end
-
-function foo!(x, y, ns, nf)
-    bar!(x, view(y, 1:ns:nf))
-end
-
-foo!(x, y, 2, 5)
-
-x == [2, 5, 8]
-
-@btime foo!($x, $y, $2, $5)
