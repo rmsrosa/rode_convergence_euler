@@ -1,12 +1,4 @@
-# # Linear homogeneous RODE
-
-# This checks the order of convergence of the Euler method for the linear ODE
-# $$
-# \begin{cases}
-# dXₜ/dt = Wₜ Xₜ, \\
-# X₀ ∼ 𝒩(0, 1)
-# \end{cases}
-# $$
+# # Linear homogeneous RODE with Wiener noise
 
 using Plots
 using Random

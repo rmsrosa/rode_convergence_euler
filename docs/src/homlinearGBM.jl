@@ -1,4 +1,4 @@
-# # Linear homogeneous RODE with GBM noise
+# # Linear homogeneous RODE with sin of GBM noise
 
 using Plots
 using Random
@@ -44,3 +44,9 @@ filename = "order_linearhomogenousGBM.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
+
+using BenchmarkTools
+
+nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Nmax, Ns)
+
+@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $solution!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
