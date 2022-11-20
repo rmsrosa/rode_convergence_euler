@@ -26,7 +26,7 @@ function GBM_noise(t0, tf, μ, σ,  Y0)
     return fn
 end
 
-function solution_by_euler!(rng, Xt, t0, tf, x0, f, Yt)
+function solve_euler!(rng, Xt, t0, tf, x0, f, Yt)
     N = length(Yt)
     dt = (tf - t0) / (N - 1)
     Xt[1] = x0
@@ -49,7 +49,7 @@ function prepare_variables(Ntgt, Ns)
     return nsteps, deltas, trajerrors, Yt, Xt, XNt
 end
 
-function get_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
+function calculate_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
     for _ in 1:M
         # draw initial condition
         x0 = X0(rng)
@@ -65,7 +65,7 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M,
 
             deltas[i] = (tf - t0) / (N - 1)
 
-            solution_by_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
+            solve_euler!(rng, XNt, t0, tf, x0, f, view(Yt, 1:nstep:1+nstep*(N-1)))
 
             for n in 2:N
                 trajerrors[n, i] += abs(XNt[n] - Xt[1 + (n-1) * nstep])
@@ -78,10 +78,10 @@ function get_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M,
     nothing
 end
 
-function get_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+function calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-    get_errors!(rng, Yt, Xt, XNt, X0, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+    calculate_errors!(rng, Yt, Xt, XNt, X0, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
@@ -90,7 +90,7 @@ function get_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
     return deltas, errors, trajerrors, lc, p
 end
 
-function table_errors(Ns, deltas, errors)
+function generate_error_table(Ns, deltas, errors)
     table = "N & dt & error \\\\\n"
     for (N, dt, error) in zip(Ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
         table *= "$N & $dt & $error \\\\\n"

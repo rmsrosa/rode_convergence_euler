@@ -27,14 +27,14 @@ Ntgt = 2^18
 Ns = 2 .^ (4:10)
 M = 1_000
 
-@time deltas, errors, trajerrors, lc, p = get_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 
 #= plot(range(t0, tf, length=Ntgt), Yt, label="noise sample path")
 plt = plot(range(t0, tf, length=Ntgt), Xt, label="solution sample path")
 plot!(plt, range(t0, tf, length=last(Ns)), XNt, label="approximate sample path")
 display(plt) =#
 
-table = table_errors(Ns, deltas, errors)
+table = generate_error_table(Ns, deltas, errors)
 
 println(table)
 
@@ -54,4 +54,4 @@ using BenchmarkTools
 
 nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-@btime get_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
+@btime calculate_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
