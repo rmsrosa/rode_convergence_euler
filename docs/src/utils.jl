@@ -13,17 +13,49 @@ function Wiener_noise(t0, tf, Y0)
     return fn
 end
 
-function GBM_noise(t0, tf, μ, σ,  Y0)
-    fn = (rng, Yt) -> begin
-        Yt[begin] = Y0
-        dt = (tf - t0) / (length(Yt) - 1)
+function Wiener_noise(t0::S, tf::S, Y0::T) where {S, T}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        sqrtdt = sqrt(dt)
+        Yt[1] = Y0
+        for n in 2:N
+            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
+        end
+    end
+    return fn
+end
+
+function GBM_noise(t0::T1, tf::T1, μ::T2, σ::T2, Y0::T3) where {T1, T2, T3}
+    fn = function (rng::AbstractRNG, Yt::Vector{T3})
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
         a = (μ + σ^2/2)
-        for n in firstindex(Yt)+1:lastindex(Yt)
+        Yt[1] = Y0
+        for n in 2:N
             Yt[n] = Yt[n-1] * exp(a * dt + σ * sqrtdt * randn(rng))
         end
     end
     return fn
+end
+
+function CompoundPoisson_noise(t0::T1, tf::T1, λ::T2, R::T3) where {T1, T2, T3}
+    fn = function (rng::AbstractRNG, Yt::Vector{T2})
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        Yt[1] = zero(λ)
+        i = 1
+        while i < N
+            i += 1
+            Yt[i] = Yt[i-1]
+            r = - log(rand()) / λ
+            while r < dt
+                Yt[i] += R(rng)
+                r += -log(rand()) / λ
+            end
+        end
+    end
 end
 
 function solve_euler!(rng, Xt, t0, tf, x0, f, Yt)
@@ -126,7 +158,6 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     filename === nothing || savefig(plt, @__DIR__() * "/img/$filename")
     return Yt, Xt, XNts
 end
-
 
 function generate_error_table(Ns, deltas, errors)
     table = "N & dt & error \\\\\n"
