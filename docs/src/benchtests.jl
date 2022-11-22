@@ -74,10 +74,19 @@ function mysum8(u)
     r
 end
 
+function mysum9(u)
+    r = first(u)
+    @inbounds for i in Iterators.drop(eachindex(u), 1)
+        r += u[i]
+    end
+    r
+end
+
 u = rand(1000)
 
 mysum1(u) ≈ mysum2(u) ≈ mysum3(u) ≈ mysum4(u) ≈ sum(u)
 mysum5(u) ≈ mysum6(u) ≈ mysum7(u) ≈ mysum8(u) ≈ sum(u)
+mysum9(u) ≈ sum(u)
 
 @info :sum
 @btime sum($u)
@@ -105,3 +114,6 @@ mysum5(u) ≈ mysum6(u) ≈ mysum7(u) ≈ mysum8(u) ≈ sum(u)
 
 @info :mysum8
 @btime mysum8($u)
+
+@info :mysum9
+@btime mysum9($u)
