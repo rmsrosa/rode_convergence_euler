@@ -26,6 +26,11 @@ function GBM_noise(t0, tf, μ, σ, y0::T) where {T}
     return fn
 end
 
+"""
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and stationary arrivals given by the distribution `U`.
+
+This construction is done by drawing the number of events between consecutive times with interval `dt` by using the Poisson distribution `N(t+dt) - N(t) = Poisson(λdt)`.
+"""
 function CompoundPoisson_noise(t0, tf, λ, R)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
@@ -42,7 +47,12 @@ function CompoundPoisson_noise(t0, tf, λ, R)
     end
 end
 
-function CompoundPoisson_noise_alt(t0, tf, λ, R)
+"""
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and stationary arrivals given by the distribution `U`.
+
+The construction is done by drawing the interarrival times.
+"""
+function CompoundPoisson_noise_alt(t0, tf, λ, U)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -53,7 +63,7 @@ function CompoundPoisson_noise_alt(t0, tf, λ, R)
             Yt[i] = Yt[i-1]
             r = - log(rand(rng)) / λ
             while r < dt
-                Yt[i] += rand(rng, R)
+                Yt[i] += rand(rng, U)
                 r += -log(rand(rng)) / λ
             end
         end
