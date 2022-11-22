@@ -4,7 +4,7 @@ using Plots
 using Random
 using Distributions
 
-include("utils.jl")
+include("utils/tools.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
@@ -36,12 +36,12 @@ println(table)
 
 #include("utils.jl")
 
-filename = "order_linearhomogenoussinGBM.png"
+filename = @__DIR__() * "/img/order_linearhomogenoussinGBM.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
 
-filename = "linearhomogenoussinGBM_sample.png"
+filename = @__DIR__() * "/img/linearhomogenoussinGBM_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
 
 

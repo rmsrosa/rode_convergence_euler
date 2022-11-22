@@ -4,7 +4,7 @@ using Plots
 using Random
 using Distributions
 
-include("utils.jl")
+include("utils/tools.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
@@ -35,13 +35,13 @@ info = (
     ic = "\$X_0 \\sim \\mathcal{N}(1.0, 0.01)\$",
     tspan="\$[0, T] = [$t0, $tf]\$"
 )
-filename = "order_harvest.png"
+filename = @__DIR__() * "/img/order_harvest.png"
 
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
 
-filename = "harvest_sample.png"
+filename = @__DIR__() * "/img/harvest_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
 
 using BenchmarkTools

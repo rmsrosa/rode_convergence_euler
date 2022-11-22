@@ -4,7 +4,7 @@ using Plots
 using Random
 using Distributions
 
-include("utils.jl")
+include("utils/tools.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
@@ -41,13 +41,13 @@ info = (
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
     tspan="\$[0, T] = [$t0, $tf]\$"
 )
-filename = "order_linearhomogenous.png"
+filename = @__DIR__() * "/img/order_linearhomogenous.png"
 
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
 plot_t_vs_errors(deltas, trajerrors, t0, tf)
 
-filename = "linearhomogenous_sample.png"
+filename = @__DIR__() * "/img/linearhomogenous_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
 
 using BenchmarkTools
