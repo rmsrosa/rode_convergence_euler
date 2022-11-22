@@ -1,24 +1,13 @@
 using Plots
 using Random
+using Distributions
 
-function Wiener_noise(t0, tf, Y0)
-    fn = (rng, Yt) -> begin
-        Yt[begin] = Y0
-        dt = (tf - t0) / (length(Yt) - 1)
-        sqrtdt = sqrt(dt)
-        for n in firstindex(Yt)+1:lastindex(Yt)
-            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
-        end
-    end
-    return fn
-end
-
-function Wiener_noise(t0::S, tf::S, Y0::T) where {S, T}
+function Wiener_noise(t0, tf, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
-        Yt[1] = Y0
+        Yt[1] = y0
         for n in 2:N
             Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
         end
@@ -26,13 +15,14 @@ function Wiener_noise(t0::S, tf::S, Y0::T) where {S, T}
     return fn
 end
 
-function GBM_noise(t0::T1, tf::T1, μ::T2, σ::T2, Y0::T3) where {T1, T2, T3}
-    fn = function (rng::AbstractRNG, Yt::Vector{T3})
+
+function GBM_noise(t0, tf, μ, σ, y0::T) where {T}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
         a = (μ + σ^2/2)
-        Yt[1] = Y0
+        Yt[1] = y0
         for n in 2:N
             Yt[n] = Yt[n-1] * exp(a * dt + σ * sqrtdt * randn(rng))
         end
@@ -40,8 +30,24 @@ function GBM_noise(t0::T1, tf::T1, μ::T2, σ::T2, Y0::T3) where {T1, T2, T3}
     return fn
 end
 
-function CompoundPoisson_noise(t0::T1, tf::T1, λ::T2, R::T3) where {T1, T2, T3}
-    fn = function (rng::AbstractRNG, Yt::Vector{T2})
+function CompoundPoisson_noise(t0, tf, λ, R)
+    fn = function (rng, Yt::Vector)
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        RV = Poisson(λ * dt)
+        Yt[1] = 0.0
+        for n in 2:N
+            Ni = rand(rng, RV)
+            Yt[n] = Yt[n-1]
+            for _ in 1:Ni
+                Yt[n] += rand(rng, R)
+            end
+        end
+    end
+end
+
+function CompoundPoisson_noise_alt(t0, tf, λ, R)
+    fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         Yt[1] = zero(λ)
@@ -49,10 +55,10 @@ function CompoundPoisson_noise(t0::T1, tf::T1, λ::T2, R::T3) where {T1, T2, T3}
         while i < N
             i += 1
             Yt[i] = Yt[i-1]
-            r = - log(rand()) / λ
+            r = - log(rand(rng)) / λ
             while r < dt
-                Yt[i] += R(rng)
-                r += -log(rand()) / λ
+                Yt[i] += rand(rng, R)
+                r += -log(rand(rng)) / λ
             end
         end
     end
@@ -84,7 +90,7 @@ end
 function calculate_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
     for _ in 1:M
         # draw initial condition
-        x0 = X0(rng)
+        x0 = rand(rng, X0)
 
         # generate noise sample path
         noise!(rng, Yt)
@@ -132,7 +138,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10)
 
     # generate target path
-    x0 = X0(rng)
+    x0 = rand(rng, X0)
     Xt = Vector{Float64}(undef, Ntgt)
     target!(rng, Xt, t0, tf, x0, f, Yt)
 

@@ -2,20 +2,23 @@
 
 using Plots
 using Random
+using Distributions
 
 include("utils.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = (rng) -> 0.6 + 0.1 * randn(rng)
+X0 = TruncatedNormal(1.0, 0.04, 0.2, 1.8)
 f(x, y) = x - x^2 - y
-noise! = CompoundPoisson_noise(0.0, 1.0, 10.0, (rng) -> 0.1 * rand(rng))
+λ = 10.0
+R = Uniform(0.0, 0.1)
+noise! = CompoundPoisson_noise(t0, tf, λ, R)
 target! = solve_euler!
 
 Ntgt = 2^16
 Ns = 2 .^ (4:8)
-M = 10_000
+M = 1_000
 
 # plot(yy, linetype=:steppre)
 

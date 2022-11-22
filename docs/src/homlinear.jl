@@ -2,16 +2,17 @@
 
 using Plots
 using Random
+using Distributions
 
 include("utils.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = randn
-W0 = 0.0
+X0 = Normal()
+w0 = 0.0
 f(x, y) = y * x
-noise! = Wiener_noise(t0, tf, W0)
+noise! = Wiener_noise(t0, tf, w0)
 target! = function (rng, Xt, t0, tf, x0, f, Yt)
     Ntgt = length(Yt)
     dt = (tf - t0) / (Ntgt - 1)

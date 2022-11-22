@@ -2,18 +2,19 @@
 
 using Plots
 using Random
+using Distributions
 
 include("utils.jl")
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = randn
+X0 = Normal()
 f(x, y) = sin(y) * x
 μ = 1.0
 σ = 0.2
-Y0 = 1.0
-noise! = GBM_noise(t0, tf, Y0, μ, σ)
+y0 = 1.0
+noise! = GBM_noise(t0, tf, y0, μ, σ)
 target! = solve_euler!
 
 Ntgt = 2^20
