@@ -1,4 +1,4 @@
-# # Harvest model with compound Poisson process
+# # Harvest model with a stepwise Poisson process
 
 using Plots
 using Random
@@ -11,14 +11,18 @@ t0 = 0.0
 tf = 1.0
 X0 = TruncatedNormal(1.0, 0.04, 0.2, 1.8)
 f(x, y) = x - x^2 - y
-λ = 10.0
-R = Uniform(0.0, 0.1)
-noise! = CompoundPoisson_noise(t0, tf, λ, R)
+λ = 25.0 # rate of step changes per unit time
+#R = Uniform(0.0, 0.1)
+α = 2.0
+β = 15.0
+R = Beta(α, β)
+display(plot(0.0:0.01:1.0, pdf.(R, 0.0:0.01:1.0)))
+noise! = StepPoisson_noise(t0, tf, λ, R)
 target! = solve_euler!
 
-Ntgt = 2^16
+Ntgt = 2^18
 Ns = 2 .^ (4:8)
-M = 1_000
+M = 2_000
 
 # plot(yy, linetype=:steppre)
 

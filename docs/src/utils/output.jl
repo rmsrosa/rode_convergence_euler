@@ -6,7 +6,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     # generate noise sample path
     Yt = Vector{Float64}(undef, Ntgt)
     noise!(rng, Yt)
-    plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10)
+    display(plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10))
 
     # generate target path
     x0 = rand(rng, X0)

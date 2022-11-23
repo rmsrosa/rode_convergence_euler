@@ -69,3 +69,15 @@ function CompoundPoisson_noise_alt(t0, tf, λ, U)
         end
     end
 end
+
+function StepPoisson_noise(t0, tf, λ, R)
+    fn = function (rng, Yt::Vector)
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        RV = Poisson(λ * dt)
+        Yt[1] = 0.0
+        for n in 2:N
+            Yt[n] = isodd(rand(rng, RV)) ? rand(rng, R) : Yt[n-1]
+        end
+    end
+end
