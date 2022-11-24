@@ -99,3 +99,48 @@ function fBM_noise(t0, tf, y0::T, N; cache=Vector{T}(undef, N)) where {T}
     end
     return fn
 end
+
+"""
+    Generates sample paths of fractional Brownian Motion using the Davies Harte method
+    
+    args:
+        T:      length of time (in years)
+        N:      number of time steps within timeframe
+        H:      Hurst parameter
+"""
+function hosking(rng, T, N, H)
+    
+    gamma = (k, H) -> 0.5*abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H)
+    
+    X = [randn()]
+    mu = [gamma(1, H) * X[1]]
+    sigsq = [1 - (gamma(1, H)^2)]
+    tau = [gamma(1, H)^2]
+    
+    d = [gamma(1,H)]
+    
+    for n in 2:N
+        
+        F = [i + j == n + 1 for i in 1:n, j in 1:n]
+        c = [gamma(k+1,H) for k in 0:n-1]
+                
+        # sigma(n+1)**2
+        s = sigsq[n-1] - ((gamma(n+1,H) - tau[n-1])^2) / sigsq[n-1]
+        
+        # d(n+1)
+        phi = (gamma(n+1,H) - tau[n-1])/sigsq[n-1]
+        @. d = d - phi * d[end:-1:begin]
+        append!(d, phi)
+        
+        # mu(n+1) and tau(n+1)
+        Xn1 = mu[n-1] + sigsq[n-1] * randn(rng)
+        
+        append!(X, Xn1)
+        append!(sigsq, s)
+        append!(mu, sum(d .* X[end:-1:begin]))
+        append!(tau, sum(c .* F * d))
+    end
+    
+    fBm = cumsum(X) * N^(-H)    
+    return T^H * fBm
+end
