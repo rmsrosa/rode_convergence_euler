@@ -81,3 +81,19 @@ function StepPoisson_noise(t0, tf, λ, R)
         end
     end
 end
+
+"""
+Fractional Brownian motion process
+"""
+function fBM_noise(t0, tf, y0::T) where {T}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        sqrtdt = sqrt(dt)
+        Yt[1] = y0
+        for n in 2:N
+            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
+        end
+    end
+    return fn
+end
