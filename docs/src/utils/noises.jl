@@ -85,14 +85,16 @@ end
 """
 Fractional Brownian motion process
 """
-function fBM_noise(t0, tf, y0::T) where {T}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+function fBM_noise(t0, tf, y0::T, N; cache=Vector{T}(undef, N)) where {T}
+    fn = function (rng::AbstractRNG, Yt::Vector{T}; cache=cache)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
         Yt[1] = y0
+        cache[1] = y0
         for n in 2:N
             Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
+            cache[n] = Yt[n]
         end
     end
     return fn
