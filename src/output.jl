@@ -54,7 +54,7 @@ function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=not
     filename === nothing || savefig(plt, filename)
 end
 
-function plot_t_vs_errors(deltas, trajerrors, t0, tf, filename=nothing)
+function plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf, filename=nothing)
     plt = plot(title = "Evolution in time of the strong error of the Euler method\nfor each chosen fixed time step", xlabel="\$t\$", ylabel="error", titlefont=10, legend=:topleft)
     for (i, N) in enumerate(Ns)
         plot!(range(t0, tf, length=N), trajerrors[1:N, i], label="\$\\mathrm{d}t = $(round(deltas[i], sigdigits=2))\$")

@@ -1,16 +1,16 @@
 # # Linear homogeneous RODE with sin of GBM noise
 
+using Revise
 using Plots
 using Random
 using Distributions
-
-include("utils/tools.jl")
+using RODEConvergence
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
 X0 = Normal()
-f(x, y) = sin(y) * x
+f(t, x, y) = sin(y) * x
 μ = 1.0
 σ = 0.2
 y0 = 1.0
@@ -39,7 +39,7 @@ println(table)
 filename = @__DIR__() * "/img/order_linearhomogenoussinGBM.png"
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
-plot_t_vs_errors(deltas, trajerrors, t0, tf)
+plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 
 filename = @__DIR__() * "/img/linearhomogenoussinGBM_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)

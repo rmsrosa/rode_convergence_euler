@@ -1,16 +1,16 @@
 # # Harvest model with a stepwise Poisson process
 
+using Revise
 using Plots
 using Random
 using Distributions
-
-include("utils/tools.jl")
+using RODEConvergence
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
 X0 = TruncatedNormal(1.0, 0.04, 0.2, 1.8)
-f(x, y) = x - x^2 - y
+f(t, x, y) = x - x^2 - y
 λ = 25.0 # rate of step changes per unit time
 #R = Uniform(0.0, 0.1)
 α = 2.0
@@ -43,7 +43,7 @@ filename = @__DIR__() * "/img/order_harvest.png"
 
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
-plot_t_vs_errors(deltas, trajerrors, t0, tf)
+plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 
 filename = @__DIR__() * "/img/harvest_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)

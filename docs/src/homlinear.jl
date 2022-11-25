@@ -1,17 +1,17 @@
 # # Linear homogeneous RODE with Wiener noise
 
+using Revise
 using Plots
 using Random
 using Distributions
-
-include("utils/tools.jl")
+using RODEConvergence
 
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
 X0 = Normal()
 w0 = 0.0
-f(x, y) = y * x
+f(t, x, y) = y * x
 noise! = Wiener_noise(t0, tf, w0)
 target! = function (rng, Xt, t0, tf, x0, f, Yt)
     Ntgt = length(Yt)
@@ -45,7 +45,7 @@ filename = @__DIR__() * "/img/order_linearhomogenous.png"
 
 plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 
-plot_t_vs_errors(deltas, trajerrors, t0, tf)
+plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 
 filename = @__DIR__() * "/img/linearhomogenous_sample.png"
 plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
