@@ -85,8 +85,9 @@ end
 """
 Fractional Brownian motion process
 """
-function fBM_noise(t0, tf, y0::T, N; cache=Vector{T}(undef, N)) where {T}
-    fn = function (rng::AbstractRNG, Yt::Vector{T}; cache=cache)
+function fBM_noise(t0, tf, y0, N)
+    cache=Vector{eltype(y0)}(undef, N)
+    fn = function (rng::AbstractRNG, Yt::Vector; cache=cache)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
@@ -110,8 +111,10 @@ end
 """
 function hosking(rng, T, N, H)
     
-    gamma = (k, H) -> 0.5*abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H)
+    # Diecker eq. (1.7)
+    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H))
     
+    # Diecker Sec. 2.1.1.
     X = [randn()]
     mu = [gamma(1, H) * X[1]]
     sigsq = [1 - (gamma(1, H)^2)]
@@ -121,24 +124,23 @@ function hosking(rng, T, N, H)
     
     for n in 2:N
         
+        # s = \sigma_{n+1}^2
+        s = sigsq[n-1] - ((gamma(n+1,H) - tau[n-1])^2) / sigsq[n-1]
+        append!(sigsq, s)
+
         F = [i + j == n + 1 for i in 1:n, j in 1:n]
         c = [gamma(k+1,H) for k in 0:n-1]
-                
-        # sigma(n+1)**2
-        s = sigsq[n-1] - ((gamma(n+1,H) - tau[n-1])^2) / sigsq[n-1]
-        
+
         # d(n+1)
         phi = (gamma(n+1,H) - tau[n-1])/sigsq[n-1]
-        @. d = d - phi * d[end:-1:begin]
+        d .= d - phi * F * d
         append!(d, phi)
         
-        # mu(n+1) and tau(n+1)
         Xn1 = mu[n-1] + sigsq[n-1] * randn(rng)
         
         append!(X, Xn1)
-        append!(sigsq, s)
         append!(mu, sum(d .* X[end:-1:begin]))
-        append!(tau, sum(c .* F * d))
+        append!(tau, sum(c .* (F * d)))
     end
     
     fBm = cumsum(X) * N^(-H)    
