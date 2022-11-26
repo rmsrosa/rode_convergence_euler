@@ -9,7 +9,10 @@ using RODEConvergence
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = TruncatedNormal(1.0, 0.04, 0.2, 1.8)
+α0 = 15.0
+β0 = 2.0
+X0 = Beta(α0, β0)
+display(plot(0.0:0.01:1.0, pdf.(X0, 0.0:0.01:1.0)))
 f(t, x, y) = x - x^2 - y
 λ = 25.0 # rate of step changes per unit time
 #R = Uniform(0.0, 0.1)
@@ -35,8 +38,8 @@ println(table)
 #include("utils.jl")
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = X_t - X_t^2 - Y_t\$",
-    noise = "a compound Poisson process noise \$\\{Y_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(1.0, 0.01)\$",
+    noise = "a stepwise Poisson process noise \$\\{Y_t\\}_t\$",
+    ic = "\$X_0 \\sim \\mathrm{Beta}($α0, $β0)\$",
     tspan="\$[0, T] = [$t0, $tf]\$"
 )
 filename = @__DIR__() * "/img/order_harvest.png"
