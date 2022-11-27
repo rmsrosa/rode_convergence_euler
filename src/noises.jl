@@ -31,7 +31,7 @@ end
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
 
-The noise returned by the constructor yields a random sample path obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
 """
@@ -56,7 +56,7 @@ end
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
 
-The noise returned by the constructor yields a random sample path obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
+The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
 
 drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 """
@@ -83,7 +83,7 @@ end
 
 Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `Y`.
 
-The noise returned by the constructor yields a random sample path obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
@@ -101,6 +101,8 @@ function StepPoisson_noise(t0, tf, λ, Y)
 end
 
 """
+    Transport_noise(t0, tf, f, RV, n)
+
 Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `RV`.
 
 The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
