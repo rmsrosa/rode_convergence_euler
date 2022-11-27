@@ -27,32 +27,40 @@ function GBM_noise(t0, tf, μ, σ, y0::T) where {T}
 end
 
 """
-Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and stationary arrivals given by the distribution `U`.
+    CompoundPoisson_noise(t0, tf, λ, dY)
 
-This construction is done by drawing the number of events between consecutive times with interval `dt` by using the Poisson distribution `N(t+dt) - N(t) = Poisson(λdt)`.
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
+
+The noise returned by the constructor yields a random sample path obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+
+Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
 """
-function CompoundPoisson_noise(t0, tf, λ, R)
+function CompoundPoisson_noise(t0, tf, λ, dY)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
-        RV = Poisson(λ * dt)
+        dN = Poisson(λ * dt)
         Yt[1] = 0.0
         for n in 2:N
-            Ni = rand(rng, RV)
+            Ni = rand(rng, dN)
             Yt[n] = Yt[n-1]
             for _ in 1:Ni
-                Yt[n] += rand(rng, R)
+                Yt[n] += rand(rng, dY)
             end
         end
     end
 end
 
 """
-Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and stationary arrivals given by the distribution `U`.
+    CompoundPoisson_noise_alt(t0, tf, λ, dY)
 
-The construction is done by drawing the interarrival times.
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
+
+The noise returned by the constructor yields a random sample path obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
+
+drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 """
-function CompoundPoisson_noise_alt(t0, tf, λ, U)
+function CompoundPoisson_noise_alt(t0, tf, λ, dY)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -63,21 +71,52 @@ function CompoundPoisson_noise_alt(t0, tf, λ, U)
             Yt[i] = Yt[i-1]
             r = - log(rand(rng)) / λ
             while r < dt
-                Yt[i] += rand(rng, U)
+                Yt[i] += rand(rng, dY)
                 r += -log(rand(rng)) / λ
             end
         end
     end
 end
 
-function StepPoisson_noise(t0, tf, λ, R)
+"""
+    StepPoisson_noise(t0, tf, λ, Y)
+
+Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `Y`.
+
+The noise returned by the constructor yields a random sample path obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+
+Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
+"""
+function StepPoisson_noise(t0, tf, λ, Y)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
-        RV = Poisson(λ * dt)
+        dN = Poisson(λ * dt)
         Yt[1] = 0.0
         for n in 2:N
-            Yt[n] = isodd(rand(rng, RV)) ? rand(rng, R) : Yt[n-1]
+            r = rand(rng, dN)
+            Yt[n] = iszero(r) ? Yt[n-1] : rand(rng, R)
+        end
+    end
+end
+
+"""
+Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `RV`.
+
+The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
+"""
+function Transport_noise(t0, tf, f, RV, n)
+    rv = zeros(n)
+    fn = function (rng, Yt::Vector; rv = rv)
+        N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        for i in eachindex(rv)
+            rv[i] = rand(rng, RV)
+        end
+        t = t0 - dt
+        for n in 1:N
+            t += dt
+            Yt[n] = f(t, rv)
         end
     end
 end
