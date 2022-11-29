@@ -187,3 +187,54 @@ function hosking(rng, T, N, H)
     fBm = cumsum(X) * N^(-H)    
     return T^H * fBm
 end
+
+function hosking(rng, T, N, H)
+    
+    # Diecker eq. (1.7)
+    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H))
+
+    output = Vector{Float64}(undef, N)
+    phi = Vector{Float64}(undef, N)
+    psi = Vector{Float64}(undef, N)
+    cov = Vector{Float64}(undef, N)
+
+    output[1] = randn(rng)
+    v = 1
+    phi[1] = 0.0
+    for i in 1:N
+        cov[i] = gamma(i-1, H)
+    end
+    for i in 2:N
+        phi[i-1] = cov[i]
+        for j in 1:i-1
+            psi[j] = phi[j]
+            phi[i-1] -= psi[j] * cov[i-j]
+        end
+        phi[i-1] /= v
+        for j in 1:i-1
+            phi[j] = psi[j] - phi[i-1] * psi[i-j];
+        end
+        v *= (1 - phi[i-1] * phi[i-1])
+    
+        output[i] = 0;
+        for j in 1:i
+            output[i] += phi[j] * output[i-j+1];
+        end
+        output[i] += sqrt(v) * randn(rng);
+    end
+    scaling = (T/N)^H
+    output[1] *= scaling
+    for i in 2:N
+        output[i] = output[i-1] + scaling * output[i]
+    end
+    return output
+end
+
+function daviesharte(rng, T, N, H)
+    ispow2(N) || throw(
+        ArgumentError(
+            "desired length must be a power of 2 for this implementation of the Davies-Harte method."
+        )
+    )
+
+end
