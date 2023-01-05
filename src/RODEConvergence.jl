@@ -2,6 +2,7 @@ module RODEConvergence
 
 using Random
 using Distributions
+using FFTW
 using Plots
 
 # noises

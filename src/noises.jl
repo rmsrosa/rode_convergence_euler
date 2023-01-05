@@ -152,10 +152,10 @@ end
 """
 function hosking(rng, T, N, H)
     
-    # Diecker eq. (1.7)
+    # Dieker eq. (1.7)
     gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H))
     
-    # Diecker Sec. 2.1.1.
+    # Dieker Sec. 2.1.1.
     X = [randn()]
     mu = [gamma(1, H) * X[1]]
     sigsq = [1 - (gamma(1, H)^2)]
@@ -190,7 +190,7 @@ end
 
 function hosking(rng, T, N, H)
     
-    # Diecker eq. (1.7)
+    # Dieker eq. (1.7)
     gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
 
     output = Vector{Float64}(undef, N)
@@ -230,6 +230,13 @@ function hosking(rng, T, N, H)
     return output
 end
 
+"""
+    daviesharte(rng, T, N, H)
+
+Generates a sample path of a fractional Brownian motion with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
+
+Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
+"""
 function daviesharte(rng, T, N, H)
     ispow2(N) || throw(
         ArgumentError(
@@ -237,7 +244,35 @@ function daviesharte(rng, T, N, H)
         )
     )
 
-    # covariance function in Diecker eq. (1.7)
+    # covariance function in Dieker eq. (1.7)
     gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
 
+    # the first row of the circulant matrix in Dieker eq. (2.9)
+    row = [[gamma(k, H) for k in 0:N-1]; 0.0; [gamma(k, H) for k in N-1:-1:1]]
+
+    # square-root of the eigenvalues as in Dieker eq. (2.10) - straighforward inverse DFT for testing
+    # λsqrt = [sqrt(real(sum(row[j+1] * exp(2π * im * j * k / (2N)) for j in 0:2N-1))) for k in 0:2N-1]
+
+    # square-root of eigenvalues as in Dieker eq. (2.10) - using FFTW
+    λsqrt = sqrt.(real(ifft(row) * 2N))
+
+    # generate Wⱼ according to step 2 in Dieker pages 16-17
+    Wl = Vector{ComplexF64}(undef, 2N)
+    Wl[1], Wl[N+1] = randn(rng, 2)
+    for j in 2:N
+        v1, v2 = randn(rng, 2)
+        Wl[j] = (v1 + im * v2) / √2
+        Wl[2N-j+2] = (v1 - im * v2) / √2
+    end
+
+    # multiply Wⱼ by √λⱼ to prep for DFT
+    Wl .*= λsqrt
+
+    # straighforward DFT of √λⱼ Wⱼ for testing
+    # Z = [real(sum(Wl[j+1] * exp(-2π * im * j * k / (2N))/√(2N) for j in 0:2N-1)) for k in 0:2N-1]
+    # Discrete Fourier transform of √λⱼ Wⱼ according to Dieker eq. (2.12) via FFTW
+    Z = real(fft(Wl)) / √(2N)
+
+    # fBm sample is made of the first N values of Z
+    return Z[1:N]
 end
