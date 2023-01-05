@@ -191,7 +191,7 @@ end
 function hosking(rng, T, N, H)
     
     # Diecker eq. (1.7)
-    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H))
+    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
 
     output = Vector{Float64}(undef, N)
     phi = Vector{Float64}(undef, N)
@@ -236,5 +236,8 @@ function daviesharte(rng, T, N, H)
             "desired length must be a power of 2 for this implementation of the Davies-Harte method."
         )
     )
+
+    # covariance function in Diecker eq. (1.7)
+    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
 
 end
