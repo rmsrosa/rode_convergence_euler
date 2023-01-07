@@ -143,14 +143,14 @@ function fBM_noise(t0, tf, y0, N)
 end
 
 """
-    Generates sample paths of fractional Brownian Motion using the Davies Harte method
+    Generates sample paths of fractional Brownian Motion using the Hosking method
     
     args:
         T:      length of time (in years)
         N:      number of time steps within timeframe
         H:      Hurst parameter
 """
-function hosking(rng, T, N, H)
+function fBm_hosking(rng, T, N, H)
     
     # Dieker eq. (1.7)
     gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) - 2*abs(k)^(2H) + abs(k+1)^(2H))
@@ -188,7 +188,7 @@ function hosking(rng, T, N, H)
     return T^H * fBm
 end
 
-function hosking(rng, T, N, H)
+function fBm_hosking2(rng, T, N, H)
     
     # Dieker eq. (1.7)
     gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
@@ -231,13 +231,58 @@ function hosking(rng, T, N, H)
 end
 
 """
-    daviesharte(rng, T, N, H)
+    fG_daviesharte(rng, T, N, H)
 
-Generates a sample path of a fractional Brownian motion with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
+Generates a sample path of a fractional Gaussian noise with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
 
 Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
-function daviesharte(rng, T, N, H)
+function fG_daviesharte(rng, T, N, H)
+    ispow2(N) || throw(
+        ArgumentError(
+            "desired length must be a power of 2 for this implementation of the Davies-Harte method."
+        )
+    )
+
+    # covariance function in Dieker eq. (1.7)
+    gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
+
+    # the first row of the circulant matrix in Dieker eq. (2.9)
+    row = Vector{Float64}(undef, 2N)
+    row[1] = 1.0
+    row[N+1] = 0.0
+    for k in 1:N-1
+        row[2N-k+1] = row[k+1] = gamma(k, H)
+    end
+
+    # square-root of eigenvalues as in Dieker eq. (2.10) - using FFTW
+    λsqrt = sqrt.(real(ifft(row) * 2N))
+
+    # generate Wⱼ according to step 2 in Dieker pages 16-17
+    Wl = Vector{ComplexF64}(undef, 2N)
+    Wl[1] = randn(rng)
+    Wl[N+1] = randn(rng)
+    for j in 2:N
+        v1 = randn(rng)
+        v2 = randn(rng)
+        Wl[j] = (v1 + im * v2) / √2
+        Wl[2N-j+2] = (v1 - im * v2) / √2
+    end
+
+    # multiply Wⱼ by √λⱼ to prep for DFT
+    Wl .*= λsqrt
+
+    # Discrete Fourier transform of √λⱼ Wⱼ according to Dieker eq. (2.12) via FFTW
+    Z = real(fft(Wl)) / √(2N)
+
+    # Rescale from [0, N] to [0, T]
+    Z *= (T/N)^(H)
+
+    # fBm sample is made of the first N values of Z 
+    return Z[1:N]
+end
+
+function fG_daviesharte_naive(rng, T, N, H)
     ispow2(N) || throw(
         ArgumentError(
             "desired length must be a power of 2 for this implementation of the Davies-Harte method."
@@ -251,10 +296,7 @@ function daviesharte(rng, T, N, H)
     row = [[gamma(k, H) for k in 0:N-1]; 0.0; [gamma(k, H) for k in N-1:-1:1]]
 
     # square-root of the eigenvalues as in Dieker eq. (2.10) - straighforward inverse DFT for testing
-    # λsqrt = [sqrt(real(sum(row[j+1] * exp(2π * im * j * k / (2N)) for j in 0:2N-1))) for k in 0:2N-1]
-
-    # square-root of eigenvalues as in Dieker eq. (2.10) - using FFTW
-    λsqrt = sqrt.(real(ifft(row) * 2N))
+    λsqrt = [sqrt(real(sum(row[j+1] * exp(2π * im * j * k / (2N)) for j in 0:2N-1))) for k in 0:2N-1]
 
     # generate Wⱼ according to step 2 in Dieker pages 16-17
     Wl = Vector{ComplexF64}(undef, 2N)
@@ -268,11 +310,20 @@ function daviesharte(rng, T, N, H)
     # multiply Wⱼ by √λⱼ to prep for DFT
     Wl .*= λsqrt
 
-    # straighforward DFT of √λⱼ Wⱼ for testing
+    # straighforward DFT of √λⱼ Wⱼ for testing, only first N values are relevant:
+    Z = [real(sum(Wl[j+1] * exp(-2π * im * j * k / (2N))/√(2N) for j in 0:2N-1)) for k in 0:N-1]
     # Z = [real(sum(Wl[j+1] * exp(-2π * im * j * k / (2N))/√(2N) for j in 0:2N-1)) for k in 0:2N-1]
-    # Discrete Fourier transform of √λⱼ Wⱼ according to Dieker eq. (2.12) via FFTW
-    Z = real(fft(Wl)) / √(2N)
+
+    # Rescale from [0, N] to [0, T]
+    Z *= (T/N)^(H)
 
     # fBm sample is made of the first N values of Z
-    return Z[1:N]
+    return Z
+end
+
+fG_daviesharte(Xoshiro(123), 1.0, 2^10, 0.2) ≈ fG_daviesharte_naive(Xoshiro(123), 1.0, 2^10, 0.2)
+
+function fBm_daviesharte(rng, T, N, H)
+    Z = fG_daviesharte(rng, T, N, H)
+    return [zero(Z[1]); cumsum(view(Z, 1:N-1))]
 end
