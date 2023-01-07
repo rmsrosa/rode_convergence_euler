@@ -79,15 +79,15 @@ function CompoundPoisson_noise_alt(t0, tf, λ, dY)
 end
 
 """
-    StepPoisson_noise(t0, tf, λ, Y)
+    StepPoisson_noise(t0, tf, λ, S)
 
-Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `Y`.
+Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `S`.
 
 The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
-Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
+Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
-function StepPoisson_noise(t0, tf, λ, Y)
+function StepPoisson_noise(t0, tf, λ, S)
     fn = function (rng, Yt::Vector)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -95,7 +95,7 @@ function StepPoisson_noise(t0, tf, λ, Y)
         Yt[1] = 0.0
         for n in 2:N
             r = rand(rng, dN)
-            Yt[n] = iszero(r) ? Yt[n-1] : rand(rng, R)
+            Yt[n] = iszero(r) ? Yt[n-1] : rand(rng, S)
         end
     end
 end
