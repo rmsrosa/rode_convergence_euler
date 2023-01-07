@@ -126,18 +126,73 @@ end
 """
 Fractional Brownian motion process
 """
-function fBM_noise(t0, tf, y0, N)
-    cache=Vector{eltype(y0)}(undef, N)
-    fn = function (rng::AbstractRNG, Yt::Vector; cache=cache)
-        N = length(Yt)
-        dt = (tf - t0) / (N - 1)
-        sqrtdt = sqrt(dt)
-        Yt[1] = y0
-        cache[1] = y0
-        for n in 2:N
-            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
-            cache[n] = Yt[n]
+function fBM_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
+    ispow2(N) || throw(
+        ArgumentError(
+            "Desired length must be a power of 2 for this implementation of the Davies-Harte method."
+        )
+    )
+    0.0 < H < 1.0 || throw(
+        ArgumentError(
+            "Hurst parameter should be strictly between 0.0 and 1.0."
+        )
+    )
+    cache_real = Vector{Float64}(undef, 2N)
+    cache_complex = Vector{ComplexF64}(undef, 2N)
+    cache_complex2 = Vector{ComplexF64}(undef, 2N)
+    plan_inverse = plan_ifft(cache_real; flags)
+    plan_direct = plan_fft(cache_complex; flags)
+
+    fn = function (rng::AbstractRNG, Yt::Vector{Float64}; cache_real=cache_real, cache_complex=cache_complex, cache_complex2=cache_complex2, plan_inverse=plan_inverse, plan_direct=plan_direct)
+        length(Yt) ≤ N || throw(
+            ArgumentError(
+                "length of the sample path vector should be at most that given in the construction of the fBm noise process."
+            )
+        )
+
+        # covariance function in Dieker eq. (1.7)
+        gamma = (k, H) -> 0.5 * (abs(k-1)^(2H) + abs(k+1)^(2H)) - abs(k)^(2H)
+
+        # the first row of the circulant matrix in Dieker eq. (2.9)
+        cache_complex[1] = 1.0
+        cache_complex[N+1] = 0.0
+        for k in 1:N-1
+            cache_complex[2N-k+1] = cache_complex[k+1] = gamma(k, H)
         end
+
+        # square-root of eigenvalues as in Dieker eq. (2.10) - using FFTW
+        mul!(cache_complex2, plan_inverse, cache_complex)
+        # cache_complex .= ifft(cache_real)
+        map!(r -> sqrt(2N * real(r)), cache_real, cache_complex2)
+
+        # generate Wⱼ according to step 2 in Dieker pages 16-17
+        cache_complex[1] = randn(rng)
+        cache_complex[N+1] = randn(rng)
+        for j in 2:N
+            v1 = randn(rng)
+            v2 = randn(rng)
+            cache_complex[j] = (v1 + im * v2) / √2
+            cache_complex[2N-j+2] = (v1 - im * v2) / √2
+        end
+
+        # multiply Wⱼ by √λⱼ to prep for DFT
+        cache_complex .*= cache_real
+
+        # Discrete Fourier transform of √λⱼ Wⱼ according to Dieker eq. (2.12) via FFTW
+        mul!(cache_complex2, plan_direct, cache_complex)
+        # cache_real = real(fft(cache_complex)) / √(2N)
+        cache_complex2 ./= √(2N)
+
+        map!(real, cache_real, cache_complex2)
+
+        # Rescale from [0, N] to [0, T]
+        cache_real .*= ((tf - t0)/N)^(H)
+
+        # fGn is made of the first N values of Z 
+        Yt[1] = y0
+        Yt[2:end] .= view(cache_real, 2:length(Yt))
+        # fBm sample Yt is made of the first N values of Z 
+        cumsum!(Yt, Yt)
     end
     return fn
 end
@@ -233,7 +288,7 @@ end
 """
     fG_daviesharte(rng, T, N, H)
 
-Generates a sample path of a fractional Gaussian noise with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
+Generates a sample path of a fractional Gaussian noise (fGn) with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
 
 Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
