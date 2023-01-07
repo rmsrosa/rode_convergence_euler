@@ -12,6 +12,9 @@ makedocs(
             "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md",
             "Homogenous Wiener noise" => "wiener_homogeneous.md",
             "Homogenous sine Wiener noise" => "sin_wiener_homogeneous.md"
+        ],
+        "Appendix" => [
+            "Fractional Brownian motion" => "fBm.md"
         ]
     ],
     authors = "Ricardo Rosa and Peter Kloeden",
