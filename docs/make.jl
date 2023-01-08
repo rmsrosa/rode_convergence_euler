@@ -1,5 +1,7 @@
 using Documenter
 
+ENV["GKSwstype"] = "100"
+
 makedocs(
     sitename = "Euler method for RODEs",
     pages = [
