@@ -248,6 +248,6 @@ When calling `fBm_noise(t0, T, y0, H, N)`, a few cache vectors are created to ho
 
 ```@example fBm
 H = Hs[1]
-@btime noise![H]($rng, $Yt)
+@btime $(noise![H])($rng, $Yt)
 nothing # hide
 ```
