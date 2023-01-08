@@ -242,7 +242,12 @@ Looks good!
 
 ## Benchmark
 
+The function `fBm_noise(t0, T, y0, H, N)` returns a fractional Brownian motion *sampler.* That means when we set `noise! = fBm_noise(t0, T, y0, H, N)`, then `noise!` is a function that takes a random number generator `rng` and a vector `Yt` so that, upon calling `noise!(rng, Yt)`, it fills up the vector `Yt` with a sample path.
+
+When calling `fBm_noise(t0, T, y0, H, N)`, a few cache vectors are created to hold the intermediate results needed when generating each sample path, including going through inverse and direct fast Fourier transforms. Besised creating the auxiliary cache vectors, it also builds the FFT plans used in the FFT transforms via [FFTW.jl](https://github.com/JuliaMath/FFTW.jl). In this way, the resulting method `noise!` contains everthing pre-allocated so generating a sample is non-allocating. This can be benchmarked as follows.
+
 ```@example fBm
 H = Hs[1]
-@btime noise![H](rng, Yt)
+@btime noise![H]($rng, $Yt)
+nothing # hide
 ```
