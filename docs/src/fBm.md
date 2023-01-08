@@ -12,7 +12,9 @@ We start by loading the necessary packages:
 using Random
 using Distributions
 using Statistics
+using BenchmarkTools
 using FFTW
+using LinearAlgebra
 using Plots
 using RODEConvergence
 ```
@@ -28,13 +30,19 @@ N = 2^9
 t0 = 0.0
 T = 2.0
 tt = range(t0, T, length=N)
+y0 = 0.0
 H = 0.8
+
+noise! = Dict(H => fBm_noise(t0, T, y0, H, N))
+
+Yt = Vector{Float64}(undef, N)
+
 rng = Xoshiro(123)
 
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    W = RODEConvergence.fBm_daviesharte(rng, T, N, H)
-    plot!(plt, tt, W)
+    noise![H](rng, Yt)
+    plot!(plt, tt, Yt)
 end
 plt
 ```
@@ -44,10 +52,12 @@ Now with $H=1/2$, which yields a standard Brownian motion.
 ```@example fBm
 H = 0.5
 
+noise![H] = fBm_noise(t0, T, y0, H, N)
+
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    W = RODEConvergence.fBm_daviesharte(rng, T, N, H)
-    plot!(plt, tt, W)
+    noise![H](rng, Yt)
+    plot!(plt, tt, Yt)
 end
 plt
 ```
@@ -57,10 +67,12 @@ Finally a rougher path with $0 < H < 1/2$.
 ```@example fBm
 H = 0.2
 
+noise![H] = fBm_noise(t0, T, y0, H, N)
+
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    W = RODEConvergence.fBm_daviesharte(rng, T, N, H)
-    plot!(plt, tt, W)
+    noise![H](rng, Yt)
+    plot!(plt, tt, Yt)
 end
 plt
 ```
@@ -192,7 +204,7 @@ So, we compute the covariance from the generated sample paths and check the rela
 H = 0.2
 covmatW = cov(W[H], dims=2, corrected=false)
 covmat = [0.5*(t^(2H) + s^(2H) - abs(t - s)^(2H)) for t in tt, s in tt]
-extrema(covmatW - covmat)
+extrema(covmatW .- covmat)
 ```
 
 Let us visualize the covariance of the sample paths:
@@ -218,3 +230,9 @@ surface(tt, tt, covmatW .- covmat, title="Difference", titlefont=8, xlabel="t", 
 ```
 
 Looks good!
+
+## Benchmark
+
+```@example fBm
+@btime noise![H](rng, Yt);
+```

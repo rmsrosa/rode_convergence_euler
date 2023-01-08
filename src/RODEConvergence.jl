@@ -2,11 +2,12 @@ module RODEConvergence
 
 using Random
 using Distributions
+using LinearAlgebra
 using FFTW
 using Plots
 
 # noises
-export Wiener_noise, GBM_noise, CompoundPoisson_noise, StepPoisson_noise, fBM_noise
+export Wiener_noise, GBM_noise, CompoundPoisson_noise, StepPoisson_noise, fBm_noise
 # solvers
 export solve_euler!, solve_heun!
 # error calculation

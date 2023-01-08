@@ -126,7 +126,7 @@ end
 """
 Fractional Brownian motion process
 """
-function fBM_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
+function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
     ispow2(N) || throw(
         ArgumentError(
             "Desired length must be a power of 2 for this implementation of the Davies-Harte method."
