@@ -183,7 +183,7 @@
 
 % Article info
 
-\title[Strong order 1 convergence of Euler for Random ODEs]{Novel approach to error estimation for approximations of random ordinary differential equations and the strong order 1 convergence of the Euler method}
+\title[Strong order convergence of Euler for Random ODEs]{Novel approach to error estimation for approximations of random ordinary differential equations and sharp estimates for the strong order convergence of the Euler method}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
@@ -197,7 +197,7 @@
 
 \date{\today}
 
-%\thanks{This work was partly supported by the CNPq, Bras\'{\i}lia, Brazil and by the NSF grant ???.}
+%\thanks{This work was partly supported by ...}
 
 \subjclass[2000]{76D05, 76D06, 35Q30, 37L99}
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, point process}.
@@ -239,7 +239,7 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and is of order $H + 1/2$, when $0 < H < 1/2$.
 
 The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
 \begin{equation}
@@ -290,6 +290,20 @@ In the case of an It\^o integral, this is exactly what we assume, because the It
 Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check. These two cases are treated in \cref{secmonotonicbound} (for the bounded variation case; see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (for the It\^o noise case; see \cref{lemItostep} and \cref{thmItostep}).
 
 The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
+
+In the case of the fractional Brownian motion with Hurst parameter $0 < H < 1/2$, we have, essentially,
+\[
+    F_s - F_\tau \sim \int_\tau^s (s-\tau)^{H-1/2}\;\mathrm{d}W_\xi.
+\]
+Then,
+\begin{align*}
+    \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\ 
+    & \qquad \sim \int_0^{t_j} \int_{\tau^N(s)}^s (s-\tau^N(s))^{H-1/2} \;\mathrm{d} W_\xi\;\mathrm{d}s \\
+    & \qquad = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} (s-\tau^N(s))^{H-1/2} \;\mathrm{d}s \;\mathrm{d} W_\xi \\
+    & \qquad \sim \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \tau^N(\xi))^{H+1/2} \;\mathrm{d} W_\xi \\
+    & \qquad = (\Delta t_N)^{H+1/2} \int_0^{t_j} \;\mathrm{d} W_\xi.
+\end{align*}
+which, upon taking the expectation, yields a strong convergence of order $H+1/2$.
 
 We end the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence.
 
@@ -991,6 +1005,18 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
     for a suitable constant $C \geq 0$.
 \end{thm}
 
+\section{The case of fractional Brownian motion noise}
+
+Here, we use the \textbf{fractional It\^o formula} \cite[Theorem 4.2.6]{BHOB2008}, which says that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(t, y)$ continuous along with its derivatives up to order one in $t$ and two in $y$,
+\begin{multline*}
+    f(t, B^H_t) = f(s, B^H_s) + \int_s^t \frac{\partial f}{\partial }(s, B^H_s)\;\mathrm{d}s \\
+        + \int_s^t \frac{\partial f}{\partial y}(s, B^H_s)\;\mathrm{d}B^H_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, B^H_s)s^{2H - 1}\;\mathrm{d}s,
+\end{multline*}
+where the integral with respect to $B^H_s$ is a Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}), 
+provided all the integrands are integrable in a suitable sense with respect to $\{B^H_t\}$. Here, we just assume the derivatives are continuous and uniformly bounded, which is sufficient for the formula to be valid and is suitable to our needs.
+
+Another fundamental result is the \textbf{WIS isometry} \cite[Theorem 4.5.6]{BHOB2008}, which says that
+
 \section{Numerical examples}
 
 In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above.
@@ -1359,6 +1385,8 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 \begin{thebibliography}{25}
     \bibitem{Asai2016} Y. Asai, \emph{Numerical Methods for Random Ordinary Differential Equations and their Appli-
     cations in Biology and Medicine.} Dissertation, Institut für Mathematik, Goethe Universität Frankfurt am Main, 2016.
+
+    \bibitem{BHOB2008} F. Biagini, Y. Hu, B. Oksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
