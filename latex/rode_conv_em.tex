@@ -1007,15 +1007,67 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 \section{The case of fractional Brownian motion noise}
 
-Here, we use the \textbf{fractional It\^o formula} \cite[Theorem 4.2.6]{BHOB2008}, which says that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(t, y)$ continuous along with its derivatives up to order one in $t$ and two in $y$,
+Here, we use the \textbf{fractional It\^o formula} \cite[Theorem 4.2.6]{BHOB2008}, which says that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
 \begin{multline*}
-    f(t, B^H_t) = f(s, B^H_s) + \int_s^t \frac{\partial f}{\partial }(s, B^H_s)\;\mathrm{d}s \\
+    f(t, B^H_t) = f(s, B^H_s) + \int_s^t \frac{\partial f}{\partial s}(s, B^H_s)\;\mathrm{d}s \\
         + \int_s^t \frac{\partial f}{\partial y}(s, B^H_s)\;\mathrm{d}B^H_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, B^H_s)s^{2H - 1}\;\mathrm{d}s,
 \end{multline*}
-where the integral with respect to $B^H_s$ is a Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}), 
+where the integral with respect to $B^H_s$ is a \textbf{Wick It\^o Skorohod (WIS)} integral (see \cite[Chapter 4]{BHOB2008}), 
 provided all the integrands are integrable in a suitable sense with respect to $\{B^H_t\}$. Here, we just assume the derivatives are continuous and uniformly bounded, which is sufficient for the formula to be valid and is suitable to our needs.
 
-Another fundamental result is the \textbf{WIS isometry} \cite[Theorem 4.5.6]{BHOB2008}, which says that
+A fundamental result that helps estimate the integral with respect to $\{B^H_t\}$ is the \textbf{WIS isometry} \cite[Theorem 4.5.6]{BHOB2008}, which is, however, a delicate formula involving fractional derivatives. Fortunately, since we assume the partial derivatives of $f=f(s, y)$ are uniformly bounded, we can take a detour and follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a more explicit formula but under the assumption that $f$ is time independent. We follow the arguments for the time-dependent case and exploit the fact that the derivatives are bounded to simplify the calculations.
+
+One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
+\[
+    B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}s
+\]
+where
+\begin{multline*}
+    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^{H-1/2} (t - s)^{H - 1/2} \right. \\ \left. - (H-1/2)s^{-(H-1/2)}\int_s^t\tau^{H-3/2}(\tau - s)^{H - 1/2}\;\mathrm{d}\tau\right)
+\end{multline*}
+with $C_H$ constant (it is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, with $\alpha = H - 1/2$).
+
+Thus, as in \cite[Section 2.7.4]{Mishura2008}, we write $B^H_t = B^H_{t, s}$, where $B^H_{t, s}$ is defined, for $0 \leq s \leq t$, by
+\[
+    B^H_{s, t} = C_H s^{H-1/2}\int_0^s \tau^{1/2 - H}(t - \tau)^{H-1/2}\;\mathrm{d}B_\tau.
+\]
+As a function of $s$, $B^H_{s, t}$ is non-anticipative with respect to the Wiener process and is an It\^o process within the interval $0 < s < t$, with
+\begin{multline*}
+    \mathrm{d}_s B^H_{s, t} = (H-1/2)C_H s^{H-3/2}\left(\int_0^s \tau^{1/2 - H}(t - \tau)^{H-1/2}\;\mathrm{d}B_\tau\right)\;\mathrm{d}s \\
+    + C_H (t - s)^{H-1/2}\;\mathrm{d}B_s.
+\end{multline*}
+
+Hence, using the It\^o formula,
+\begin{multline*}
+    f(s, B^H_{s, t}) \\
+    = 
+\end{multline*}
+
+In order to avoid the singularity, we first look within the interval $\varepsilon < s < t - \varepsilon$. Within this interval,
+
+\[
+    B_{t-\varepsilon,t} - B_{\varepsilon,t} = \int_\varepsilon^{t-\varepsilon} \left(\frac{\partial f(t, B_{\tau, t})}{\partial s} + \frac{\partial f(t, B_{\tau, t})}{\partial y}\frac{\partial B_{\tau, t}}{\partial \tau}\right)\;\mathrm{d}\tau
+\]
+
+Therefore,
+\[
+    B^H_t = B^H_{t, t} = B^H_{0, t} + \int_0^t \mathrm{d}B^H_{s, t} = \int_0^t 
+\]
+
+Thus, using that $\partial_y f = \partial_y f(s, y)$ is continuous and bounded, the integral above with respect to $\{B^H_t\}_t$ can be rewritten
+
+Actually, we better use \cite[Theorem 2.7.6]{Mishura2008} as it does not use fractional derivatives. This result says that, if $F:\mathbb{R}\rightarrow\mathbb{R}$ is of class three-times continuously differentiable, then (see also \cite[Section 1.8]{Mishura2008})
+\begin{multline}
+    f(B^H_t) = f(B^H_s) + \int_s^t f'(B^H_\tau)\left((H-1/2)\tau^{H-3/2}\right)Y_{t,\tau}\;\mathrm{d}\tau -(H-1/2) \\
+    + C_H\int_s^t f'(B^H_\tau)(t-\tau)^{H-1/2}\;\mathrm{d}\tau
+\end{multline}
+
+\[
+    C_H = \left( \frac{2H\Gamma(3/2 - H)}{\Gamma(2 - 2H)\Gamma(H+1/2)} \right)^{1/2}
+\]
+
+
+
 
 \section{Numerical examples}
 
@@ -1393,6 +1445,9 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
     \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 
     \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
+
+    \bibitem{Mishura2008} Y. S. Mishura2008, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
+
 \end{thebibliography}
 
 \end{document}
