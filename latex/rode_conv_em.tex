@@ -1019,52 +1019,58 @@ A fundamental result that helps estimate the integral with respect to $\{B^H_t\}
 
 One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
 \[
-    B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}s
+    B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s
 \]
-where
-\begin{multline*}
-    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^{H-1/2} (t - s)^{H - 1/2} \right. \\ \left. - (H-1/2)s^{-(H-1/2)}\int_s^t\tau^{H-3/2}(\tau - s)^{H - 1/2}\;\mathrm{d}\tau\right)
-\end{multline*}
-with $C_H$ constant (it is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, with $\alpha = H - 1/2$).
-
-Thus, as in \cite[Section 2.7.4]{Mishura2008}, we write $B^H_t = B^H_{t, s}$, where $B^H_{t, s}$ is defined, for $0 \leq s \leq t$, by
+for a suitable standard Wiener process $\{W_s\}_s$, where
 \[
-    B^H_{s, t} = C_H s^{H-1/2}\int_0^s \tau^{1/2 - H}(t - \tau)^{H-1/2}\;\mathrm{d}B_\tau.
+    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\tau^{\alpha-1}(\tau - s)^\alpha\;\mathrm{d}\tau\right)
 \]
-As a function of $s$, $B^H_{s, t}$ is non-anticipative with respect to the Wiener process and is an It\^o process, with
+with $\alpha = H-1/2$ (for notational simplicity) and $C_H$ is given by (it is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, with $\alpha = H - 1/2$)
 \[
-    \mathrm{d}_s B^H_{s, t} = s^{-1}B_{s, t}\;\mathrm{d}s \\
-    + C_H (t - s)^{H-1/2}\;\mathrm{d}B_s.
+    C_H = \left( \frac{2H\Gamma(1-\alpha)}{\Gamma(1 - 2\alpha)\Gamma(1+\alpha)} \right)^{1/2}.
 \]
 
+Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define, for $0 \leq s \leq t$,
+\[
+    Y^H_{s, t} = C_H \int_0^s \tau^{-\alpha}(t - \tau)^\alpha \;\mathrm{d}W_\tau,
+\]
+and write $B^H_t = B^H_{t, s}$, where $B^H_{t, s}$ is given by
+\[
+    B^H_{s, t} = s^\alpha Y^H_{s, t} - \alpha \int_0^s \tau^{\alpha-1}Y^H_{\tau, \tau}\;\mathrm{d}\tau.
+\]
+
+As functions of $s$, both $Y^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
+\[
+    \mathrm{d}_s Y^H_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
+\]
+and
+\[
+    \mathrm{d}_s B^H_{s, t} = \alpha s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s + C_H (t - s)^\alpha \;\mathrm{d}W_s.
+\]
 Observe that, from the It\^o isometry,
 \[
-    \mathbb{E}\left[(B^H_{s,t})^2\right] = C_H^2 s^{2H-1}\int_0^s \tau^{1 - 2H}(t - \tau)^{2H-1}\;\mathrm{d}\tau 
-    = \mathcal{O}(s) \quad \text{as } s \rightarrow 0.
+    \mathbb{E}\left[(Y^H_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \tau)^{2\alpha}\;\mathrm{d}\tau \\
+    \leq C_H^2 s^{-2\alpha}t^{2\alpha}s = C_H^2 s^{1-2\alpha}t^{2\alpha}.
 \]
-Hence, $\mathbb{E}[|B^H_{s, t}|] = \mathcal{O}(s^{1/2})$, as $s\rightarrow 0$, and the singularities at the endpoints are both integrable.
+Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints are all integrable.
 
 Then, using the It\^o formula,
 \begin{align*}
-    f(s, B^H_{s, t})
-    & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial s}(t, B_{\tau, t})\;\mathrm{d}\tau + \int_{0}^s \tau^{-1}\frac{\partial f}{\partial y}(t, B_{\tau, t})B_{\tau, t}\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^s (t - \tau)^{2H-1}\frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) \;\mathrm{d}s + C_H \int_{0}^s (t - \tau)^{H-1/2}\frac{\partial f}{\partial y}(t, B_{\tau, t})\;\mathrm{d} B_\tau
+    f(s, B^H_{s, t}) & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial s}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
-Thus, using that $\partial_y f = \partial_y f(s, y)$ is continuous and bounded, the integral above with respect to $\{B^H_t\}_t$ can be rewritten
+Thus, using that the partial derivatives are continuous and uniformly bounded,
+\begin{align*}
+    \mathbb{E}\left[\left|f(s, B^H_{s, t}) - f(0, B^H_{0, t})\right|\right] & \leq s + \int_{0}^s \tau^{\alpha-1}\left(\mathbb{E}\left[\left|Y^H_{\tau, t}\right|\right] + \mathbb{E}\left[\left|Y^H_{\tau, \tau}\right|\right] \right)\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^s (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^s (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
+\end{align*}
 
-Actually, we better use \cite[Theorem 2.7.6]{Mishura2008} as it does not use fractional derivatives. This result says that, if $F:\mathbb{R}\rightarrow\mathbb{R}$ is of class three-times continuously differentiable, then (see also \cite[Section 1.8]{Mishura2008})
-\begin{multline}
-    f(B^H_t) = f(B^H_s) + \int_s^t f'(B^H_\tau)\left((H-1/2)\tau^{H-3/2}\right)Y_{t,\tau}\;\mathrm{d}\tau -(H-1/2) \\
-    + C_H\int_s^t f'(B^H_\tau)(t-\tau)^{H-1/2}\;\mathrm{d}\tau
-\end{multline}
-
-\[
-    C_H = \left( \frac{2H\Gamma(3/2 - H)}{\Gamma(2 - 2H)\Gamma(H+1/2)} \right)^{1/2}
-\]
-
-
-
+In particular, since $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$,
+\begin{align*}
+    \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_0)\right|\right] & \leq t + C_H \int_0^t \tau^{\alpha-1}\left(\tau^{1/2-\alpha}t^{\alpha} + \tau^{1/2-\alpha}\tau^{\alpha}\right)\;\mathrm{d}\tau\\ 
+    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
+\end{align*}
 
 \section{Numerical examples}
 
