@@ -1031,28 +1031,25 @@ Thus, as in \cite[Section 2.7.4]{Mishura2008}, we write $B^H_t = B^H_{t, s}$, wh
 \[
     B^H_{s, t} = C_H s^{H-1/2}\int_0^s \tau^{1/2 - H}(t - \tau)^{H-1/2}\;\mathrm{d}B_\tau.
 \]
-As a function of $s$, $B^H_{s, t}$ is non-anticipative with respect to the Wiener process and is an It\^o process within the interval $0 < s < t$, with
-\begin{multline*}
-    \mathrm{d}_s B^H_{s, t} = (H-1/2)C_H s^{H-3/2}\left(\int_0^s \tau^{1/2 - H}(t - \tau)^{H-1/2}\;\mathrm{d}B_\tau\right)\;\mathrm{d}s \\
+As a function of $s$, $B^H_{s, t}$ is non-anticipative with respect to the Wiener process and is an It\^o process, with
+\[
+    \mathrm{d}_s B^H_{s, t} = s^{-1}B_{s, t}\;\mathrm{d}s \\
     + C_H (t - s)^{H-1/2}\;\mathrm{d}B_s.
-\end{multline*}
-
-Hence, using the It\^o formula,
-\begin{multline*}
-    f(s, B^H_{s, t}) \\
-    = 
-\end{multline*}
-
-In order to avoid the singularity, we first look within the interval $\varepsilon < s < t - \varepsilon$. Within this interval,
-
-\[
-    B_{t-\varepsilon,t} - B_{\varepsilon,t} = \int_\varepsilon^{t-\varepsilon} \left(\frac{\partial f(t, B_{\tau, t})}{\partial s} + \frac{\partial f(t, B_{\tau, t})}{\partial y}\frac{\partial B_{\tau, t}}{\partial \tau}\right)\;\mathrm{d}\tau
 \]
 
-Therefore,
+Observe that, from the It\^o isometry,
 \[
-    B^H_t = B^H_{t, t} = B^H_{0, t} + \int_0^t \mathrm{d}B^H_{s, t} = \int_0^t 
+    \mathbb{E}\left[(B^H_{s,t})^2\right] = C_H^2 s^{2H-1}\int_0^s \tau^{1 - 2H}(t - \tau)^{2H-1}\;\mathrm{d}\tau 
+    = \mathcal{O}(s) \quad \text{as } s \rightarrow 0.
 \]
+Hence, $\mathbb{E}[|B^H_{s, t}|] = \mathcal{O}(s^{1/2})$, as $s\rightarrow 0$, and the singularities at the endpoints are both integrable.
+
+Then, using the It\^o formula,
+\begin{align*}
+    f(s, B^H_{s, t})
+    & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial s}(t, B_{\tau, t})\;\mathrm{d}\tau + \int_{0}^s \tau^{-1}\frac{\partial f}{\partial y}(t, B_{\tau, t})B_{\tau, t}\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^s (t - \tau)^{2H-1}\frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) \;\mathrm{d}s + C_H \int_{0}^s (t - \tau)^{H-1/2}\frac{\partial f}{\partial y}(t, B_{\tau, t})\;\mathrm{d} B_\tau
+\end{align*}
 
 Thus, using that $\partial_y f = \partial_y f(s, y)$ is continuous and bounded, the integral above with respect to $\{B^H_t\}_t$ can be rewritten
 
