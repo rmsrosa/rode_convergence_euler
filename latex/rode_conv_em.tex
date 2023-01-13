@@ -1056,20 +1056,31 @@ Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarro
 
 Then, using the It\^o formula,
 \begin{align*}
-    f(s, B^H_{s, t}) & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial s}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
+    f(s, B^H_{s, t}) & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \int_{0}^s \frac{\partial f}{\partial y}(t, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
+\end{align*}
+In particular, since $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$,
+\begin{align*}
+    f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^t \frac{\partial f}{\partial y}(t, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \int_{0}^t \frac{\partial f}{\partial y}(t, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
 Thus, using that the partial derivatives are continuous and uniformly bounded,
 \begin{align*}
-    \mathbb{E}\left[\left|f(s, B^H_{s, t}) - f(0, B^H_{0, t})\right|\right] & \leq s + \int_{0}^s \tau^{\alpha-1}\left(\mathbb{E}\left[\left|Y^H_{\tau, t}\right|\right] + \mathbb{E}\left[\left|Y^H_{\tau, \tau}\right|\right] \right)\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^s (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^s (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
+    \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_{0})\right|\right] & \leq t + \int_{0}^t \tau^{\alpha-1}\left(\mathbb{E}\left[\left|Y^H_{\tau, t}\right|\right] + \mathbb{E}\left[\left|Y^H_{\tau, \tau}\right|\right] \right)\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
 \end{align*}
 
-In particular, since $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$,
+Thus,
 \begin{align*}
     \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_0)\right|\right] & \leq t + C_H \int_0^t \tau^{\alpha-1}\left(\tau^{1/2-\alpha}t^{\alpha} + \tau^{1/2-\alpha}\tau^{\alpha}\right)\;\mathrm{d}\tau\\ 
     & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
+\end{align*}
+
+But we actually need to estimate a step $f(t', B^H_{t'}) - f(t, B^H_{t})$, so we subtract
+\begin{align*}
+    f(t', B^H_{t'}) - f(t, B^H_{t}) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^t \frac{\partial f}{\partial y}(t, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+    & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(t, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \int_{0}^t \frac{\partial f}{\partial y}(t, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
 \section{Numerical examples}
