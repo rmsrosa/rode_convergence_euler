@@ -1083,6 +1083,21 @@ But we actually need to estimate a step $f(t', B^H_{t'}) - f(t, B^H_{t})$, so we
     & \quad + C_H \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})(t' - \tau)^\alpha\;\mathrm{d} B_\tau - C_H \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
+This can be written in the form
+\begin{align*}
+    & f(t', B^H_{t'}) - f(t, B^H_{t}) \\
+    & \quad = \int_{t}^{t'} G(\tau, t') \;\mathrm{d}\tau + \int_0^t (G(\tau, t') - G(\tau, t)) \;\mathrm{d}\tau \\
+    & \quad = \int_{t}^{t'} H(\tau, t') \;\mathrm{d}B_\tau + \int_0^t (H(\tau, t') - H(\tau, t)) \;\mathrm{d}B_\tau,
+\end{align*}
+for the families of processes $\{G(\tau, t)\}_{0\leq\tau\leq t}$ and $\{H(\tau, t)\}_{0\leq\tau\leq t}$, $0\leq t \leq T$, given by
+\[
+    G(\tau, t) = \frac{\partial f}{\partial \tau}(t, B_{\tau, t})  + \alpha \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau}) + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha}
+\]
+and
+\[
+    H(\tau, t) = \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha
+\]
+
 \section{Numerical examples}
 
 In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above.
