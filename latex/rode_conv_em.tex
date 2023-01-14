@@ -1007,15 +1007,16 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 \section{The case of fractional Brownian motion noise}
 
-Here, we use the \textbf{fractional It\^o formula} \cite[Theorem 4.2.6]{BHOB2008}, which says that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
+For this case, we need a version of the It\^o formula for fractional Brownian motion, known as \emph{fractional It\^o formula}. The case $0 < H < 1/2$ is a delicate one, thought. A general formula that includes this case is given in \cite[Theorem 4.2.6]{BHOB2008}, saying that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
 \begin{multline*}
     f(t, B^H_t) = f(s, B^H_s) + \int_s^t \frac{\partial f}{\partial s}(s, B^H_s)\;\mathrm{d}s \\
         + \int_s^t \frac{\partial f}{\partial y}(s, B^H_s)\;\mathrm{d}B^H_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, B^H_s)s^{2H - 1}\;\mathrm{d}s,
 \end{multline*}
-where the integral with respect to $B^H_s$ is a \textbf{Wick It\^o Skorohod (WIS)} integral (see \cite[Chapter 4]{BHOB2008}), 
-provided all the integrands are integrable in a suitable sense with respect to $\{B^H_t\}$. Here, we just assume the derivatives are continuous and uniformly bounded, which is sufficient for the formula to be valid and is suitable to our needs.
+where the integral with respect to $\{B^H_s\}_s$ is a \emph{Wick It\^o Skorohod (WIS)} integral (see \cite[Chapter 4]{BHOB2008}), provided all the integrands are integrable in a suitable sense with respect to $\{B^H_t\}$.
 
-A fundamental result that helps estimate the integral with respect to $\{B^H_t\}$ is the \textbf{WIS isometry} \cite[Theorem 4.5.6]{BHOB2008}, which is, however, a delicate formula involving fractional derivatives. Fortunately, since we assume the partial derivatives of $f=f(s, y)$ are uniformly bounded, we can take a detour and follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a more explicit formula but under the assumption that $f$ is time independent. We follow the arguments for the time-dependent case and exploit the fact that the derivatives are bounded to simplify the calculations.
+In turn, for estimating the integral with respect to $\{B^H_s\}_s$, we need a version of the It\^o isometry. A general one is the \emph{WIS isometry} in \cite[Theorem 4.5.6]{BHOB2008}, which is, however, a delicate formula involving fractional derivatives. 
+
+Fortunately, for the error estimates, we assume the derivatives are continuous and uniformly bounded, which allows us to take a detour and follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a more explicit formula but under the assumption that $f$ is time independent. We follow the arguments for the time-dependent case and exploit the fact that the derivatives are bounded to simplify the calculations.
 
 One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
 \[
@@ -1068,12 +1069,8 @@ In particular, since $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$,
 Thus, using that the partial derivatives are continuous and uniformly bounded,
 \begin{align*}
     \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_{0})\right|\right] & \leq t + \int_{0}^t \tau^{\alpha-1}\left(\mathbb{E}\left[\left|Y^H_{\tau, t}\right|\right] + \mathbb{E}\left[\left|Y^H_{\tau, \tau}\right|\right] \right)\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
-\end{align*}
-
-Thus,
-\begin{align*}
-    \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_0)\right|\right] & \leq t + C_H \int_0^t \tau^{\alpha-1}\left(\tau^{1/2-\alpha}t^{\alpha} + \tau^{1/2-\alpha}\tau^{\alpha}\right)\;\mathrm{d}\tau\\ 
+    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2} \\
+    & \leq t + C_H \int_0^t \tau^{\alpha-1}\left(\tau^{1/2-\alpha}t^{\alpha} + \tau^{1/2-\alpha}\tau^{\alpha}\right)\;\mathrm{d}\tau\\ 
     & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
 \end{align*}
 
