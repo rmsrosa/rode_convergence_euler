@@ -1076,7 +1076,11 @@ Thus, using that the partial derivatives are continuous and uniformly bounded,
 
 But we actually need to estimate a step $f(t', B^H_{t'}) - f(t, B^H_{t})$, so we subtract
 \begin{align*}
-    f(t', B^H_{t'}) - f(t, B^H_{t}) & = \ldots
+    & f(t', B^H_{t'}) - f(t, B^H_{t}) \\
+    & \quad = \int_{0}^{t'} \frac{\partial f}{\partial \tau}(t', B_{\tau, t'})\;\mathrm{d}\tau - \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau\\
+    & \quad + \alpha \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})\tau^{\alpha - 1} (Y^H_{\tau, t'} - Y^H_{\tau, \tau})\;\mathrm{d}\tau - \alpha \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau\\
+    & \quad + \frac{C_H^2}{2}\int_{0}^{t'} \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t'}) (t' - \tau)^{2\alpha} \;\mathrm{d}\tau - \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau\\
+    & \quad + C_H \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})(t' - \tau)^\alpha\;\mathrm{d} B_\tau - C_H \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
 \section{Numerical examples}
