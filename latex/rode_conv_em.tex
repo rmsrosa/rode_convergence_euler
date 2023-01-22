@@ -1051,11 +1051,11 @@ One of the integral formulas for the fractional Brownian motion is \cite[Section
 \[
     B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s
 \]
-for a suitable standard Wiener process $\{W_s\}_s$, where
+for a suitable standard Wiener process $\{W_s\}_s$, with
 \[
     m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\tau^{\alpha-1}(\tau - s)^\alpha\;\mathrm{d}\tau\right),
 \]
-where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
+and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
 Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Y^H_{s, t}$ and $B^H_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defYHst} and \eqref{defBHst}, and write $B^H_t = B^H_{t, s}$. As functions of $s$, both $Y^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
 \begin{equation}
@@ -1075,24 +1075,16 @@ Observe that, from the It\^o isometry,
 \]
 Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
 
-Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto B_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$. This completes the proof.
+Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto B_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$.
 \end{proof}
 
 Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $B_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $B_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
-
-Thus, using that the partial derivatives are continuous and uniformly bounded,
-\begin{align*}
-    \mathbb{E}\left[\left|f(t, B^H_t) - f(0, B^H_{0})\right|\right] & \leq t + \int_{0}^t \tau^{\alpha-1}\left(\mathbb{E}\left[\left|Y^H_{\tau, t}\right|\right] + \mathbb{E}\left[\left|Y^H_{\tau, \tau}\right|\right] \right)\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2} \\
-    & \leq t + C_H \int_0^t \tau^{\alpha-1}\left(\tau^{1/2-\alpha}t^{\alpha} + \tau^{1/2-\alpha}\tau^{\alpha}\right)\;\mathrm{d}\tau\\ 
-    & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
-\end{align*}
 
 According to \cref{propbasicestimate}, we need to estimate the steps of the form
 \[
     f(s, X_{\tau^N(s)}^N, B^H_s) - f(\tau^N(s), X_{\tau^N(s)}^N, B^H_{\tau^N(s)}).
 \]
-Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of two arguments and apply \cref{lempartialItoformula} to find the following.
+Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of only the two remaining arguments and apply \cref{lempartialItoformula} to find the following.
 
 \begin{lem}
     \label{lemsinglestepwithfBm}
