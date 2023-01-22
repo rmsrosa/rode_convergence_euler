@@ -1009,62 +1009,76 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 For this case, we need a version of the It\^o formula for fractional Brownian motion, known as \emph{fractional It\^o formula}. The case $0 < H < 1/2$ is a delicate one, thought. A general formula that includes this case is given in \cite[Theorem 4.2.6]{BHOB2008}, saying that, for a fractional Brownian motion $\{B^H_t\}_t$ with $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
 \begin{multline*}
-    f(t, B^H_t) = f(s, B^H_s) + \int_s^t \frac{\partial f}{\partial s}(s, B^H_s)\;\mathrm{d}s \\
-        + \int_s^t \frac{\partial f}{\partial y}(s, B^H_s)\;\mathrm{d}B^H_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, B^H_s)s^{2H - 1}\;\mathrm{d}s,
+    f(t, B^H_t) = f(0, B^H_0) + \int_0^t \frac{\partial f}{\partial s}(s, B^H_s)\;\mathrm{d}s \\
+        + \int_0^t \frac{\partial f}{\partial y}(s, B^H_s)\;\mathrm{d}B^H_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, B^H_s)s^{2H - 1}\;\mathrm{d}s,
 \end{multline*}
 where the integral with respect to $\{B^H_s\}_s$ is a \emph{Wick It\^o Skorohod (WIS)} integral (see \cite[Chapter 4]{BHOB2008}), provided all the integrands are integrable in a suitable sense with respect to $\{B^H_t\}$.
 
 In turn, for estimating the integral with respect to $\{B^H_s\}_s$, we need a version of the It\^o isometry. A general one is the \emph{WIS isometry} in \cite[Theorem 4.5.6]{BHOB2008}, which is, however, a delicate formula involving fractional derivatives. 
 
-Fortunately, for the error estimates, we assume the derivatives are continuous and uniformly bounded, which allows us to take a detour and follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a more explicit formula but under the assumption that $f$ is time independent. We follow the arguments for the time-dependent case and exploit the fact that the derivatives are bounded to simplify the calculations.
+Fortunately, for the error estimates, we assume the derivatives are continuous and uniformly bounded, which allows us to stop short the formula and use more friendly terms. For that, we follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a formula involving directly the It\^o integral with respect to a Wiener process. Their result, however, is restricted to the case in which $f$ is time independent. We follow their arguments and obtain a partial formula for a time-dependent $f$. In doing so, we first obtain the following intermediary result.
 
+\begin{lem}
+    \label{lempartialItoformula}
+    Let $\{B^H_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, y)$ be a real-valued function on $[0, T]\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
+    \begin{equation}
+        \label{partialItoformula}
+        \begin{aligned}
+            f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial s}(t, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s \\
+            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, B_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})(t - s)^\alpha\;\mathrm{d} B_s,
+        \end{aligned}
+    \end{equation}
+    for $0 \leq t \leq T$, where $\alpha = H-1/2$ (for notational simplicity); $C_H$ is given by
+    \begin{equation}
+        \label{defCH}
+        C_H = \left( \frac{2H\Gamma(1-\alpha)}{\Gamma(1 - 2\alpha)\Gamma(1+\alpha)} \right)^{1/2};
+    \end{equation}
+    and
+    \begin{equation}
+        \label{defYHst}
+        Y^H_{s, t} = C_H \int_0^s \tau^{-\alpha}(t - \tau)^\alpha \;\mathrm{d}W_\tau
+    \end{equation}
+    and
+    \begin{equation}
+        \label{defBHst}
+        B^H_{s, t} = s^\alpha Y^H_{s, t} - \alpha \int_0^s \tau^{\alpha-1}Y^H_{\tau, \tau}\;\mathrm{d}\tau.
+    \end{equation}
+    are defined for $0\leq s \leq t$.
+\end{lem}
+
+\begin{proof}
 One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
 \[
     B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s
 \]
 for a suitable standard Wiener process $\{W_s\}_s$, where
 \[
-    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\tau^{\alpha-1}(\tau - s)^\alpha\;\mathrm{d}\tau\right)
+    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\tau^{\alpha-1}(\tau - s)^\alpha\;\mathrm{d}\tau\right),
 \]
-with $\alpha = H-1/2$ (for notational simplicity) and $C_H$ is given by (it is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, with $\alpha = H - 1/2$)
-\[
-    C_H = \left( \frac{2H\Gamma(1-\alpha)}{\Gamma(1 - 2\alpha)\Gamma(1+\alpha)} \right)^{1/2}.
-\]
+where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
-Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define, for $0 \leq s \leq t$,
-\[
-    Y^H_{s, t} = C_H \int_0^s \tau^{-\alpha}(t - \tau)^\alpha \;\mathrm{d}W_\tau,
-\]
-and write $B^H_t = B^H_{t, s}$, where $B^H_{t, s}$ is given by
-\[
-    B^H_{s, t} = s^\alpha Y^H_{s, t} - \alpha \int_0^s \tau^{\alpha-1}Y^H_{\tau, \tau}\;\mathrm{d}\tau.
-\]
-
-As functions of $s$, both $Y^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
-\[
+Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Y^H_{s, t}$ and $B^H_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defYHst} and \eqref{defBHst}, and write $B^H_t = B^H_{t, s}$. As functions of $s$, both $Y^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
+\begin{equation}
+    \label{YHstItoprocess}
     \mathrm{d}_s Y^H_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
-\]
-and
-\[
+\end{equation}
+and, hence,
+\begin{equation}
+    \label{BHstItoprocess}
     \mathrm{d}_s B^H_{s, t} = \alpha s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s + C_H (t - s)^\alpha \;\mathrm{d}W_s.
-\]
+\end{equation}
+
 Observe that, from the It\^o isometry,
 \[
     \mathbb{E}\left[(Y^H_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \tau)^{2\alpha}\;\mathrm{d}\tau \\
     \leq C_H^2 s^{-2\alpha}t^{2\alpha}s = C_H^2 s^{1-2\alpha}t^{2\alpha}.
 \]
-Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints are all integrable.
+Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
 
-Then, using the It\^o formula,
-\begin{align*}
-    f(s, B^H_{s, t}) & = f(0, B^H_{0, t}) + \int_{0}^s \frac{\partial f}{\partial \tau}(\tau, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \int_{0}^s \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
-\end{align*}
-In particular, since $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$,
-\begin{align*}
-    f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau + \alpha \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
-    & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau + C_H \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
-\end{align*}
+Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto B_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$. This completes the proof.
+\end{proof}
+
+Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $B_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $B_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
 
 Thus, using that the partial derivatives are continuous and uniformly bounded,
 \begin{align*}
@@ -1074,7 +1088,33 @@ Thus, using that the partial derivatives are continuous and uniformly bounded,
     & \quad + \frac{C_H^2}{2}\int_{0}^t (t - \tau)^{2\alpha} \;\mathrm{d}s + C_H \left(\int_{0}^t (t - \tau)^{2\alpha}\;\mathrm{d} \tau\right)^{1/2}.
 \end{align*}
 
-But we actually need to estimate a step $f(t', B^H_{t'}) - f(t, B^H_{t})$, so we subtract
+According to \cref{propbasicestimate}, we need to estimate the steps of the form
+\[
+    f(s, X_{\tau^N(s)}^N, B^H_s) - f(\tau^N(s), X_{\tau^N(s)}^N, B^H_{\tau^N(s)}).
+\]
+Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of two arguments and apply \cref{lempartialItoformula} to find the following.
+
+\begin{lem}
+    \label{singlestepwithfBm}
+    Let $\{B^H_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
+    \begin{equation}
+        \begin{aligned}
+            & f(s, X_{\tau^N(s)}^N, B^H_s) - f(\tau^N(s), X_{\tau^N(s)}^N, B^H_{\tau^N(s)}) \\
+            & \quad = \int_{\tau^N(s)}^{s} G(\tau, s) \;\mathrm{d}\tau + \int_0^{\tau^N(s)} (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}\tau \\
+            & \quad = \int_{\tau^N(s)}^{s} H(\tau, s) \;\mathrm{d}B^H_\tau + \int_0^{\tau^N(s)} (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}B^H_\tau,
+        \end{aligned}
+    \end{equation}
+    for the families of processes $\{G(\tau, s)\}_{0\leq\tau\leq s}$ and $\{H(\tau, s)\}_{0\leq\tau\leq s}$, $0\leq s \leq T$, given by
+    \[
+        G(\tau, s) = \frac{\partial f}{\partial \tau}(s, B^H_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, B^H_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau}) + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, B^H_{\tau, s}) (s - \tau)^{2\alpha}
+    \]
+    and
+    \[
+        H(\tau, s) = \frac{\partial f}{\partial y}(\tau, B^H_{\tau, s})(s - \tau)^\alpha
+    \]
+\end{lem}
+
+So we subtract
 \begin{align*}
     & f(t', B^H_{t'}) - f(t, B^H_{t}) \\
     & \quad = \int_{0}^{t'} \frac{\partial f}{\partial \tau}(t', B_{\tau, t'})\;\mathrm{d}\tau - \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau\\
@@ -1083,20 +1123,7 @@ But we actually need to estimate a step $f(t', B^H_{t'}) - f(t, B^H_{t})$, so we
     & \quad + C_H \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})(t' - \tau)^\alpha\;\mathrm{d} B_\tau - C_H \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
 \end{align*}
 
-This can be written in the form
-\begin{align*}
-    & f(t', B^H_{t'}) - f(t, B^H_{t}) \\
-    & \quad = \int_{t}^{t'} G(\tau, t') \;\mathrm{d}\tau + \int_0^t (G(\tau, t') - G(\tau, t)) \;\mathrm{d}\tau \\
-    & \quad = \int_{t}^{t'} H(\tau, t') \;\mathrm{d}B_\tau + \int_0^t (H(\tau, t') - H(\tau, t)) \;\mathrm{d}B_\tau,
-\end{align*}
-for the families of processes $\{G(\tau, t)\}_{0\leq\tau\leq t}$ and $\{H(\tau, t)\}_{0\leq\tau\leq t}$, $0\leq t \leq T$, given by
-\[
-    G(\tau, t) = \frac{\partial f}{\partial \tau}(t, B_{\tau, t})  + \alpha \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau}) + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha}
-\]
-and
-\[
-    H(\tau, t) = \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha
-\]
+
 
 \section{Numerical examples}
 
