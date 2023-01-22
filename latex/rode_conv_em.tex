@@ -1024,8 +1024,8 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     \begin{equation}
         \label{partialItoformula}
         \begin{aligned}
-            f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial s}(t, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s \\
-            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, B_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})(t - s)^\alpha\;\mathrm{d} B_s,
+            f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s \\
+            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, B_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})(t - s)^\alpha\;\mathrm{d} W_s,
         \end{aligned}
     \end{equation}
     for $0 \leq t \leq T$, where $\alpha = H-1/2$ (for notational simplicity); $C_H$ is given by
@@ -1095,35 +1095,41 @@ According to \cref{propbasicestimate}, we need to estimate the steps of the form
 Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of two arguments and apply \cref{lempartialItoformula} to find the following.
 
 \begin{lem}
-    \label{singlestepwithfBm}
+    \label{lemsinglestepwithfBm}
     Let $\{B^H_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
     \begin{equation}
+        \label{singlestepwithfBm}
         \begin{aligned}
             & f(s, X_{\tau^N(s)}^N, B^H_s) - f(\tau^N(s), X_{\tau^N(s)}^N, B^H_{\tau^N(s)}) \\
             & \quad = \int_{\tau^N(s)}^{s} G(\tau, s) \;\mathrm{d}\tau + \int_0^{\tau^N(s)} (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}\tau \\
-            & \quad = \int_{\tau^N(s)}^{s} H(\tau, s) \;\mathrm{d}B^H_\tau + \int_0^{\tau^N(s)} (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}B^H_\tau,
+            & \quad + \int_{\tau^N(s)}^{s} H(\tau, s) \;\mathrm{d}W_\tau + \int_0^{\tau^N(s)} (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}W_\tau,
         \end{aligned}
     \end{equation}
     for the families of processes $\{G(\tau, s)\}_{0\leq\tau\leq s}$ and $\{H(\tau, s)\}_{0\leq\tau\leq s}$, $0\leq s \leq T$, given by
-    \[
-        G(\tau, s) = \frac{\partial f}{\partial \tau}(s, B^H_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, B^H_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau}) + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, B^H_{\tau, s}) (s - \tau)^{2\alpha}
-    \]
+    \begin{multline}
+        G(\tau, s) = \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau}) \\ 
+        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s}) (s - \tau)^{2\alpha}
+    \end{multline}
     and
-    \[
-        H(\tau, s) = \frac{\partial f}{\partial y}(\tau, B^H_{\tau, s})(s - \tau)^\alpha
-    \]
+    \begin{equation}
+        H(\tau, s) = C_H\frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})(s - \tau)^\alpha.
+    \end{equation}
 \end{lem}
 
-So we subtract
-\begin{align*}
-    & f(t', B^H_{t'}) - f(t, B^H_{t}) \\
-    & \quad = \int_{0}^{t'} \frac{\partial f}{\partial \tau}(t', B_{\tau, t'})\;\mathrm{d}\tau - \int_{0}^t \frac{\partial f}{\partial \tau}(t, B_{\tau, t})\;\mathrm{d}\tau\\
-    & \quad + \alpha \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})\tau^{\alpha - 1} (Y^H_{\tau, t'} - Y^H_{\tau, \tau})\;\mathrm{d}\tau - \alpha \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})\tau^{\alpha - 1} (Y^H_{\tau, t} - Y^H_{\tau, \tau})\;\mathrm{d}\tau\\
-    & \quad + \frac{C_H^2}{2}\int_{0}^{t'} \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t'}) (t' - \tau)^{2\alpha} \;\mathrm{d}\tau - \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(\tau, B_{\tau, t}) (t - \tau)^{2\alpha} \;\mathrm{d}\tau\\
-    & \quad + C_H \int_{0}^{t'} \frac{\partial f}{\partial y}(\tau, B_{\tau, t'})(t' - \tau)^\alpha\;\mathrm{d} B_\tau - C_H \int_{0}^t \frac{\partial f}{\partial y}(\tau, B_{\tau, t})(t - \tau)^\alpha\;\mathrm{d} B_\tau
-\end{align*}
-
-
+\begin{proof}
+    Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
+    \begin{align*}
+        f(s, B^H_s) & = f(0, B^H_0) + \int_{0}^s \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})\;\mathrm{d}\tau \\ 
+        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\tau, X_{\tau^N(s)}^N, B_{\tau, s}) (s - \tau)^{2\alpha} \;\mathrm{d}\tau \\
+        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})(s - \tau)^\alpha\;\mathrm{d} W_\tau.
+    \end{align*}
+    In terms of $G$ and $H$, this becomes
+    \[
+        f(s, B^H_s) = f(0, B^H_0) + \int_0^s G(\tau, s)\;\mathrm{d}\tau + \int_0^s H(\tau, s)\;\mathrm{d}W_{\tau}.
+    \]
+    Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm}.
+\end{proof}
 
 \section{Numerical examples}
 
