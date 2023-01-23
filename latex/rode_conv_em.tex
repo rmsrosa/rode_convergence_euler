@@ -1136,6 +1136,22 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
 \end{lem}
 
+\begin{proof}
+    From \eqref{singlestepwithfBm},
+    \begin{align*}
+        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\tau, s) \;\mathrm{d}\tau\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}\tau\;\mathrm{d}s \\
+        & \quad + \int_0^t\int_{\tau^N(s)}^{s} H(\tau, s) \;\mathrm{d}W_\tau\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}W_\tau\;\mathrm{d}s.
+    \end{align*}
+    Using Fubini's Theorem,
+    \begin{align*}
+        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        & \quad = \int_0^t\int_\tau^{\tau^N(\tau) + \Delta t_N} G(\tau, s) \;\mathrm{d}s\;\mathrm{d}\tau + \int_0^t\int_{\tau^N(\tau) + \Delta t_N}^t (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\tau \\
+        & \quad + \int_0^t\int_\tau^{\tau^N(\tau) + \Delta t_N} H(\tau, s) \;\mathrm{d}s\;\mathrm{d}W_\tau + \int_0^t\int_{\tau^N(\tau) + \Delta t_N}^t (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\tau.
+    \end{align*}
+    Now we need to estimate each term.
+\end{proof}
+
 \section{Numerical examples}
 
 In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above.
