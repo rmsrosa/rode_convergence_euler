@@ -902,7 +902,7 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     and
     \begin{equation}
         \label{defBHst}
-        Y_{s, t} = s^\alpha Z_{s, t} - \alpha \int_0^s \zeta^{\alpha-1}Z_{\zeta, \zeta}\;\mathrm{d}\zeta.
+        Y_{s, t} = s^\alpha Z_{s, t} - \alpha \int_0^s \xi^{\alpha-1}Z_{\xi, \xi}\;\mathrm{d}\xi.
     \end{equation}
     are defined for $0\leq s \leq t$.
 \end{lem}
@@ -914,7 +914,7 @@ One of the integral formulas for the fractional Brownian motion is \cite[Section
 \]
 for a suitable standard Wiener process $\{W_s\}_s$, with
 \[
-    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\zeta^{\alpha-1}(\zeta - s)^\alpha\;\mathrm{d}\zeta\right),
+    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\xi^{\alpha-1}(\xi - s)^\alpha\;\mathrm{d}\xi\right),
 \]
 and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
@@ -931,7 +931,7 @@ and, hence,
 
 Observe that, from the It\^o isometry,
 \[
-    \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \zeta)^{2\alpha}\;\mathrm{d}\zeta \\
+    \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \xi)^{2\alpha}\;\mathrm{d}\xi \\
     \leq C_H^2 s^{-2\alpha}t^{2\alpha}s = C_H^2 s^{1-2\alpha}t^{2\alpha}.
 \]
 Hence, $\mathbb{E}[|Z_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
@@ -956,8 +956,8 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
         \label{singlestepwithfBm}
         \begin{aligned}
             & f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \\
-            & \quad = \int_{\tau^N(s)}^{s} G(\zeta, s) \;\mathrm{d}\zeta + \int_0^{\tau^N(s)} (G(\zeta, s) - G(\zeta, \tau^N(s))) \;\mathrm{d}\zeta \\
-            & \quad + \int_{\tau^N(s)}^{s} H(\zeta, s) \;\mathrm{d}W_\zeta + \int_0^{\tau^N(s)} (H(\zeta, s) - H(\zeta, \tau^N(s))) \;\mathrm{d}W_\zeta,
+            & \quad = \int_{\tau^N(s)}^{s} G(\xi, s) \;\mathrm{d}\xi + \int_0^{\tau^N(s)} (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}\xi \\
+            & \quad + \int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi + \int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi,
         \end{aligned}
     \end{equation}
     for the families of processes $\{G(\tau, s)\}_{0\leq\tau\leq s}$ and $\{H(\tau, s)\}_{0\leq\tau\leq s}$, $0\leq s \leq T$, given by
@@ -974,14 +974,14 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
 \begin{proof}
     Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
     \begin{align*}
-        f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \zeta}(\zeta, X_{\tau^N(s)}^N, B_{\zeta, s})\;\mathrm{d}\zeta \\ 
-        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\zeta, X_{\tau^N(s)}^N, B_{\zeta, s})\zeta^{\alpha - 1} (Z_{\zeta, s} - Z_{\zeta, \zeta})\;\mathrm{d}\zeta \\
-        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\zeta, X_{\tau^N(s)}^N, B_{\zeta, s}) (s - \zeta)^{2\alpha} \;\mathrm{d}\zeta \\
-        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\zeta, X_{\tau^N(s)}^N, B_{\zeta, s})(s - \zeta)^\alpha\;\mathrm{d} W_\zeta.
+        f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})\;\mathrm{d}\xi \\ 
+        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
+        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, B_{\xi, s}) (s - \xi)^{2\alpha} \;\mathrm{d}\xi \\
+        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})(s - \xi)^\alpha\;\mathrm{d} W_\xi.
     \end{align*}
     In terms of $G$ and $H$, this becomes
     \[
-        f(s, Y_s) = f(0, Y_0) + \int_0^s G(\zeta, s)\;\mathrm{d}\zeta + \int_0^s H(\zeta, s)\;\mathrm{d}W_{\zeta}.
+        f(s, Y_s) = f(0, Y_0) + \int_0^s G(\xi, s)\;\mathrm{d}\xi + \int_0^s H(\xi, s)\;\mathrm{d}W_{\xi}.
     \]
     Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm}.
 \end{proof}
@@ -1001,14 +1001,14 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     From \eqref{singlestepwithfBm},
     \begin{align*}
         & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
-        & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\zeta, s) \;\mathrm{d}\zeta\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\zeta, s) - G(\zeta, \tau^N(s))) \;\mathrm{d}\zeta\;\mathrm{d}s \\
-        & \quad + \int_0^t\int_{\tau^N(s)}^{s} H(\zeta, s) \;\mathrm{d}W_\zeta\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\zeta, s) - H(\zeta, \tau^N(s))) \;\mathrm{d}W_\zeta\;\mathrm{d}s.
+        & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\xi, s) \;\mathrm{d}\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}\xi\;\mathrm{d}s \\
+        & \quad + \int_0^t\int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi\;\mathrm{d}s.
     \end{align*}
     Using Fubini's Theorem,
     \begin{align*}
         & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
-        & \quad = \int_0^t\int_\zeta^{\tau^N(\zeta) + \Delta t_N} G(\zeta, s) \;\mathrm{d}s\;\mathrm{d}\zeta + \int_0^t\int_{\tau^N(\zeta) + \Delta t_N}^t (G(\zeta, s) - G(\zeta, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\zeta \\
-        & \quad + \int_0^t\int_\zeta^{\tau^N(\zeta) + \Delta t_N} H(\zeta, s) \;\mathrm{d}s\;\mathrm{d}W_\zeta + \int_0^t\int_{\tau^N(\zeta) + \Delta t_N}^t (H(\zeta, s) - H(\zeta, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\zeta.
+        & \quad = \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} G(\xi, s) \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\xi \\
+        & \quad + \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\;\mathrm{d}W_\xi + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\xi.
     \end{align*}
     Now we need to estimate each term.
 \end{proof}
