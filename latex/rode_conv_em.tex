@@ -246,8 +246,8 @@ The first main idea of the proof is to not estimate the local error and, instead
     \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
         X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
-        & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
+        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s  \\ 
+        & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
 \end{equation}
@@ -386,8 +386,8 @@ In this section, we derive the following integral formula for the global error:
         \label{globalerrorintegralformula}
         \begin{aligned}
             X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
-            & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
+            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s  \\ 
+            & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
             & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
         \end{aligned}
     \end{equation}
@@ -479,7 +479,7 @@ Here we derive an estimate, under minimal hypotheses, that is the basis for the 
     $$
     for $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     $$
-        \left|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s.
+        \left|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_s - X_{\tau^N(s)}| \;\mathrm{d}s.
     $$
     
     For the second term, we use again \eqref{Lxassumptionbasic}, so that
@@ -488,7 +488,7 @@ Here we derive an estimate, under minimal hypotheses, that is the basis for the 
     $$
     for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
-        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_{\tau^N(s)} - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
+        \left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right| \leq L_X \int_0^{t_j} |X_{\tau^N(s)}^N - X_{\tau^N(s)}^N| \;\mathrm{d}s \\
         \leq L_X\sum_{i=0}^{j-1} |X_{t_i} - X_{t_i}^N|\Delta t_N.
     \end{multline*}
     
@@ -590,7 +590,7 @@ More precisely, we have the following result:
     Besides \cref{standinghypotheses1}, suppose that, for all $0 \leq s \leq T$,
     \begin{equation}
         \label{stepbound}
-          |f(s, X_{\tau^N(s)}, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
+          |f(s, X_{\tau^N(s)}^N, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
       \end{equation}
       where $\{\bar F_t\}$ is a real stochastic process satisfying
       \begin{equation}
@@ -729,7 +729,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \end{multline*}
     Thus, \eqref{stepbound} holds with
     \[
-        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}|)t + (C_3 + C_4 |X_{\tau^N(t)}|) V(\{Y_t\}_{t\in I}; 0, t).
+        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}^N|)t + (C_3 + C_4 |X_{\tau^N(t)}^N|) V(\{Y_t\}_{t\in I}; 0, t).
     \]
     It is clear that, not only the expectation, but all the sample paths of $\{F_t\}_{t\in I}$ are monotonic non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
     \[
@@ -753,11 +753,11 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \]
     with $1 \leq p < \infty$, then the process $\{\bar F_t\}_{t\in I}$ becomes
     \[
-        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}|)t + (C_3 + C_4 |X_{\tau^N(t)}|^{p-1}) V(\{Y_t\}_{t\in I}; 0, t).
+        \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}^N|)t + (C_3 + C_4 |X_{\tau^N(t)}^N|^{p-1}) V(\{Y_t\}_{t\in I}; 0, t).
     \]
     Applying the H\"older inequality yields
     \[
-        \bar F_t \leq (C_1 + C_2 |X_{\tau^N(t)}|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) + C_4 \frac{p-1}{p}|X_{\tau^N(t)}|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
+        \bar F_t \leq (C_1 + C_2 |X_{\tau^N(t)}^N|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) + C_4 \frac{p-1}{p}|X_{\tau^N(t)}^N|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
     \]
     With that, the required conditions on $\{\bar F_t\}_{t\in I}$ are met and we are allowed to apply \cref{thmmonotonicbound} and deduce the strong order 1 convergence of the Euler method.
 \end{rmk}
@@ -785,7 +785,7 @@ Here, as explained in the Introduction, we assume the process given by $F_t = f(
 With that in mind, we first have the following result.
 \begin{lem}
     \label{lemItostep}
-    Besides \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise, satisfying
+    Besides \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o noise, satisfying
     \begin{equation}
         \label{Itostep}
         \mathrm{d}F_t^N = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
@@ -798,7 +798,7 @@ With that in mind, we first have the following result.
     Then,
     \begin{multline}
         \label{expectintfboundbyIto}
-        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
     \end{multline}
     for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
@@ -811,23 +811,23 @@ With that in mind, we first have the following result.
     \]
     Upon integration,
     \begin{multline*}
-        \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
+        \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
         = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s
     \end{multline*}
     Exchanging the order of integration, according to Fubini's theorem, yields
     \begin{align*}
-        \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
         & \qquad = \int_0^t (\tau^N(\xi)+\Delta t_N - \xi) A_\xi \;\mathrm{d}\xi + \int_0^t (\tau^N(\xi) + \Delta t_N - \xi) B_\xi \;\mathrm{d}W_\xi.
     \end{align*}
     Taking the absolute mean and using the It\^o isometry on the second term gives
     \begin{multline*}
-        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \int_0^t |\tau^N(\xi)+\Delta t_N - \xi| \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}.
     \end{multline*}
     Since $|\tau^N(\xi)+\Delta t_N - \xi| \leq \Delta t_N$, we find
     \begin{multline*}
-        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
     \end{multline*}
     which completes the proof.
@@ -939,7 +939,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
     \]
     Therefore, we are under the condition of \eqref{standinghypotheses1}.
 
-    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
+    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
     \begin{multline}
         \label{itoformula}
             \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
@@ -977,7 +977,7 @@ Of course, it is possible to mix the two cases and have the following result com
 \begin{thm}
     \label{thmmixedcase}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itostep} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itostep} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$, i.e.
     \begin{equation}
         \label{stepHbound}
         |H_s^N - H_{\tau^N(s)}^N| \leq \bar H_s^N - \bar H_{\tau^N(s)}^N
@@ -1130,7 +1130,7 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Suppose these derivatives are uniformly bounded. Then,
     \begin{multline}
         \label{expectintfboundbyfBm}
-        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
     \end{multline}
     for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
@@ -1139,13 +1139,13 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
 \begin{proof}
     From \eqref{singlestepwithfBm},
     \begin{align*}
-        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\tau, s) \;\mathrm{d}\tau\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}\tau\;\mathrm{d}s \\
         & \quad + \int_0^t\int_{\tau^N(s)}^{s} H(\tau, s) \;\mathrm{d}W_\tau\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}W_\tau\;\mathrm{d}s.
     \end{align*}
     Using Fubini's Theorem,
     \begin{align*}
-        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
+        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \quad = \int_0^t\int_\tau^{\tau^N(\tau) + \Delta t_N} G(\tau, s) \;\mathrm{d}s\;\mathrm{d}\tau + \int_0^t\int_{\tau^N(\tau) + \Delta t_N}^t (G(\tau, s) - G(\tau, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\tau \\
         & \quad + \int_0^t\int_\tau^{\tau^N(\tau) + \Delta t_N} H(\tau, s) \;\mathrm{d}s\;\mathrm{d}W_\tau + \int_0^t\int_{\tau^N(\tau) + \Delta t_N}^t (H(\tau, s) - H(\tau, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\tau.
     \end{align*}
