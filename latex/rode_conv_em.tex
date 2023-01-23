@@ -1024,7 +1024,7 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     \begin{equation}
         \label{partialItoformula}
         \begin{aligned}
-            f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s \\
+            f(t, B^H_t) & = f(0, B^H_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Z^H_{s, t} - Z^H_{s, s})\;\mathrm{d}s \\
             & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, B_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})(t - s)^\alpha\;\mathrm{d} W_s,
         \end{aligned}
     \end{equation}
@@ -1036,12 +1036,12 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     and
     \begin{equation}
         \label{defYHst}
-        Y^H_{s, t} = C_H \int_0^s \tau^{-\alpha}(t - \tau)^\alpha \;\mathrm{d}W_\tau
+        Z^H_{s, t} = C_H \int_0^s \tau^{-\alpha}(t - \tau)^\alpha \;\mathrm{d}W_\tau
     \end{equation}
     and
     \begin{equation}
         \label{defBHst}
-        B^H_{s, t} = s^\alpha Y^H_{s, t} - \alpha \int_0^s \tau^{\alpha-1}Y^H_{\tau, \tau}\;\mathrm{d}\tau.
+        B^H_{s, t} = s^\alpha Z^H_{s, t} - \alpha \int_0^s \tau^{\alpha-1}Z^H_{\tau, \tau}\;\mathrm{d}\tau.
     \end{equation}
     are defined for $0\leq s \leq t$.
 \end{lem}
@@ -1057,23 +1057,23 @@ for a suitable standard Wiener process $\{W_s\}_s$, with
 \]
 and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
-Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Y^H_{s, t}$ and $B^H_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defYHst} and \eqref{defBHst}, and write $B^H_t = B^H_{t, s}$. As functions of $s$, both $Y^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
+Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Z^H_{s, t}$ and $B^H_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defYHst} and \eqref{defBHst}, and write $B^H_t = B^H_{t, s}$. As functions of $s$, both $Z^H_{s, t}$ and $B^H_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
 \begin{equation}
     \label{YHstItoprocess}
-    \mathrm{d}_s Y^H_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
+    \mathrm{d}_s Z^H_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
 \end{equation}
 and, hence,
 \begin{equation}
     \label{BHstItoprocess}
-    \mathrm{d}_s B^H_{s, t} = \alpha s^{\alpha - 1} (Y^H_{s, t} - Y^H_{s, s})\;\mathrm{d}s + C_H (t - s)^\alpha \;\mathrm{d}W_s.
+    \mathrm{d}_s B^H_{s, t} = \alpha s^{\alpha - 1} (Z^H_{s, t} - Z^H_{s, s})\;\mathrm{d}s + C_H (t - s)^\alpha \;\mathrm{d}W_s.
 \end{equation}
 
 Observe that, from the It\^o isometry,
 \[
-    \mathbb{E}\left[(Y^H_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \tau)^{2\alpha}\;\mathrm{d}\tau \\
+    \mathbb{E}\left[(Z^H_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \tau)^{2\alpha}\;\mathrm{d}\tau \\
     \leq C_H^2 s^{-2\alpha}t^{2\alpha}s = C_H^2 s^{1-2\alpha}t^{2\alpha}.
 \]
-Hence, $\mathbb{E}[|Y^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
+Hence, $\mathbb{E}[|Z^H_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
 
 Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto B_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $B^H_{t, t} = B^H_t$ and $B^H_{0, t} = 0 = B^H_0$.
 \end{proof}
@@ -1099,7 +1099,7 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
     \end{equation}
     for the families of processes $\{G(\tau, s)\}_{0\leq\tau\leq s}$ and $\{H(\tau, s)\}_{0\leq\tau\leq s}$, $0\leq s \leq T$, given by
     \begin{multline}
-        G(\tau, s) = \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau}) \\ 
+        G(\tau, s) = \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s})\tau^{\alpha - 1} (Z^H_{\tau, s} - Z^H_{\tau, \tau}) \\ 
         + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, X_{\tau^N(s)}^N, B^H_{\tau, s}) (s - \tau)^{2\alpha}
     \end{multline}
     and
@@ -1112,7 +1112,7 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
     Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
     \begin{align*}
         f(s, B^H_s) & = f(0, B^H_0) + \int_{0}^s \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})\;\mathrm{d}\tau \\ 
-        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})\tau^{\alpha - 1} (Y^H_{\tau, s} - Y^H_{\tau, \tau})\;\mathrm{d}\tau \\
+        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})\tau^{\alpha - 1} (Z^H_{\tau, s} - Z^H_{\tau, \tau})\;\mathrm{d}\tau \\
         & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\tau, X_{\tau^N(s)}^N, B_{\tau, s}) (s - \tau)^{2\alpha} \;\mathrm{d}\tau \\
         & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, B_{\tau, s})(s - \tau)^\alpha\;\mathrm{d} W_\tau.
     \end{align*}
@@ -1122,6 +1122,17 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
     \]
     Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm}.
 \end{proof}
+
+\begin{lem}
+    \label{lemfBmsteps}
+    Let $\{B^H_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Suppose these derivatives are uniformly bounded. Then,
+    \begin{multline}
+        \label{expectintfboundbyfBm}
+        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
+        \leq \Delta t_N \left(\int_0^t \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}\right),
+    \end{multline}
+    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
+\end{lem}
 
 \section{Numerical examples}
 
