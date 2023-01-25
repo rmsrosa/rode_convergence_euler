@@ -960,14 +960,16 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
             & \quad + \int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi + \int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi,
         \end{aligned}
     \end{equation}
-    for the families of processes $\{G(\tau, s)\}_{0\leq\tau\leq s}$ and $\{H(\tau, s)\}_{0\leq\tau\leq s}$, $0\leq s \leq T$, given by
+    for the families of processes $\{G(\xi, s)\}_{0\leq\xi\leq s}$ and $\{H(\xi, s)\}_{0\leq\xi\leq s}$, $0\leq s \leq T$, given by
     \begin{multline}
-        G(\tau, s) = \frac{\partial f}{\partial \tau}(\tau, X_{\tau^N(s)}^N, Y_{\tau, s})  + \alpha \frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, Y_{\tau, s})\tau^{\alpha - 1} (Z_{\tau, s} - Z_{\tau, \tau}) \\ 
-        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\tau, X_{\tau^N(s)}^N, Y_{\tau, s}) (s - \tau)^{2\alpha}
+        \label{defGtaus}
+        G(\xi, s) = \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})  + \alpha \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi}) \\ 
+        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{2\alpha}
     \end{multline}
     and
     \begin{equation}
-        H(\tau, s) = C_H\frac{\partial f}{\partial y}(\tau, X_{\tau^N(s)}^N, Y_{\tau, s})(s - \tau)^\alpha.
+        \label{defHtaus}
+        H(\xi, s) = C_H\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^\alpha.
     \end{equation}
 \end{lem}
 
@@ -1002,15 +1004,48 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     \begin{align*}
         & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\xi, s) \;\mathrm{d}\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}\xi\;\mathrm{d}s \\
-        & \quad + \int_0^t\int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi\;\mathrm{d}s.
+        & \qquad + \int_0^t\int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi\;\mathrm{d}s.
     \end{align*}
     Using Fubini's Theorem,
     \begin{align*}
         & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
-        & \quad = \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} G(\xi, s) \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\xi \\
-        & \quad + \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\;\mathrm{d}W_\xi + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\xi.
+        & \quad = \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} G(\xi, s) \;\mathrm{d}s\;\mathrm{d}\xi \\
+        & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\xi \\
+        & \qquad + \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\;\mathrm{d}W_\xi \\
+        & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\xi.
     \end{align*}
-    Now we need to estimate each term.
+    Taking the strong norm and using the Lyapunov inequality and the It\^o isometry, we find that
+    \begin{equation}
+        \begin{aligned}
+            & \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \right|\right] \\
+            & \quad \leq \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left| G(\xi, s)\right|\right] \;\mathrm{d}s\;\mathrm{d}\xi \\
+            & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t \mathbb{E}\left[\left|(G(\xi, s) - G(\xi, \tau^N(s)))\right|\right] \;\mathrm{d}s\;\mathrm{d}\xi \\
+            & \qquad + \left(\int_0^t(\tau^N(\xi) + \Delta t_N - \xi)\int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s\;\mathrm{d}\xi\right)^{1/2} \\
+            & \qquad + \left(\int_0^t(t - \tau^N(\xi) - \Delta t_N)\right. \\
+            & \qquad \qquad \qquad \qquad \left. \int_{\tau^N(\xi) + \Delta t_N}^t \mathbb{E}\left[\left|(H(\xi, s) - H(\xi, \tau^N(s)))\right|^2\right] \;\mathrm{d}s\;\mathrm{d}\xi\right)^{1/2}.
+        \end{aligned}
+    \end{equation}
+    Now we need to estimate each integral. The integrals involving $H(\xi,s)$ are easier. Since the partial derivatives of $f$ are uniformly bounded, we have, from \eqref{defHtaus}, that
+    \[
+        \left|H(\xi, s)\right| \leq C_H L_Y (s - \xi)^\alpha,
+    \]
+    for any $0\leq \xi \leq s \leq T$, for a suitable constant $L_Y$ bounding $\partial f/\partial y$. Thus,
+    \begin{multline*}
+        \int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} C_H^2 L_Y^2 (s - \xi)^{2\alpha} \;\mathrm{d}s \\
+        = \frac{C_H^2 L_Y^2}{2\alpha + 1} (\tau^N(\xi) + \Delta t_N - \xi)^{2\alpha + 1}.
+    \end{multline*}
+    Since $0 \leq \tau^N(\xi) + \Delta t_N \leq \Delta t_N$, we find that
+    \begin{multline}
+        \left(\int_0^t(\tau^N(\xi) + \Delta t_N - \xi)\int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s\;\mathrm{d}\xi\right)^{1/2} \\
+        \leq t^{1/2}\frac{C_H L_Y}{(2\alpha + 1)^{1/2}} (\Delta t_N)^{\alpha + 1}.
+    \end{multline}
+    Since $\alpha = H - 1/2$, this term yields order $H + 1/2$.
+    
+    Similarly, using triangulation and the uniform boundedness of the second derivative $\partial^2 f/\partial y^2$ by a constant $L_{YY}$,
+    \begin{multline*}
+        \left|H(\xi, s) - H(\xi, \tau^N(s))\right| \\ 
+        \leq C_H L_{YY} \left|Y_{\xi, s} - Y_{\xi, \tau^N(s)}\right|(s - \xi)^\alpha + C_H L_Y ((\tau^N(s) - \xi)^\alpha - (s - \xi)^\alpha),
+    \end{multline*}
 \end{proof}
 
 \section{Numerical examples}
