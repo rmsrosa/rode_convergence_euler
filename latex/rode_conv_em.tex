@@ -885,8 +885,8 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     \begin{equation}
         \label{partialItoformula}
         \begin{aligned}
-            f(t, Y_t) & = f(0, Y_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, B_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})s^{\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s \\
-            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, B_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, B_{s, t})(t - s)^\alpha\;\mathrm{d} W_s,
+            f(t, Y_t) & = f(0, Y_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, Y_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})s^{\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s \\
+            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, Y_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})(t - s)^\alpha\;\mathrm{d} W_s,
         \end{aligned}
     \end{equation}
     for $0 \leq t \leq T$, where $\alpha = H-1/2$ (for notational simplicity); $C_H$ is given by
@@ -936,10 +936,10 @@ Observe that, from the It\^o isometry,
 \]
 Hence, $\mathbb{E}[|Z_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
 
-Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto B_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $Y_{t, t} = Y_t$ and $Y_{0, t} = 0 = Y_0$.
+Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto Y_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $Y_{t, t} = Y_t$ and $Y_{0, t} = 0 = Y_0$.
 \end{proof}
 
-Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $B_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $B_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
+Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $Y_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $Y_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
 
 According to \cref{propbasicestimate}, we need to estimate the steps of the form
 \[
@@ -976,10 +976,10 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
 \begin{proof}
     Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
     \begin{align*}
-        f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})\;\mathrm{d}\xi \\ 
-        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
-        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, B_{\xi, s}) (s - \xi)^{2\alpha} \;\mathrm{d}\xi \\
-        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, B_{\xi, s})(s - \xi)^\alpha\;\mathrm{d} W_\xi.
+        f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\;\mathrm{d}\xi \\ 
+        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
+        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{2\alpha} \;\mathrm{d}\xi \\
+        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^\alpha\;\mathrm{d} W_\xi.
     \end{align*}
     In terms of $G$ and $H$, this becomes
     \[
@@ -988,6 +988,7 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm}.
 \end{proof}
 
+Before we estimate \eqref{singlestepwithfBm}, we need to estimate a few terms involving $Z_{\xi, s}$ and 
 \begin{lem}
     \label{lemfBmsteps}
     Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Suppose these derivatives are uniformly bounded. Then,
@@ -1040,7 +1041,7 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
         \leq t^{1/2}\frac{C_H L_Y}{(2\alpha + 1)^{1/2}} (\Delta t_N)^{\alpha + 1}.
     \end{multline}
     Since $\alpha = H - 1/2$, this term yields order $H + 1/2$.
-    
+
     Similarly, using triangulation and the uniform boundedness of the second derivative $\partial^2 f/\partial y^2$ by a constant $L_{YY}$,
     \begin{multline*}
         \left|H(\xi, s) - H(\xi, \tau^N(s))\right| \\ 
