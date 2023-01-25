@@ -885,24 +885,24 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     \begin{equation}
         \label{partialItoformula}
         \begin{aligned}
-            f(t, Y_t) & = f(0, Y_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, Y_{s, t})\;\mathrm{d}s + \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})s^{\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s \\
-            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, Y_{s, t}) (t - s)^{2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})(t - s)^\alpha\;\mathrm{d} W_s,
+            f(t, Y_t) & = f(0, Y_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, Y_{s, t})\;\mathrm{d}s - \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})s^{-\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s \\
+            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, Y_{s, t}) (t - s)^{-2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})(t - s)^{-\alpha}\;\mathrm{d} W_s,
         \end{aligned}
     \end{equation}
-    for $0 \leq t \leq T$, where $\alpha = H-1/2$ (for notational simplicity); $C_H$ is given by
+    for $0 \leq t \leq T$, where $\alpha = 1/2 - H$ (for notational simplicity); $C_H$ is given by
     \begin{equation}
         \label{defCH}
-        C_H = \left( \frac{2H\Gamma(1-\alpha)}{\Gamma(1 - 2\alpha)\Gamma(1+\alpha)} \right)^{1/2};
+        C_H = \left( \frac{2H\Gamma(1+\alpha)}{\Gamma(1 + 2\alpha)\Gamma(1-\alpha)} \right)^{1/2};
     \end{equation}
     and
     \begin{equation}
         \label{defZHst}
-        Z_{s, t} = C_H \int_0^s \xi^{-\alpha}(t - \xi)^\alpha \;\mathrm{d}W_\xi
+        Z_{s, t} = C_H \int_0^s \xi^{\alpha}(t - \xi)^{-\alpha} \;\mathrm{d}W_\xi
     \end{equation}
     and
     \begin{equation}
         \label{defYHst}
-        Y_{s, t} = s^\alpha Z_{s, t} - \alpha \int_0^s \xi^{\alpha-1}Z_{\xi, \xi}\;\mathrm{d}\xi.
+        Y_{s, t} = s^{-\alpha} Z_{s, t} + \alpha \int_0^s \xi^{-\alpha-1}Z_{\xi, \xi}\;\mathrm{d}\xi.
     \end{equation}
     are defined for $0\leq s \leq t$.
 \end{lem}
@@ -914,30 +914,34 @@ One of the integral formulas for the fractional Brownian motion is \cite[Section
 \]
 for a suitable standard Wiener process $\{W_s\}_s$, with
 \[
-    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^\alpha (t - s)^\alpha - \alpha s^{-\alpha}\int_s^t\xi^{\alpha-1}(\xi - s)^\alpha\;\mathrm{d}\xi\right),
+    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^{-\alpha} (t - s)^{-\alpha} + \alpha s^{\alpha}\int_s^t\xi^{-\alpha-1}(\xi - s)^{-\alpha}\;\mathrm{d}\xi\right),
 \]
 and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
 Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Z_{s, t}$ and $Y_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defZHst} and \eqref{defYHst}, and notice that $Y_t = Y_{t, t}$ and $Y_0 = Y_{0, t} = 0$. As functions of $s$, both $Z_{s, t}$ and $Y_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
 \begin{equation}
     \label{YHstItoprocess}
-    \mathrm{d}_s Z_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
+    \mathrm{d}_s Z_{s, t} = C_H s^{\alpha}(t - s)^{-\alpha} \;\mathrm{d}W_s,
 \end{equation}
 and, hence,
 \begin{equation}
     \label{BHstItoprocess}
-    \mathrm{d}_s Y_{s, t} = \alpha s^{\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s + C_H (t - s)^\alpha \;\mathrm{d}W_s.
+    \mathrm{d}_s Y_{s, t} = -\alpha s^{-\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s + C_H (t - s)^{-\alpha} \;\mathrm{d}W_s.
 \end{equation}
 
 Observe that, from the It\^o isometry,
 \[
-    \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{-2\alpha}(t - \xi)^{2\alpha}\;\mathrm{d}\xi \\
-    \leq C_H^2 s^{-2\alpha}t^{2\alpha}s = C_H^2 s^{1-2\alpha}t^{2\alpha}.
+    \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{2\alpha}(t - \xi)^{-2\alpha}\;\mathrm{d}\xi \\
+    \leq C_H^2 s^{2\alpha}t^{-2\alpha}s = C_H^2 s^{1+2\alpha}t^{-2\alpha}.
 \]
-Hence, $\mathbb{E}[|Z_{s, t}|] = \mathcal{O}(s^{1/2-\alpha})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
+Hence, $\mathbb{E}[|Z_{s, t}|] = \mathcal{O}(s^{1/2+\alpha})$ and $\mathbb{E}[|Z_{s, s}|] = \mathcal{O}(s^{1/2})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
 
 Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto Y_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $Y_{t, t} = Y_t$ and $Y_{0, t} = 0 = Y_0$.
 \end{proof}
+
+\begin{rmk}
+    Notice we use $\alpha = 1/2 - H$ instead of $H - 1/2$ as defined in \cite[Section 1.8]{Mishura2008}. This is in order to have $\alpha$ positive, with $0 < \alpha < 1/2$, in the range of interest $0 < H < 1/2$, making it easier to reason about it.
+\end{rmk}
 
 Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $Y_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $Y_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
 
@@ -963,13 +967,13 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     for the families of processes $\{G(\xi, s)\}_{0\leq\xi\leq s}$ and $\{H(\xi, s)\}_{0\leq\xi\leq s}$, $0\leq s \leq T$, given by
     \begin{multline}
         \label{defGtaus}
-        G(\xi, s) = \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})  + \alpha \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi}) \\ 
-        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{2\alpha}
+        G(\xi, s) = \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) - \alpha \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{-\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi}) \\ 
+        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{-2\alpha}
     \end{multline}
     and
     \begin{equation}
         \label{defHtaus}
-        H(\xi, s) = C_H\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^\alpha.
+        H(\xi, s) = C_H\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^{-\alpha}.
     \end{equation}
 \end{lem}
 
@@ -977,9 +981,9 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
     \begin{align*}
         f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\;\mathrm{d}\xi \\ 
-        & \quad + \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
-        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{2\alpha} \;\mathrm{d}\xi \\
-        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^\alpha\;\mathrm{d} W_\xi.
+        & \quad - \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{-\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
+        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{-2\alpha} \;\mathrm{d}\xi \\
+        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^{-\alpha}\;\mathrm{d} W_\xi.
     \end{align*}
     In terms of $G$ and $H$, this becomes
     \[
@@ -1000,12 +1004,12 @@ Before we estimate \eqref{singlestepwithfBm}, we need to estimate a few terms in
 \begin{proof}
     We write, for $0 \leq \xi \leq \tau \leq s$,
     \begin{multline*}
-        Z_{\xi, s} - Z_{\xi, \tau} = C_H \int_0^\xi \eta^{-\alpha}(s - \eta)^\alpha \;\mathrm{d}W_\eta - C_H \int_0^\xi \eta^{-\alpha}(\tau - \eta)^\alpha \;\mathrm{d}W_\eta \\
-        = C_H \int_0^\xi \eta^{-\alpha}\left((s - \eta)^\alpha - (\tau - \eta)^\alpha\right)\;\mathrm{d}W_\eta.
+        Z_{\xi, s} - Z_{\xi, \tau} = C_H \int_0^\xi \eta^{\alpha}(s - \eta)^{-\alpha} \;\mathrm{d}W_\eta - C_H \int_0^\xi \eta^{\alpha}(\tau - \eta)^{-\alpha} \;\mathrm{d}W_\eta \\
+        = C_H \int_0^\xi \eta^{\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)\;\mathrm{d}W_\eta.
     \end{multline*}
     Using the Lyapunov inequality and the It\^o isometry,
     \[
-        \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] \leq C_H \left(\int_0^\xi \eta^{-2\alpha}\left((s - \eta)^\alpha - (\tau - \eta)^\alpha\right)^2\;\mathrm{d}\eta \right)^{1/2}.
+        \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] \leq C_H \left(\int_0^\xi \eta^{2\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)^2\;\mathrm{d}\eta \right)^{1/2}.
     \]
 \end{proof}
 
@@ -1050,24 +1054,24 @@ Now we are ready to estimate \eqref{singlestepwithfBm}
     \end{equation}
     Now we need to estimate each integral. The integrals involving $H(\xi,s)$ are easier. Since the partial derivatives of $f$ are uniformly bounded, we have, from \eqref{defHtaus}, that
     \[
-        \left|H(\xi, s)\right| \leq C_H L_Y (s - \xi)^\alpha,
+        \left|H(\xi, s)\right| \leq C_H L_Y (s - \xi)^{-\alpha},
     \]
     for any $0\leq \xi \leq s \leq T$, for a suitable constant $L_Y$ bounding $\partial f/\partial y$. Thus,
     \begin{multline*}
-        \int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} C_H^2 L_Y^2 (s - \xi)^{2\alpha} \;\mathrm{d}s \\
-        = \frac{C_H^2 L_Y^2}{2\alpha + 1} (\tau^N(\xi) + \Delta t_N - \xi)^{2\alpha + 1}.
+        \int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} C_H^2 L_Y^2 (s - \xi)^{-2\alpha} \;\mathrm{d}s \\
+        = \frac{C_H^2 L_Y^2}{1-2\alpha} (\tau^N(\xi) + \Delta t_N - \xi)^{1-2\alpha}.
     \end{multline*}
     Since $0 \leq \tau^N(\xi) + \Delta t_N \leq \Delta t_N$, we find that
     \begin{multline}
         \left(\int_0^t(\tau^N(\xi) + \Delta t_N - \xi)\int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left|H(\xi, s)\right|^2\right] \;\mathrm{d}s\;\mathrm{d}\xi\right)^{1/2} \\
-        \leq t^{1/2}\frac{C_H L_Y}{(2\alpha + 1)^{1/2}} (\Delta t_N)^{\alpha + 1}.
+        \leq t^{1/2}\frac{C_H L_Y}{(1-2\alpha)^{1/2}} (\Delta t_N)^{1-\alpha}.
     \end{multline}
-    Since $\alpha = H - 1/2$, this term yields order $H + 1/2$.
+    Since $\alpha = 1/2 - H$, this term yields order $H + 1/2$.
 
     Similarly, using triangulation and the uniform boundedness of the second derivative $\partial^2 f/\partial y^2$ by a constant $L_{YY}$,
     \begin{multline*}
         \left|H(\xi, s) - H(\xi, \tau^N(s))\right| \\ 
-        \leq C_H L_{YY} \left|Y_{\xi, s} - Y_{\xi, \tau^N(s)}\right|(s - \xi)^\alpha + C_H L_Y ((\tau^N(s) - \xi)^\alpha - (s - \xi)^\alpha),
+        \leq C_H L_{YY} \left|Y_{\xi, s} - Y_{\xi, \tau^N(s)}\right|(s - \xi)^{-\alpha} + C_H L_Y ((\tau^N(s) - \xi)^{-\alpha} - (s - \xi)^{-\alpha}),
     \end{multline*}
 \end{proof}
 
