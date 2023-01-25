@@ -896,12 +896,12 @@ Fortunately, for the error estimates, we assume the derivatives are continuous a
     \end{equation}
     and
     \begin{equation}
-        \label{defYHst}
+        \label{defZHst}
         Z_{s, t} = C_H \int_0^s \xi^{-\alpha}(t - \xi)^\alpha \;\mathrm{d}W_\xi
     \end{equation}
     and
     \begin{equation}
-        \label{defBHst}
+        \label{defYHst}
         Y_{s, t} = s^\alpha Z_{s, t} - \alpha \int_0^s \xi^{\alpha-1}Z_{\xi, \xi}\;\mathrm{d}\xi.
     \end{equation}
     are defined for $0\leq s \leq t$.
@@ -918,7 +918,7 @@ for a suitable standard Wiener process $\{W_s\}_s$, with
 \]
 and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
 
-Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Z_{s, t}$ and $Y_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defYHst} and \eqref{defBHst}, and notice that $Y_t = Y_{t, t}$ and $Y_0 = Y_{0, t} = 0$. As functions of $s$, both $Z_{s, t}$ and $Y_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
+Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Z_{s, t}$ and $Y_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defZHst} and \eqref{defYHst}, and notice that $Y_t = Y_{t, t}$ and $Y_0 = Y_{0, t} = 0$. As functions of $s$, both $Z_{s, t}$ and $Y_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
 \begin{equation}
     \label{YHstItoprocess}
     \mathrm{d}_s Z_{s, t} = C_H s^{-\alpha}(t - s)^\alpha \;\mathrm{d}W_s,
@@ -988,7 +988,29 @@ Now we need to estimate the steps. We restrict the analysis to the case $0 < H <
     Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm}.
 \end{proof}
 
-Before we estimate \eqref{singlestepwithfBm}, we need to estimate a few terms involving $Z_{\xi, s}$ and 
+Before we estimate \eqref{singlestepwithfBm}, we need to estimate a few terms involving $Z_{\xi, s}$ and $Y_{\xi, s}$.
+\begin{lem}
+    \label{lemZYestimates}
+    For $Z_{\xi, s}$ defined in \eqref{defZHst}, we have
+    \begin{equation}
+        \mathbb{E}\left[|Z_{\xi, s}|\right]
+    \end{equation}
+\end{lem}
+
+\begin{proof}
+    We write, for $0 \leq \xi \leq \tau \leq s$,
+    \begin{multline*}
+        Z_{\xi, s} - Z_{\xi, \tau} = C_H \int_0^\xi \eta^{-\alpha}(s - \eta)^\alpha \;\mathrm{d}W_\eta - C_H \int_0^\xi \eta^{-\alpha}(\tau - \eta)^\alpha \;\mathrm{d}W_\eta \\
+        = C_H \int_0^\xi \eta^{-\alpha}\left((s - \eta)^\alpha - (\tau - \eta)^\alpha\right)\;\mathrm{d}W_\eta.
+    \end{multline*}
+    Using the Lyapunov inequality and the It\^o isometry,
+    \[
+        \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] \leq C_H \left(\int_0^\xi \eta^{-2\alpha}\left((s - \eta)^\alpha - (\tau - \eta)^\alpha\right)^2\;\mathrm{d}\eta \right)^{1/2}.
+    \]
+\end{proof}
+
+
+Now we are ready to estimate \eqref{singlestepwithfBm}
 \begin{lem}
     \label{lemfBmsteps}
     Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Suppose these derivatives are uniformly bounded. Then,
