@@ -886,7 +886,7 @@ where the symbol $\diamond$ is the \emph{Wick product} \cite[Definition A.1.7]{B
 On an interval of $\mathbb{R}$, this is defined as
 \begin{equation}
     \label{defWISintegral}
-    \int_0^t Z_s\;\mathrm{d}Y_s = \int_0^t \left(\chi_{[0, t]} \;Z_s \right)\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]} \;Z_s \right)\diamond W_s^H \;\mathrm{d}s,
+    \int_0^t Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]} \;Z_s \right)\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]} \;Z_s \right)\diamond W_s^H \;\mathrm{d}s,
 \end{equation}
 where $\chi_{[0, t]}$ denotes the characteristic function of the interval. For the calculus involving the WIS integral, it is important to note that the Wick product is commutative, additive and distributive \cite[Definition A.1.7]{BHOB2008}.
 
@@ -905,16 +905,15 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
 
 \begin{proof}
     Applying \eqref{fractionalItoformula}, we find
-    \begin{align*}
-        f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) & = \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \\
-        & \qquad + \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}Y_\xi \\
-        & \qquad + \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi
-    \end{align*}
+    \begin{multline*}
+        f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \\
+        + \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}Y_\xi + \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi
+    \end{multline*}
     Integrating in $s$ from $0$ to $t$ and using the definition \eqref{defWISintegral} of the WIS integral,
     \begin{align*}
-        \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
+        \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) \right. & \left. - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
         & = \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \;\mathrm{d}s \\
-        & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[s - \tau^N(s)]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}\xi \;\mathrm{d}s \\
+        & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}\xi \;\mathrm{d}s \\
         & \qquad + \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi \;\mathrm{d}s.
     \end{align*}
     Exchanging the order of integration gives
@@ -922,7 +921,7 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
         \begin{aligned}
             \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
             & = \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}\xi \\
-            & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[s - \tau^N(s)]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
+            & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
             & \qquad + \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi.
         \end{aligned}
     \end{equation}
@@ -936,7 +935,12 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
         \mathbb{E}\left[\left|\int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi\right|\right] \\
         \leq \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} L_{YY} \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi \leq \frac{L_{YY}}{2H} t^{2H} \Delta t_N.
     \end{multline}
-    As for the term with the WIS integral ... 
+    As for the term with the WIS integral, we use that $W_t^H = M^H W_t$ and that $M^H$ is symmetric with respect \cite{BHOB2008} to write
+    \begin{align*}
+        \int_0^t \int_\mathbb{R} & \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
+        & = \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond M^H W_\xi \;\mathrm{d}s \;\mathrm{d}\xi \\
+        & = \int_0^t \int_\mathbb{R} \left(M^H\left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right)\right) \diamond W_\xi \;\mathrm{d}s \;\mathrm{d}\xi.
+    \end{align*} 
 \end{proof}
 
 \subsection{Alternative way but unsuccessful so far}
