@@ -1,6 +1,6 @@
 using BenchmarkTools
 
-function mysum1(u)
+function mysum1(u::Vector)
     r = u[1]
     @inbounds for i in 2:length(u)
         r += u[i]
