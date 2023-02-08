@@ -44,7 +44,7 @@
 
 % Article info
 
-\title[Strong order convergence of Euler for Random ODEs]{Novel approach to error estimation for approximations of random ordinary differential equations and sharp estimates for the strong order convergence of the Euler method}
+\title[Strong order convergence of Euler for Random ODEs]{Novel approach to error estimation for approximations of random ordinary differential equations with sharper estimates for the strong order convergence of the Euler method}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
@@ -868,7 +868,7 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 \section{The case of fractional Brownian motion noise}
 
-For this case, we need a version of the It\^o formula for fractional Brownian motion, known as \emph{fractional It\^o formula}. The case $0 < H < 1/2$ is a delicate one, thought. A general formula that includes this case is given in \cite[Theorem 4.2.6]{BHOB2008} and in \cite[Theorem 4.1][Bender2003], for instance, saying that, for a fractional Brownian motion $\{Y_t\}_t$ with Hurst parameter $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
+For this case, we need a version of the It\^o formula for fractional Brownian motion, known as \emph{fractional It\^o formula}. The case $0 < H < 1/2$ is a delicate one, thought. A general formula that includes this case is given in \cite[Theorem 4.2.6]{BHOB2008} and in \cite[Theorem 4.1]{Bender2003}, for instance, saying that, for a fractional Brownian motion $\{Y_t\}_t$ with Hurst parameter $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
 \begin{multline}
     \label{fractionalItoformula}
     f(t, Y_t) = f(0, Y_0) + \int_0^t \frac{\partial f}{\partial s}(s, Y_s)\;\mathrm{d}s \\
@@ -881,16 +881,94 @@ The WIS integral is defined (see \cite[Definition 4.2.2]{BHOB2008}) for a WIS-in
     \label{defWISintegralinR}
     \int_\mathbb{R} Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} Z_s \diamond W_s^H \;\mathrm{d}s,
 \end{equation}
-where the symbol $\diamond$ is the \emph{Wick product} \cite[Definition A.1.7]{BHOB2008} between the two processes, and $\{W_t^H\}_{t}$ is a \emph{fractional white noise} \cite[eq. (4.16)]{BHOB2008}, both depending on the expansion in terms of polynomial chaos, over an \emph{Hida} space $(\mathcal{S})^*$ of stochastic distributions \cite[Definition A.1.4]{BHOB2008}. In such a space, we rigorously have that a fractional white noise is the derivative of a fractional Brownian motion. We also have the relation $W_t^H = M^HW_t$ with the standard white noise (corresponding to $H=1/2$), associated with a standard Brownian motion, and where $M^H$ is the $M$ operator defined via Fourier transform by $\widehat{Mf}(\eta) = |\eta|^{H-1/2}\hat{f}(\eta)$, $\eta\in \mathbb{R}$ \cite[Definition 4.1.2]{BHOB2008}.
+where the symbol $\diamond$ is the \emph{Wick product} \cite[Definition A.1.7]{BHOB2008} between the two processes, and $\{W_t^H\}_{t}$ is a \emph{fractional white noise} \cite[eq. (4.16)]{BHOB2008}, both depending on the expansion in terms of polynomial chaos, over an \emph{Hida} space $(\mathcal{S})^*$ of stochastic distributions \cite[Definition A.1.4]{BHOB2008}. In such a space, we rigorously have that a fractional white noise is the derivative of a fractional Brownian motion. We also have the relation $W_t^H = M_t^HW_t$ with the standard white noise (corresponding to $H=1/2$), associated with a standard Brownian motion, and where $M_t^H$ is the (deterministic) operator defined via Fourier transform by $\widehat{M_t^Hf}(\eta) = |\eta|^{H-1/2}\hat{f}(\eta)$, $\eta\in \mathbb{R}$ \cite[Definition 4.1.2]{BHOB2008}, acting on each sample path. We use the subscript $t$ in $M_t$ just to make it explicit that it acts on the variable $t$ of the process $W_t$, which is useful when combining it with the dependency on other variables.
 
 On an interval of $\mathbb{R}$, this is defined as
 \begin{equation}
     \label{defWISintegral}
-    \int_0^t Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]} \;Z_s \right)\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]} \;Z_s \right)\diamond W_s^H \;\mathrm{d}s,
+    \int_0^t Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]}(s) \;Z_s \right)\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]}(s) \;Z_s \right)\diamond W_s^H \;\mathrm{d}s,
 \end{equation}
 where $\chi_{[0, t]}$ denotes the characteristic function of the interval. For the calculus involving the WIS integral, it is important to note that the Wick product is commutative, additive and distributive \cite[Definition A.1.7]{BHOB2008}.
 
-In turn, for estimating the integral with respect to $\{Y_s\}_s$, we need a version of the It\^o isometry. A general one is the \emph{WIS isometry} in \cite[Theorem 4.5.6]{BHOB2008}, which is, however, a delicate formula involving fractional derivatives. Fortunately, the partial derivative $\partial_y f$ is uniformly bounded, allowing us to estimate it more directly via the Wick product.
+In turn, for estimating the integral with respect to $\{Y_s\}_s$, a version of the It\^o isometry would be useful. A general one is the \emph{WIS isometry} in \cite[Theorem 4.5.6]{BHOB2008}:
+\begin{multline}
+    \label{WISisometry}
+    \mathbb{E}\left[\left(\int_\mathbb{R} Z_t \;\mathrm{d}Y_t\right)^2\right] = \mathbb{E}\left[\int_\mathbb{R} (M^H Z_t)^2 \;\mathrm{d}t\right] \\
+    + \mathbb{E}\left[ \int_\mathbb{R}\int_\mathbb{R} D_t^H (M_s^H)^2Z_s \cdot D_s^H(M_t^H)^2 Z_t\;\mathrm{d}s \;\mathrm{d}t \right].
+\end{multline}
+
+
+This, however, is a delicate formula involving fractional derivatives. I don't even understand the mixed-up variables in $D_t^H (M_s^H)^2Z_s$ and $D_s^H(M_t^H)^2 Z_t$.
+
+\subsection{Unsuccesful approach so far} 
+
+Fortunately, the partial derivative $\partial_y f$ is uniformly bounded, allowing us to estimate it more directly via the Wick product.
+
+Concerning the Wick product, we also use the fact that it satisfies (see \cite[Corollary 2.10]{GHLOUZ1993})
+\begin{equation}
+    \label{expectationWick}
+    \mathbb{E}[X \diamond Y] = \mathbb{E}[X] \mathbb{E}[Y],
+\end{equation}
+for two integrable processes.
+
+\begin{lem}
+    \label{estimateMchibounded}
+    Let $a < b$ and let $g=g(\eta)$ be a uniformly bounded real-valued continuous function. Then, for any $0 < H < 1$, $H \neq 1/2$,
+    \[
+        \left|M^H (\chi_{[a, b]}g)(\xi)\right| \leq \frac{C_H}{H - 1/2} (\sup_\mathbb{R} |g|) \left( \frac{(a - \xi)}{|a - \xi|^{3/2 - H}} - \frac{(b - \xi)}{|b - \xi|^{3/2 - H}}\right).
+    \]
+    for every $\xi\in \mathbb{R}$, $\xi \neq a, b$.
+\end{lem}
+
+\begin{proof}
+    The proof is inspired by the computation of $M^H\chi_{[a, b]}$ (i.e. without $g$) in \cite[Example 4.1.4]{BHOB2008}, but the presence of $g$ complicates things considerably. That computation uses the following expression for $M^H$ as given in \cite[eq. (4.2)]{BHOB2008}:
+    \[
+        M^H f(\xi) = - \frac{C_H}{H-1/2}\frac{\mathrm{d}}{\mathrm{d}\xi} \int_\mathbb{R} \frac{(\xi - \eta)}{|\xi - \eta|^{3/2-H}} f(\eta) \;\mathrm{d}\eta,
+    \]
+    for a suitable constant $C_H$ and smooth test function $f$ in the Schwartz space. This can be extended to any function for which $|\eta|^{1/2 - H}f(\eta)$ is integrable, such as $f(\eta) = \chi_{[a, b]}g(\eta)$. In this case, we have
+    \[
+        M^H (\chi_{[a, b]}g)(\xi) = - \frac{C_H}{H-1/2}\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \frac{(\xi - \eta)}{|\xi - \eta|^{3/2-H}} g(\eta) \;\mathrm{d}\eta.
+    \]
+    The presence of the term $g$ complicates things considerably, however. In order to handle this term, we regularize the kernel $K(s) = - s/|s|^{3/2-H}$ to remove its singularity. Given $\varepsilon > 0$, we truncate it as
+    \[
+        K_\varepsilon(s) = \min\{\max\{K(s), K(\varepsilon)\}, K(-\varepsilon)\}.
+    \]
+    % ξ = -10.0:0.05:10.0
+    % K(ξ; ε = 0.2, H = 1/4) = min(max(- ξ / abs(ξ)^(3/2 - H), - 1/ε^(1/2 - H)), 1/ε^(1/2 - H))
+    % plot(ξ, K, legend=nothing)
+    
+    By the (odd) symmetry $K_\varepsilon(s) = - K_\varepsilon(-s)$, we have the (even) symmetry of the derivative $K_\varepsilon'(s) = K_\varepsilon'(-s)$, so that
+    \[
+        \frac{\mathrm{d}}{\mathrm{d}\xi} K_\varepsilon(\xi - \eta) = K_\varepsilon'(\xi - \eta) = K_\varepsilon'(\eta - \xi) = \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) = - \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\xi - \eta).
+    \]
+    Now, since the integration interval is finite and $K_\varepsilon$ has no singularity, we are allowed to pass the derivative inside the integral and obtain
+    \[
+        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K_\varepsilon(\xi - \eta) g(\eta) \;\mathrm{d}\eta = \int_a^b \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) g(\eta) \;\mathrm{d}\eta.
+    \]
+    Since the derivative $K_\varepsilon'$ is non-negative, we bound this term as
+    \begin{multline*}
+        \left|\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K_\varepsilon(\xi - \eta) g(\eta) \;\mathrm{d}\eta \right| \leq (\sup_\mathbb{R} |g|) \int_a^b \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) \;\mathrm{d}\eta \\
+        = (\sup_\mathbb{R} |g|) \left(K_\varepsilon(b - \xi) - K_\varepsilon(a - \xi)\right).
+    \end{multline*}
+    Now we estimate
+    \[
+        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta.
+    \]
+    For $\xi \leq a$ or $\xi \geq b$, this term vanishes. Consider then $a < \xi < b$ and suppose $\varepsilon < \min\{\xi - a, b - \xi\}$. In this case,
+    \[
+        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta = \frac{\mathrm{d}}{\mathrm{d}\xi} \int_{\xi - \varepsilon}^{\xi + \varepsilon} \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta    
+    \]
+
+    We let $\varepsilon \rightarrow 0$ and find that
+    \[
+        \left|\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K(\xi - \eta) g(\eta) \;\mathrm{d}\eta \right| \leq (\sup_\mathbb{R} |g|) \left(K(b - \xi) - K(a - \xi)\right),
+    \]
+    almost surely (i.e. for $\xi \neq a, b$). Back to $M^H (\chi_{[a, b]}g)$, this yields
+    \[
+        \left|M^H (\chi_{[a, b]}g)(\xi)\right| \leq \frac{C_H}{H - 1/2} (\sup_\mathbb{R} |g|) \left( \frac{(a - \xi)}{|a - \xi|^{3/2 - H}} - \frac{(b - \xi)}{|b - \xi|^{3/2 - H}}\right).
+    \]
+    This completes the proof.
+\end{proof}
 
 According to \cref{propbasicestimate}, we need to estimate steps of the form
 \[
@@ -913,15 +991,15 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
     \begin{align*}
         \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) \right. & \left. - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
         & = \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \;\mathrm{d}s \\
-        & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}\xi \;\mathrm{d}s \\
+        & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}\xi \;\mathrm{d}s \\
         & \qquad + \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi \;\mathrm{d}s.
     \end{align*}
-    Exchanging the order of integration gives
+    As in the other cases, we now exchange the order of integration, obtaining
     \begin{equation}
         \begin{aligned}
             \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
             & = \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}\xi \\
-            & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
+            & \qquad + \int_\mathbb{R} \int_0^t \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
             & \qquad + \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi.
         \end{aligned}
     \end{equation}
@@ -935,12 +1013,26 @@ Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involv
         \mathbb{E}\left[\left|\int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi\right|\right] \\
         \leq \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} L_{YY} \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi \leq \frac{L_{YY}}{2H} t^{2H} \Delta t_N.
     \end{multline}
-    As for the term with the WIS integral, we use that $W_t^H = M^H W_t$ and that $M^H$ is symmetric with respect \cite{BHOB2008} to write
+    As for the term with the WIS integral, we use that $W_t^H = M^HW_t$, that $M^H$ is symmetric, and that the Wick product is distributive to write
     \begin{align*}
-        \int_0^t \int_\mathbb{R} & \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
-        & = \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond M^H W_\xi \;\mathrm{d}s \;\mathrm{d}\xi \\
-        & = \int_0^t \int_\mathbb{R} \left(M^H\left(\chi_{[\tau^N(s), s]}\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right)\right) \diamond W_\xi \;\mathrm{d}s \;\mathrm{d}\xi.
-    \end{align*} 
+        \int_\mathbb{R} \int_0^t & \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
+        & = \int_\mathbb{R} \int_0^t \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond M^H W_\xi \;\mathrm{d}s \;\mathrm{d}\xi \\
+        & = \int_\mathbb{R} \int_0^t \left(M^H \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi)\right) \right) \diamond W_\xi \;\mathrm{d}s \;\mathrm{d}\xi.
+    \end{align*}
+    The Wick product satisfies
+    \[
+        \mathbb{E}\left[\left|A \diamond B\right|\right] \leq \sqrt{\mathbb{E}\left[A^2\right]\mathbb{E}\left[B^2\right]}.
+    \]
+    In particular,
+    \begin{multline*}
+        \mathbb{E}\left[\left(M^H\left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right)\right)^2\right]^{1/2} \\
+        \leq \frac{C_H}{(H - 1/2)} (\sup_\mathbb{R} |g|) \left( \frac{(\tau^N(s) - \xi)}{|\tau^N(s) - \xi|^{3/2 - H}} - \frac{(s - \xi)}{|s - \xi|^{3/2 - H}}\right)
+    \end{multline*}
+    and
+    \[
+        \mathbb{E}\left[W_\xi^2\right]^{1/2} = 1.
+    \]
+    Hmm, this doesn't seem like it is going to work. I can only picture a $\Delta t_N^{H}$ with this approach.
 \end{proof}
 
 \subsection{Alternative way but unsuccessful so far}
@@ -1554,6 +1646,8 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
     \bibitem{BHOB2008} F. Biagini, Y. Hu, B. Oksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
+
+    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr\o n, B. \O ksendal, J. Ub\o e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. Högnas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
     \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 
