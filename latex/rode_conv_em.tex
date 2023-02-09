@@ -93,14 +93,14 @@ with the initial condition
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under further suitable conditions, that the Euler scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, it can be show \cite{GruneKloeden2001}, under suitable regularity conditions on $f$, that the Euler scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and is of order $H + 1/2$, when $0 < H < 1/2$.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continous, but the strong convergence is of order 1 only when $1/2 \leq H < 1$, dropping to order $H + 1/2$, when $0 < H < 1/2$, which is still higher the H\"older exponent of the sample paths.
 
 The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
 \begin{equation}
@@ -140,23 +140,40 @@ either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The
 Then, we find that
 \begin{multline*}
     \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right],
+    \leq \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right|\right].
 \end{multline*}
-which yields the strong order 1 convergence provided the remaining expectation is finite.
 
-In the case of an It\^o integral, this is exactly what we assume, because the It\^o integral is not order preserving; the bound on the remaining expectation is obtained via It\^o isometry. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
+In the case of an It\^o noise, we assume
+\[
+    \mathrm{d}F_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
+\]
+with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, and we bound the right hand side using the Lyapunov inequality and the It\^o isometry:
+\begin{align*}
+    \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right|\right] & \leq \left( \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[A_\xi^2]\;\mathrm{d} \xi\right)^{1/2} \\ 
+    & \quad + \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \mathbb{E}[B_\xi] \;\mathrm{d}\xi  \\ 
+    & \leq \Delta t_N\left(\left( \int_0^{t_j} \mathbb{E}[A_\xi^2]\;\mathrm{d} \xi \right)^{1/2} + \int_0^{t_j} \mathbb{E}[B_\xi] \;\mathrm{d}\xi \right).
+\end{align*}
+which yields the strong order 1 convergence, provided the integrals are finite.
+
+In the case of noises with bounded variation, we may actually relax the above condition and assume the steps are bounded by a process $\{\bar F_t\}_{t\in I}$ with monotonic non-decreasing sample paths,
 \[
     |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
 \]
-Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check. These two cases are treated in \cref{secmonotonicbound} (for the bounded variation case; see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (for the It\^o noise case; see \cref{lemItostep} and \cref{thmItostep}).
+Using the monotonicity, this yields
+\[
+    \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} \bar F_\xi \right|\right] \leq \Delta t_N \left(\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0]\right),
+\]
+yielding, again, strong order 1 convergence.
+
+These two cases are treated in \cref{secmonotonicbound} (for the bounded variation case; see \cref{lemmonotonicbound} and \cref{thmmonotonicbound}) and \cref{secItonoise} (for the It\^o noise case; see \cref{lemItostep} and \cref{thmItostep}).
 
 The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
 
-In the case of the fractional Brownian motion with Hurst parameter $0 < H < 1/2$, we have, essentially,
+We complement the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not have a general proof of this order of convergence in the case of fBm noise, but in the example considered, we essentially have
 \[
     F_s - F_\tau \sim \int_\tau^s (s-\tau)^{H-1/2}\;\mathrm{d}W_\xi.
 \]
-Then,
+In this case,
 \begin{align*}
     \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\ 
     & \qquad \sim \int_0^{t_j} \int_{\tau^N(s)}^s (s-\tau^N(s))^{H-1/2} \;\mathrm{d} W_\xi\;\mathrm{d}s \\
@@ -164,14 +181,14 @@ Then,
     & \qquad \sim \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \tau^N(\xi))^{H+1/2} \;\mathrm{d} W_\xi \\
     & \qquad = (\Delta t_N)^{H+1/2} \int_0^{t_j} \;\mathrm{d} W_\xi.
 \end{align*}
-which, upon taking the expectation, yields a strong convergence of order $H+1/2$.
-
-We end the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence.
+which, upon taking the expectation, yields a strong convergence of order $H + 1/2$.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
 
-For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017}. We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
+For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017} (see also \cite[Section 3.3]{NeckelRupp2013}).
+
+We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
 
 \begin{stdhyp}
     \label{standinghypotheses1}
@@ -183,7 +200,7 @@ For the notion and main results on pathwise solution for RODEs, we refer the rea
                 |f(t, x_1, y) - f(t, x_2, y)| \leq L_X |x_1 - x_2|, \quad \forall t \in I, \;\forall x_1, x_2, y\in\mathbb{R}.
             \end{equation}
 
-        \item \label{standinghypotheses1Car} We also assume that $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
+        \item \label{standinghypotheses1Car} The mapping $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, Y_t(\omega))$ is continuous on $x\in \mathbb{R}$, for almost every $(t, \omega)\in I\times \Omega$;
                 \item The mapping $t \mapsto f(t, x, Y_t(\omega))$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}$ and each sample path $t \mapsto Y_t(\omega)$;
@@ -413,6 +430,8 @@ Combining the two previous results we obtain
 \end{prop}
 
 \begin{proof}
+    Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by taking the expectation of \eqref{Etjbasicbound} in \cref{lembasicestimate} and properly estimating the first two terms on the right hand side. The first term is handled with the assumption \eqref{EX0X0N}. We just need to take care of the second term.
+    
     Under \cref{standinghypotheses1}, \cref{estimatesecondterminglobalerror} applies and estimate \eqref{estimatesecondterminglobalerrorintegral} holds.
     Using \eqref{EX0strongbound} and \eqref{EMtstrongbound}, that estimate yields
     \[
@@ -431,7 +450,7 @@ Combining the two previous results we obtain
         \int_0^{t_j} \mathbb{E}[|X_s - X_{\tau^N(s)}]| \;\mathrm{d}s \leq \Delta t_N\left(\mathbb{E}[|X_0|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
     \end{equation}
 
-    Now we turn our attention to \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} gives
+    Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} gives
     \begin{multline*}
         \mathbb{E}\left[|X_{t_j} - X_{t_j}^N|\right] \leq \left( \mathbb{E}\left[|X_0 - X_0^N|\right] + L_X \int_0^{t_j} \mathbb{E}\left[|X_s - X_{\tau^N(s)}|\right] \;\mathrm{d}s \right. \\
         \left. \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]\right) e^{L_X t_j}.
@@ -453,16 +472,17 @@ More precisely, we have the following result:
         \label{stepbound}
           |f(s, X_{\tau^N(s)}^N, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)},
       \end{equation}
-      where $\{\bar F_t\}$ is a real stochastic process satisfying
+      where $\{\bar F_t\}$ is a real stochastic process with monotonic nondecreasing sample paths and with
       \begin{equation}
         \label{expectstepmonotonic}
-        \mathbb{E}[|\bar F_t|] \textrm{ is monotonic nondecreasing and bounded in } t\in I.
+        \mathbb{E}[\bar F_t] \textrm{ uniformly bounded on } t\in I.
       \end{equation}
       Then,
-      \begin{equation}
+      \begin{multline}
         \label{expectintfboundbyG}
-          \mathbb{E}\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N,
-      \end{equation}
+          \mathbb{E}\left[\left|\int_0^t \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
+          \leq (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N,
+      \end{multline}
       for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
 \end{lem}
 
@@ -481,7 +501,7 @@ More precisely, we have the following result:
     \begin{align*}
       \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s & = \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{0}]) \;\mathrm{d}s.
     \end{align*}
-    Using the monotonicity and the condition that $t \leq \Delta t_N$,
+    Using the monotonicity of $\{\bar F_t\}$ and the condition that $t \leq \Delta t_N$,
     \begin{multline*}
       \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_0^t (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0]) \;\mathrm{d}s  \\
       = (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])t \leq (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N.
@@ -501,7 +521,7 @@ More precisely, we have the following result:
       \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s \leq \int_{t-\Delta t_N}^t \mathbb{E}[\bar F_t] \;\mathrm{d}s - \mathbb{E}[\bar F_0]\Delta t_N= (\mathbb{E}[\bar F_t] - \mathbb{E}[\bar F_0])\Delta t_N.
     \]
 
-    Putting the estimates together proves \eqref{expectintfboundbyG}.
+    Putting the estimates together and using the boundedness \eqref{expectstepmonotonic} prove \eqref{expectintfboundbyG}.
 \end{proof}
 
 \begin{thm}
@@ -532,7 +552,7 @@ More precisely, we have the following result:
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \eqref{thmmonotonicboundstrongordernew}.
 \end{proof}
 
-The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{expectstepmonotonic}, are not readily verified, but the following result gives more explicit conditions.
+The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{expectstepmonotonic}, are not readily verifiable, but the following result gives more explicit conditions.
 
 \begin{thm}
     \label{thmdiffmonotonicbound}
@@ -592,7 +612,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \bar F_t = (C_1 + C_2 |X_{\tau^N(t)}^N|)t + (C_3 + C_4 |X_{\tau^N(t)}^N|) V(\{Y_t\}_{t\in I}; 0, t).
     \]
-    It is clear that, not only the expectation, but all the sample paths of $\{F_t\}_{t\in I}$ are monotonic non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
+    It is clear that all the sample paths of $\{F_t\}_{t\in I}$ are monotonic non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
     \[
         \mathbb{E}[\bar F_T] \leq (C_1 + C_2 K_1)T + (C_3 + C_4K_1)\mathbb{E}[V(\{Y_t\}_{t\in I}; 0, T)^2] < \infty.
     \]
@@ -673,7 +693,7 @@ With that in mind, we first have the following result.
     Upon integration,
     \begin{multline*}
         \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
-        = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s
+        = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s.
     \end{multline*}
     Exchanging the order of integration, according to Fubini's theorem, yields
     \begin{align*}
@@ -800,7 +820,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
     \]
     Therefore, we are under the condition of \eqref{standinghypotheses1}.
 
-    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the fact the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
+    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o noise  \eqref{Itostep}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o noise follows from the It\^o formula and the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
     \begin{multline}
         \label{itoformula}
             \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
@@ -827,7 +847,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
 \end{proof}
 
 \begin{rmk}
-    In the case that the diffusion term $b = b(t, y)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and the Euler scheme is of strong order 1, otherwise, it has always been regarded to be of order 1/2 (CITATION...). Here, however, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
+    When the diffusion term $b = b(t, y) = b(t)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and in this case the Euler scheme is well known to be of strong order 1 \cite{HighamKloeden2021}. In the more general $b=b(t, y)$ case, however, the Euler scheme has always been regarded to be of order 1/2 \cite{GruneKloeden2001}. Here, though, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
 \end{rmk}
 
 \section{The mixed case}
@@ -838,7 +858,7 @@ Of course, it is possible to mix the two cases and have the following result com
 \begin{thm}
     \label{thmmixedcase}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itostep} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itostep} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$ with monotonic non-decreasing sample paths, i.e.
     \begin{equation}
         \label{stepHbound}
         |H_s^N - H_{\tau^N(s)}^N| \leq \bar H_s^N - \bar H_{\tau^N(s)}^N
@@ -846,7 +866,7 @@ Of course, it is possible to mix the two cases and have the following result com
     with
     \begin{equation}
       \label{expectstepHmonotonic}
-      \mathbb{E}[|\bar H_t|] \textrm{ is monotonic nondecreasing and bounded in } t\in I.
+      \mathbb{E}[\bar H_t] \textrm{ uniformly bounded on } t\in I.
     \end{equation}
     Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e. there exists a constant $C\geq 0$ such that
     \begin{equation}
@@ -1274,7 +1294,7 @@ Now we are ready to estimate \eqref{singlestepwithfBm_alt}
 
 \section{Numerical examples}
 
-In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above.
+In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We also illustrate the $H+1/2$ order of convergence in the case of a fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$.
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for samples $\omega_1, \ldots, \omega_M$, and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
@@ -1305,7 +1325,7 @@ at each mesh point.
 \[
     \epsilon^{N_i} = \max_{j=0, \ldots, N_i} \epsilon_{t_j}^{N_i}
 \]
-    \item Finally, we fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, for suitable $C$ and $p$, with $p$ giving the order of convergence.
+    \item Finally, we fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, via linear least-square regression in log scale, for suitable $C$ and $p$, with $p$ giving the order of convergence.
 \end{enumerate}
 
 \subsection{Linear homogeneous equation}
@@ -1411,23 +1431,8 @@ The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to
     \mathbb{E}\left[\left|e^{\sum_i Z_i} - 1\right|\right] \sim \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} \\
     = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
 \end{multline*}
-hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods. In fact, the Heun method, which also seems to be of strong order 1, converges with strong order 2 to the average solution when given the noise at the mesh points, i.e.
-\begin{equation}
-    \label{barXtlinearhomogeneousrode}
-    \bar X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + (t_{i+1}-t_i)^3/24\right)},
-\end{equation}
-or to the approximation discarding this term altogether, i.e.
-\begin{equation}
-    \label{tildeXtlinearhomogeneousrode}
-    \tilde X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i)\right)},
-\end{equation}
-but it falls down to strong order 1 when the correct distribution \eqref{Xtlinearhomogeneousrode} for the exact solution is considered. This highlights the importance of using either the right distribution to check the order of convergence, or a higher order approximation. The focus of this article is on the Euler method, not Heun's, so we do not pursuit this point further. We limit ourselves to displaying the Figure \ref{figheunconvergence}, on which our observations above are based.
+hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods.
 \end{rmk}
-
-\begin{figure}[htb]
-    \label{figheunconvergence}
-    \caption{Order of convergence of the Heun method for the equation $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$, towards sample paths of (i) exact solutions as in \eqref{Xtlinearhomogeneousrode}; (ii) average solutions as in \eqref{barXtlinearhomogeneousrode}; (iii) approximate solutions as in \eqref{barXtlinearhomogeneousrode}.}
-\end{figure}
 
 \subsection{Linear inhomogeneous equation}
 
@@ -1651,9 +1656,13 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 
     \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 
-    \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden (2017), \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
+    \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017. \href{https://link.springer.com/book/10.1007/978-981-10-6265-0}{DOI: 10.1007/978-981-10-6265-0}.
 
-    \bibitem{Mishura2008} Y. S. Mishura2008, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
+    \bibitem{HighamKloeden2021} D. J. Higham, P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
+
+    \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
+
+    \bibitem{NeckelRupp2013} F. Rupp, T. Neckel, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
 
 \end{thebibliography}
 
