@@ -1224,8 +1224,36 @@ See Neckel and Rupp pg 582 as a starting point of a model driven by a transport 
 \subsection{Fractional Brownian motion noise}
 
 Here, we consider again the linear equation
+\begin{equation}
+    \label{linearnonhomogeneousrode2}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = -X_t + B^H_t, \qquad 0 \leq t \leq T, \\
+        \left. X_t \right|_{t = 0} = X_0,
+      \end{cases}
+\end{equation}
+except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. We show that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence.
 
-except that the noise $\{Y_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. We show that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For this reason, we leave the nonlinear case to a subsequent work and focus on the linear example.
+Although the above linear equation has the explicit solution
+\begin{equation}
+    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
+\end{equation}
+we check the convergence numerically by solving the equation with the Euler method itself, but using as target the approximation in the finest mesh.
+
+In this particular case, we can prove rigorously the strong order of convergence is $H+1/2$, for $0 < H < 1/2$. Indeed, we need to estimate the last term in \eqref{expectedestimateglobalerrorintegral}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
+\[
+    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
+\]
+for $0 \leq s \leq T$. Now, we use the expression
+\[
+    B^H_s = \int_0^s 
+\]
+
+Hence, the last term in \eqref{expectedestimateglobalerrorintegral} becomes
+
+\begin{align*}
+    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]
+\end{align*}
+
 
 \section*{Acknowledgments}
 
