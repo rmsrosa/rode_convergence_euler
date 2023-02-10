@@ -1256,21 +1256,38 @@ where $\Gamma(\cdot)$ is the well-known Gamma function. For the step, this means
     \left. + \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi\right).
 \end{multline}
 Then, using Fubini's Theorem to exchange the order of integration,
+\begin{equation}
+    \label{integralofstepfBm}
+    \begin{aligned}
+        \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
+        & = \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+        & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+        & = \frac{1}{\Gamma(H + 1/2)}\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+        & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\\
+        & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+    \end{aligned}
+\end{equation}
+
+For the first term,
 \begin{align*}
-    \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
-    & = \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
-    & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi \;\mathrm{d}s \\
-    & = \frac{1}{\Gamma(H + 1/2)}\int_{-\infty}^{t_j} \int_{\max\{0, \tau^N(\xi)+\Delta t_N\}}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\\
-    & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+    \int_{0}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\
+    & = \int_{0}^{\Delta t_N} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\
+    & \quad + \int_{\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (s - \Delta t_N -\xi)^{H-1/2}\right) \;\mathrm{d}s \\
+    & \leq \int_0^{\Delta t_N}\frac{(s - \tau^N(s))^{H - 1/2}}{(s - \xi)^{H-1/2}(\tau^N(s) - \xi)^{H - 1/2}} \;\mathrm{d}s \\
+    & \qquad + \frac{1}{H + 1/2} \left((t_j - \xi)^{H + 1/2} - (t_j - \Delta t_N - \xi)^{H + 1/2}\right) \\
+    & \qquad + \frac{1}{H + 1/2} \left((\Delta t_N - \xi)^{H + 1/2} - (-\xi)^{H + 1/2}\right) \\
+    & \leq C \Delta t_N^{H + 1/2} \quad (CHECK!)
 \end{align*}
 
-For the second term, we have
+
+For the last term, we have
 \begin{multline*}
     0 \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s = \frac{1}{H + 1/2} (\tau^N(\xi) + \Delta t_N - \xi)^{H + 1/2} \\
     \leq \frac{1}{H + 1/2} \Delta t_N^{H + 1/2}.
 \end{multline*}
 so that, using the Lyapunov inequality and the It\^o isometry
 \begin{multline}
+    label{thirdtermfBm}
     \mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     \leq \left( \int_0^{t_j} \left(\int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s\right)^2 \;\mathrm{d}\xi\right)^{1/2} \\ 
     \leq \left( \int_0^{t_j} \Delta t_N^{2H + 1} \;\mathrm{d}\xi\right)^{1/2} \leq t_j^{1/2} \Delta t_N^{H + 1/2}.
