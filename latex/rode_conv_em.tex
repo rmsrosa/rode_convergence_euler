@@ -335,7 +335,44 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimate for the global pathwise error}
 
-Here we derive an estimate, under minimal hypotheses, that is the basis for the estimates in specific cases.
+Here we derive an estimate, under minimal hypotheses, that is the basis for the estimates in specific cases. For that, we use a discrete version of the Grownwall lemma. Here we state a particular case of a result that can be found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}).
+
+\begin{lem}[Discrete Gronwall Lemma]
+    Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers satisfying
+    \begin{equation}
+        \label{integralgronwall}
+        e_j \leq a \sum_{i=0}^{j-1} e_i + b,
+    \end{equation}
+    for every $j$, with $e_0 = 0$, and where $a, b > 0$. Then,
+    \begin{equation}
+        \label{estimateintegralgronwall}
+        e_j \leq b e^{aj}, \qquad \forall j.
+    \end{equation}
+\end{lem}
+
+\begin{proof}
+    This follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$. For the sake of completeness, we give a direct proof for this particular case.
+    
+    The result is trivially true for $j=0$. Suppose, by induction, that the result is true up to $j-1$. Then,
+    \[
+        e_j \leq a \sum_{i=0}^{j-1} be^{ai} + b = b \left(a \sum_{i=0}^{j-1} e^{ai} + 1\right).
+    \]
+    Using that $1 + a \leq e^a$, we have $a \leq e^a - 1$, hence
+    \[
+        e_j \leq b\left((e^a - 1)\sum_{i=0}^{j-1} e^{ia} + 1\right).
+    \]
+    Using that $\sum_{i=0}^{j-1} \theta^i = (\theta^j - 1)(\theta - 1)$, with $\theta = e^a$, we see that
+    \[
+        (e^a - 1)\sum_{i=0}^{j-1} e^{ia} \leq e^{ja} - 1,
+    \]
+    so that
+    \[
+        e_j \leq be^{ja},
+    \]
+    which completes the induction.
+\end{proof}
+
+We are now ready to start proving our basic estimate for the global pathwise error.
 
 \begin{lem}
     \label{lembasicestimate}
@@ -793,7 +830,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
         \mathbb{E}[|Y_t|^2] & \leq \mathbb{E}[|Y_0|^2] + \int_0^t \left(2\mathbb{E}[(A_M + A_Y |Y_s|) |Y_s|]  + \mathbb{E}[(B_M + B_Y|Y_s|)^2 \right) \;\mathrm{d}s \\
         & \leq \mathbb{E}[|Y_0|^2] + \int_0^t \left(4(A_M^2 + (1 + A_Y) \mathbb{E}[|Y_s|^2])  + 2(B_M^2 + B_Y^2\mathbb{E}[|Y_s|^2]) \right) \;\mathrm{d}s
     \end{align*}
-    By the Gronwall Lemma,
+    By the classical Gronwall Lemma \cite{Gronwall1919},
     \[
         \mathbb{E}[|Y_t|^2] \leq \left( \mathbb{E}[|Y_0|^2] + (4A_M^2 + 2B_M^2)t\right)e^{(4(1 + A_Y) + 2B_Y^2)t}.
     \]
@@ -847,7 +884,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
 \end{proof}
 
 \begin{rmk}
-    When the diffusion term $b = b(t, y) = b(t)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and in this case the Euler scheme is well known to be of strong order 1 \cite{HighamKloeden2021}. In the more general $b=b(t, y)$ case, however, the Euler scheme has always been regarded to be of order 1/2 \cite{GruneKloeden2001}. Here, though, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
+    When the diffusion term $b = b(t, y) = b(t)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and in this case the Euler scheme is well known to be of strong order 1 \cite{HighamKloeden2021}. In the more general $b=b(t, y)$ case, however, the Euler scheme has always been regarded to be of order 1/2 \cite{GruneKloeden2001} (see also \cite{WangCaoHanKloeden2021} for mean square convergence). Here, though, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
 \end{rmk}
 
 \section{The mixed case}
@@ -1586,60 +1623,6 @@ Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is
 
 See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
 
-\appendix{}
-
-\section{Discrete Gronwall Lemma}
-
-We end this section by abstracting away the Gronwall type inequality we use \textcolor{red}{(this is probably written somewhere, and I need to find the source)}:
-\begin{lem}
-Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers satisfying
-\begin{equation}
-  \label{integralgronwall}
-  e_j \leq a \sum_{i=0}^{j-1} e_i + b,
-\end{equation}
-with $e_0 = 0$, where $a, b > 0$. Then,
-\begin{equation}
-  \label{estimateintegralgronwall}
-  e_j \leq b e^{aj}, \qquad \forall j.
-\end{equation}
-\end{lem}
-
-\begin{proof}
-  The result is trivially true for $j=0$. Suppose, by induction, that the result is true up to $j-1$. Then,
-  $$
-  e_j \leq a \sum_{i=0}^{j-1} be^{ai} + b = b \left(a \sum_{i=0}^{j-1} e^{ai} + 1\right).
-  $$
-  Using that $1 + a \leq e^a$, we have $a \leq e^a - 1$, hence
-  $$
-  e_j \leq b\left((e^a - 1)\sum_{i=0}^{j-1} e^{ia} + 1\right).
-  $$
-  Using that $\sum_{i=0}^{j-1} \theta^i = (\theta^j - 1)(\theta - 1)$, with $\theta = e^a$, we see that
-  $$
-  (e^a - 1)\sum_{i=0}^{j-1} e^{ia} \leq e^{ja} - 1,
-  $$
-  so that
-  $$
-  e_j \leq be^{ja},
-  $$
-  which completes the induction.
-\end{proof}
-
-\section{Numerical examples}
-
-\subsection{Lower-order converge}
-
-\begin{figure}
-  \includegraphics[scale=0.8]{img/plot_13.png}
-\end{figure}
-
-For a lower order convergence, below order $1$, we take the noise $\{Y_t\}_t$ to be the transport process defined by
-$$
-Y_t = \sin(t/Z)^{1/3},
-$$
-where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes values strictly within $(0, 1)$ and, hence, $\sin(t/Z)$ can have arbitrarily high frequencies and, hence, go through the critic value $y = 0$ extremely often.
-
-\textcolor{red}{(Need to remove the Heun method and do more tests and examples)}.
-
 \section*{Acknowledgments}
 
 \begin{thebibliography}{25}
@@ -1650,9 +1633,15 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
 
     \bibitem{BHOB2008} F. Biagini, Y. Hu, B. Oksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
 
+    \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
+
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
     \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr\o n, B. \O ksendal, J. Ub\o e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. Högnas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
+
+    \bibitem{GiraultRaviart1981} V. Girault, P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
+
+    \bibitem{Gronwall1919} T. H. Gronwall, Note on the derivatives with respect to a parameter of the solutions of a system of differential equations, \emph{Ann. of Math.} (2) 20 (1919), 292--296.
 
     \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 
@@ -1663,6 +1652,8 @@ where $Z$ is a beta random variable $Z \sim B(\alpha, \beta)$. Notice $Z$ takes 
     \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
 
     \bibitem{NeckelRupp2013} F. Rupp, T. Neckel, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
+
+    \bibitem{WangCaoHanKloeden2021} P. Wang, Y. Cao, X. Han, P. Kloeden, Mean-square convergence of numerical methods for random ordinary differential equations, \emph{Numerical Algorithms,} vol. 87 (2021), 299--333.
 
 \end{thebibliography}
 
