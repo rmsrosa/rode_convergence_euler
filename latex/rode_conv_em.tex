@@ -44,10 +44,9 @@
 
 % Article info
 
-\title[Strong order convergence of Euler for Random ODEs]{Novel approach to error estimation for approximations of random ordinary differential equations with sharper estimates for the strong order convergence of the Euler method}
+\title[Strong order convergence of Euler for Random ODEs]{Improved error estimate for the strong order of convergence of the Euler method for random ordinary differential equations}
 
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
-
 \author[P. E. Kloeden]{Peter E. Kloeden}
 
 \address[Ricardo M. S. Rosa]{Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro, Brazil}
@@ -61,10 +60,10 @@
 %\thanks{This work was partly supported by ...}
 
 \subjclass[2000]{76D05, 76D06, 35Q30, 37L99}
-\keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, point process}.
+\keywords{random ordinary differential equations, Euler method, strong convergence, It\^o noise, point-process noise, fractional Brownian motion noise}.
 
 \begin{abstract}
-It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular. Here, we show that it is possible to exploit further conditions on the noise and prove that the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on two main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error. Secondly, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process. In the first case, the noise-sensitive part of the global error is bounded by the time step multiplied by a term involving the expectation of the total variation. In the second case, we exploit the It\^o isometry to bound that part of the global error.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term. We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence below the attained order 1 in the examples above, but still above the $H$ order of convergence obtained in previous works.
 \end{abstract}
 
 \maketitle
@@ -100,7 +99,7 @@ When the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths,
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continous, but the strong convergence is of order 1 only when $1/2 \leq H < 1$, dropping to order $H + 1/2$, when $0 < H < 1/2$, which is still higher the H\"older exponent of the sample paths.
+Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order convergence, with the sample paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1 only when $1/2 \leq H < 1$, dropping to order $H + 1/2$, when $0 < H < 1/2$, which is still higher the H\"older exponent $H$ of the sample paths.
 
 The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely (see \cref{lemglobalerrorintegralformula})
 \begin{equation}
@@ -127,7 +126,11 @@ The only problematic, noise-sensitive term is the last one. The classical analys
 \[
     \mathbb{E}\left[\left|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right|\right] \leq C\Delta t_N^{\theta}.
 \]
-Instead, we look at the whole global error formula \eqref{lemglobalerrorintegralformulaintro} and assume, for the last term, that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable sense. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\in I}$ satisfy
+Instead, we look at the whole noise error 
+\[
+    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]
+\]
+and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable global way. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\in I}$ satisfy
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
@@ -169,7 +172,7 @@ These two cases are treated in \cref{secmonotonicbound} (for the bounded variati
 
 The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
 
-We complement the paper with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not have a general proof of this order of convergence in the case of fBm noise, but in the example considered, we essentially have
+We complement this work with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not have a general proof of this order of convergence in the case of fBm noise, but, in the example considered, we essentially have
 \[
     F_s - F_\tau \sim \int_\tau^s (s-\tau)^{H-1/2}\;\mathrm{d}W_\xi.
 \]
@@ -681,7 +684,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
 \end{rmk}
 
 \begin{rmk}
-    One particular example that fits the conditions of \cref{thmdiffmonotonicbound} is when $f=f(t, x, y)$ is semi-separable, i.e.
+    One particular example that easily yields \eqref{ftfylineargrowth} is when $f=f(t, x, y)$ is semi-separable, i.e.
     \begin{equation}
         \label{lineareqform}
         f(t, x, y) = a(t, y)h(x) + b(t, y),
@@ -692,7 +695,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \partial_t f = \partial_t a(t, y) h(x) + \partial_t b(t, y), \qquad \partial_y f = \partial_y a(t, y) h(x) + \partial_t b(t, y)
     \]
-    Since the partial derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and $h$ is Lipschitz, it follows that the partial derivatives $\partial_t f$ and $\partial_y f$ have at most linear growth. Thus,  \eqref{ftfylineargrowth} is satisfies.
+    Since the partial derivatives of $a=a(t, y)$ and $b=b(t, y)$ are uniformly bounded and $h$ is Lipschitz, it follows that the partial derivatives $\partial_t f$ and $\partial_y f$ have at most linear growth. Thus, \eqref{ftfylineargrowth} is satisfies and \cref{thmdiffmonotonicbound} applies. But this special form \eqref{lineareqform} is by no means necessary, and the result applies to more general terms $f=f(t, x, y)$, as stated in the theorem.
 \end{rmk}
 
 \section{The case of an It\^o noise}
@@ -923,412 +926,6 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
     for a suitable constant $C \geq 0$.
 \end{thm}
 
-\section{The case of fractional Brownian motion noise}
-
-For this case, we need a version of the It\^o formula for fractional Brownian motion, known as \emph{fractional It\^o formula}. The case $0 < H < 1/2$ is a delicate one, thought. A general formula that includes this case is given in \cite[Theorem 4.2.6]{BHOB2008} and in \cite[Theorem 4.1]{Bender2003}, for instance, saying that, for a fractional Brownian motion $\{Y_t\}_t$ with Hurst parameter $0 < H < 1$ and for $f=f(s, y)$ continuous along with its derivatives up to order one in $s$ and two in $y$,
-\begin{multline}
-    \label{fractionalItoformula}
-    f(t, Y_t) = f(0, Y_0) + \int_0^t \frac{\partial f}{\partial s}(s, Y_s)\;\mathrm{d}s \\
-        + \int_0^t \frac{\partial f}{\partial y}(s, Y_s)\;\mathrm{d}Y_s + H \int_0^t \frac{\partial^2 f}{\partial y^2}(s, Y_s)s^{2H - 1}\;\mathrm{d}s,
-\end{multline}
-where the integral with respect to $\{Y_s\}_s$ is a \emph{Wick It\^o Skorohod (WIS)} integral (see \cite[Chapter 4]{BHOB2008}), provided all the integrands are integrable in a suitable sense.
-
-The WIS integral is defined (see \cite[Definition 4.2.2]{BHOB2008}) for a WIS-integrable process $\{Z_t\}_t$ as
-\begin{equation}
-    \label{defWISintegralinR}
-    \int_\mathbb{R} Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} Z_s \diamond W_s^H \;\mathrm{d}s,
-\end{equation}
-where the symbol $\diamond$ is the \emph{Wick product} \cite[Definition A.1.7]{BHOB2008} between the two processes, and $\{W_t^H\}_{t}$ is a \emph{fractional white noise} \cite[eq. (4.16)]{BHOB2008}, both depending on the expansion in terms of polynomial chaos, over an \emph{Hida} space $(\mathcal{S})^*$ of stochastic distributions \cite[Definition A.1.4]{BHOB2008}. In such a space, we rigorously have that a fractional white noise is the derivative of a fractional Brownian motion. We also have the relation $W_t^H = M_t^HW_t$ with the standard white noise (corresponding to $H=1/2$), associated with a standard Brownian motion, and where $M_t^H$ is the (deterministic) operator defined via Fourier transform by $\widehat{M_t^Hf}(\eta) = |\eta|^{H-1/2}\hat{f}(\eta)$, $\eta\in \mathbb{R}$ \cite[Definition 4.1.2]{BHOB2008}, acting on each sample path. We use the subscript $t$ in $M_t$ just to make it explicit that it acts on the variable $t$ of the process $W_t$, which is useful when combining it with the dependency on other variables.
-
-On an interval of $\mathbb{R}$, this is defined as
-\begin{equation}
-    \label{defWISintegral}
-    \int_0^t Z_s\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]}(s) \;Z_s \right)\;\mathrm{d}Y_s = \int_\mathbb{R} \left(\chi_{[0, t]}(s) \;Z_s \right)\diamond W_s^H \;\mathrm{d}s,
-\end{equation}
-where $\chi_{[0, t]}$ denotes the characteristic function of the interval. For the calculus involving the WIS integral, it is important to note that the Wick product is commutative, additive and distributive \cite[Definition A.1.7]{BHOB2008}.
-
-In turn, for estimating the integral with respect to $\{Y_s\}_s$, a version of the It\^o isometry would be useful. A general one is the \emph{WIS isometry} in \cite[Theorem 4.5.6]{BHOB2008}:
-\begin{multline}
-    \label{WISisometry}
-    \mathbb{E}\left[\left(\int_\mathbb{R} Z_t \;\mathrm{d}Y_t\right)^2\right] = \mathbb{E}\left[\int_\mathbb{R} (M^H Z_t)^2 \;\mathrm{d}t\right] \\
-    + \mathbb{E}\left[ \int_\mathbb{R}\int_\mathbb{R} D_t^H (M_s^H)^2Z_s \cdot D_s^H(M_t^H)^2 Z_t\;\mathrm{d}s \;\mathrm{d}t \right].
-\end{multline}
-
-
-This, however, is a delicate formula involving fractional derivatives. I don't even understand the mixed-up variables in $D_t^H (M_s^H)^2Z_s$ and $D_s^H(M_t^H)^2 Z_t$.
-
-\subsection{Unsuccesful approach so far} 
-
-Fortunately, the partial derivative $\partial_y f$ is uniformly bounded, allowing us to estimate it more directly via the Wick product.
-
-Concerning the Wick product, we also use the fact that it satisfies (see \cite[Corollary 2.10]{GHLOUZ1993})
-\begin{equation}
-    \label{expectationWick}
-    \mathbb{E}[X \diamond Y] = \mathbb{E}[X] \mathbb{E}[Y],
-\end{equation}
-for two integrable processes.
-
-\begin{lem}
-    \label{estimateMchibounded}
-    Let $a < b$ and let $g=g(\eta)$ be a uniformly bounded real-valued continuous function. Then, for any $0 < H < 1$, $H \neq 1/2$,
-    \[
-        \left|M^H (\chi_{[a, b]}g)(\xi)\right| \leq \frac{C_H}{H - 1/2} (\sup_\mathbb{R} |g|) \left( \frac{(a - \xi)}{|a - \xi|^{3/2 - H}} - \frac{(b - \xi)}{|b - \xi|^{3/2 - H}}\right).
-    \]
-    for every $\xi\in \mathbb{R}$, $\xi \neq a, b$.
-\end{lem}
-
-\begin{proof}
-    The proof is inspired by the computation of $M^H\chi_{[a, b]}$ (i.e. without $g$) in \cite[Example 4.1.4]{BHOB2008}, but the presence of $g$ complicates things considerably. That computation uses the following expression for $M^H$ as given in \cite[eq. (4.2)]{BHOB2008}:
-    \[
-        M^H f(\xi) = - \frac{C_H}{H-1/2}\frac{\mathrm{d}}{\mathrm{d}\xi} \int_\mathbb{R} \frac{(\xi - \eta)}{|\xi - \eta|^{3/2-H}} f(\eta) \;\mathrm{d}\eta,
-    \]
-    for a suitable constant $C_H$ and smooth test function $f$ in the Schwartz space. This can be extended to any function for which $|\eta|^{1/2 - H}f(\eta)$ is integrable, such as $f(\eta) = \chi_{[a, b]}g(\eta)$. In this case, we have
-    \[
-        M^H (\chi_{[a, b]}g)(\xi) = - \frac{C_H}{H-1/2}\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \frac{(\xi - \eta)}{|\xi - \eta|^{3/2-H}} g(\eta) \;\mathrm{d}\eta.
-    \]
-    The presence of the term $g$ complicates things considerably, however. In order to handle this term, we regularize the kernel $K(s) = - s/|s|^{3/2-H}$ to remove its singularity. Given $\varepsilon > 0$, we truncate it as
-    \[
-        K_\varepsilon(s) = \min\{\max\{K(s), K(\varepsilon)\}, K(-\varepsilon)\}.
-    \]
-    % ξ = -10.0:0.05:10.0
-    % K(ξ; ε = 0.2, H = 1/4) = min(max(- ξ / abs(ξ)^(3/2 - H), - 1/ε^(1/2 - H)), 1/ε^(1/2 - H))
-    % plot(ξ, K, legend=nothing)
-    
-    By the (odd) symmetry $K_\varepsilon(s) = - K_\varepsilon(-s)$, we have the (even) symmetry of the derivative $K_\varepsilon'(s) = K_\varepsilon'(-s)$, so that
-    \[
-        \frac{\mathrm{d}}{\mathrm{d}\xi} K_\varepsilon(\xi - \eta) = K_\varepsilon'(\xi - \eta) = K_\varepsilon'(\eta - \xi) = \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) = - \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\xi - \eta).
-    \]
-    Now, since the integration interval is finite and $K_\varepsilon$ has no singularity, we are allowed to pass the derivative inside the integral and obtain
-    \[
-        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K_\varepsilon(\xi - \eta) g(\eta) \;\mathrm{d}\eta = \int_a^b \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) g(\eta) \;\mathrm{d}\eta.
-    \]
-    Since the derivative $K_\varepsilon'$ is non-negative, we bound this term as
-    \begin{multline*}
-        \left|\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K_\varepsilon(\xi - \eta) g(\eta) \;\mathrm{d}\eta \right| \leq (\sup_\mathbb{R} |g|) \int_a^b \frac{\mathrm{d}}{\mathrm{d}\eta} K_\varepsilon(\eta - \xi) \;\mathrm{d}\eta \\
-        = (\sup_\mathbb{R} |g|) \left(K_\varepsilon(b - \xi) - K_\varepsilon(a - \xi)\right).
-    \end{multline*}
-    Now we estimate
-    \[
-        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta.
-    \]
-    For $\xi \leq a$ or $\xi \geq b$, this term vanishes. Consider then $a < \xi < b$ and suppose $\varepsilon < \min\{\xi - a, b - \xi\}$. In this case,
-    \[
-        \frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta = \frac{\mathrm{d}}{\mathrm{d}\xi} \int_{\xi - \varepsilon}^{\xi + \varepsilon} \left(K(\xi - \eta) - K_\varepsilon(\xi - \eta) \right)g(\eta) \;\mathrm{d}\eta    
-    \]
-
-    We let $\varepsilon \rightarrow 0$ and find that
-    \[
-        \left|\frac{\mathrm{d}}{\mathrm{d}\xi} \int_a^b K(\xi - \eta) g(\eta) \;\mathrm{d}\eta \right| \leq (\sup_\mathbb{R} |g|) \left(K(b - \xi) - K(a - \xi)\right),
-    \]
-    almost surely (i.e. for $\xi \neq a, b$). Back to $M^H (\chi_{[a, b]}g)$, this yields
-    \[
-        \left|M^H (\chi_{[a, b]}g)(\xi)\right| \leq \frac{C_H}{H - 1/2} (\sup_\mathbb{R} |g|) \left( \frac{(a - \xi)}{|a - \xi|^{3/2 - H}} - \frac{(b - \xi)}{|b - \xi|^{3/2 - H}}\right).
-    \]
-    This completes the proof.
-\end{proof}
-
-According to \cref{propbasicestimate}, we need to estimate steps of the form
-\[
-    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}).
-\]
-Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of only the two remaining arguments and apply \eqref{fractionalItoformula}. Then, upon integration in $s$, we obtain the following result.
-
-\begin{lem}
-    \label{lemsinglestepwithfBm}
-    Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
-\end{lem}
-
-\begin{proof}
-    Applying \eqref{fractionalItoformula}, we find
-    \begin{multline*}
-        f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \\
-        + \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}Y_\xi + \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi
-    \end{multline*}
-    Integrating in $s$ from $0$ to $t$ and using the definition \eqref{defWISintegral} of the WIS integral,
-    \begin{align*}
-        \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) \right. & \left. - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
-        & = \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}\xi \;\mathrm{d}s \\
-        & \qquad + \int_0^t \int_\mathbb{R} \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}\xi \;\mathrm{d}s \\
-        & \qquad + \int_0^t \int_{\tau^N(s)}^{s} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}\xi \;\mathrm{d}s.
-    \end{align*}
-    As in the other cases, we now exchange the order of integration, obtaining
-    \begin{equation}
-        \begin{aligned}
-            \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right) \;\mathrm{d}s \\
-            & = \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}s \;\mathrm{d}\xi \\
-            & \qquad + \int_\mathbb{R} \int_0^t \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
-            & \qquad + \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi.
-        \end{aligned}
-    \end{equation}
-    Now we estimate each double integral. Since the partial derivatives are uniformly bounded, the standard integrals are of strong order one in $\Delta t_N$:
-    \begin{multline}
-        \mathbb{E}\left[\left|\int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_\xi) \;\mathrm{d}s\;\mathrm{d}\xi\right|\right] \\
-        \leq \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} L_Y \;\mathrm{d}s\;\mathrm{d}\xi \leq L_Y t \Delta t_N,
-    \end{multline}
-    and
-    \begin{multline}
-        \mathbb{E}\left[\left|\int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_\xi) \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi\right|\right] \\
-        \leq \int_0^t \int_{\xi}^{\tau^N(\xi)+\Delta t_N} L_{YY} \xi^{2H - 1}\;\mathrm{d}s\;\mathrm{d}\xi \leq \frac{L_{YY}}{2H} t^{2H} \Delta t_N.
-    \end{multline}
-    As for the term with the WIS integral, we use that $W_t^H = M^HW_t$, that $M^H$ is symmetric, and that the Wick product is distributive to write
-    \begin{align*}
-        \int_\mathbb{R} \int_0^t & \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond W_\xi^H \;\mathrm{d}s \;\mathrm{d}\xi \\
-        & = \int_\mathbb{R} \int_0^t \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right) \diamond M^H W_\xi \;\mathrm{d}s \;\mathrm{d}\xi \\
-        & = \int_\mathbb{R} \int_0^t \left(M^H \left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi)\right) \right) \diamond W_\xi \;\mathrm{d}s \;\mathrm{d}\xi.
-    \end{align*}
-    The Wick product satisfies
-    \[
-        \mathbb{E}\left[\left|A \diamond B\right|\right] \leq \sqrt{\mathbb{E}\left[A^2\right]\mathbb{E}\left[B^2\right]}.
-    \]
-    In particular,
-    \begin{multline*}
-        \mathbb{E}\left[\left(M^H\left(\chi_{[\tau^N(s), s]}(\xi)\;\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_\xi) \right)\right)^2\right]^{1/2} \\
-        \leq \frac{C_H}{(H - 1/2)} (\sup_\mathbb{R} |g|) \left( \frac{(\tau^N(s) - \xi)}{|\tau^N(s) - \xi|^{3/2 - H}} - \frac{(s - \xi)}{|s - \xi|^{3/2 - H}}\right)
-    \end{multline*}
-    and
-    \[
-        \mathbb{E}\left[W_\xi^2\right]^{1/2} = 1.
-    \]
-    Hmm, this doesn't seem like it is going to work. I can only picture a $\Delta t_N^{H}$ with this approach.
-\end{proof}
-
-\subsection{Alternative way but unsuccessful so far}
-
-Fortunately, for the error estimates, we assume the derivatives are continuous and uniformly bounded, which allows us to stop short the formula and use more friendly terms. For that, we follow the arguments in \cite[Theorem 2.7.4]{Mishura2008}. They lead to a formula involving directly the It\^o integral with respect to a Wiener process. Their result, however, is restricted to the case in which $f$ is time independent. We follow their arguments and obtain a partial formula for a time-dependent $f$. In doing so, we first obtain the following intermediary result.
-
-\begin{lem}
-    \label{lempartialItoformula}
-    Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, y)$ be a real-valued function on $[0, T]\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
-    \begin{equation}
-        \label{partialItoformula}
-        \begin{aligned}
-            f(t, Y_t) & = f(0, Y_0) + \int_{0}^t \frac{\partial f}{\partial s}(s, Y_{s, t})\;\mathrm{d}s - \alpha \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})s^{-\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s \\
-            & \quad + \frac{C_H^2}{2}\int_{0}^t \frac{\partial^2 f}{\partial y^2}(s, Y_{s, t}) (t - s)^{-2\alpha} \;\mathrm{d}s + C_H \int_{0}^t \frac{\partial f}{\partial y}(s, Y_{s, t})(t - s)^{-\alpha}\;\mathrm{d} W_s,
-        \end{aligned}
-    \end{equation}
-    for $0 \leq t \leq T$, where $\alpha = 1/2 - H$ (for notational simplicity); $C_H$ is given by
-    \begin{equation}
-        \label{defCH}
-        C_H = \left( \frac{2H\Gamma(1+\alpha)}{\Gamma(1 + 2\alpha)\Gamma(1-\alpha)} \right)^{1/2};
-    \end{equation}
-    and
-    \begin{equation}
-        \label{defZHst}
-        Z_{s, t} = C_H \int_0^s \xi^{\alpha}(t - \xi)^{-\alpha} \;\mathrm{d}W_\xi
-    \end{equation}
-    and
-    \begin{equation}
-        \label{defYHst}
-        Y_{s, t} = s^{-\alpha} Z_{s, t} + \alpha \int_0^s \xi^{-\alpha-1}Z_{\xi, \xi}\;\mathrm{d}\xi.
-    \end{equation}
-    are defined for $0\leq s \leq t$.
-\end{lem}
-
-\begin{proof}
-One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
-\[
-    Y_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s
-\]
-for a suitable standard Wiener process $\{W_s\}_s$, with
-\[
-    m_H(t, s) = C_H \left( \left(\frac{t}{s}\right)^{-\alpha} (t - s)^{-\alpha} + \alpha s^{\alpha}\int_s^t\xi^{-\alpha-1}(\xi - s)^{-\alpha}\;\mathrm{d}\xi\right),
-\]
-and where $C_H$ is given by \eqref{defCH}. The constant $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}.
-
-Thus, as in \cite[Section 2.7.4]{Mishura2008}, we define $Z_{s, t}$ and $Y_{t, s}$, for $0 \leq s \leq t$, as in \eqref{defZHst} and \eqref{defYHst}, and notice that $Y_t = Y_{t, t}$ and $Y_0 = Y_{0, t} = 0$. As functions of $s$, both $Z_{s, t}$ and $Y_{s, t}$ are non-anticipative with respect to the Wiener process and are It\^o processes, with
-\begin{equation}
-    \label{YHstItoprocess}
-    \mathrm{d}_s Z_{s, t} = C_H s^{\alpha}(t - s)^{-\alpha} \;\mathrm{d}W_s,
-\end{equation}
-and, hence,
-\begin{equation}
-    \label{BHstItoprocess}
-    \mathrm{d}_s Y_{s, t} = -\alpha s^{-\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s + C_H (t - s)^{-\alpha} \;\mathrm{d}W_s.
-\end{equation}
-
-Observe that, from the It\^o isometry \cite{Oksendal2003},
-\[
-    \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{2\alpha}(t - \xi)^{-2\alpha}\;\mathrm{d}\xi \\
-    \leq C_H^2 s^{2\alpha}t^{-2\alpha}s = C_H^2 s^{1+2\alpha}t^{-2\alpha}.
-\]
-Hence, $\mathbb{E}[|Z_{s, t}|] = \mathcal{O}(s^{1/2+\alpha})$ and $\mathbb{E}[|Z_{s, s}|] = \mathcal{O}(s^{1/2})$, as $s\rightarrow 0$, and the singularities at both endpoints $s=0$ and $s=t$ are all integrable.
-
-Now, the formula \eqref{partialItoformula} follows from the classic It\^o formula using that $s \mapsto Y_{s, t}$ is an It\^o process satisfying \eqref{BHstItoprocess}, together with $Y_{t, t} = Y_t$ and $Y_{0, t} = 0 = Y_0$.
-\end{proof}
-
-\begin{rmk}
-    Notice we use $\alpha = 1/2 - H$ instead of $H - 1/2$ as defined in \cite[Section 1.8]{Mishura2008}. This is in order to have $\alpha$ positive, with $0 < \alpha < 1/2$, in the range of interest $0 < H < 1/2$, making it easier to reason about it.
-\end{rmk}
-
-Notice that formula \eqref{partialItoformula} is in a sense a partial It\^o formula since it involves $f$ applied to $Y_{s, t}$. In \cite[Theorem 2.7.6]{Mishura2008}, the author continuous the derivation and expand the functions that depend on $Y_{s, t}$, requiring a higher order regularity of $f$ and adding a few more terms to the formula (in the particular case of a time-independent function $f$). Since, however, we assume that the partial derivatives of $f$ are all bounded, this expansion is not necessary, and \eqref{partialItoformula} suffices.
-
-According to \cref{propbasicestimate}, we need to estimate the steps of the form
-\[
-    f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}).
-\]
-Since $X_{\tau^N(s)}^N$ is the same in both terms, we regard this step as involving a function of only the two remaining arguments and apply \cref{lempartialItoformula} to find the following.
-
-Now we need to estimate the steps. We restrict the analysis to the case $0 < H < 1/2$, for simplicity.
-
-\begin{lem}
-    \label{lemsinglestepwithfBm_alt}
-    Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1/2,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Then,
-    \begin{equation}
-        \label{singlestepwithfBm_alt}
-        \begin{aligned}
-            & f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \\
-            & \quad = \int_{\tau^N(s)}^{s} G(\xi, s) \;\mathrm{d}\xi + \int_0^{\tau^N(s)} (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}\xi \\
-            & \quad + \int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi + \int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi,
-        \end{aligned}
-    \end{equation}
-    for the families of processes $\{G(\xi, s)\}_{0\leq\xi\leq s}$ and $\{H(\xi, s)\}_{0\leq\xi\leq s}$, $0\leq s \leq T$, given by
-    \begin{multline}
-        \label{defGtaus}
-        G(\xi, s) = \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) - \alpha \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{-\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi}) \\ 
-        + \frac{C_H^2}{2}\frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{-2\alpha}
-    \end{multline}
-    and
-    \begin{equation}
-        \label{defHtaus}
-        H(\xi, s) = C_H\frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^{-\alpha}.
-    \end{equation}
-\end{lem}
-
-\begin{proof}
-    Replacing $s$ by $\tau$ and $t$ by $s$ and including the term $X_{\tau^N(s)}^N$ which is constant with respect to $\tau$ along the integration intervals, we rewrite \eqref{partialItoformula} as
-    \begin{align*}
-        f(s, Y_s) & = f(0, Y_0) + \int_{0}^s \frac{\partial f}{\partial \xi}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\;\mathrm{d}\xi \\ 
-        & \quad - \alpha \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})\xi^{-\alpha - 1} (Z_{\xi, s} - Z_{\xi, \xi})\;\mathrm{d}\xi \\
-        & \quad + \frac{C_H^2}{2}\int_{0}^s \frac{\partial^2 f}{\partial y^2}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s}) (s - \xi)^{-2\alpha} \;\mathrm{d}\xi \\
-        & \quad + C_H \int_{0}^s \frac{\partial f}{\partial y}(\xi, X_{\tau^N(s)}^N, Y_{\xi, s})(s - \xi)^{-\alpha}\;\mathrm{d} W_\xi.
-    \end{align*}
-    In terms of $G$ and $H$, this becomes
-    \[
-        f(s, Y_s) = f(0, Y_0) + \int_0^s G(\xi, s)\;\mathrm{d}\xi + \int_0^s H(\xi, s)\;\mathrm{d}W_{\xi}.
-    \]
-    Subtracting from this the same expression at $s=\tau^N(s)$ yields precisely \eqref{singlestepwithfBm_alt}.
-\end{proof}
-
-Before we estimate \eqref{singlestepwithfBm_alt}, we need to estimate a few terms involving $Z_{\xi, s}$ and $Y_{\xi, s}$.
-\begin{lem}
-    \label{lemZYestimates}
-    For $Z_{\xi, s}$ defined in \eqref{defZHst}, we have
-    \begin{equation}
-        \mathbb{E}\left[|Z_{\xi, s}|\right]
-    \end{equation}
-\end{lem}
-
-\begin{proof}
-    We write, for $0 \leq \xi \leq \tau \leq s$,
-    \begin{multline*}
-        Z_{\xi, s} - Z_{\xi, \tau} = C_H \int_0^\xi \eta^{\alpha}(s - \eta)^{-\alpha} \;\mathrm{d}W_\eta - C_H \int_0^\xi \eta^{\alpha}(\tau - \eta)^{-\alpha} \;\mathrm{d}W_\eta \\
-        = C_H \int_0^\xi \eta^{\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)\;\mathrm{d}W_\eta.
-    \end{multline*}
-    Using the Lyapunov inequality and the It\^o isometry \cite{Oksendal2003},
-    \[
-        \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] \leq C_H \left(\int_0^\xi \eta^{2\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)^2\;\mathrm{d}\eta \right)^{1/2}.
-    \]
-    Since both terms are positive, we have
-    \begin{align*}
-        \frac{1}{(\tau - \eta)^{2\alpha}} - \frac{1}{(s - \eta)^{2\alpha}} & = \left(\frac{1}{(\tau - \eta)^{\alpha}} - \frac{1}{(s - \eta)^{\alpha}}\right) \left(\frac{1}{(\tau - \eta)^{\alpha}} + \frac{1}{(s - \eta)^{\alpha}}\right)\\
-        & \geq \left(\frac{1}{(\tau - \eta)^{\alpha}} - \frac{1}{(s - \eta)^{\alpha}}\right) \left(\frac{1}{(\tau - \eta)^{\alpha}} - \frac{1}{(s - \eta)^{\alpha}}\right) \\
-        & = \left(\frac{1}{(\tau - \eta)^{\alpha}} - \frac{1}{(s - \eta)^{\alpha}}\right)^2.
-    \end{align*}
-    Thus,
-    \begin{align*}
-        \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] & \leq C_H \left(\int_0^\xi \eta^{2\alpha}\left(\frac{1}{(\tau - \eta)^{2\alpha}} - \frac{1}{(s - \eta)^{2\alpha}}\right)\;\mathrm{d}\eta \right)^{1/2} \\
-        & \leq C_H \xi^{\alpha}\left(\int_0^\xi \left(\frac{1}{(\tau - \eta)^{2\alpha}} - \frac{1}{(s - \eta)^{2\alpha}}\right)\;\mathrm{d}\eta \right)^{1/2} \\
-        & \leq \frac{C_H \xi^\alpha}{\sqrt{1 - 2\alpha}} \left((\tau - \xi)^{1 - 2\alpha} - \tau^{1-2\alpha} - (s - \xi)^{1 - 2\alpha} + s^{1 - 2\alpha}\right)^{1/2} \\
-        & \leq \frac{C_H \xi^\alpha}{\sqrt{1 - 2\alpha}}\left(s - \tau\right)^{1/2 - \alpha}.
-    \end{align*}
-\end{proof}
-
-
-Now we are ready to estimate \eqref{singlestepwithfBm_alt}
-\begin{lem}
-    \label{lemfBmsteps}
-    Let $\{Y_t\}_{t\in [0, T]}$ be a fractional Brownian motion with Hurst parameter $0 < H < 1,$ and let $f=f(s, x, y)$ be a real-valued function on $[0, T]\times\mathbb{R}\times \mathbb{R}$ which is continuous along with its derivatives up to order one in $s$ and two in $y$. Suppose these derivatives are uniformly bounded. Then,
-    \begin{multline}
-        \label{expectintfboundbyfBm}
-        \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
-        \leq C\Delta t_N^{H+1/2},
-    \end{multline}
-    for all $0 \leq t \leq T$ and every $N\in \mathbb{R}$.
-\end{lem}
-
-\begin{proof}
-    From \eqref{singlestepwithfBm_alt},
-    \begin{align*}
-        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
-        & \quad = \int_0^t\int_{\tau^N(s)}^{s} G(\xi, s) \;\mathrm{d}\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}\xi\;\mathrm{d}s \\
-        & \qquad + \int_0^t\int_{\tau^N(s)}^{s} H(\xi, s) \;\mathrm{d}W_\xi\;\mathrm{d}s + \int_0^t\int_0^{\tau^N(s)} (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}W_\xi\;\mathrm{d}s.
-    \end{align*}
-    Using Fubini's Theorem,
-    \begin{align*}
-        & \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
-        & \quad = \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} G(\xi, s) \;\mathrm{d}s\;\mathrm{d}\xi \\
-        & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (G(\xi, s) - G(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}\xi \\
-        & \qquad + \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\;\mathrm{d}W_\xi \\
-        & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\xi.
-    \end{align*}
-    Taking the strong norm and using the Lyapunov inequality and the It\^o isometry \cite{Oksendal2003}, we find that
-    \begin{equation}
-        \begin{aligned}
-            & \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \right|\right] \\
-            & \quad \leq \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} \mathbb{E}\left[\left| G(\xi, s)\right|\right] \;\mathrm{d}s\;\mathrm{d}\xi \\
-            & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t \mathbb{E}\left[\left|(G(\xi, s) - G(\xi, \tau^N(s)))\right|\right] \;\mathrm{d}s\;\mathrm{d}\xi \\
-            & \qquad + \left(\int_0^t\mathbb{E}\left[\left(\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\right)^2\right]\;\mathrm{d}\xi\right)^{1/2} \\
-            & \qquad + \left(\int_0^t\mathbb{E}\left[\left(\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\right)^2\right]\;\mathrm{d}\xi\right)^{1/2}.
-        \end{aligned}
-    \end{equation}
-    
-    Now we need to estimate each integral. The integrals involving $H(\xi,s)$ are easier. Since the partial derivatives of $f$ are uniformly bounded, we have, from \eqref{defHtaus}, that $H(\xi, s)$ is uniformly bounded, with
-    \[
-        \left|H(\xi, s)\right| \leq C_H L_Y (s - \xi)^{-\alpha},
-    \]
-    for any $0\leq \xi \leq s \leq T$, for a suitable constant $L_Y$ bounding $\partial f/\partial y$. Thus,
-    \begin{multline*}
-        \left|\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\right| \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} C_H L_Y (s - \xi)^{-\alpha} \;\mathrm{d}s \\
-        = \frac{C_H L_Y}{1 - \alpha} (\tau^N(\xi) + \Delta t_N - \xi)^{1-\alpha},
-    \end{multline*}
-    almost surely. Since $0 \leq \tau^N(\xi) + \Delta t_N \xi \leq \Delta t_N$, we find that
-    \begin{equation}
-        \left(\int_0^t\mathbb{E}\left[\left(\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\right)^2\right]\;\mathrm{d}\xi\right)^{1/2} \leq t^{1/2}\frac{C_H L_Y}{1 - \alpha} (\Delta t_N)^{1-\alpha}.
-    \end{equation}
-    Since $\alpha = 1/2 - H$, this term yields order $1-\alpha = H + 1/2$.
-
-    Similarly, using triangulation and the uniform boundedness of the second derivative $\partial^2 f/\partial y^2$ by a constant $L_{YY}$,
-    \begin{multline*}
-        \left|H(\xi, s) - H(\xi, \tau^N(s))\right| \\ 
-        \leq C_H L_{YY} \left|Y_{\xi, s} - Y_{\xi, \tau^N(s)}\right|(s - \xi)^{-\alpha} + C_H L_Y ((\tau^N(s) - \xi)^{-\alpha} - (s - \xi)^{-\alpha}).
-    \end{multline*}
-
-    As in the proof of \cref{lemZYestimates},
-    For $0 \leq \eta < \tau \leq s$, we have
-    \[
-        0 < \frac{\tau - \eta}{s - \eta} \leq 1, \quad 0 < \frac{s - \tau}{s - \eta} \leq 1.
-    \]
-    Since, moreover, $0 < \alpha < 1/2$, it follows that
-    \[
-        1 = \frac{\tau - \eta}{s - \eta} + \frac{s - \tau}{s - \eta} \leq \left(\frac{\tau - \eta}{s - \eta}\right)^\alpha + \left(\frac{s - \tau}{s - \eta}\right)^\alpha.
-    \]
-    Dividing this relation by $(\tau - \eta)^\alpha$ yields
-    \[
-        \frac{1}{(\tau - \eta)^\alpha} - \frac{1}{(s - \eta)^\alpha} \leq \frac{(s - \tau)^\alpha}{(s-\eta)^\alpha(\tau - \eta)^\alpha}.
-    \]
-    This relation extends trivially to $0 \leq \eta \leq \tau \leq s$, with both sides being infinite.
-
-    So,
-    \[
-        \frac{1}{(\tau^N(s) - \eta)^\alpha} - \frac{1}{(s - \eta)^\alpha} \leq \frac{(s - \tau^N(s))^\alpha}{(s-\eta)^\alpha(\tau^N(s) - \eta)^\alpha}.
-    \]
-    Thus,
-    \begin{multline*}
-        \left|H(\xi, s) - H(\xi, \tau^N(s))\right| \\ 
-        \leq C_H L_{YY} \left|Y_{\xi, s} - Y_{\xi, \tau^N(s)}\right|(s - \xi)^{-\alpha} + C_H L_Y \frac{(s - \tau^N(s))^\alpha}{(s-\eta)^\alpha(\tau^N(s) - \eta)^\alpha}.
-    \end{multline*}
-\end{proof}
-
 \section{Numerical examples}
 
 In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We also illustrate the $H+1/2$ order of convergence in the case of a fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$.
@@ -1474,7 +1071,6 @@ hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect th
 \end{rmk}
 
 \subsection{Linear inhomogeneous equation}
-
 
 We now consider the following linear equation with noise in the nonhomogenous term:
 \begin{equation}
@@ -1624,6 +1220,12 @@ Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is
 \subsection{Earthquake and other impulse driven models}
 
 See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
+
+\subsection{Fractional Brownian motion noise}
+
+Here, we consider again the linear equation
+
+except that the noise $\{Y_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. We show that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For this reason, we leave the nonlinear case to a subsequent work and focus on the linear example.
 
 \section*{Acknowledgments}
 
