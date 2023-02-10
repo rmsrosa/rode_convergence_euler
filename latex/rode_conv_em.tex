@@ -738,7 +738,7 @@ With that in mind, we first have the following result.
         & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
         & \qquad = \int_0^t (\tau^N(\xi)+\Delta t_N - \xi) A_\xi \;\mathrm{d}\xi + \int_0^t (\tau^N(\xi) + \Delta t_N - \xi) B_\xi \;\mathrm{d}W_\xi.
     \end{align*}
-    Taking the absolute mean and using the It\^o isometry on the second term gives
+    Taking the absolute mean and using the It\^o isometry \cite{Oksendal2003} on the second term gives
     \begin{multline*}
         \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right|\right]  \\
         \leq \int_0^t |\tau^N(\xi)+\Delta t_N - \xi| \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi + \left(\int_0^t (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[|B_\xi|^2] \;\mathrm{d}\xi \right)^{1/2}.
@@ -1146,7 +1146,7 @@ and, hence,
     \mathrm{d}_s Y_{s, t} = -\alpha s^{-\alpha - 1} (Z_{s, t} - Z_{s, s})\;\mathrm{d}s + C_H (t - s)^{-\alpha} \;\mathrm{d}W_s.
 \end{equation}
 
-Observe that, from the It\^o isometry,
+Observe that, from the It\^o isometry \cite{Oksendal2003},
 \[
     \mathbb{E}\left[(Z_{s, t})^2\right] = C_H^2 \int_0^s \tau^{2\alpha}(t - \xi)^{-2\alpha}\;\mathrm{d}\xi \\
     \leq C_H^2 s^{2\alpha}t^{-2\alpha}s = C_H^2 s^{1+2\alpha}t^{-2\alpha}.
@@ -1224,7 +1224,7 @@ Before we estimate \eqref{singlestepwithfBm_alt}, we need to estimate a few term
         Z_{\xi, s} - Z_{\xi, \tau} = C_H \int_0^\xi \eta^{\alpha}(s - \eta)^{-\alpha} \;\mathrm{d}W_\eta - C_H \int_0^\xi \eta^{\alpha}(\tau - \eta)^{-\alpha} \;\mathrm{d}W_\eta \\
         = C_H \int_0^\xi \eta^{\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)\;\mathrm{d}W_\eta.
     \end{multline*}
-    Using the Lyapunov inequality and the It\^o isometry,
+    Using the Lyapunov inequality and the It\^o isometry \cite{Oksendal2003},
     \[
         \mathbb{E}\left[\left|Z_{\xi, s} - Z_{\xi, \tau}\right|\right] \leq C_H \left(\int_0^\xi \eta^{2\alpha}\left((s - \eta)^{-\alpha} - (\tau - \eta)^{-\alpha}\right)^2\;\mathrm{d}\eta \right)^{1/2}.
     \]
@@ -1271,7 +1271,7 @@ Now we are ready to estimate \eqref{singlestepwithfBm_alt}
         & \qquad + \int_0^t\int_\xi^{\tau^N(\xi) + \Delta t_N} H(\xi, s) \;\mathrm{d}s\;\mathrm{d}W_\xi \\
         & \qquad + \int_0^t\int_{\tau^N(\xi) + \Delta t_N}^t (H(\xi, s) - H(\xi, \tau^N(s))) \;\mathrm{d}s\;\mathrm{d}W_\xi.
     \end{align*}
-    Taking the strong norm and using the Lyapunov inequality and the It\^o isometry, we find that
+    Taking the strong norm and using the Lyapunov inequality and the It\^o isometry \cite{Oksendal2003}, we find that
     \begin{equation}
         \begin{aligned}
             & \mathbb{E}\left[\left|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \right|\right] \\
@@ -1635,13 +1635,13 @@ See Neckel and Rupp pg 582 as a starting point of a model driven by a transport 
 
     \bibitem{Julia2017} J. Bezanson, A. Edelman, S. Karpinski, V. B. Shah, Julia: A fresh approach to numerical computing, \emph{Siam Review,} 59 (2017), no. 1, 65--98.
 
-    \bibitem{BHOB2008} F. Biagini, Y. Hu, B. Oksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
+    \bibitem{BHOB2008} F. Biagini, Y. Hu, B. {\O}ksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
 
     \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
-    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr\o n, B. \O ksendal, J. Ub\o e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
+    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
     \bibitem{GiraultRaviart1981} V. Girault, P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
 
@@ -1654,6 +1654,8 @@ See Neckel and Rupp pg 582 as a starting point of a model driven by a transport 
     \bibitem{HighamKloeden2021} D. J. Higham, P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
 
     \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
+
+    \bibitem{Oksendal2003} B. {\O}ksendal, \emph{Stochastic Differential Equations - An Introduction with Applications,} Universitext, Springer-Verlag Berlin Heidelberg 2003.
 
     \bibitem{RackauckasNie2017} C. Rackauckas, Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1.
 
