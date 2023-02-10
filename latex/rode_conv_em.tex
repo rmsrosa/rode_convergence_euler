@@ -1243,16 +1243,77 @@ In this particular case, we can prove rigorously the strong order of convergence
 \[
     f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
 \]
-for $0 \leq s \leq T$. Now, we use the expression
-\[
-    B^H_s = \int_0^s 
-\]
-
-Hence, the last term in \eqref{expectedestimateglobalerrorintegral} becomes
-
+for $0 \leq s \leq T$. There are several ways to represent an fBm (see e.g. \cite{BHOB2008, Mishura2008}). We will use the formula \cite[eq. (2.1)]{MandelbrotVanNess1968}, \cite[eq. (1.1)]{BHOB2008}
+\begin{multline}
+    \label{BHtintegralformula}
+    B^H_t = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^0 \left( (t-s)^{H-1/2} - (-s)^{H-1/2}\right) \;\mathrm{d}W_s \right. \\
+    \left. + \int_0^t (t - s)^{H-1/2} \;\mathrm{d}W_s\right),
+\end{multline}
+where $\Gamma(\cdot)$ is the well-known Gamma function. For the step, this means
+\begin{multline}
+    \label{BHtintegralformulastep}
+    B^H_s - B^H_{\tau^N(s)} = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \right. \\
+    \left. + \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi\right).
+\end{multline}
+Then, using Fubini's Theorem to exchange the order of integration,
 \begin{align*}
-    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right]
+    \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
+    & = \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+    & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+    & = \frac{1}{\Gamma(H + 1/2)}\int_{-\infty}^{t_j} \int_{\max\{0, \tau^N(\xi)+\Delta t_N\}}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\\
+    & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi \\
 \end{align*}
+
+For the second term, we have
+\begin{multline*}
+    0 \leq \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s = \frac{1}{H + 1/2} (\tau^N(\xi) + \Delta t_N - \xi)^{H + 1/2} \\
+    \leq \frac{1}{H + 1/2} \Delta t_N^{H + 1/2}.
+\end{multline*}
+so that, using the Lyapunov inequality and the It\^o isometry
+\begin{multline}
+    \mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    \leq \left( \int_0^{t_j} \left(\int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s\right)^2 \;\mathrm{d}\xi\right)^{1/2} \\ 
+    \leq \left( \int_0^{t_j} \Delta t_N^{2H + 1/2} \;\mathrm{d}\xi\right)^{1/2} \leq t_j^{1/2} \Delta t_N^{2H + 1/2}.
+\end{multline}
+
+
+\subsection{Old}
+One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
+\begin{equation}
+    \label{BHtintegralformulaold}
+    B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s,
+\end{equation}
+for a suitable standard Wiener process $\{W_s\}_s$, with
+\begin{multline}
+    \label{mH}
+    m_H(t, s) = C_H \left( \left(\frac{s}{t}\right)^{1/2 - H} \frac{1}{(t - s)^{1/2 - H}} \right. \\
+    \left. + \left(\frac{1}{2} - H\right) s^{1/2 - H}\int_s^t\frac{1}{\xi^{3/2 - H}}\frac{1}{(\xi - s)^{1/2 - H}}\;\mathrm{d}\xi\right),
+\end{multline}
+and where $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, given by
+\begin{equation}
+    \label{defCH}
+    C_H = \left( \frac{2H\Gamma(3/2 - H)}{\Gamma(2 - 2H)\Gamma(H + 1/2)} \right)^{1/2},
+\end{equation}
+where $\Gamma(\cdot)$ is the well-known Gamma function.
+
+With \eqref{BHtintegralformulaold}, we write
+\[
+    B^H_s - B^H_{\tau^N(s)} = \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi + \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi. 
+\]
+Thus, using Fubini's Theorem to exchange the order of integration,
+\begin{align*}
+    \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
+    & = \int_0^{t_j} \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+    & \qquad + \int_0^{t_j} \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
+    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} m_H(s, \xi) \;\mathrm{d}s \;\mathrm{d}W_\xi  \\
+    & \qquad + \int_0^{t_j} \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi \;\mathrm{d}s
+\end{align*}
+
+Using the Lyapunov inequality and the It\^o isometry, the last term in \eqref{expectedestimateglobalerrorintegral} becomes
+\begin{multline*}
+    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
+    \leq \left( \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi\right)^{1/2} + \left( \right)^{1/2}
+\end{multline*}
 
 
 \section*{Acknowledgments}
@@ -1282,6 +1343,8 @@ Hence, the last term in \eqref{expectedestimateglobalerrorintegral} becomes
     \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017.
 
     \bibitem{HighamKloeden2021} D. J. Higham, P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
+
+    \bibitem{MandelbrotVanNess1968} B. B. Mandelbrot, J. W. Van Ness, Fractional Brownian Motions, Fractional Noises and Applications, \emph{Siam Review,} Vol. 10 (1968), no. 4, 422--437.
 
     \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
 
