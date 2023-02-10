@@ -495,7 +495,7 @@ Combining the two previous results we obtain
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, which completes the proof.
 \end{proof}
 
-\section{The case of monotonic sample path bounds}
+\section{The case of noise with sample paths of bounded variation}
 \label{secmonotonicbound}
 
 Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o noise and $f$ is not assumed to be differentiable, but, instead, that the steps can be controlled by monotonic nondecreasing processes with finite expected growth. This fits well with the typical case of point processes, such as renewal-reward processes, Hawkes process, and the like.
@@ -887,7 +887,7 @@ In practice, conditions \eqref{Itostep}-\eqref{expectItostepterms} follows from 
     When the diffusion term $b = b(t, y) = b(t)$, in \eqref{YtItonoise}, is actually independent of $y$, then the noise is an additive noise and in this case the Euler scheme is well known to be of strong order 1 \cite{HighamKloeden2021}. In the more general $b=b(t, y)$ case, however, the Euler scheme has always been regarded to be of order 1/2 \cite{GruneKloeden2001} (see also \cite{WangCaoHanKloeden2021} for mean square convergence). Here, though, we deduce, under the conditions of \cref{thmItonoise}, that even if $b=b(t, y)$ depends on $y$, the strong convergence of the Euler scheme is actually of order 1.    
 \end{rmk}
 
-\section{The mixed case}
+\section{The mixed case with It\^o and bounded variation noises}
 \label{secmixed}
 
 Of course, it is possible to mix the two cases and have the following result combining \cref{thmmonotonicbound} and \cref{thmItostep}.
@@ -1365,6 +1365,8 @@ at each mesh point.
     \item Finally, we fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, via linear least-square regression in log scale, for suitable $C$ and $p$, with $p$ giving the order of convergence.
 \end{enumerate}
 
+As for the implementation itself, all code is written in the Julia language \cite{Julia2017}. Julia is a high-performance programming language, suitable for scientific computing and computationally-demanding applications. Julia has a performant and feature-rich package for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations. For the sake of transparency, however, all the numerics presented below were implemented explicitly, complementing the aforementioned package, and made available in the github repository \cite{RODEConvEM2023}.
+
 \subsection{Linear homogeneous equation}
 \label{seclinearhomogeneousrode}
 
@@ -1631,13 +1633,15 @@ See Neckel and Rupp pg 582 as a starting point of a model driven by a transport 
 
     \bibitem{Bender2003} C. Bender, An It\^o formula for generalized functionals of a fractional Brownian motion with arbitrary Hurst parameter, \emph{Stochastic Processes and their Applications,} 104 (2003), 81--106.
 
+    \bibitem{Julia2017} J. Bezanson, A. Edelman, S. Karpinski, V. B. Shah, Julia: A fresh approach to numerical computing, \emph{Siam Review,} 59 (2017), no. 1, 65--98.
+
     \bibitem{BHOB2008} F. Biagini, Y. Hu, B. Oksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
 
     \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
-    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr\o n, B. \O ksendal, J. Ub\o e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. Högnas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
+    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr\o n, B. \O ksendal, J. Ub\o e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
     \bibitem{GiraultRaviart1981} V. Girault, P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
 
@@ -1650,6 +1654,10 @@ See Neckel and Rupp pg 582 as a starting point of a model driven by a transport 
     \bibitem{HighamKloeden2021} D. J. Higham, P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
 
     \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
+
+    \bibitem{RackauckasNie2017} C. Rackauckas, Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1.
+
+    \bibitem{RODEConvEM2023} P. Kloeden, R. Rosa, Numerical examples of strong order of convergence of the Euler method for random ordinary differential equations, \texttt{https://github.com/rmsrosa/rode\_conv\_em}.
 
     \bibitem{NeckelRupp2013} F. Rupp, T. Neckel, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
 
