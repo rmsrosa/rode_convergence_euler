@@ -1262,23 +1262,61 @@ Then, using Fubini's Theorem to exchange the order of integration,
         \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
         & = \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
         & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi \;\mathrm{d}s \\
-        & = \frac{1}{\Gamma(H + 1/2)}\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi \\
+        & = \frac{1}{\Gamma(H + 1/2)}\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \\
         & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\\
         & \qquad + \frac{1}{\Gamma(H + 1/2)}\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi \\
     \end{aligned}
 \end{equation}
 
-For the first term,
+For the first term, notice $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable in $\sigma > \xi$, so that
+\[
+    (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} = - (H-1/2)\int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\]
+Thus,
+\[
+    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s = (H-1/2)\int_{0}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s.
+\]
+Exchanging the order of integration yields
 \begin{align*}
-    \int_{0}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\
-    & = \int_{0}^{\Delta t_N} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\
-    & \quad + \int_{\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (s - \Delta t_N -\xi)^{H-1/2}\right) \;\mathrm{d}s \\
-    & \leq \int_0^{\Delta t_N}\frac{(s - \tau^N(s))^{H - 1/2}}{(s - \xi)^{H-1/2}(\tau^N(s) - \xi)^{H - 1/2}} \;\mathrm{d}s \\
-    & \qquad + \frac{1}{H + 1/2} \left((t_j - \xi)^{H + 1/2} - (t_j - \Delta t_N - \xi)^{H + 1/2}\right) \\
-    & \qquad + \frac{1}{H + 1/2} \left((\Delta t_N - \xi)^{H + 1/2} - (-\xi)^{H + 1/2}\right) \\
-    & \leq C \Delta t_N^{H + 1/2} \quad \textrm{(CHECK! BUT WAIT NEED FAST DECAY IN $\xi$)}
+    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} \right. & \left. - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s \\
+    & = (H-1/2)\int_{0}^{t_j} \int_{\sigma}^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
+    & = (H-1/2)\int_{0}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
 \end{align*}
+Hence,
+\begin{multline*}
+    \left|\int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s\right| \\
+    \leq (1/2 - H)\int_{0}^{t_j} \Delta t_N (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{multline*}
+Now, using the Lyapunov inequality and the It\^o isometry, and using the same trick as above,
+\begin{align*}
+    & \mathbb{E}\left[\left|\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \right|\right] \\
+    & \qquad\qquad \leq \left(\int_{-\infty}^{0} \left(\int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
+    & \qquad\qquad \leq \Delta t_N \left(\int_{-\infty}^{0} \left( (1/2 - H)\int_0^{t_j} (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
+    & \qquad\qquad \leq (1/2 - H)\Delta t_N \left(\int_{-\infty}^{0} \left(\int_0^T (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
+    & \qquad\qquad \leq C_{T, H}\Delta t_N,
+\end{align*}
+for a suitable constant $C_{T, H}$. We see this term is order 1.
 
+The second term is similar.
+\begin{align*}
+    \int_{\tau^N(\xi)+\Delta t_N}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s \\
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_\sigma^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{align*}
+Thus,
+\begin{multline*}
+    \left| \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right| \\
+    \leq (1/2 - H)\Delta t_N \int_{\tau^N(\xi)+\Delta t_N}^{t_j} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{multline*}
+Hence,
+\begin{align*}
+    & \mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    & \qquad\qquad \leq \left(\int_{0}^{t_j} \left(\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
+    & \qquad\qquad \leq \Delta t_N (1/2 - H)\left(\int_{0}^{t_j} \left( \int_{\tau^N(\xi)+\Delta t_N}^{T} (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
+    & \qquad\qquad \leq C_{T, H}\Delta t_N,
+\end{align*}
+for a possibly different constant $C_{T, H}$. This term is also of order 1.
 
 For the last term, we have
 \begin{multline*}
@@ -1287,51 +1325,11 @@ For the last term, we have
 \end{multline*}
 so that, using the Lyapunov inequality and the It\^o isometry
 \begin{multline}
-    label{thirdtermfBm}
+    \label{thirdtermfBm}
     \mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     \leq \left( \int_0^{t_j} \left(\int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s\right)^2 \;\mathrm{d}\xi\right)^{1/2} \\ 
     \leq \left( \int_0^{t_j} \Delta t_N^{2H + 1} \;\mathrm{d}\xi\right)^{1/2} \leq t_j^{1/2} \Delta t_N^{H + 1/2}.
 \end{multline}
-
-
-\subsection{Old}
-One of the integral formulas for the fractional Brownian motion is \cite[Section 1.8]{Mishura2008}
-\begin{equation}
-    \label{BHtintegralformulaold}
-    B^H_t = \int_0^t m_H(t, s) \;\mathrm{d}W_s,
-\end{equation}
-for a suitable standard Wiener process $\{W_s\}_s$, with
-\begin{multline}
-    \label{mH}
-    m_H(t, s) = C_H \left( \left(\frac{s}{t}\right)^{1/2 - H} \frac{1}{(t - s)^{1/2 - H}} \right. \\
-    \left. + \left(\frac{1}{2} - H\right) s^{1/2 - H}\int_s^t\frac{1}{\xi^{3/2 - H}}\frac{1}{(\xi - s)^{1/2 - H}}\;\mathrm{d}\xi\right),
-\end{multline}
-and where $C_H$ is the constant $C_H^{(6)}$ in \cite[Section 1.8]{Mishura2008}, given by
-\begin{equation}
-    \label{defCH}
-    C_H = \left( \frac{2H\Gamma(3/2 - H)}{\Gamma(2 - 2H)\Gamma(H + 1/2)} \right)^{1/2},
-\end{equation}
-where $\Gamma(\cdot)$ is the well-known Gamma function.
-
-With \eqref{BHtintegralformulaold}, we write
-\[
-    B^H_s - B^H_{\tau^N(s)} = \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi + \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi. 
-\]
-Thus, using Fubini's Theorem to exchange the order of integration,
-\begin{align*}
-    \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
-    & = \int_0^{t_j} \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
-    & \qquad + \int_0^{t_j} \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi \;\mathrm{d}s \\
-    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} m_H(s, \xi) \;\mathrm{d}s \;\mathrm{d}W_\xi  \\
-    & \qquad + \int_0^{t_j} \int_0^{\tau^N(s)} \left(m_H(s, \xi) - m_H(\tau^N(s), \xi) \right) \;\mathrm{d}W_\xi \;\mathrm{d}s
-\end{align*}
-
-Using the Lyapunov inequality and the It\^o isometry, the last term in \eqref{expectedestimateglobalerrorintegral} becomes
-\begin{multline*}
-    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq \left( \int_{\tau^N(s)}^s m_H(s, \xi) \;\mathrm{d}W_\xi\right)^{1/2} + \left( \right)^{1/2}
-\end{multline*}
-
 
 \section*{Acknowledgments}
 
