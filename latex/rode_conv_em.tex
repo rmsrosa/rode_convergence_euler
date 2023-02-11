@@ -172,11 +172,11 @@ These two cases are treated in \cref{secmonotonicbound} (for the bounded variati
 
 The conditions in \cref{thmmonotonicbound} and \cref{thmItostep} are not readily verifiable, but \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of the two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o noise.
 
-We complement this work with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not have a general proof of this order of convergence in the case of fBm noise, but, in the example considered, we essentially have
+We complement this work with a few explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not have a general proof of this order of convergence in the case of fBm noise, but, in the example considered, we essentially have (see \eqref{stepfBm} and \eqref{BHtintegralformulastep})
 \[
-    F_s - F_\tau \sim \int_\tau^s (s-\tau)^{H-1/2}\;\mathrm{d}W_\xi.
+    F_s - F_\tau \sim \int_\tau^s (s-\tau)^{H-1/2}\;\mathrm{d}W_\xi + \text{higher order term}.
 \]
-In this case,
+In this case, disregarding the higher order term,
 \begin{align*}
     \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\ 
     & \qquad \sim \int_0^{t_j} \int_{\tau^N(s)}^s (s-\tau^N(s))^{H-1/2} \;\mathrm{d} W_\xi\;\mathrm{d}s \\
@@ -1239,17 +1239,18 @@ Although the above linear equation has the explicit solution
 \end{equation}
 we check the convergence numerically by solving the equation with the Euler method itself, but using as target the approximation in the finest mesh.
 
-In this particular case, we can prove rigorously the strong order of convergence is $H+1/2$, for $0 < H < 1/2$. Indeed, we need to estimate the last term in \eqref{expectedestimateglobalerrorintegral}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
-\[
+In this particular case, we can prove rigorously the strong order of convergence is $H+1/2$, for $0 < H < 1/2$. Indeed, we need to estimate the last term of \eqref{expectedestimateglobalerrorintegral}, in \cref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
+\begin{equation}
+    \label{stepfBm}
     f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
-\]
+\end{equation}
 for $0 \leq s \leq T$. There are several ways to represent an fBm (see e.g. \cite{BHOB2008, Mishura2008}). We will use the formula \cite[eq. (2.1)]{MandelbrotVanNess1968}, \cite[eq. (1.1)]{BHOB2008}
 \begin{multline}
     \label{BHtintegralformula}
     B^H_t = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^0 \left( (t-s)^{H-1/2} - (-s)^{H-1/2}\right) \;\mathrm{d}W_s \right. \\
     \left. + \int_0^t (t - s)^{H-1/2} \;\mathrm{d}W_s\right),
 \end{multline}
-where $\Gamma(\cdot)$ is the well-known Gamma function. For the step, this means
+where $\Gamma(\cdot)$ is the well-known Gamma function. For the step, \eqref{BHtintegralformula} means that
 \begin{multline}
     \label{BHtintegralformulastep}
     B^H_s - B^H_{\tau^N(s)} = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \right. \\
@@ -1288,14 +1289,20 @@ Hence,
     \leq (1/2 - H)\int_{0}^{t_j} \Delta t_N (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
 \end{multline*}
 Now, using the Lyapunov inequality and the It\^o isometry, and using the same trick as above,
+
 \begin{align*}
     & \mathbb{E}\left[\left|\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \right|\right] \\
     & \qquad\qquad \leq \left(\int_{-\infty}^{0} \left(\int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
     & \qquad\qquad \leq \Delta t_N \left(\int_{-\infty}^{0} \left( (1/2 - H)\int_0^{t_j} (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
-    & \qquad\qquad \leq (1/2 - H)\Delta t_N \left(\int_{-\infty}^{0} \left(\int_0^T (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
-    & \qquad\qquad \leq C_{T, H}\Delta t_N,
+    & \qquad\qquad \leq (1/2 - H)\Delta t_N \left(\int_{-\infty}^{0} \left(\int_0^T (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2}.
 \end{align*}
-for a suitable constant $C_{T, H}$. We see this term is order 1.
+Therefore,
+\begin{multline}
+    \label{firsttermfBm}
+    \frac{1}{\Gamma(H + 1/2)}\Delta t_N \mathbb{E}\left[\left|\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \right|\right] \\
+    \leq C_H^{(1)}\Delta t_N,
+\end{multline}
+for a suitable constant $C_H^{(1)}$. We see this term is order 1.
 
 The second term is similar.
 \begin{align*}
@@ -1311,12 +1318,17 @@ Thus,
 \end{multline*}
 Hence,
 \begin{align*}
-    & \mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    & \mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     & \qquad\qquad \leq \left(\int_{0}^{t_j} \left(\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
-    & \qquad\qquad \leq \Delta t_N (1/2 - H)\left(\int_{0}^{t_j} \left( \int_{\tau^N(\xi)+\Delta t_N}^{T} (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2} \\
-    & \qquad\qquad \leq C_{T, H}\Delta t_N,
+    & \qquad\qquad \leq \Delta t_N (1/2 - H)\left(\int_{0}^{t_j} \left( \int_{\tau^N(\xi)+\Delta t_N}^{T} (\sigma - \xi)^{H-3/2} \;\mathrm{d}\sigma \right)^2 \;\mathrm{d}\xi \right)^{1/2}.
 \end{align*}
-for a possibly different constant $C_{T, H}$. This term is also of order 1.
+Therefore,
+\begin{multline}
+    \label{secondtermfBm}
+    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    \leq C_H^{(2)}\Delta t_N,
+\end{multline}
+for a possibly different constant $C_H^{(2)}$. This term is also of order 1.
 
 For the last term, we have
 \begin{multline*}
@@ -1324,12 +1336,24 @@ For the last term, we have
     \leq \frac{1}{H + 1/2} \Delta t_N^{H + 1/2}.
 \end{multline*}
 so that, using the Lyapunov inequality and the It\^o isometry
-\begin{multline}
-    \label{thirdtermfBm}
+\begin{multline*}
     \mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     \leq \left( \int_0^{t_j} \left(\int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s\right)^2 \;\mathrm{d}\xi\right)^{1/2} \\ 
     \leq \left( \int_0^{t_j} \Delta t_N^{2H + 1} \;\mathrm{d}\xi\right)^{1/2} \leq t_j^{1/2} \Delta t_N^{H + 1/2}.
+\end{multline*}
+Therefore,
+\begin{equation}
+    \label{thirdtermfBm}
+    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \leq C_H^{(3)} \Delta t_N^{H + 1/2},
+\end{equation}
+for a third constant $C_H^{(3)}$.
+
+Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{thirdtermfBm} in \eqref{integralofstepfBm} we find that
+\begin{multline}
+    \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
+    \leq C_H^{(4)} \Delta t_N + C_H^{(3)} \Delta t_N^{H + 1/2},
 \end{multline}
+where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
 \section*{Acknowledgments}
 
