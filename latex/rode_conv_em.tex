@@ -46,14 +46,14 @@
 
 \title[Strong order convergence of Euler for Random ODEs]{Improved error estimate for the strong order of convergence of the Euler method for random ordinary differential equations}
 
-\author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 \author[P. E. Kloeden]{Peter E. Kloeden}
+\author[R. M. S. Rosa]{Ricardo M. S. Rosa}
 
-\address[Ricardo M. S. Rosa]{Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro, Brazil}
 \address[Peter E. Kloeden]{Mathematics Department, University of Tubingen, Germany}
+\address[Ricardo M. S. Rosa]{Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro, Brazil}
 
-\email[R. M. S. Rosa]{rrosa@im.ufrj.br}
 \email[P. E. Kloeden]{kloeden@math.uni-frankfurt.de}
+\email[R. M. S. Rosa]{rrosa@im.ufrj.br}
 
 \date{\today}
 
@@ -150,7 +150,7 @@ In the case of an It\^o noise, we assume
 \[
     \mathrm{d}F_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
 \]
-with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, and we bound the right hand side using the Lyapunov inequality and the It\^o isometry:
+with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, which may actually depend on $\{Y_t\}_t$, so that multiplicative noise is allowed. Then we bound the right hand side using the Lyapunov inequality and the It\^o isometry:
 \begin{align*}
     \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right|\right] & \leq \left( \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[A_\xi^2]\;\mathrm{d} \xi\right)^{1/2} \\ 
     & \quad + \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \mathbb{E}[B_\xi] \;\mathrm{d}\xi  \\ 
@@ -184,7 +184,7 @@ In this case, disregarding the higher order term,
     & \qquad \sim \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \tau^N(\xi))^{H+1/2} \;\mathrm{d} W_\xi \\
     & \qquad = (\Delta t_N)^{H+1/2} \int_0^{t_j} \;\mathrm{d} W_\xi.
 \end{align*}
-which, upon taking the expectation, yields a strong convergence of order $H + 1/2$.
+which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
@@ -1033,7 +1033,7 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
     \label{samplepathslinearhomogeneousrode}
-    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutios compatible with the given realizations of the noise on the mesh points.}
+    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
 \end{figure}
 
 The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
@@ -1139,7 +1139,7 @@ Hence, once an Euler approximation of \eqref{linearnonhomogeneousrode} is comput
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearnonhomogeneousZidistribution}. Figure \ref{samplepathslinearnonhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
     \label{samplepathslinearnonhomogeneousrode}
-    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutios compatible with the given realizations of the noise on the mesh points.}
+    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
 \end{figure}
 
 The Table \ref{tablinearnonhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearnonhomogeneousrode} illustrates the order of convergence.
@@ -1219,7 +1219,7 @@ Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is
 
 \subsection{Earthquake and other impulse driven models}
 
-See Neckel and Rupp pg 582 as a starting point of a model driven by a transport process as the source of ground motion excitation (both Kanai-Tajima and Bogdanoff, check out also the Clough-Penzien).
+Now we consider a simple structural model driven by an earthquake-type random disturbance in the form of a transport process, proposed by \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models) as a starting point of a model driven by a transport process as the source of ground motion excitation. There are a number of models for earthquake-type forcing, such as Kanai-Tajima and Clough-Penzien. We chose the Bogdanoff-Goldberg-Bernard model due to the different type of noise, so we can illustrate the improved convergence in the case of a transport process noise.
 
 \subsection{Fractional Brownian motion noise}
 
@@ -1363,39 +1363,41 @@ where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propb
 
     \bibitem{Bender2003} C. Bender, An It\^o formula for generalized functionals of a fractional Brownian motion with arbitrary Hurst parameter, \emph{Stochastic Processes and their Applications,} 104 (2003), 81--106.
 
-    \bibitem{Julia2017} J. Bezanson, A. Edelman, S. Karpinski, V. B. Shah, Julia: A fresh approach to numerical computing, \emph{Siam Review,} 59 (2017), no. 1, 65--98.
+    \bibitem{Julia2017} J. Bezanson, A. Edelman, S. Karpinski, and V. B. Shah, Julia: A fresh approach to numerical computing, \emph{Siam Review,} 59 (2017), no. 1, 65--98.
 
-    \bibitem{BHOB2008} F. Biagini, Y. Hu, B. {\O}ksendal, T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
+    \bibitem{BHOB2008} F. Biagini, Y. Hu, B. {\O}ksendal, and T. Zhang. \emph{Stochastic Calculus for Fractional Brownian Motion and Applications,} Springer-Verlag, London, 2008.
+
+    \bibitem{BogdanoffGoldbergBernard1961} J. L. Bogdanoff, J. E. Goldberg, and M. C. Bernard, Response of a simple structure to a random earthquake-type disturbance, \emph{Bulletin of the Seismological Society of America,} 51 (1961), no. 2, 293--310.
 
     \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
 
-    \bibitem{CoddingtonLevinson1985} E. A. Coddington, N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
+    \bibitem{CoddingtonLevinson1985} E. A. Coddington and N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
-    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
+    \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, and T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
-    \bibitem{GiraultRaviart1981} V. Girault, P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
+    \bibitem{GiraultRaviart1981} V. Girault and P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
 
     \bibitem{Gronwall1919} T. H. Gronwall, Note on the derivatives with respect to a parameter of the solutions of a system of differential equations, \emph{Ann. of Math.} (2) 20 (1919), 292--296.
 
-    \bibitem{GruneKloeden2001} L. Gr\"une, P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
+    \bibitem{GruneKloeden2001} L. Gr\"une and P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
 
-    \bibitem{HanKloeden2017} X. Han \& P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017.
+    \bibitem{HanKloeden2017} X. Han and P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017.
 
-    \bibitem{HighamKloeden2021} D. J. Higham, P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
+    \bibitem{HighamKloeden2021} D. J. Higham and P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
 
-    \bibitem{MandelbrotVanNess1968} B. B. Mandelbrot, J. W. Van Ness, Fractional Brownian Motions, Fractional Noises and Applications, \emph{Siam Review,} Vol. 10 (1968), no. 4, 422--437.
+    \bibitem{MandelbrotVanNess1968} B. B. Mandelbrot and J. W. Van Ness, Fractional Brownian Motions, Fractional Noises and Applications, \emph{Siam Review,} Vol. 10 (1968), no. 4, 422--437.
 
     \bibitem{Mishura2008} Y. S. Mishura, \emph{Stochastic calculus for fractional Brownian motion and related processes,} Lecture Notes in Mathematics 1929, Springer-Verlag, Berlin, Heidelberg, 2008.
 
     \bibitem{Oksendal2003} B. {\O}ksendal, \emph{Stochastic Differential Equations - An Introduction with Applications,} Universitext, Springer-Verlag Berlin Heidelberg 2003.
 
-    \bibitem{RackauckasNie2017} C. Rackauckas, Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1.
+    \bibitem{RackauckasNie2017} C. Rackauckas and Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1.
 
-    \bibitem{RODEConvEM2023} P. Kloeden, R. Rosa, Numerical examples of strong order of convergence of the Euler method for random ordinary differential equations, \texttt{https://github.com/rmsrosa/rode\_conv\_em}.
+    \bibitem{RODEConvEM2023} P. Kloeden and R. Rosa, Numerical examples of strong order of convergence of the Euler method for random ordinary differential equations, \texttt{https://github.com/rmsrosa/rode\_conv\_em}.
 
-    \bibitem{NeckelRupp2013} F. Rupp, T. Neckel, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
+    \bibitem{NeckelRupp2013} F. Rupp and T. Neckel, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
 
-    \bibitem{WangCaoHanKloeden2021} P. Wang, Y. Cao, X. Han, P. Kloeden, Mean-square convergence of numerical methods for random ordinary differential equations, \emph{Numerical Algorithms,} vol. 87 (2021), 299--333.
+    \bibitem{WangCaoHanKloeden2021} P. Wang, Y. Cao, X. Han, and P. Kloeden, Mean-square convergence of numerical methods for random ordinary differential equations, \emph{Numerical Algorithms,} vol. 87 (2021), 299--333.
 
 \end{thebibliography}
 
