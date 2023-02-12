@@ -1,4 +1,12 @@
+"""
+    Wiener_noise(t0, tf, y0)
 
+Construct a Wiener process on the interval `t0` to `tf`, with initial condition `y0`.
+
+The noise process `noise! = Wiener_noise(t0, tf, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+    
+The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
+"""
 function Wiener_noise(t0, tf, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
@@ -12,6 +20,15 @@ function Wiener_noise(t0, tf, y0::T) where {T}
     return fn
 end
 
+"""
+    GBM_noise(t0, tf, μ, σ, y0)
+
+Construct a Geometric Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`.
+
+The noise process `noise! = GBM_noise(t0, tf, μ, σ, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process, defined by ``dY_t = \\mu Y_t dt + \\sigma Y_t dW_t``.
+    
+The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
+"""
 function GBM_noise(t0, tf, μ, σ, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
@@ -31,7 +48,9 @@ end
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
 
-The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+
+The noise process returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
 """
@@ -55,6 +74,8 @@ end
     CompoundPoisson_noise_alt(t0, tf, λ, dY)
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
+
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
 The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
 
@@ -83,6 +104,8 @@ end
 
 Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `S`.
 
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+
 The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
@@ -105,6 +128,8 @@ end
 
 Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `RV`.
 
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+
 The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
 """
 function Transport_noise(t0, tf, f, RV, n)
@@ -124,7 +149,17 @@ function Transport_noise(t0, tf, f, RV, n)
 end
 
 """
-Fractional Brownian motion process
+    fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
+
+Construct a fractional Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, Husrt parameter `H` and length up to `N`.
+
+The noise process `noise! = fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+    
+The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`. The length of `Yt` must be smaller than or equal to the length `N` given in the constructor and used for the pre-allocation of the auxiliary vectors.
+
+The method implemented is the one developed by Davies and Harte and uses an FFT transform to drop the order of complexity to O(N log N). For the transform, we use `FFTW.jl`, and use the flag `flags=FFTW.MEASURE` for generating the plans. Other common flags can be passed instead.
+
+Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
 function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
     ispow2(N) || throw(
@@ -198,12 +233,14 @@ function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
 end
 
 """
-    Generates sample paths of fractional Brownian Motion using the Hosking method
+    fBm_hosking(rng, T, N, H)
+
+Generate sample paths of fractional Brownian Motion using the Hosking method, but I am not sure it is correct. I focused on the Davies-Harte method instead.
     
-    args:
-        T:      length of time (in years)
-        N:      number of time steps within timeframe
-        H:      Hurst parameter
+args:
+    T:      length of time (in years)
+    N:      number of time steps within timeframe
+    H:      Hurst parameter
 """
 function fBm_hosking(rng, T, N, H)
     
@@ -243,6 +280,9 @@ function fBm_hosking(rng, T, N, H)
     return T^H * fBm
 end
 
+"""
+An alternate implementation for fractional Brownian motion process, but I think it is not working either. Don't think I finish implementing it.
+"""
 function fBm_hosking2(rng, T, N, H)
     
     # Dieker eq. (1.7)
@@ -290,7 +330,7 @@ end
 
 Generates a sample path of a fractional Gaussian noise (fGn) with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
 
-Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
+This one is not optimized with pre-allocated plans, it was only used for development and testing.
 """
 function fG_daviesharte(rng, T, N, H)
     ispow2(N) || throw(
@@ -337,6 +377,13 @@ function fG_daviesharte(rng, T, N, H)
     return Z[1:N]
 end
 
+"""
+    fG_daviesharte_naive(rng, T, N, H)
+
+Generates a sample path of a fractional Gaussian noise (fGn) with Hurst parameter `H` on the interval `[0, T]` discretized over a uniform mesh with `N` points (which must be a power of 2), with random numbers generated with `rng`.
+
+This one does not use `FFTW.jl` and is pretty slow, using a naive discrete transform that is not FFT and with complexity O(N^2). It was only used for development and testing.
+"""
 function fG_daviesharte_naive(rng, T, N, H)
     ispow2(N) || throw(
         ArgumentError(
@@ -376,8 +423,11 @@ function fG_daviesharte_naive(rng, T, N, H)
     return Z
 end
 
-fG_daviesharte(Xoshiro(123), 1.0, 2^10, 0.2) ≈ fG_daviesharte_naive(Xoshiro(123), 1.0, 2^10, 0.2)
+"""
+    fBm_daviesharte(rng, T, N, H)
 
+Generate a sample path of a fractional Brownian motion using a sample path of a fractional Gaussian noise from [`fG_daviesharte(rng, T, N, H)`](@ref), which is not optimized with pre-allocated plans.
+"""
 function fBm_daviesharte(rng, T, N, H)
     Z = fG_daviesharte(rng, T, N, H)
     return [zero(Z[1]); cumsum(view(Z, 1:N-1))]
