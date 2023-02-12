@@ -1,4 +1,5 @@
 using Documenter
+using RODEConvergence
 
 ENV["GKSwstype"] = "100"
 
@@ -15,6 +16,7 @@ makedocs(
             "Homogenous Wiener noise" => "wiener_homogeneous.md",
             "Homogenous sine Wiener noise" => "sin_wiener_homogeneous.md"
         ],
+        "API" => "api.md",
         "Appendix" => [
             "Fractional Brownian motion" => "fBm.md"
         ]
@@ -25,4 +27,5 @@ makedocs(
         canonical = "https://github.com/rmsrosa/rode_conv_em",
         edit_link = "main",
     ),
+    modules = [RODEConvergence],
 )
