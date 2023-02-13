@@ -31,7 +31,7 @@ function solve_euler!(rng, Xt, t0, tf, x0, f, Yt)
 end
 
 """
-    solve_euler!(rng, Xt, t0, tf, x0, f, Yt)
+    solve_heun!(rng, Xt, t0, tf, x0, f, Yt)
 
 Solve inplace, via Heun method, the RODE `dX_t/dt = f(t, X_t, Y_t),` with the following data:
 

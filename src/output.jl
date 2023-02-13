@@ -1,4 +1,9 @@
 
+"""
+    plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
+
+Plot a few sample paths in the interval `t0` to `tf`, with different time steps as given by a list/vector/range `Ns`, from the noise `noise!`, using the Euler method for the equation with right hand side `f`.
+"""
 function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
 
     title = info === nothing ? "" : "Sample noise, sample target and numerical approximations for\n$(info.equation), with $(info.ic), on $(info.tspan)\nand $(info.noise)"
@@ -6,7 +11,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     # generate noise sample path
     Yt = Vector{Float64}(undef, Ntgt)
     noise!(rng, Yt)
-    display(plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10))
+    plt_noise = plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10, legend=nothing)
 
     # generate target path
     x0 = rand(rng, X0)
@@ -31,11 +36,15 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
         plot!(plt, range(t0, tf, length=N), XNt, linestyle=:dash, label="\$N = $N\$")
     end
 
-    display(plt)
     filename === nothing || savefig(plt, filename)
-    return Yt, Xt, XNts
+    return plt, plt_noise, Yt, Xt, XNts
 end
 
+"""
+    generate_error_table(Ns, deltas, errors)
+
+Generate the markdown table with the data for the strong `errors` obtained with time steps `deltas` and length `Ns`.
+"""
 function generate_error_table(Ns, deltas, errors)
     table = "N & dt & error \\\\\n"
     for (N, dt, error) in zip(Ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
@@ -50,8 +59,8 @@ function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=not
     plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", xlims = [0.5, 2.0] .* extrema(deltas), ylims = [0.5, 2.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
     scatter!(plt, deltas, errors, marker = :star, label = "strong errors with $M samples")
     plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))")
-    display(plt)
     filename === nothing || savefig(plt, filename)
+    return plt
 end
 
 function plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf, filename=nothing)
@@ -59,6 +68,6 @@ function plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf, filename=nothing)
     for (i, N) in enumerate(Ns)
         plot!(range(t0, tf, length=N), trajerrors[1:N, i], label="\$\\mathrm{d}t = $(round(deltas[i], sigdigits=2))\$")
     end
-    display(plt)
     filename === nothing || savefig(plt, filename)
+    return plt
 end

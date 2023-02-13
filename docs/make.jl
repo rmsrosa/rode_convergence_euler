@@ -8,20 +8,22 @@ makedocs(
     pages = [
         "Overview" => "index.md",
         "Theory" => [
-            "Main results" => "results.md",
-            "Main idea" => "idea.md"
+            "Main results" => "theory/results.md",
+            "Main idea" => "theory/idea.md",
         ],
         "Examples" => [
-            "Nonhomogenous Wiener noise" => "wiener_nonhomogeneous.md",
-            "Homogenous Wiener noise" => "wiener_homogeneous.md",
-            "Homogenous sine Wiener noise" => "sin_wiener_homogeneous.md"
+            "Homogenous linear equation with sine of Wiener noise coefficient" => "examples/sin_wiener_homogeneous.md",
+        ],
+        "DifferentialEquations.jl" => [
+            "Nonhomogenous Wiener noise" => "sciml/wiener_nonhomogeneous.md",
+            "Homogenous Wiener noise" => "sciml/wiener_homogeneous.md",
+        ],
+        "Noises" => [
+            "Fractional Brownian motion" => "noises/fBm.md",
         ],
         "API" => "api.md",
-        "Appendix" => [
-            "Fractional Brownian motion" => "fBm.md"
-        ]
     ],
-    authors = "Ricardo Rosa and Peter Kloeden",
+    authors = "Peter Kloeden and Ricardo Rosa",
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", "false") == "true",
         canonical = "https://github.com/rmsrosa/rode_conv_em",
