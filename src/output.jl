@@ -53,16 +53,34 @@ function generate_error_table(Ns, deltas, errors)
     return table
 end
 
-function plot_dt_vs_error(deltas, errors, lc, p, M; info = nothing, filename=nothing)
-    title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)\nand $(info.noise)"
+"""
+    plot_dt_vs_error(deltas, errors, lc, p; info = nothing, filename=nothing)
+
+Plot the convergence estimate in a log-log scale (tme step vs strong error) based on the given values `deltas`, `errors`, `lc`, `p`, as computed by [`calculate_errors`](@ref), and the number `M` of sample points used in the Monte-Carlo method.
+
+It draws a scatter plot from `deltas` and `errors` and a line plot from the fitted `errors ≈ C Δtᵖ`, where `C = exp(lc)`.
+
+If `info` is given as a namedtuple with fields `info.equation`, `info.ic`, `info.tspan`, `info.noise`, and `info.M`, then a title is included in the plot, with this information.
+
+If `filename` is given, then the picture is save to the given location.
+"""
+function plot_dt_vs_error(deltas, errors, lc, p; info = nothing, filename=nothing)
+    title = info === nothing ? "" : "Order of convergence of the strong error of the Euler method for\n$(info.equation), with $(info.ic), on $(info.tspan)\n, $(info.noise)\n, and $(info.M)"
     fit = exp(lc) * deltas .^ p
     plt = plot(xscale = :log10, yscale = :log10, xaxis = "\$\\Delta t\$", xlims = [0.5, 2.0] .* extrema(deltas), ylims = [0.5, 2.0] .* extrema(errors), yaxis = "error", title = title, titlefont = 10, legend = :topleft)
-    scatter!(plt, deltas, errors, marker = :star, label = "strong errors with $M samples")
+    scatter!(plt, deltas, errors, marker = :star, label = "strong errors")
     plot!(plt, deltas, fit, linestyle = :dash, label = "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))")
     filename === nothing || savefig(plt, filename)
     return plt
 end
 
+"""
+    plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf, filename=nothing)
+
+Plot the evolution of the strong error in time `t` within the interval `(t0, tf)`.
+
+If `filename` is given, then the picture is save to the given location.
+"""
 function plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf, filename=nothing)
     plt = plot(title = "Evolution in time of the strong error of the Euler method\nfor each chosen fixed time step", xlabel="\$t\$", ylabel="error", titlefont=10, legend=:topleft)
     for (i, N) in enumerate(Ns)

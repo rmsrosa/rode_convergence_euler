@@ -153,10 +153,11 @@ And add some information about the simulation:
 
 ```@example sinwienerhomogeneous
 info = (
-    equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
+    equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = \\sin(W_t) X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$"
+    tspan="\$[0, T] = [$t0, $tf]\$",
+    M = "$M sample paths"
 )
 ```
 
@@ -206,7 +207,7 @@ p
 
 ```@example sinwienerhomogeneous
 filename = nothing
-plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
+plot_dt_vs_error(deltas, errors, lc, p; info, filename)
 ```
 
 ```@example sinwienerhomogeneous

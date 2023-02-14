@@ -12,6 +12,7 @@ makedocs(
             "Main idea" => "theory/idea.md",
         ],
         "Examples" => [
+            "Homogenous linear equation with Wiener noise coefficient" => "examples/wiener_homogeneous.md",
             "Homogenous linear equation with sine of Wiener noise coefficient" => "examples/sin_wiener_homogeneous.md",
         ],
         "DifferentialEquations.jl" => [
