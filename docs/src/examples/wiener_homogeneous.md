@@ -50,10 +50,11 @@ where
 ```
 
 Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$ to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
-\[
+```math
     \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
-\]
+```
 Hence,
+```math
 \begin{align*}
     \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
     & = \int_0^\tau \int_0^\tau \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
@@ -62,24 +63,35 @@ Hence,
     & = \int_0^\tau \frac{t^2}{2}\;\mathrm{d}t + \int_0^\tau t(\tau - t)\;\mathrm{d}t - \int_0^\tau \frac{t\tau^2}{2\tau}\;\mathrm{d}t \\
     & = \frac{\tau^3}{12}.
 \end{align*}
+```
 
 Back to $Z_i$, this means that
-\begin{equation}
-    \label{linearhomogeneousZidistribution}
-    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
-\end{equation}
+```math
+    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \sqrt{\frac{(t_{i+1} - t_i)^3}{12}}\mathcal{N}(0, 1).
+```
 
 For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
 ```math
     \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
 ```
-This is the contribution of this random variable to the mean of the exact solution. But we actually use the exact $e^{\sum_i Z_i}$ for a more reliable estimate.
+This is the contribution of this random variable to the mean of the exact solution. But in the implementation we actually draw from $Z_i$, not from $e^{Z_i}$.
 
-Hence, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
+Thus, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
 ```math
-    X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 ```
-for realizations $Z_i$ drawn from a normal distribution.
+for realizations $Z_i$ drawn from a normal distribution and scaled by the standard deviation $\sqrt{(t_{i+1} - t_i)^3/12}$. This is implemented by computing the integral recursively, via
+```math
+    \begin{cases} \\
+        I_j = I_{j-1} + \frac{1}{2}\left(W_{t_{j-1}} + W_{t_j}\right)(t_{j} - t_{j-1}) + Z_j, \\
+        Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
+        R_j \sim \mathcal{N}(0, 1), \\
+    \end{cases}
+```
+with $I_0 = 0$, and setting
+```math
+X_{t_j} = X_0 e^{I_j}.
+```
 
 ## Numerical approximation
 
@@ -110,7 +122,7 @@ Ns = 2 .^ (4:10)
 M = 1_000
 ```
 
-We define the *target* solution.
+We define the *target* solution as described above.
 
 ```@example wienerhomogeneous
 target! = function (rng, Xt, t0, tf, x0, f, Yt)
@@ -119,12 +131,10 @@ target! = function (rng, Xt, t0, tf, x0, f, Yt)
     Xt[1] = x0
     It = 0.0
     for n in 2:Ntgt
-        It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3) / 12
+        It += (Yt[n] + Yt[n-1]) * dt / 2 + randn(rng) * sqrt(dt^3 / 12)
         Xt[n] = x0 * exp(It)
     end
 end
-
-# target! = solve_euler!
 ```
 
 And add some information about the simulation:
@@ -178,7 +188,7 @@ nothing # hide
 The calculated order of convergence is given by `p`:
 
 ```@example wienerhomogeneous
-println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=3))")
+println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
 nothing # hide
 ```
 

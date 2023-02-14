@@ -1023,14 +1023,14 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 \begin{equation}
     \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
 \end{equation}
-This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{\sum_i Z_i}$ for a more reliable estimate.
+This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
 
 Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
 \begin{equation}
     \label{Xtlinearhomogeneousrode}
-    X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 \end{equation}
-for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
+for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
     \label{samplepathslinearhomogeneousrode}
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
@@ -1042,14 +1042,14 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
     \label{tablinearhomogeneousrode}
     \begin{tabular}[htb]{|l|l|l|}
         \hline N & dt & error \\
-        \hline \hline 16 & 0.0667 & 0.0416 \\
-        32 & 0.0159 & 0.0201 \\
-        64 & 0.0323 & 0.0101 \\
-        128 & 0.00787 & 0.00516 \\
-        256 & 0.00392 & 0.00261 \\
-        512 & 0.00196 & 0.00129 \\
-        1024 & 0.000978 & 0.000637 \\
-        2048 & 0.000489 & 0.000314 \\
+        \hline \hline
+        16 & 0.0667 & 0.0228 \\
+        32 & 0.0323 & 0.0116 \\
+        64 & 0.0159 & 0.00607 \\
+        128 & 0.00787 & 0.00301 \\
+        256 & 0.00392 & 0.00151 \\
+        512 & 0.00196 & 0.000751 \\
+        1024 & 0.000978 & 0.000367 \\
         \hline
     \end{tabular}
     \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 samples for each fixed time step, with the exact solution calculated with $2^{16}=65536$ points.}
