@@ -79,7 +79,7 @@ The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by t
 
 The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
 
-drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+This is an alternative implementation to [`CompoundPoisson_noise`](@ref).
 """
 function CompoundPoisson_noise_alt(t0, tf, λ, dY)
     fn = function (rng, Yt::Vector)
@@ -232,16 +232,8 @@ function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
     return fn
 end
 
-"""
-    fBm_hosking(rng, T, N, H)
 
-Generate sample paths of fractional Brownian Motion using the Hosking method, but I am not sure it is correct. I focused on the Davies-Harte method instead.
-    
-args:
-    T:      length of time (in years)
-    N:      number of time steps within timeframe
-    H:      Hurst parameter
-"""
+# fBm_hosking(rng, T, N, H) generates sample paths of fractional Brownian Motion using the Hosking method, but I am not sure it is correct. I focused on the Davies-Harte method instead and stopped working on this one.
 function fBm_hosking(rng, T, N, H)
     
     # Dieker eq. (1.7)
@@ -280,9 +272,7 @@ function fBm_hosking(rng, T, N, H)
     return T^H * fBm
 end
 
-"""
-An alternate implementation for fractional Brownian motion process, but I think it is not working either. Don't think I finish implementing it.
-"""
+#  An alternate implementation for fractional Brownian motion process via the Hosking method, but I think it is not working either. Don't think I finish implementing it.
 function fBm_hosking2(rng, T, N, H)
     
     # Dieker eq. (1.7)

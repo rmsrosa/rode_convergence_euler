@@ -1,5 +1,7 @@
 # API
 
+Here we include the docstrings of the functions implemented in `RODEConvergence.jl`, starting with the exported functions and ending with some internal and other test functions.
+
 ## Noises
 
 ```@docs
@@ -67,3 +69,22 @@ plot_dt_vs_error
 ```@docs
 plot_t_vs_errors
 ```
+
+## Internal or extra functions
+
+```@docs
+RODEConvergence.CompoundPoisson_noise_alt
+```
+
+```@docs
+RODEConvergence.fG_daviesharte
+```
+
+```@docs
+RODEConvergence.fG_daviesharte_naive
+```
+
+```@docs
+RODEConvergence.fBm_daviesharte
+```
+
