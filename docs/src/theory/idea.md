@@ -63,6 +63,6 @@ The conditions above are not readily verifiable, but more explicit conditions fo
 
 The case of fractional Brownian motion is more delicate, but follows a similar idea, except the sample paths satisfy
 ```math
-    F_s - F_\tau = \int_\tau^s (s - \xi)^{H-1/2}\;\mathrm{d}F_\xi + \mathcal{O}(\Delta t_N)},
+    F_s - F_\tau = \int_\tau^s (s - \xi)^{H-1/2}\;\mathrm{d}F_\xi + \mathcal{O}(\Delta t_N),
 ```
 which eventually leads to $\Delta t_N^{H + 1/2}$ order, for $0 < H < 1/2.$
