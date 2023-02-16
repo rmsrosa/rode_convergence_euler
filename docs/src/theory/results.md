@@ -1,4 +1,4 @@
-## Main results
+# Main results
 
 Consider the random ordinary differential equation
 ```math
@@ -18,7 +18,7 @@ with the initial condition
   X_0^N = X_0.
 ```
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-Hölder continuous sample paths, it can be show {GruneKloeden2001}, under suitable regularity conditions on $f=f(t, x, y)$, that the Euler scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-Hölder continuous sample paths, it can be show [Grune & Kloeden (2001)](https://link.springer.com/article/10.1023/A:1021995918864), under suitable regularity conditions on $f=f(t, x, y)$, that the Euler scheme converges strongly with order $\theta$ with respect to the time step, i.e. there exists a constant $C \geq 0$ such that
 ```math
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 ```
@@ -30,3 +30,5 @@ We show, in the paper, that, in many classical examples, it is possible to explo
 ```
 
 This is the case, for instance, when the noise is a point process, a transport process, or an Itô process.
+
+For a fractional Brownian motion process with Hurst parameter $H$, we still get strong order 1 convergence for $1/2 \leq H < 1$, while for $0 < H < 1/2$ the strong order of convergence drops to $H + 1/2$, which, however, is still higher than the previously estimated order of $H$, which is the Hölder regularity of the pathwise solutions.

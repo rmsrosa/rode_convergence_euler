@@ -1041,24 +1041,30 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 \begin{table}
     \label{tablinearhomogeneousrode}
     \begin{tabular}[htb]{|l|l|l|}
-        \hline N & dt & error \\
-        \hline \hline
-        16 & 0.0667 & 0.0228 \\
-        32 & 0.0323 & 0.0116 \\
-        64 & 0.0159 & 0.00607 \\
-        128 & 0.00787 & 0.00301 \\
-        256 & 0.00392 & 0.00151 \\
-        512 & 0.00196 & 0.000751 \\
-        1024 & 0.000978 & 0.000367 \\
-        \hline
+    \hline N & dt & error\\
+    \hline \hline
+    16 & 0.0667 & 0.0228 \\
+    32 & 0.0323 & 0.0116 \\
+    64 & 0.0159 & 0.00607 \\
+    128 & 0.00787 & 0.00301 \\
+    256 & 0.00392 & 0.00151 \\
+    512 & 0.00196 & 0.000751 \\
+    1024 & 0.000978 & 0.000367 \\
+    \hline \\
     \end{tabular}
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 samples for each fixed time step, with the exact solution calculated with $2^{16}=65536$ points.}
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $[0, T] = [0.0, 1.0]$, based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $2^{20}=1048576$ points.}    
 \end{table}
 
 \begin{figure}[htb]
     \label{figlinearhomogeneousrode}
-    \includegraphics[scale=0.7]{img/order_linearhomogenous.png}
-    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024, 2048$.}
+    \includegraphics[scale=0.7]{img/order_wienerhomogenous.png}
+    \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
+    $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
+    and a standard Wiener process noise $\{W_t\}_t$,
+     computed with 1000 sample paths,
+    for each $\Delta t = 1/N$,  $N = 16, 32, 64, 128, 256, 512, 1024$.
+    }
 \end{figure}
 
 \begin{rmk}

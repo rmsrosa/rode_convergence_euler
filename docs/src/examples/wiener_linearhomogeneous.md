@@ -1,3 +1,7 @@
+```@meta
+EditURL = "<unknown>/docs/literate/wiener_linearhomogeneous.jl"
+```
+
 # Homogenous linear RODE with a Wiener process noise coefficient
 
 We start by considering a homogeneous linear equation in which the coefficient is a Wiener process.
@@ -8,14 +12,14 @@ More precisely, we consider the RODE
 ```math
   \begin{cases}
     \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
-    \left. X_t \right|_{t = 0} = X_0,
+  \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 ```
 where $\{W_t\}_{t\geq 0}$ is a Wiener process.
 
 The explicit solution is
 ```math
-X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.
+  X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.
 ```
 
 ## Computing a solution with the exact distribution
@@ -29,18 +33,18 @@ We do that by first breaking down the sum into parts:
 
 On each mesh interval, we use that
 ```math
-B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
+  B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 ```
 is a Brownian bridge on $[t_i, t_{i+1}]$, independent of $\{W_t\}_{t\geq 0}$.
 
 Since
 ```math
-\mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t,
+  \mathrm{d}W_t = \mathrm{d}B_t + \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\;\mathrm{d}t,
 ```
 we obtain
 ```math
 \begin{align*}
-    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} \left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
+  \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} \left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
     & = \frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i,
 \end{align*}
 ```
@@ -51,14 +55,14 @@ where
 
 Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$ to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
 ```math
-    \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
+   \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
 ```
 Hence,
 ```math
 \begin{align*}
     \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
     & = \int_0^\tau \int_0^\tau \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^\tau \left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \int_0^\tau \int_0^\tau \left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t  \\
     & = \int_0^\tau \int_0^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
     & = \int_0^\tau \frac{t^2}{2}\;\mathrm{d}t + \int_0^\tau t(\tau - t)\;\mathrm{d}t - \int_0^\tau \frac{t\tau^2}{2\tau}\;\mathrm{d}t \\
     & = \frac{\tau^3}{12}.
@@ -90,7 +94,7 @@ for realizations $Z_i$ drawn from a normal distribution and scaled by the standa
 ```
 with $I_0 = 0$, and setting
 ```math
-X_{t_j} = X_0 e^{I_j}.
+  X_{t_j} = X_0 e^{I_j}.
 ```
 
 ## Numerical approximation
@@ -99,16 +103,16 @@ X_{t_j} = X_0 e^{I_j}.
 
 First we load the necessary packages
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 using Plots
 using Random
 using Distributions
 using RODEConvergence
-```
+````
 
 Then we set up some variables
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
@@ -120,11 +124,11 @@ f(t, x, y) = y * x
 Ntgt = 2^12
 Ns = 2 .^ (4:10)
 M = 1_000
-```
+````
 
 And add some information about the simulation:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
@@ -132,13 +136,14 @@ info = (
     tspan="\$[0, T] = [$t0, $tf]\$",
     M = M,
     Ntgt = Ntgt,
-    Ns = Ns
+    Ns = Ns,
+    filename = "order_wiener_linearhomogenous.png"
 )
-```
+````
 
 We define the *target* solution as described above.
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 target! = function (rng, Xt, t0, tf, x0, f, Yt)
     Ntgt = length(Yt)
     dt = (tf - t0) / (Ntgt - 1)
@@ -149,22 +154,22 @@ target! = function (rng, Xt, t0, tf, x0, f, Yt)
         Xt[n] = x0 * exp(It)
     end
 end
-```
+````
 
 ### An illustrative sample path
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
 nothing # hide
-```
+````
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plt_noise
-```
+````
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plt
-```
+````
 
 ### An illustrative ensemble of solutions
 
@@ -172,64 +177,61 @@ plt
 
 With everything set up, we compute the errors:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 @time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
-```
+````
 
 The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 table = generate_error_table(Ns, deltas, errors, info)
 
 println(table) # hide
 nothing # hide
-```
+````
 
 The calculated order of convergence is given by `p`:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
-nothing # hide
-```
+````
 
 ### Plots
 
 We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
 nothing # hide
-```
+````
 
 One can use that to plot the figure here:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plot(plt; title)
-```
+````
 
 While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plot(plt)
-```
 
-```@example wienerhomogeneous
 println(title)
-```
+````
 
-```@example wienerhomogeneous
-pwd()
-```
-
-```@example wienerhomogeneous
-filename = "../../../latex/img/order_wienerhomogenous.png" # hide
-savefig(plt, filename) # hide
+````@example wiener_linearhomogeneous
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
-```
+````
 
 We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
 
-```@example wienerhomogeneous
+````@example wiener_linearhomogeneous
 plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
-```
+````
+
+---
+
+*This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
+

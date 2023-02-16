@@ -1,6 +1,8 @@
-## Main idea
+# Main idea
 
-The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely
+The improvent in the convergence estimates relies on **three main ideas.**
+
+**The first main idea** of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely
 ```math
 \begin{align*}
     X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
@@ -26,11 +28,14 @@ The first term vanishes due to the initial condition $X_0^N = X_0$. The second t
 ```math
     \mathbb{E}\left[\left|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right|\right] \leq C\Delta t^{\theta}.
 ```
+
 Instead, we look at the whole global error and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable way. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\in I}$ satisfy
 ```math
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 ```
-either in the sense of a Riemann-Stieltjes integral or of an Itô integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an Itô noise. In any case, we bound the global error term using the Fubini Theorem,
+either in the sense of a Riemann-Stieltjes integral or of an Itô integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an Itô noise. This is **the second main idea.**
+
+Now comes the **third main idea.** We use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the scale of the time-step (on $[\tau^N(s), s]$). In this way, We bound the global error term as
 ```math
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
@@ -46,10 +51,18 @@ Then, we find that
 ```
 which yields the strong order 1 convergence provided the remaining expectation is finite.
 
-In the case of an Itô integral, this is exactly what we assume, because the Itô integral is not order preserving; the bound on the remaining expectation is obtained via Itô isometry. In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
+In the case of an Itô integral, this is exactly what we assume, because the Itô integral is not order preserving, and the bound on the remaining expectation is obtained via Itô isometry.
+
+In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
 ```math
     |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
 ```
 Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check.
 
 The conditions above are not readily verifiable, but more explicit conditions for each of the two cases are given. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an Itô noise.
+
+The case of fractional Brownian motion is more delicate, but follows a similar idea, except the sample paths satisfy
+```math
+    F_s - F_\tau = \int_\tau^s (s - \xi)^{H-1/2}\;\mathrm{d}F_\xi + \mathcal{O}(\Delta t_N)},
+```
+which eventually leads to $\Delta t_N^{H + 1/2}$ order, for $0 < H < 1/2.$
