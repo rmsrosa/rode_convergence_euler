@@ -35,7 +35,7 @@ On each mesh interval, we consider again the Brownian bridge
 ```math
   B_t = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
 ```
-on $[t_i, t_{i+1}]$, which is independent of $\{W_t\}_{t\geq 0}$.
+on $[t_i, t_{i+1}]$, which is independent of $W_{t_i}$ and $W_{t_{i+1}}$.
 
 Then,
 ```math
