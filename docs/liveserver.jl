@@ -25,6 +25,8 @@ LiveServer.servedocs(;
     include_dirs = [
         # Watch the src folder so docstrings can be Revise'd
         joinpath(REPO_ROOT, "src"),
+        # Watch the `docs/literate` so pages from the scripts can be updated
+        joinpath(REPO_ROOT, "docs", "literate"),
     ],
     skip_dirs = [
         # Skip the folder where Literate.jl output is written. This is needed
