@@ -1,26 +1,22 @@
+#!/usr/bin/env julia
+
+# Make sure docs environment is active and instantiated
+import Pkg
+Pkg.activate(@__DIR__)
+Pkg.instantiate()
+
 using Documenter
-using Literate
 using RODEConvergence
+
+if "liveserver" in ARGS
+    using Revise
+    Revise.revise()
+end
 
 ENV["GKSwstype"] = "100"
 
-const repo_root = dirname(@__DIR__)
-
-literate_dir = joinpath(repo_root, "docs", "literate")
-generated_relative_dir = "examples"
-generated_dir = joinpath(repo_root, "docs", "src", generated_relative_dir)
-common_script = "common_end.jl"
-
-mkpath(generated_dir)
-
-append_common_script(content) = replace(content, """include(@__DIR__() * "/common_end.jl")""" => read(joinpath(literate_dir, common_script), String))
-
-generated_examples = String[]
-
-for fn in filter(!=(common_script), readdir("docs/literate"))
-    Literate.markdown(joinpath(literate_dir, fn), generated_dir, documenter=true, execute=false, preprocess = append_common_script)
-    push!(generated_examples, replace(joinpath(generated_relative_dir, fn), ".jl" => ".md"))
-end
+# Generate markdown pages from Literate scripts and get the list of generated pages as `generate_examples`:
+include(joinpath(@__DIR__(), "literate.jl"))
 
 makedocs(
     sitename = "Euler method for RODEs",
@@ -49,6 +45,7 @@ makedocs(
         ]
     ],
     authors = "Peter Kloeden and Ricardo Rosa",
+    draft = "draft" in ARGS,
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", "false") == "true",
         canonical = "https://github.com/rmsrosa/rode_conv_em",
