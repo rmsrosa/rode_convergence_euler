@@ -35,14 +35,7 @@ makedocs(
         "Noises" => [
             "noises/fBm.md",
         ],
-        "API" => [
-            "api/api_overview.md",
-            "api/api_noises.md",
-            "api/api_solvers.md",
-            "api/api_errors.md",
-            "api/api_output.md",
-            "api/api_extra.md"
-        ]
+        "api.md",
     ],
     authors = "Peter Kloeden and Ricardo Rosa",
     draft = "draft" in ARGS,

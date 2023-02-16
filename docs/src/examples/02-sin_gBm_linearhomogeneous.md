@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "<unknown>/docs/literate/sin_gBm_linearhomogeneous.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/02-sin_gBm_linearhomogeneous.jl"
 ```
 
 # Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient
@@ -34,7 +34,7 @@ Indeed, the convergence will be estimated from a set of discretizations with mes
 
 First we load the necessary packages
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 using Plots
 using Random
 using Distributions
@@ -43,7 +43,7 @@ using RODEConvergence
 
 Then we set up some variables
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
@@ -61,7 +61,7 @@ M = 1_000
 
 And add some information about the simulation:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = \\sin(Y_t) X_t\$",
     noise = "a geometric Brownian motion process noise \$\\{Y_t\\}_t\$ (drift=$μ; diffusion=$σ)",
@@ -76,22 +76,22 @@ info = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `Ntgt` of mesh points:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 target! = solve_euler!
 ````
 
 ### An illustrative sample path
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
 nothing # hide
 ````
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plt_noise
 ````
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plt
 ````
 
@@ -101,14 +101,14 @@ plt
 
 With everything set up, we compute the errors:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 @time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 
 The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 table = generate_error_table(Ns, deltas, errors, info)
 
 println(table) # hide
@@ -117,7 +117,7 @@ nothing # hide
 
 The calculated order of convergence is given by `p`:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
 ````
 
@@ -125,33 +125,33 @@ println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
 
 We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
 nothing # hide
 ````
 
 One can use that to plot the figure here:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plot(plt; title)
 ````
 
 While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plot(plt)
 
 println(title)
 ````
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
 ````
 
 We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
 
-````@example sin_gBm_linearhomogeneous
+````@example 02-sin_gBm_linearhomogeneous
 plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 ````
 

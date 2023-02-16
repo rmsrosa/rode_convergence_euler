@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "<unknown>/docs/literate/wiener_linearhomogeneous.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/01-wiener_linearhomogeneous.jl"
 ```
 
 # Homogenous linear RODE with a Wiener process noise coefficient
@@ -103,7 +103,7 @@ with $I_0 = 0$, and setting
 
 First we load the necessary packages
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 using Plots
 using Random
 using Distributions
@@ -112,7 +112,7 @@ using RODEConvergence
 
 Then we set up some variables
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
@@ -128,7 +128,7 @@ M = 1_000
 
 And add some information about the simulation:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
@@ -143,7 +143,7 @@ info = (
 
 We define the *target* solution as described above.
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 target! = function (rng, Xt, t0, tf, x0, f, Yt)
     Ntgt = length(Yt)
     dt = (tf - t0) / (Ntgt - 1)
@@ -158,16 +158,16 @@ end
 
 ### An illustrative sample path
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
 nothing # hide
 ````
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plt_noise
 ````
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plt
 ````
 
@@ -177,14 +177,14 @@ plt
 
 With everything set up, we compute the errors:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 @time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 
 The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 table = generate_error_table(Ns, deltas, errors, info)
 
 println(table) # hide
@@ -193,7 +193,7 @@ nothing # hide
 
 The calculated order of convergence is given by `p`:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
 ````
 
@@ -201,33 +201,33 @@ println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
 
 We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
 nothing # hide
 ````
 
 One can use that to plot the figure here:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plot(plt; title)
 ````
 
 While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plot(plt)
 
 println(title)
 ````
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
 ````
 
 We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
 
-````@example wiener_linearhomogeneous
+````@example 01-wiener_linearhomogeneous
 plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 ````
 

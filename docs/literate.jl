@@ -20,7 +20,14 @@ append_common_script(content) = replace(content, """include(@__DIR__() * "/commo
 
 generated_examples = String[]
 
-for fn in filter(!=(COMMON_SCRIPT), readdir("docs/literate"))
-    Literate.markdown(joinpath(LITERATE_DIR, fn), GENERATED_DIR, documenter=true, execute=false, preprocess = append_common_script)
+for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir("docs/literate"))
+    Literate.markdown(
+        joinpath(LITERATE_DIR, fn),
+        GENERATED_DIR,
+        documenter=true,
+        execute=false,
+        preprocess = append_common_script,
+        repo_root_url = "https://github.com/rmsrosa/rode_conv_em"
+    )
     push!(generated_examples, replace(joinpath(GENERATED_RELATIVE_DIR, fn), ".jl" => ".md"))
 end
