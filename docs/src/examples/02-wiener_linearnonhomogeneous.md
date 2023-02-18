@@ -87,14 +87,14 @@ Thus, once an Euler approximation is computed, along with realizations $\{W_{t_i
 for realizations $Z_i$ drawn from a normal distribution and scaled by the standard deviation $\sqrt{(t_{i+1} - t_i)^3/12}$. This is implemented by computing the integral recursively, via
 ```math
     \begin{cases} \\
-        I_j = I_{j-1} - \left(W_{t_{j-1}} + W_{t_j}\right)(t_{j} - t_{j-1}) + Z_j, \\
+        I_j = I_{j-1} + \frac{W_{t_{j-1}} + W_{t_j}}{t_{j} - t_{j-1}}\left(e^{t_{j} - e^{t_{j-1}}}\right) - Z_j, \\
         Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
         R_j \sim \mathcal{N}(0, 1), \\
     \end{cases}
 ```
 with $I_0 = 0$, and setting
 ```math
-  X_{t_j} = e^{t_j}\left(X_0 + I_j\right) + W_{t_j}.
+  X_{t_j} = e^{t_j}\left(X_0 - I_j\right) + W_{t_j}.
 ```
 
 ## Numerical approximation
@@ -121,7 +121,7 @@ y0 = 0.0
 noise! = Wiener_noise(t0, tf, y0)
 f(t, x, y) = - x + y
 
-Ntgt = 2^20
+Ntgt = 2^16
 Ns = 2 .^ (4:10)
 M = 1_000
 ````
@@ -149,19 +149,19 @@ target! = function (rng, Xt, t0, tf, x0, f, Yt)
     dt = (tf - t0) / (Ntgt - 1)
     Xt[1] = x0
     It = 0.0
+    tn1 = 0.0
     for n in 2:Ntgt
-        It -= (Yt[n] + Yt[n-1]) * dt + randn(rng) * sqrt(dt^3 / 12)
-        tn = (n-1) * dt
+        tn = tn1 + dt
+        It -= (Yt[n] - Yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
         Xt[n] = exp(-tn) * (x0 + It) + Yt[n]
+        tn1 = tn
     end
 end
 ````
 
 There is something wrong with the formula, just use the euler approximation for now:
 
-````@example 02-wiener_linearnonhomogeneous
 target! = solve_euler!
-````
 
 ### An illustrative sample path
 
