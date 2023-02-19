@@ -115,8 +115,8 @@ noise! = Wiener_noise(t0, tf, y0)
 f(t, x, y) = - x + y
 
 Ntgt = 2^16
-Ns = 2 .^ (4:10)
-M = 1_000
+Ns = 2 .^ (4:14)
+M = 10_000
 
 # And add some information about the simulation:
 
@@ -141,14 +141,10 @@ target! = function (rng, Xt, t0, tf, x0, f, Yt)
     tn1 = 0.0
     for n in 2:Ntgt
         tn = tn1 + dt
-        It -= (Yt[n] - Yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
-        Xt[n] = exp(-tn) * (x0 + It) + Yt[n]
+        It += (Yt[n] - Yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
+        Xt[n] = exp(-tn) * (x0 - It) + Yt[n]
         tn1 = tn
     end
 end
-
-# There is something wrong with the formula, just use the euler approximation for now:
-
-# target! = solve_euler!
 
 include(@__DIR__() * "/common_end.jl")
