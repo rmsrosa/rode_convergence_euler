@@ -116,6 +116,7 @@ f(t, x, y) = - x + y
 
 Ntgt = 2^16
 Ns = 2 .^ (4:14)
+Nsample = Ns[[1, 2, 3, 4]]
 M = 10_000
 
 # And add some information about the simulation:

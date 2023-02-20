@@ -116,6 +116,7 @@ f(t, x, y) = y * x
 
 Ntgt = 2^16
 Ns = 2 .^ (4:14)
+Nsample = Ns[[1, 2, 3, 4]]
 M = 1_000
 
 # And add some information about the simulation:

@@ -1,6 +1,6 @@
 # ### An illustrative sample path
 
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Nsample; info)
 nothing # hide
 
 # 

@@ -49,6 +49,7 @@ f(t, x, y) = sin(y) * x
 
 Ntgt = 2^18
 Ns = 2 .^ (4:9)
+Nsample = Ns[[1, 2, 3, 4]]
 M = 1_000
 
 # And add some information about the simulation:
