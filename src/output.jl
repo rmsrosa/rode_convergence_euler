@@ -11,7 +11,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     # generate noise sample path
     Yt = Vector{Float64}(undef, Ntgt)
     noise!(rng, Yt)
-    plt_noise = plot(range(t0, tf, length=Ntgt), Yt, title="noise sample path", titlefont = 10, legend=nothing)
+    plt_noise = plot(range(t0, tf, length=Ntgt), Yt, color=:black, title="noise sample path", titlefont = 10, legend=nothing)
 
     # generate target path
     x0 = rand(rng, X0)
@@ -33,7 +33,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
 
         push!(XNts, XNt)
 
-        plot!(plt, range(t0, tf, length=N), XNt, linestyle=:dash, label="\$N = $N\$")
+        plot!(plt, range(t0, tf, length=N), XNt, linestyle=:auto, color=:black, label="\$N = $N\$")
     end
 
     filename === nothing || savefig(plt, filename)
