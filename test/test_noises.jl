@@ -1,4 +1,5 @@
 @testset "Test noises" begin
+    rng = Xoshiro(123)
     t0 = 0.0
     tf = 2.0
     N = 2^8
@@ -7,7 +8,6 @@
     Ytf = Vector{Float64}(undef, M)
     Yt = Vector{Float64}(undef, N)
     @testset "Wiener process" begin
-        rng = Xoshiro(123)
         y0 = 0.0
         noise! = Wiener_noise(t0, tf, y0)
         @test_nowarn noise!(rng, Yt)
@@ -22,10 +22,9 @@
         @test var(Ytf) ≈ tf (atol = 0.05)
     end
 
-    @testset "gBM process" begin
-        rng = Xoshiro(123)
-        y0 = 0.5
-        μ = 0.4
+    @testset "GBM process" begin
+        y0 = 0.4
+        μ = 0.3
         σ = 0.2
         noise! = GBM_noise(t0, tf, μ, σ, y0)
         @test_nowarn noise!(rng, Yt)
@@ -41,7 +40,6 @@
     end
 
     @testset "Compound Poisson" begin
-        rng = Xoshiro(123)
         λ = 25.0
         μ = 0.5
         σ = 0.2
@@ -60,7 +58,6 @@
     end
 
     @testset "Step Poisson" begin
-        rng = Xoshiro(123)
         λ = 25.0
         α = 2.0
         β = 15.0
@@ -79,7 +76,6 @@
     end
 
     @testset "Transport process" begin
-        rng = Xoshiro(123)
         nr = 5
         f = (t, r) -> sum(sin(r[i] * t) for i in 1:nr)
         α = 2.0
@@ -99,7 +95,6 @@
     end
 
     @testset "fBm process" begin
-        rng = Xoshiro(123)
         y0 = 0.0
         H = 0.25
         noise! = fBm_noise(t0, tf, y0, H, N)
