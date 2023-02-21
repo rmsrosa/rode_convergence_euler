@@ -54,7 +54,7 @@ The noise process returned by the constructor yields a random sample path of ``Y
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
 """
-function CompoundPoisson_noise(t0::T, tf::T, λ::T, dY::F) where {T, F}
+function CompoundPoisson_noise(t0::T, tf::T, λ::T, dY::G) where {T, G}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -81,7 +81,7 @@ The noise returned by the constructor yields a random sample path of ``Y_t = \\s
 
 This is an alternative implementation to [`CompoundPoisson_noise`](@ref).
 """
-function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::F) where {T, F}
+function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::G) where {T, G}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -110,11 +110,11 @@ The noise returned by the constructor yields a random sample path of ``Y_t = Y_{
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
-function StepPoisson_noise(t0::T, tf::T, λ::T, S::F) where {T, F}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+function StepPoisson_noise(t0::T, tf::T, λ::T, S::G) where {T, G}
+    dt = (tf - t0) / (N - 1)
+    dN = Poisson(λ * dt)
+    fn = function (rng::AbstractRNG, Yt::Vector{T}; dN = dN)
         N = length(Yt)
-        dt = (tf - t0) / (N - 1)
-        dN = Poisson(λ * dt)
         Yt[1] = 0.0
         for n in 2:N
             r = rand(rng, dN)
@@ -128,11 +128,11 @@ end
 
 Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `RV`.
 
-The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+The noise process `noise! = Transport_noise(t0, tf, f, RV, n)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
 The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
 """
-function Transport_noise(t0::T, tf::T, f::F1, RV::F2, n::S) where {T, S, F1, F2}
+function Transport_noise(t0::T, tf::T, f::F, RV::G, n::S) where {T, S, F, G}
     rv = zeros(T, n)
     fn = function (rng::AbstractRNG, Yt::Vector{T}; rv::Vector{T} = rv)
         N = length(Yt)
