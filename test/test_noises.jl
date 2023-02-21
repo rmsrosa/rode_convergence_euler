@@ -12,9 +12,8 @@
         noise! = Wiener_noise(t0, tf, y0)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
 
         for m in 1:M
             noise!(rng, Yt)
@@ -34,9 +33,8 @@
         noise! = GBM_noise(t0, tf, μ, σ, y0)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
 
         for m in 1:M
             noise!(rng, Yt)
@@ -57,9 +55,8 @@
         noise! = CompoundPoisson_noise(t0, tf, λ, dN)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
         
         for m in 1:M
             noise!(rng, Yt)
@@ -80,9 +77,8 @@
         noise! = StepPoisson_noise(t0, tf, λ, S)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
         
         for m in 1:M
             noise!(rng, Yt)
@@ -97,16 +93,16 @@
 
     @testset "Transport process" begin
         nr = 5
-        f = (t, r) -> sum(sin(r[i] * t) for i in 1:nr)
+        f = (t, r) -> mapreduce(ri -> sin(ri*t), +, r)
+        # g(t, r) = mapreduce(ri -> sin(ri*t), +, r)
         α = 2.0
         β = 15.0
         RV = Beta(α, β)
         noise! = Transport_noise(t0, tf, f, RV, nr)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test_broken allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
 
         for m in 1:M
             noise!(rng, Yt)
@@ -125,9 +121,8 @@
         noise! = fBm_noise(t0, tf, y0, H, N)
         
         @test_nowarn noise!(rng, Yt)
-        
-        allocs = @allocated noise!(rng, Yt)
-        @test_broken allocs == 0
+        @test (@ballocated $noise!($rng, $Yt)) == 0
+        @test_nowarn (@inferred noise!(rng, Yt))
         
         for m in 1:M
             noise!(rng, Yt)
