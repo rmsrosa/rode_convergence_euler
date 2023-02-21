@@ -111,14 +111,14 @@ The noise returned by the constructor yields a random sample path of ``Y_t = Y_{
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
 function StepPoisson_noise(t0::T, tf::T, λ::T, S::G) where {T, G}
-    dt = (tf - t0) / (N - 1)
-    dN = Poisson(λ * dt)
-    fn = function (rng::AbstractRNG, Yt::Vector{T}; dN = dN)
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
+        dt = (tf - t0) / (N - 1)
+        dN = Poisson(λ * dt)
         Yt[1] = 0.0
         for n in 2:N
-            r = rand(rng, dN)
-            Yt[n] = iszero(r) ? Yt[n-1] : rand(rng, S)
+            Ni = rand(rng, dN)
+            Yt[n] = iszero(Ni) ? Yt[n-1] : rand(rng, S)
         end
     end
 end

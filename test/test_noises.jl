@@ -10,7 +10,12 @@
     @testset "Wiener process" begin
         y0 = 0.0
         noise! = Wiener_noise(t0, tf, y0)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test allocs == 0
+
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
@@ -27,7 +32,12 @@
         μ = 0.3
         σ = 0.2
         noise! = GBM_noise(t0, tf, μ, σ, y0)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test allocs == 0
+
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
@@ -45,7 +55,12 @@
         σ = 0.2
         dN = Normal(μ, σ)
         noise! = CompoundPoisson_noise(t0, tf, λ, dN)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test allocs == 0
+        
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
@@ -63,7 +78,12 @@
         β = 15.0
         S = Beta(α, β)
         noise! = StepPoisson_noise(t0, tf, λ, S)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test allocs == 0
+        
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
@@ -82,7 +102,12 @@
         β = 15.0
         RV = Beta(α, β)
         noise! = Transport_noise(t0, tf, f, RV, nr)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test_broken allocs == 0
+
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
@@ -98,7 +123,12 @@
         y0 = 0.0
         H = 0.25
         noise! = fBm_noise(t0, tf, y0, H, N)
+        
         @test_nowarn noise!(rng, Yt)
+        
+        allocs = @allocated noise!(rng, Yt)
+        @test_broken allocs == 0
+        
         for m in 1:M
             noise!(rng, Yt)
             Ythf[m] = Yt[div(N, 2)]
