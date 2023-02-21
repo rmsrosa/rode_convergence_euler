@@ -7,7 +7,7 @@ The noise process `noise! = Wiener_noise(t0, tf, y0)` returned by the constructo
     
 The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
 """
-function Wiener_noise(t0, tf, y0::T) where {T}
+function Wiener_noise(t0::T, tf::T, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -29,7 +29,7 @@ The noise process `noise! = GBM_noise(t0, tf, μ, σ, y0)` returned by the const
     
 The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
 """
-function GBM_noise(t0, tf, μ, σ, y0::T) where {T}
+function GBM_noise(t0::T, tf::T, μ::T, σ::T, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -54,8 +54,8 @@ The noise process returned by the constructor yields a random sample path of ``Y
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
 """
-function CompoundPoisson_noise(t0, tf, λ, dY)
-    fn = function (rng, Yt::Vector)
+function CompoundPoisson_noise(t0::T, tf::T, λ::T, dY::F) where {T, F}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         dN = Poisson(λ * dt)
@@ -81,8 +81,8 @@ The noise returned by the constructor yields a random sample path of ``Y_t = \\s
 
 This is an alternative implementation to [`CompoundPoisson_noise`](@ref).
 """
-function CompoundPoisson_noise_alt(t0, tf, λ, dY)
-    fn = function (rng, Yt::Vector)
+function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::F) where {T, F}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         Yt[1] = zero(λ)
@@ -110,8 +110,8 @@ The noise returned by the constructor yields a random sample path of ``Y_t = Y_{
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
-function StepPoisson_noise(t0, tf, λ, S)
-    fn = function (rng, Yt::Vector)
+function StepPoisson_noise(t0::T, tf::T, λ::T, S::F) where {T, F}
+    fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         dN = Poisson(λ * dt)
@@ -132,9 +132,9 @@ The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by t
 
 The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
 """
-function Transport_noise(t0, tf, f, RV, n)
-    rv = zeros(n)
-    fn = function (rng, Yt::Vector; rv = rv)
+function Transport_noise(t0::T, tf::T, f::F1, RV::F2, n::S) where {T, S, F1, F2}
+    rv = zeros(T, n)
+    fn = function (rng::AbstractRNG, Yt::Vector{T}; rv::Vector{T} = rv)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         for i in eachindex(rv)
@@ -161,7 +161,7 @@ The method implemented is the one developed by Davies and Harte and uses an FFT 
 
 Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
-function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
+function fBm_noise(t0::Float64, tf::Float64, y0::Float64, H::Float64, N::Int; flags=FFTW.MEASURE)
     ispow2(N) || throw(
         ArgumentError(
             "Desired length must be a power of 2 for this implementation of the Davies-Harte method."
@@ -178,7 +178,7 @@ function fBm_noise(t0, tf, y0, H, N; flags=FFTW.MEASURE)
     plan_inverse = plan_ifft(cache_real; flags)
     plan_direct = plan_fft(cache_complex; flags)
 
-    fn = function (rng::AbstractRNG, Yt::Vector{Float64}; cache_real=cache_real, cache_complex=cache_complex, cache_complex2=cache_complex2, plan_inverse=plan_inverse, plan_direct=plan_direct)
+    fn = function (rng::AbstractRNG, Yt::Vector{Float64}; cache_real::Vector{Float64}=cache_real, cache_complex::Vector{ComplexF64}=cache_complex, cache_complex2::Vector{ComplexF64}=cache_complex2, plan_inverse=plan_inverse, plan_direct=plan_direct)
         length(Yt) ≤ N || throw(
             ArgumentError(
                 "length of the sample path vector should be at most that given in the construction of the fBm noise process."
@@ -322,7 +322,7 @@ Generates a sample path of a fractional Gaussian noise (fGn) with Hurst paramete
 
 This one is not optimized with pre-allocated plans, it was only used for development and testing.
 """
-function fG_daviesharte(rng, T, N, H)
+function fG_daviesharte(rng::AbstractRNG, T, N, H)
     ispow2(N) || throw(
         ArgumentError(
             "desired length must be a power of 2 for this implementation of the Davies-Harte method."
