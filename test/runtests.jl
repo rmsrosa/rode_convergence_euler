@@ -3,5 +3,5 @@ using RODEConvergence
 using Statistics
 using Test
 
-include("noise_tests.jl")
+include("test_noises.jl")
 include("test_solvers.jl")

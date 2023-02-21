@@ -1,4 +1,4 @@
-@testset "Noise tests" begin
+@testset "Test noises" begin
     t0 = 0.0
     tf = 2.0
     N = 2^8
