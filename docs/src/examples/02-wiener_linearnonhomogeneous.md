@@ -122,7 +122,7 @@ noise! = Wiener_noise(t0, tf, y0)
 f(t, x, y) = - x + y
 
 Ntgt = 2^16
-Ns = 2 .^ (4:10)
+Ns = 2 .^ (4:14)
 M = 1_000
 ````
 
