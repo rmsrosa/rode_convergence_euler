@@ -21,15 +21,15 @@ function Wiener_noise(t0::T, tf::T, y0::T) where {T}
 end
 
 """
-    GBM_noise(t0, tf, μ, σ, y0)
+    gBm_noise(t0, tf, μ, σ, y0)
 
 Construct a Geometric Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`.
 
-The noise process `noise! = GBM_noise(t0, tf, μ, σ, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process, defined by ``dY_t = \\mu Y_t dt + \\sigma Y_t dW_t``.
+The noise process `noise! = gBm_noise(t0, tf, μ, σ, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process, defined by ``dY_t = \\mu Y_t dt + \\sigma Y_t dW_t``.
     
 The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
 """
-function GBM_noise(t0::T, tf::T, μ::T, σ::T, y0::T) where {T}
+function gBm_noise(t0::T, tf::T, μ::T, σ::T, y0::T) where {T}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -44,17 +44,19 @@ function GBM_noise(t0::T, tf::T, μ::T, σ::T, y0::T) where {T}
 end
 
 """
-    CompoundPoisson_noise(t0, tf, λ, dY)
+    CompoundPoisson_noise(t0, tf, λ, dYlaw)
 
-Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dYlaw`.
 
-The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dYlaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
-The noise process returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise process returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i``, where ``N_t`` is the number of events up to time ``t``.
 
-Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given distribution `dY`.
+Each sample path is obtained by first drawing the number `n`of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+
+Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given increment distribution `dYlaw`.
 """
-function CompoundPoisson_noise(t0::T, tf::T, λ::T, dY::G) where {T, G}
+function CompoundPoisson_noise(t0::T, tf::T, λ::T, dYlaw::G) where {T, G}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -64,24 +66,24 @@ function CompoundPoisson_noise(t0::T, tf::T, λ::T, dY::G) where {T, G}
             Ni = rand(rng, dN)
             Yt[n] = Yt[n-1]
             for _ in 1:Ni
-                Yt[n] += rand(rng, dY)
+                Yt[n] += rand(rng, dYlaw)
             end
         end
     end
 end
 
 """
-    CompoundPoisson_noise_alt(t0, tf, λ, dY)
+    CompoundPoisson_noise_alt(t0, tf, λ, dYlaw)
 
-Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dY`.
+Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dYlaw`.
 
-The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dYlaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
-The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dY`, during each mesh time interval.
+The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dYlaw`, during each mesh time interval.
 
 This is an alternative implementation to [`CompoundPoisson_noise`](@ref).
 """
-function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::G) where {T, G}
+function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dYlaw::G) where {T, G}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -92,7 +94,7 @@ function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::G) where {T, G}
             Yt[i] = Yt[i-1]
             r = - log(rand(rng)) / λ
             while r < dt
-                Yt[i] += rand(rng, dY)
+                Yt[i] += rand(rng, dYlaw)
                 r += -log(rand(rng)) / λ
             end
         end
@@ -100,17 +102,17 @@ function CompoundPoisson_noise_alt(t0::T, tf::T, λ::T, dY::G) where {T, G}
 end
 
 """
-    StepPoisson_noise(t0, tf, λ, S)
+    StepPoisson_noise(t0, tf, λ, Slaw)
 
-Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `S`.
+Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `Slaw`.
 
-The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dY)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+The noise process `noise! = StepPoisson_noise(t0, tf, λ, Slaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
-The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number `n` of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
-function StepPoisson_noise(t0::T, tf::T, λ::T, S::G) where {T, G}
+function StepPoisson_noise(t0::T, tf::T, λ::T, Slaw::G) where {T, G}
     fn = function (rng::AbstractRNG, Yt::Vector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
@@ -118,27 +120,27 @@ function StepPoisson_noise(t0::T, tf::T, λ::T, S::G) where {T, G}
         Yt[1] = 0.0
         for n in 2:N
             Ni = rand(rng, dN)
-            Yt[n] = iszero(Ni) ? Yt[n-1] : rand(rng, S)
+            Yt[n] = iszero(Ni) ? Yt[n-1] : rand(rng, Slaw)
         end
     end
 end
 
 """
-    Transport_noise(t0, tf, f, RV, n)
+    Transport_noise(t0, tf, f, Ylaw, n)
 
-Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `RV`.
+Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `Ylaw`.
 
-The noise process `noise! = Transport_noise(t0, tf, f, RV, n)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
+The noise process `noise! = Transport_noise(t0, tf, f, Ylaw, n)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `Yt` and, upon each call to `noise!(rng, Yt)`, mutates the vector `Yt`, filling it up with a new sample path of the process.
 
-The noise returned by the constructor yields a random sample path obtained by first drawing `n` realizations of the distribution `RV` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
+Each random sample path is obtained by first drawing `n` realizations of the distribution `Ylaw` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
 """
-function Transport_noise(t0::T, tf::T, f::F, RV::G, n::S) where {T, S, F, G}
+function Transport_noise(t0::T, tf::T, f::F, Ylaw::G, n::S) where {T, S, F, G}
     rv = zeros(T, n)
     fn = function (rng::AbstractRNG, Yt::Vector{T}; rv::Vector{T} = rv)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         for i in eachindex(rv)
-            rv[i] = rand(rng, RV)
+            rv[i] = rand(rng, Ylaw)
         end
         t = t0 - dt
         for n in 1:N

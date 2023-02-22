@@ -1,88 +1,88 @@
 """
-    solve_euler!(rng, Xt, t0, tf, x0, f, Yt)
+    solve_euler!(rng, xt, t0, tf, x0, f, yt)
 
-Solve inplace, via Euler method, the RODE `dX_t/dt = f(t, X_t, Y_t),` with the following data:
-
-* function `f=f(t, x, y)`;
-* initial condition `x0`;
-* time interval `t0` to `tf`;
-* noise `Yt`.
-
-The values of `Xt` are updated with the computed solution values.
-
-The time step is obtained from the length `N` of the vector `Xt` via `dt = (tf - t0) / (N - 1)`.
-
-The noise vector `Yt` is expected to be of the same length of `Xt`.
-"""
-function solve_euler!(rng::AbstractRNG, Xt::Vector{T}, t0::T, tf::T, x0::T, f::F, Yt::Vector{T}) where {T, F}
-    N = length(Yt)
-    length(Xt) ≥ N || throw(
-        ArgumentError(
-            "Length of `Xt` should be at least that of `Yt` but got $(length(Xt)) and $N"
-        )
-    )
-    dt = (tf - t0) / (N - 1)
-    Xt[1] = x0
-    tn1 = t0
-    for n in 2:N
-        Xt[n] = Xt[n-1] + dt * f(tn1, Xt[n-1], Yt[n-1])
-        tn1 += dt
-    end
-end
-
-function solve_euler!(rng::AbstractRNG, Xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, Yt::Vector{T}) where {T, F}
-    N = length(Yt)
-    size(Xt, 1) ≥ N || throw(
-        ArgumentError(
-            "Row length of `Xt` should be at least that of `Yt` but got $(size(Xt,1)) and $N"
-        )
-    )
-    size(Xt, 2) == length(x0) || throw(
-        ArgumentError(
-            "Column length of `Xt` should the same as that of `x0` but got $(size(Xt,2)) and $(length(x0))"
-        )
-    )
-    dt = (tf - t0) / (N - 1)
-    Xt[1] .= x0
-    tn1 = t0
-    for n in 2:N
-        # use row of Xt as an auxiliary cache variable for dX
-        f(view(Xt, n, :), tn1, view(Xt, n-1, :), Yt[n-1])
-        Xt[n] .= Xt[n-1, :] .+ dt * Xt[N, :]
-        tn1 += dt
-    end
-end
-
-"""
-    solve_heun!(rng, Xt, t0, tf, x0, f, Yt)
-
-Solve inplace, via Heun method, the RODE `dX_t/dt = f(t, X_t, Y_t),` with the following data:
+Solve inplace, via Euler method, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` with the following data:
 
 * function `f=f(t, x, y)`;
 * initial condition `x0`;
 * time interval `t0` to `tf`;
-* noise `Yt`.
+* a sample path `yt` of a "noise".
 
-The values of `Xt` are updated with the computed solution values.
+The values of `xt` are updated with the computed solution values.
 
-The time step is obtained from the length `N` of the vector `Xt` via `dt = (tf - t0) / (N - 1)`.
+The time step is obtained from the length `N` of the vector `xt` via `dt = (tf - t0) / (N - 1)`.
 
-The noise vector `Yt` is expected to be of the same length of `Xt`.
+The noise vector `yt` is expected to be at least of the same length as `xt`.
 """
-function solve_heun!(rng::AbstractRNG, Xt::Vector{T}, t0::T, tf::T, x0::T, f::F, Yt::Vector{T}) where {T, F}
-    N = length(Yt)
-    length(Xt) ≥ N || throw(
+function solve_euler!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}) where {T, F}
+    N = length(yt)
+    length(xt) ≥ N || throw(
         ArgumentError(
-            "Length of `Xt` should be at least that of `Yt` but got $(length(Xt)) and $N"
+            "Length of `xt` should be at least that of `yt` but got $(length(xt)) and $N"
         )
     )
     dt = (tf - t0) / (N - 1)
-    Xt[1] = x0
+    xt[1] = x0
     tn1 = t0
     for n in 2:N
-        fn1 = f(tn1, Xt[n-1], Yt[n-1])
-        Xtnaux = Xt[n-1] + dt * fn1
+        xt[n] = xt[n-1] + dt * f(tn1, xt[n-1], yt[n-1])
         tn1 += dt
-        Xt[n] = Xt[n-1] + dt * (fn1 + f(tn1, Xtnaux, Yt[n])) / 2
+    end
+end
+
+function solve_euler!(rng::AbstractRNG, xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Vector{T}) where {T, F}
+    N = length(yt)
+    size(xt, 1) ≥ N || throw(
+        ArgumentError(
+            "Row length of `xt` should be at least that of `yt` but got $(size(xt,1)) and $N"
+        )
+    )
+    size(xt, 2) == length(x0) || throw(
+        ArgumentError(
+            "Column length of `xt` should the same as that of `x0` but got $(size(xt,2)) and $(length(x0))"
+        )
+    )
+    dt = (tf - t0) / (N - 1)
+    xt[1] .= x0
+    tn1 = t0
+    for n in 2:N
+        # use row of xt as an auxiliary cache variable for dX
+        f(view(xt, n, :), tn1, view(xt, n-1, :), yt[n-1])
+        xt[n] .= xt[n-1, :] .+ dt * xt[N, :]
+        tn1 += dt
+    end
+end
+
+"""
+    solve_heun!(rng, xt, t0, tf, x0, f, yt)
+
+Solve inplace, via Heun method, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` with the following data:
+
+* function `f=f(t, x, y)`;
+* initial condition `x0`;
+* time interval `t0` to `tf`;
+* a sample path `yt` of a "noise".
+
+The values of `xt` are updated with the computed solution values.
+
+The time step is obtained from the length `N` of the vector `xt` via `dt = (tf - t0) / (N - 1)`.
+
+The noise vector `yt` is expected to be at least of the same length as `xt`.
+"""
+function solve_heun!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}) where {T, F}
+    N = length(yt)
+    length(xt) ≥ N || throw(
+        ArgumentError(
+            "Length of `xt` should be at least that of `yt` but got $(length(xt)) and $N"
+        )
+    )
+    dt = (tf - t0) / (N - 1)
+    xt[1] = x0
+    tn1 = t0
+    for n in 2:N
+        fn1 = f(tn1, xt[n-1], yt[n-1])
+        xtnaux = xt[n-1] + dt * fn1
+        tn1 += dt
+        xt[n] = xt[n-1] + dt * (fn1 + f(tn1, xtnaux, yt[n])) / 2
     end
 end

@@ -1,10 +1,10 @@
 
 """
-    plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
+    plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
 
-Plot a few sample paths in the interval `t0` to `tf`, with different time steps as given by a list/vector/range `Ns`, from the noise `noise!`, using the Euler method for the equation with right hand side `f`.
+Plot a few sample paths in the interval `t0` to `tf`, with different time steps as given by a list/vector/range `Ns`, from the noise `noise!`, using the Euler method for the equation with right hand side `f` and initial condition with distribution law `X0law`, along with the `target!` solution solved on the mesh point with `Ntgt` points.
 """
-function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
+function plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns; info = nothing, filename=nothing)
 
     title = info === nothing ? "" : "Sample noise, sample target and numerical approximations for\n$(info.equation), with $(info.ic), on $(info.tspan)\nand $(info.noise)"
 
@@ -14,7 +14,7 @@ function plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, N
     plt_noise = plot(range(t0, tf, length=Ntgt), Yt, color=:black, title="noise sample path", titlefont = 10, legend=nothing)
 
     # generate target path
-    x0 = rand(rng, X0)
+    x0 = rand(rng, X0law)
     Xt = Vector{Float64}(undef, Ntgt)
     target!(rng, Xt, t0, tf, x0, f, Yt)
 

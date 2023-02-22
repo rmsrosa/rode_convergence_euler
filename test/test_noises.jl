@@ -26,11 +26,11 @@
         @test var(Ytf) ≈ tf (atol = 0.05)
     end
 
-    @testset "GBM process" begin
+    @testset "gBm process" begin
         y0 = 0.4
         μ = 0.3
         σ = 0.2
-        noise! = GBM_noise(t0, tf, μ, σ, y0)
+        noise! = gBm_noise(t0, tf, μ, σ, y0)
         
         @test_nowarn noise!(rng, Yt)
         @test (@ballocated $noise!($rng, $Yt)) == 0
@@ -51,8 +51,8 @@
         λ = 25.0
         μ = 0.5
         σ = 0.2
-        dN = Normal(μ, σ)
-        noise! = CompoundPoisson_noise(t0, tf, λ, dN)
+        dYlaw = Normal(μ, σ)
+        noise! = CompoundPoisson_noise(t0, tf, λ, dYlaw)
         
         @test_nowarn noise!(rng, Yt)
         @test (@ballocated $noise!($rng, $Yt)) == 0
@@ -73,8 +73,8 @@
         λ = 25.0
         α = 2.0
         β = 15.0
-        S = Beta(α, β)
-        noise! = StepPoisson_noise(t0, tf, λ, S)
+        Slaw = Beta(α, β)
+        noise! = StepPoisson_noise(t0, tf, λ, Slaw)
         
         @test_nowarn noise!(rng, Yt)
         @test (@ballocated $noise!($rng, $Yt)) == 0
@@ -94,11 +94,10 @@
     @testset "Transport process" begin
         nr = 5
         f = (t, r) -> mapreduce(ri -> sin(ri*t), +, r)
-        # g(t, r) = mapreduce(ri -> sin(ri*t), +, r)
         α = 2.0
         β = 15.0
-        RV = Beta(α, β)
-        noise! = Transport_noise(t0, tf, f, RV, nr)
+        Ylaw = Beta(α, β)
+        noise! = Transport_noise(t0, tf, f, Ylaw, nr)
         
         @test_nowarn noise!(rng, Yt)
         @test (@ballocated $noise!($rng, $Yt)) == 0
@@ -109,10 +108,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, RV, nr)) for _ in 1:M) (atol = 0.01)
-        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, RV, nr)) for _ in 1:M) (atol = 0.01)
-        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, RV, nr)) for _ in 1:M) (atol = 0.01)
-        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, RV, nr)) for _ in 1:M) (atol = 0.01)
+        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
+        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
+        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
+        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
     end
 
     @testset "fBm process" begin

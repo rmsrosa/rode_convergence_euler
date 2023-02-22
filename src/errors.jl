@@ -36,11 +36,11 @@ function prepare_variables(Ntgt::Int, Ns::Vector{Int})
 end
 
 """
-    calculate_errors!(rng, Yt, Xt, XNt, X0, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+    calculate_errors!(rng, Yt, Xt, XNt, X0law, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
 
 Calculate the strong error for the Euler method.
 
-The equation is assumed to be given with right hand side `f`, which must be a function of three variables `f=f(t, x, y)`, where `t` is time, `x` is the unknown, and `y` is the noise. The initial condition is taken to be `X0`, which is a random variable with samples drawn by `rand(rng, X)`. The time span is assumed to be from `t0` to `tf`.
+The equation is assumed to be given with right hand side `f`, which must be a function of three variables `f=f(t, x, y)`, where `t` is time, `x` is the unknown, and `y` is the noise. The initial condition is a random variable drawn from the distribution law `X0law` via `rand(rng, X0law)`. The time span is assumed to be from `t0` to `tf`.
 
 The noise is computed via `noise!`, which is a function that takes a RNG and a pre-allocated vector to hold the values of the noise.
 
@@ -50,11 +50,11 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 """
-function calculate_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
+function calculate_errors!(rng, Yt, Xt, XNt, X0law, f::F, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas) where F
     
     for _ in 1:M
         # draw initial condition
-        x0 = rand(rng, X0)
+        x0 = rand(rng, X0law)
 
         # generate noise sample path
         noise!(rng, Yt)
@@ -81,11 +81,11 @@ function calculate_errors!(rng, Yt, Xt, XNt, X0, f::F, noise!, target!, trajerro
 end
 
 """
-    calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+    calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
 
 Calculate the strong error for the Euler method.
 
-The equation is assumed to be given with right hand side `f`, which must be a function of three variables `f=f(t, x, y)`, where `t` is time, `x` is the unknown, and `y` is the noise. The initial condition is taken to be `X0`, which is a random variable with samples drawn by `rand(rng, X)`. The time span is assumed to be from `t0` to `tf`.
+The equation is assumed to be given with right hand side `f`, which must be a function of three variables `f=f(t, x, y)`, where `t` is time, `x` is the unknown, and `y` is the noise. The initial condition is a random variable drawn from the distribution law `X0law` via `rand(rng, X0law)`. The time span is assumed to be from `t0` to `tf`.
 
 The noise is computed via `noise!`, which is a function that takes a RNG and a pre-allocated vector to hold the values of the noise.
 
@@ -97,10 +97,10 @@ The strong errors are computed via Monte Carlo method, with the number of realiz
 
 What this function do is actually to call [`prepare_variables`](@ref) to pre-allocate the necessary variables and next to call [`calculate_errors!`](@ref) to mutate the pre-allocated vectors.
 """
-function calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+function calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-    calculate_errors!(rng, Yt, Xt, XNt, X0, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
+    calculate_errors!(rng, Yt, Xt, XNt, X0law, f, noise!, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
 
     errors = maximum(trajerrors, dims=1)[1,:]
 
