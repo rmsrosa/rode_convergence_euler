@@ -1,6 +1,6 @@
 # ### An illustrative sample path
 
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Nsample; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Nsample; info)
 nothing # hide
 
 # 
@@ -17,7 +17,7 @@ plt
 
 # With everything set up, we compute the errors:
 
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
 
 # 

@@ -40,11 +40,11 @@ using RODEConvergence
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = Normal()
+X0law = Normal()
 μ = 1.0
 σ = 0.2
 y0 = 1.0
-noise! = GBM_noise(t0, tf, y0, μ, σ)
+noise! = gBm_noise(t0, tf, y0, μ, σ)
 f(t, x, y) = sin(y) * x
 
 Ntgt = 2^18

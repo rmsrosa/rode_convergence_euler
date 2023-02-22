@@ -109,7 +109,7 @@ using RODEConvergence
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = Normal()
+X0law = Normal()
 y0 = 0.0
 noise! = Wiener_noise(t0, tf, y0)
 f(t, x, y) = - x + y
@@ -134,16 +134,16 @@ info = (
 
 # We define the *target* solution as described above.
 
-target! = function (rng, Xt, t0, tf, x0, f, Yt)
-    Ntgt = length(Yt)
+target! = function (rng, xt, t0, tf, x0, f, yt)
+    Ntgt = length(yt)
     dt = (tf - t0) / (Ntgt - 1)
-    Xt[1] = x0
+    xt[1] = x0
     It = 0.0
     tn1 = 0.0
     for n in 2:Ntgt
         tn = tn1 + dt
-        It += (Yt[n] - Yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
-        Xt[n] = exp(-tn) * (x0 - It) + Yt[n]
+        It += (yt[n] - yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
+        xt[n] = exp(-tn) * (x0 - It) + yt[n]
         tn1 = tn
     end
 end
