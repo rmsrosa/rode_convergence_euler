@@ -11,16 +11,16 @@ t0 = 0.0
 tf = 1.0
 α0 = 15.0
 β0 = 2.0
-X0 = Beta(α0, β0)
-display(plot(0.0:0.01:1.0, pdf.(X0, 0.0:0.01:1.0)))
+X0law = Beta(α0, β0)
+display(plot(0.0:0.01:1.0, pdf.(X0law, 0.0:0.01:1.0)))
 f(t, x, y) = x - x^2 - y
 λ = 25.0 # rate of step changes per unit time
 #R = Uniform(0.0, 0.1)
 α = 2.0
 β = 15.0
-R = Beta(α, β)
-display(plot(0.0:0.01:1.0, pdf.(R, 0.0:0.01:1.0)))
-noise! = StepPoisson_noise(t0, tf, λ, R)
+Slaw = Beta(α, β)
+display(plot(0.0:0.01:1.0, pdf.(Slaw, 0.0:0.01:1.0)))
+noise! = StepPoisson_noise(t0, tf, λ, Slaw)
 target! = solve_euler!
 
 Ntgt = 2^18
@@ -29,7 +29,7 @@ M = 2_000
 
 # plot(yy, linetype=:steppre)
 
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
 
 table = generate_error_table(Ns, deltas, errors)
 
@@ -49,10 +49,10 @@ plot_dt_vs_error(deltas, errors, lc, p, M; info, filename)
 plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
 
 filename = @__DIR__() * "/img/harvest_sample.png"
-plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info, filename)
+plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns; info, filename)
 
 using BenchmarkTools
 
 nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns)
 
-@btime calculate_errors!($rng, $Yt, $Xt, $XNt, $X0, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
+@btime calculate_errors!($rng, $Yt, $Xt, $XNt, $X0law, $f, $noise!, $target!, $trajerrors, $M, $t0, $tf, $Ns, $nsteps, $deltas)
