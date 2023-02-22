@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/02-wiener_linearnonhomogeneous.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/02-wiener_linearnonhomogeneous.jl"
 ```
 
 # Non-homogenous linear RODE with a Wiener process noise coefficient
@@ -116,14 +116,15 @@ Then we set up some variables
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = Normal()
+X0law = Normal()
 y0 = 0.0
 noise! = Wiener_noise(t0, tf, y0)
 f(t, x, y) = - x + y
 
 Ntgt = 2^16
 Ns = 2 .^ (4:14)
-M = 1_000
+Nsample = Ns[[1, 2, 3, 4]]
+M = 10_000
 ````
 
 And add some information about the simulation:
@@ -144,29 +145,25 @@ info = (
 We define the *target* solution as described above.
 
 ````@example 02-wiener_linearnonhomogeneous
-target! = function (rng, Xt, t0, tf, x0, f, Yt)
-    Ntgt = length(Yt)
+target! = function (rng, xt, t0, tf, x0, f, yt)
+    Ntgt = length(yt)
     dt = (tf - t0) / (Ntgt - 1)
-    Xt[1] = x0
+    xt[1] = x0
     It = 0.0
     tn1 = 0.0
     for n in 2:Ntgt
         tn = tn1 + dt
-        It -= (Yt[n] - Yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
-        Xt[n] = exp(-tn) * (x0 + It) + Yt[n]
+        It += (yt[n] - yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
+        xt[n] = exp(-tn) * (x0 - It) + yt[n]
         tn1 = tn
     end
 end
 ````
 
-There is something wrong with the formula, just use the euler approximation for now:
-
-target! = solve_euler!
-
 ### An illustrative sample path
 
 ````@example 02-wiener_linearnonhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Nsample; info)
 nothing # hide
 ````
 
@@ -185,7 +182,7 @@ plt
 With everything set up, we compute the errors:
 
 ````@example 02-wiener_linearnonhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 

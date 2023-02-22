@@ -9,7 +9,7 @@ Wiener_noise
 ```
 
 ```@docs
-GBM_noise
+gBm_noise
 ```
 
 ```@docs

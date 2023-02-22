@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/03-sin_gBm_linearhomogeneous.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/03-sin_gBm_linearhomogeneous.jl"
 ```
 
 # Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient
@@ -47,15 +47,16 @@ Then we set up some variables
 rng = Xoshiro(123)
 t0 = 0.0
 tf = 1.0
-X0 = Normal()
+X0law = Normal()
 μ = 1.0
 σ = 0.2
 y0 = 1.0
-noise! = GBM_noise(t0, tf, y0, μ, σ)
+noise! = gBm_noise(t0, tf, y0, μ, σ)
 f(t, x, y) = sin(y) * x
 
 Ntgt = 2^18
 Ns = 2 .^ (4:9)
+Nsample = Ns[[1, 2, 3, 4]]
 M = 1_000
 ````
 
@@ -83,7 +84,7 @@ target! = solve_euler!
 ### An illustrative sample path
 
 ````@example 03-sin_gBm_linearhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Nsample; info)
 nothing # hide
 ````
 
@@ -102,7 +103,7 @@ plt
 With everything set up, we compute the errors:
 
 ````@example 03-sin_gBm_linearhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 

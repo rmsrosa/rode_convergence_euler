@@ -9,7 +9,7 @@ using Literate
 
 const REPO_ROOT = dirname(@__DIR__)
 
-const LITERATE_DIR = joinpath(REPO_ROOT, "docs", "literate")
+const LITERATE_DIR = joinpath(REPO_ROOT, "docs", "literate", "examples")
 const GENERATED_RELATIVE_DIR = "examples"
 const GENERATED_DIR = joinpath(REPO_ROOT, "docs", "src", GENERATED_RELATIVE_DIR)
 COMMON_SCRIPT = "common_end.jl"
@@ -20,7 +20,7 @@ append_common_script(content) = replace(content, """include(@__DIR__() * "/commo
 
 generated_examples = String[]
 
-for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir("docs/literate"))
+for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir(LITERATE_DIR))
     Literate.markdown(
         joinpath(LITERATE_DIR, fn),
         GENERATED_DIR,
