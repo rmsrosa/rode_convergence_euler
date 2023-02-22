@@ -14,7 +14,7 @@ The time step is obtained from the length `N` of the vector `xt` via `dt = (tf -
 
 The noise vector `yt` is expected to be at least of the same length as `xt`.
 """
-function solve_euler!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}) where {T, F}
+function solve_euler!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Union{Vector{T}, SubArray{T, 1, Vector{T}, Tuple{StepRange{Int64, Int64}}, true}}) where {T, F}
     N = length(yt)
     length(xt) ≥ N || throw(
         ArgumentError(
@@ -69,7 +69,7 @@ The time step is obtained from the length `N` of the vector `xt` via `dt = (tf -
 
 The noise vector `yt` is expected to be at least of the same length as `xt`.
 """
-function solve_heun!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}) where {T, F}
+function solve_heun!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Union{Vector{T}, SubArray{T, 1, Vector{T}, Tuple{StepRange{Int64, Int64}}, true}}) where {T, F}
     N = length(yt)
     length(xt) ≥ N || throw(
         ArgumentError(
