@@ -424,3 +424,19 @@ function fBm_daviesharte(rng, T, N, H)
     Z = fG_daviesharte(rng, T, N, H)
     return [zero(Z[1]); cumsum(view(Z, 1:N-1))]
 end
+
+"""
+    MultiNoise()
+
+"""
+function MultiNoise(noises...)
+    fn = function (rng::AbstractRNG, Yt::Matrix)
+        yaux = similar(view(Yt, :, 1))
+        for (i, noise) in enumerate(noises)
+            #noise(rng, view(Yt, :, i))
+            noise(rng, yaux)
+            Yt[:, i] .= yaux
+        end
+    end
+    return fn
+end
