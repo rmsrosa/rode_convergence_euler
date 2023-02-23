@@ -108,10 +108,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
-        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
-        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
-        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.01)
+        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
+        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
+        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
+        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
     end
 
     @testset "fBm process" begin

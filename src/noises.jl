@@ -8,13 +8,15 @@ The noise process `noise! = Wiener_noise(t0, tf, y0)` returned by the constructo
 The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
 """
 function Wiener_noise(t0::T, tf::T, y0::T) where {T}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
-        Yt[1] = y0
-        for n in 2:N
-            Yt[n] = Yt[n-1] + sqrtdt * randn(rng)
+        n1 = firstindex(Yt)
+        Yt[n1] = y0
+        for n in Iterators.drop(eachindex(Yt), 1)
+            Yt[n] = Yt[n1] + sqrtdt * randn(rng)
+            n1 = n
         end
     end
     return fn
@@ -30,14 +32,16 @@ The noise process `noise! = gBm_noise(t0, tf, μ, σ, y0)` returned by the const
 The number of steps for the sample path is determined by the length of the given vector `Yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(Yt) - 1)`. The initial condition is `Yt[1] = y0`, corresponding to the value at time `t0`.
 """
 function gBm_noise(t0::T, tf::T, μ::T, σ::T, y0::T) where {T}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         sqrtdt = sqrt(dt)
         a = (μ + σ^2/2)
-        Yt[1] = y0
-        for n in 2:N
-            Yt[n] = Yt[n-1] * exp(a * dt + σ * sqrtdt * randn(rng))
+        n1 = firstindex(Yt)
+        Yt[n1] = y0
+        for n in Iterators.drop(eachindex(Yt), 1)
+            Yt[n] = Yt[n1] * exp(a * dt + σ * sqrtdt * randn(rng))
+            n1 = n
         end
     end
     return fn
@@ -57,17 +61,19 @@ Each sample path is obtained by first drawing the number `n`of events between co
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given increment distribution `dYlaw`.
 """
 function CompoundPoisson_noise(t0::T, tf::T, λ::T, dYlaw::G) where {T, G}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         dN = Poisson(λ * dt)
-        Yt[1] = 0.0
-        for n in 2:N
+        n1 = firstindex(Yt)
+        Yt[n1] = 0.0
+        for n in Iterators.drop(eachindex(Yt), 1)
             Ni = rand(rng, dN)
-            Yt[n] = Yt[n-1]
+            Yt[n] = Yt[n1]
             for _ in 1:Ni
                 Yt[n] += rand(rng, dYlaw)
             end
+            n1 = n
         end
     end
 end
@@ -113,14 +119,16 @@ The noise returned by the constructor yields a random sample path of ``Y_t = Y_{
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
 function StepPoisson_noise(t0::T, tf::T, λ::T, Slaw::G) where {T, G}
-    fn = function (rng::AbstractRNG, Yt::Vector{T})
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{T})
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         dN = Poisson(λ * dt)
-        Yt[1] = 0.0
+        n1 = firstindex(Yt)
+        Yt[n1] = 0.0
         for n in 2:N
             Ni = rand(rng, dN)
-            Yt[n] = iszero(Ni) ? Yt[n-1] : rand(rng, Slaw)
+            Yt[n] = iszero(Ni) ? Yt[n1] : rand(rng, Slaw)
+            n1 = n
         end
     end
 end
@@ -136,14 +144,14 @@ Each random sample path is obtained by first drawing `n` realizations of the dis
 """
 function Transport_noise(t0::T, tf::T, f::F, Ylaw::G, n::S) where {T, S, F, G}
     rv = zeros(T, n)
-    fn = function (rng::AbstractRNG, Yt::Vector{T}; rv::Vector{T} = rv)
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{T}; rv::Vector{T} = rv)
         N = length(Yt)
         dt = (tf - t0) / (N - 1)
         for i in eachindex(rv)
             rv[i] = rand(rng, Ylaw)
         end
         t = t0 - dt
-        for n in 1:N
+        for n in eachindex(Yt)
             t += dt
             Yt[n] = f(t, rv)
         end
@@ -180,7 +188,7 @@ function fBm_noise(t0::Float64, tf::Float64, y0::Float64, H::Float64, N::Int; fl
     plan_inverse = plan_ifft(cache_real; flags)
     plan_direct = plan_fft(cache_complex; flags)
 
-    fn = function (rng::AbstractRNG, Yt::Vector{Float64}; cache_real::Vector{Float64}=cache_real, cache_complex::Vector{ComplexF64}=cache_complex, cache_complex2::Vector{ComplexF64}=cache_complex2, plan_inverse=plan_inverse, plan_direct=plan_direct)
+    fn = function (rng::AbstractRNG, Yt::AbstractVector{Float64}; cache_real::Vector{Float64}=cache_real, cache_complex::Vector{ComplexF64}=cache_complex, cache_complex2::Vector{ComplexF64}=cache_complex2, plan_inverse=plan_inverse, plan_direct=plan_direct)
         length(Yt) ≤ N || throw(
             ArgumentError(
                 "length of the sample path vector should be at most that given in the construction of the fBm noise process."
@@ -226,8 +234,8 @@ function fBm_noise(t0::Float64, tf::Float64, y0::Float64, H::Float64, N::Int; fl
         cache_real .*= ((tf - t0)/N)^(H)
 
         # fGn is made of the first N values of Z 
-        Yt[1] = y0
-        Yt[2:end] .= view(cache_real, 2:length(Yt))
+        Yt[begin] = y0
+        Yt[begin+1:end] .= view(cache_real, 2:length(Yt))
         # fBm sample Yt is made of the first N values of Z 
         cumsum!(Yt, Yt)
     end
@@ -431,11 +439,11 @@ end
 """
 function MultiNoise(noises...)
     fn = function (rng::AbstractRNG, Yt::Matrix)
-        yaux = similar(view(Yt, :, 1))
+        #yaux = similar(view(Yt, :, 1))
         for (i, noise) in enumerate(noises)
-            #noise(rng, view(Yt, :, i))
-            noise(rng, yaux)
-            Yt[:, i] .= yaux
+            noise(rng, view(Yt, :, i))
+            #noise(rng, yaux)
+            #Yt[:, i] .= yaux
         end
     end
     return fn
