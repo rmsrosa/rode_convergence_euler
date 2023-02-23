@@ -437,13 +437,10 @@ end
     MultiNoise()
 
 """
-function MultiNoise(noises...)
+function MultiProcess_noise(noises...)
     fn = function (rng::AbstractRNG, Yt::Matrix)
-        #yaux = similar(view(Yt, :, 1))
         for (i, noise) in enumerate(noises)
             noise(rng, view(Yt, :, i))
-            #noise(rng, yaux)
-            #Yt[:, i] .= yaux
         end
     end
     return fn

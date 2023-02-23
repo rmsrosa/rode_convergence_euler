@@ -7,7 +7,7 @@ using FFTW
 using Plots
 
 # noises
-export Wiener_noise, gBm_noise, CompoundPoisson_noise, StepPoisson_noise, Transport_noise, fBm_noise
+export Wiener_noise, gBm_noise, CompoundPoisson_noise, StepPoisson_noise, Transport_noise, fBm_noise, MultiProcess_noise
 # solvers
 export solve_euler!, solve_heun!
 # error calculation
