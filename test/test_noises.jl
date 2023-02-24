@@ -173,7 +173,11 @@
         YMtf = Matrix{Float64}(undef, M, num_noises)
 
         @test_nowarn noise!(rng, YMt)
+
+        # `MultiProcess_noise`` is allocating a little but it is not affecting performance and might just be due to closure behaving finicky sometimes
+        # (per Jerry Ling (Moelf) https://github.com/Moelf on Slack)
         @test_broken (@ballocated $noise!($rng, $YMt)) == 0
+        
         @test_nowarn (@inferred noise!(rng, YMt))
 
         for m in 1:M

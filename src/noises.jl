@@ -438,9 +438,12 @@ end
 
 """
 function MultiProcess_noise(noises...)
-    fn = function (rng::AbstractRNG, Yt::Matrix)
-        for (i, noise) in enumerate(noises)
-            noise(rng, view(Yt, :, i))
+    fn = function (rng::AbstractRNG, yt::AbstractMatrix; noises::Tuple=noises)
+        axes(eachcol(yt)) == axes(noises) || throw(
+            DimensionMismatch("Columns of `yt` and list of noises in `noises` must match indices; got $(axes(eachcol(yt))) and $(axes(noises)).")
+        )
+        for (noise, yti) in zip(noises, eachcol(yt))
+            noise(rng, yti)
         end
     end
     return fn
