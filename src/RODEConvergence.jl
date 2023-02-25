@@ -6,8 +6,15 @@ using LinearAlgebra
 using FFTW
 using Plots
 
+import Random: rand
+
 # noises
-export Wiener_noise, gBm_noise, CompoundPoisson_noise, StepPoisson_noise, Transport_noise, fBm_noise, MultiProcess_noise
+export WienerProcess, GeometricBrownianMotionProcess
+export CompoundPoissonProcess, PoissonStepProcess
+export TransportProcess
+export FractionalBrownianMotionProcess
+export MultiProcess
+
 # solvers
 export solve_euler!, solve_heun!
 # error calculation

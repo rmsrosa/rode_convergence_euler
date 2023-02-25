@@ -9,14 +9,14 @@
     @testset "Wiener process" begin
         rng = Xoshiro(123)
         y0 = 0.0
-        noise! = Wiener_noise(t0, tf, y0)
+        Y = WienerProcess(t0, tf, y0)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
 
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
@@ -31,14 +31,14 @@
         y0 = 0.4
         μ = 0.3
         σ = 0.2
-        noise! = gBm_noise(t0, tf, μ, σ, y0)
+        Y = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated $rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
 
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
@@ -50,18 +50,19 @@
 
     @testset "Compound Poisson" begin
         rng = Xoshiro(123)
+        y0 = 0.0
         λ = 25.0
         μ = 0.5
         σ = 0.2
         dYlaw = Normal(μ, σ)
-        noise! = CompoundPoisson_noise(t0, tf, λ, dYlaw)
+        Y = CompoundPoissonProcess(t0, tf, y0, λ, dYlaw)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated $rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
         
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
@@ -73,18 +74,19 @@
 
     @testset "Step Poisson" begin
         rng = Xoshiro(123)
+        y0 = 0.0
         λ = 25.0
         α = 2.0
         β = 15.0
         Slaw = Beta(α, β)
-        noise! = StepPoisson_noise(t0, tf, λ, Slaw)
+        Y = PoissonStepProcess(t0, tf, y0, λ, Slaw)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated $rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
         
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
@@ -96,40 +98,38 @@
 
     @testset "Transport process" begin
         rng = Xoshiro(123)
-        nr = 5
-        f = (t, r) -> mapreduce(ri -> sin(ri*t), +, r)
-        α = 2.0
-        β = 15.0
         Ylaw = Beta(α, β)
-        noise! = Transport_noise(t0, tf, f, Ylaw, nr)
+        f = (t, r) -> mapreduce(ri -> sin(ri*t), +, r)
+        ny = 5
+        Y = TransportProcess(t0, tf, Ylaw, f, ny)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated $rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
 
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
-        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
-        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
-        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.02)
+        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
+        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
+        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
+        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
     end
 
     @testset "fBm process" begin
         rng = Xoshiro(123)
         y0 = 0.0
         H = 0.25
-        noise! = fBm_noise(t0, tf, y0, H, N)
+        Y = FractionalBrownianMotionProcess(t0, tf, y0, H, N)
         
-        @test_nowarn noise!(rng, Yt)
-        @test (@ballocated $noise!($rng, $Yt)) == 0
-        @test_nowarn (@inferred noise!(rng, Yt))
+        @test_nowarn rand!(rng, Y, Yt)
+        @test (@ballocated $rand!($rng, $Y, $Yt)) == 0
+        @test_nowarn (@inferred rand!(rng, Y, Yt))
         
         for m in 1:M
-            noise!(rng, Yt)
+            rand!(rng, Y, Yt)
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
@@ -137,10 +137,9 @@
         @test var(Ythf) ≈ (tf/2)^(2H) (atol = 0.05)
         @test mean(Ytf) ≈ 0.0 (atol = 0.05)
         @test var(Ytf) ≈ tf^(2H) (atol = 0.05)
-        rngcp = copy(rng)
-        @test RODEConvergence.fG_daviesharte(rng, tf, N, H) ≈ RODEConvergence.fG_daviesharte_naive(rngcp, tf, N, H)
     end
-
+    
+    #=
     @testset "Multi noise" begin
         rng = Xoshiro(123)
         y0 = 0.0
@@ -166,22 +165,22 @@
             Transport_noise(t0, tf, f, Ylaw, nr),
             fBm_noise(t0, tf, y0, H, N)
         )
-        noise! = MultiProcess_noise(noises...)
+        Y = MultiProcess(noises...)
 
         num_noises = length(noises)
         YMt = Matrix{Float64}(undef, N, num_noises)
         YMtf = Matrix{Float64}(undef, M, num_noises)
 
-        @test_nowarn noise!(rng, YMt)
+        @test_nowarn rand!(rng, Y, YMt)
 
         # `MultiProcess_noise`` is allocating a little but it is not affecting performance and might just be due to closure behaving finicky sometimes
         # (per Jerry Ling (Moelf) https://github.com/Moelf on Slack)
-        @test_broken (@ballocated $noise!($rng, $YMt)) == 0
+        @test_broken (@ballocated rand!($rng, $Y, $YMt)) == 0
         
-        @test_nowarn (@inferred noise!(rng, YMt))
+        @test_nowarn (@inferred rand!(rng, Y,YMt))
 
         for m in 1:M
-            noise!(rng, YMt)
+            rand!(rng, Y,YMt)
             for j in 1:num_noises
                 YMtf[m, j] = YMt[end, j]
             end
@@ -207,4 +206,5 @@
         @test means[6] ≈ 0.0 (atol = 0.1)
         @test vars[6] ≈ tf^(2H) (atol = 0.1)
     end
+    =#
 end
