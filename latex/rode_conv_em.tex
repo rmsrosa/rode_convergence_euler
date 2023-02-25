@@ -1003,15 +1003,18 @@ Notice the first term is the trapezoidal rule while the second term is a Gaussia
 \[
     \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
 \]
-Hence,
+Notice $\mathbb{E}[B_tB_s]$ is symmetric in $ts$, so we can write
 \begin{align*}
     \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
     & = \int_0^\tau \int_0^\tau \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^\tau \left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \frac{t^2}{2}\;\mathrm{d}t + \int_0^\tau t(\tau - t)\;\mathrm{d}t - \int_0^\tau \frac{t\tau^2}{2\tau}\;\mathrm{d}t \\
-    & = \frac{\tau^3}{12}.
+    & = 2\int_0^\tau \int_0^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
+    & = 2\int_0^\tau \int_0^t \left(s - \frac{ts}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t \\
+    & = \frac{2}{\tau}\int_0^\tau \int_0^t (\tau - t)s\;\mathrm{d}s\;\mathrm{d}t.
 \end{align*}
+Hence,
+\begin{equation*}
+    \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] = \frac{2}{\tau}\int_0^\tau (\tau - t)\frac{t^2}{2}\;\mathrm{d}t = \frac{2}{\tau}\left.\left(\tau\frac{t^3}{6} - \frac{t^4}{8}\right)\right|_{t = 0}^\tau = \frac{\tau^3}{12}.
+\end{equation*}
 
 Back to $Z_i$, this means that
 \begin{equation}
@@ -1076,7 +1079,7 @@ The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to
 hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods.
 \end{rmk}
 
-\subsection{Linear inhomogeneous equation}
+\subsection{Linear nonhomogeneous equation}
 
 We now consider the following linear equation with noise in the nonhomogenous term:
 \begin{equation}
@@ -1086,44 +1089,95 @@ We now consider the following linear equation with noise in the nonhomogenous te
         \left. X_t \right|_{t = 0} = X_0,
       \end{cases}
 \end{equation}
-This has the explicit solution
+This has the explicit pathwise solution
 \begin{equation}
-    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}W_s\;\mathrm{d}s.
+    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}W_s\;\mathrm{d}s, \quad 0 \leq t \leq T.
 \end{equation}
 
-As in \cref{seclinearhomogeneousrode}, when we compute an approximate solution via Euler's method, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, on the mesh points. We can find the exact distribution for $\int_0^{t_j} e^{s} W_s\;\mathrm{d}s$ given the values of the noise at the mesh points and use that to draw feasible exact solutions to estimate the strong error.
+As in \cref{seclinearhomogeneousrode}, when we compute an approximate solution via Euler's method, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, i.e. only on the mesh points. We can find the exact distribution for $\int_0^{t_j} e^{s} W_s\;\mathrm{d}s$ given the values of the noise at the mesh points and use that to draw feasible exact solutions to estimate the strong error.
 
-First we break down the sum into parts:
+First, we notice that
+\[
+    \mathrm{d}(e^tW_t) = e^t W_t\;\mathrm{d}t + e^t\;\mathrm{d}W_t.
+\]
+Thus, since $W_0 = 0$,
+\[
+    \int_0^t e^s W_s \;\mathrm{d}s = e^tW_t - \int_0^t e^t\;\mathrm{d}W_t.
+\]
+Now, for $t=t_j$, we break down the integral into parts:
 \begin{equation}
-    \int_0^{t_j} e^s W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s.
+    \int_0^{t_j} e^s \;\mathrm{d}W_s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s.
 \end{equation}
 On each mesh interval $[t_i, t_{i+1}]$, we consider, again, the Brownian bridge
 \begin{equation}
     B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i}).
 \end{equation}
-Then,
+Thus, on each mesh interval $[t_i, t_{i+1}]$, we have
+\[
+    \mathrm{d}W_t = \mathrm{d}B_t^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i} \;\mathrm{d}t.
+\]
+Hence, upon integration,
+\[
+    \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s = \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right).
+\]
+Putting them all together yields
 \begin{align*}
-    \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} e^s\left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
-    & = W_{t_{i+1}}e^{t_{i+1}} - W_{t_i}e^{t_i} - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i,
+    \int_0^{t_j} e^s W_s \;\mathrm{d}s & = e^{t_j}W_{t_j} - \int_0^{t_j} e^{t_j}\;\mathrm{d}W_t \\
+    & = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s \\
+    & = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \left(\int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right)\right).
 \end{align*}
+
+Since the Brownian bridge vanishes at the endpoints, we have
+\[
+    \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i = - \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s.
+\]
+Thus,
+\begin{equation}
+    \int_0^{t_j} e^s W_s \;\mathrm{d}s = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right) - Z_i \right),
+\end{equation}
 where
 \begin{equation}
     Z_i = \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s.
 \end{equation}
-As before, the term $Z_i$ is a Gaussian with zero mean, and we need to compute its variance to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
-\[
-    \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
-\]
-Hence,
+As before, the term $Z_i$ is a Gaussian with zero mean, and we need to compute its variance to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. As in the previous section, using the symmetry in $ts$,
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau e^s e^t B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
+    & = \int_0^\tau \int_0^\tau e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
+    & = 2\int_0^\tau \int_0^t e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
+    & = \frac{2}{\tau}\int_0^\tau \int_0^t e^s e^t (\tau - t) s \;\mathrm{d}s\;\mathrm{d}t
+\end{align*}
+Upon integration,
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \frac{2}{\tau}\int_0^\tau e^t (\tau - t) (te^t - e^t + 1) \;\mathrm{d}t \\
+    & = 
+\end{align*}
+
 \begin{align*}
     \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau e^s e^t B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
     & = \int_0^\tau \int_0^\tau e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
     & = \int_0^\tau \int_0^\tau e^s e^t\left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
     & = \int_0^\tau \int_0^t e^s e^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau e^s e^t t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau e^s e^t \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau e^t(te^t-e^t+1)\;\mathrm{d}t + \int_0^\tau te^t(e^\tau - e^t)\;\mathrm{d}t \\
-    & \qquad - \int_0^\tau \frac{te^t}{\tau}\left(\tau e^\tau - e^\tau + 1\right)\;\mathrm{d}t \\
-    & = \frac{\tau^3}{12}.
+    & = \int_0^\tau \int_0^t e^s e^t s\left(1 - \frac{t}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau e^s e^t t\left(1 - \frac{s}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t \\
+    & = \frac{1}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t + \frac{1}{\tau}\int_0^\tau \int_t^\tau e^s e^t t\left(\tau -s\right)\;\mathrm{d}s\;\mathrm{d}t.
 \end{align*}
+Switching the order of integration in the second integral and renaming the variables we see that
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \frac{1}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t + \frac{1}{\tau}\int_0^\tau \int_0^s e^s e^t t\left(\tau -s\right)\;\mathrm{d}t\;\mathrm{d}s \\
+    & = \frac{2}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t \\
+    & = \frac{2}{\tau}\int_0^\tau e^t(\tau - t)(\tau e^\tau - e^\tau + 1)\;\mathrm{d}t \\
+    & = \frac{2(\tau e^\tau - e^\tau + 1)}{\tau}((e^\tau - 1)\tau - (\tau e^\tau - e^\tau + 1)) \\
+    & = \frac{2(\tau e^\tau - e^\tau + 1)}{\tau}(e^\tau - \tau - 1).
+\end{align*}
+Computing the inner integral we find
+\begin{align*}
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \int_0^\tau e^t(te^t-e^t+1)\;\mathrm{d}t + \int_0^\tau te^t(e^\tau - e^t)\;\mathrm{d}t \\
+    & \qquad - \int_0^\tau \frac{te^t}{\tau}\left(\tau e^\tau - e^\tau + 1\right)\;\mathrm{d}t \\
+    & = \int_0^\tau (e^t-e^{2t})\;\mathrm{d}t - \int_0^\tau \frac{te^t}{\tau}\left(1 - e^\tau\right)\;\mathrm{d}t
+\end{align*}
+Computing the remaining integral yields
+\[
+    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] = e^{\tau} - e^{2\tau} - \frac{1 - e^\tau}{\tau}\left( \tau e^\tau\ - e^\tau + 1 \right)
+\]
 
 Back to $Z_i$, this means that
 \begin{equation}
@@ -1131,16 +1185,10 @@ Back to $Z_i$, this means that
     Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
 \end{equation}
 
-For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
-\begin{equation}
-    \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
-\end{equation}
-This is the contribution of this random variable to the mean of the exact solution. But we actually need to use the exact $e^{\sum_i Z_i}$ for a more reliable estimate.
-
 Hence, once an Euler approximation of \eqref{linearnonhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
 \begin{equation}
     \label{Xtlinearnonhomogeneousrode}
-    X_t = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+    X_t = e^{-t_j}\left(X_0 - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right) - Z_i \right) \right) + W_{t_j},
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearnonhomogeneousZidistribution}. Figure \ref{samplepathslinearnonhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
