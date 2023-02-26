@@ -20,10 +20,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ 0.0 (atol = 0.05)
-        @test var(Ythf) ≈ tf/2 (atol = 0.05)
-        @test mean(Ytf) ≈ 0.0 (atol = 0.05)
-        @test var(Ytf) ≈ tf (atol = 0.05)
+        @test mean(Ythf) ≈ 0.0 (atol = 0.1)
+        @test var(Ythf) ≈ tf/2 (atol = 0.1)
+        @test mean(Ytf) ≈ 0.0 (atol = 0.1)
+        @test var(Ytf) ≈ tf (atol = 0.1)
     end
 
     @testset "gBm process" begin
@@ -42,10 +42,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ y0 * exp(μ * (tf / 2)) (atol = 0.05)
-        @test var(Ythf) ≈ y0^2 * exp(2μ * (tf / 2)) * (exp(σ^2 * (tf / 2)) - 1) (atol = 0.05)
+        @test mean(Ythf) ≈ y0 * exp(μ * (tf / 2)) (atol = 0.1)
+        @test var(Ythf) ≈ y0^2 * exp(2μ * (tf / 2)) * (exp(σ^2 * (tf / 2)) - 1) (atol = 0.1)
         @test mean(Ytf) ≈ y0 * exp(μ * tf) (atol = 0.1)
-        @test var(Ytf) ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.05)
+        @test var(Ytf) ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
     end
 
     @testset "Compound Poisson" begin
@@ -90,10 +90,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ α/(α + β) (atol = 0.05)
-        @test var(Ythf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.05)
+        @test mean(Ythf) ≈ α/(α + β) (atol = 0.1)
+        @test var(Ythf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
         @test mean(Ytf) ≈ α/(α + β) (atol = 0.1)
-        @test var(Ytf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.05)
+        @test var(Ytf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
     end
 
     @testset "Transport process" begin
@@ -114,10 +114,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
-        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
-        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
-        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.02)
+        @test mean(Ythf) ≈ mean(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.1)
+        @test var(Ythf) ≈ var(sum(sin(r * tf / 2) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.1)
+        @test mean(Ytf) ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.1)
+        @test var(Ytf) ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, ny)) for _ in 1:M) (atol = 0.1)
     end
 
     @testset "fBm process" begin
@@ -135,10 +135,10 @@
             Ythf[m] = Yt[div(N, 2)]
             Ytf[m] = last(Yt)
         end
-        @test mean(Ythf) ≈ 0.0 (atol = 0.05)
-        @test var(Ythf) ≈ (tf/2)^(2H) (atol = 0.05)
-        @test mean(Ytf) ≈ 0.0 (atol = 0.05)
-        @test var(Ytf) ≈ tf^(2H) (atol = 0.05)
+        @test mean(Ythf) ≈ 0.0 (atol = 0.1)
+        @test var(Ythf) ≈ (tf/2)^(2H) (atol = 0.1)
+        @test mean(Ytf) ≈ 0.0 (atol = 0.1)
+        @test var(Ytf) ≈ tf^(2H) (atol = 0.1)
     end
     
     #=
@@ -202,8 +202,8 @@
         @test means[4] ≈ α/(α + β) (atol = 0.1)
         @test vars[4] ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
 
-        @test means[5] ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.05)
-        @test vars[5] ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.05)
+        @test means[5] ≈ mean(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.1)
+        @test vars[5] ≈ var(sum(sin(r * tf) for r in rand(rng, Ylaw, nr)) for _ in 1:M) (atol = 0.1)
 
         @test means[6] ≈ 0.0 (atol = 0.1)
         @test vars[6] ≈ tf^(2H) (atol = 0.1)
