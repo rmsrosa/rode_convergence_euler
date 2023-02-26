@@ -42,11 +42,11 @@ nothing # hide
 With this setup, we create the corresponding fractional Brownian motion processes:
 
 ```@example fBm
-noise! = Dict(H => fBm_noise(t0, T, y0, H, N) for H in Hs)
+noise = Dict(H => FractionalBrownianMotionProcess(t0, T, y0, H, N) for H in Hs)
 nothing # hide
 ```
 
-This `noise!` is a `Dict` with the keys being the chosen Hurst parameters and with each `noise![H]` being a fractional Brownian noise sampler with the corresponding `H` in `Hs`. Each sampler takes a random number generator `rng` and a vector of floats `Yt` of size `N`, and `noise![H](rng, Yt)` fills up the pre-allocated vector `Yt` with a sample path. For that, we set up the `rng`, used for reproducibility, and create the vector `Yt`.
+This `noise` is a `Dict` with the keys being the chosen Hurst parameters and with each `noise[H]` being a fractional Brownian noise sampler with the corresponding `H` in `Hs`. With each sampler, we draw a sample path with `rand!(rng, noise[H], Yt)`, with a random number generator `rng` and a vector of floats `Yt` of size `N`, so that this sampling fills up the pre-allocated vector `Yt` with a sample path. For that, we set up the `rng`, used for reproducibility, and create the vector `Yt`.
 
 ```@example fBm
 rng = Xoshiro(123)
@@ -65,7 +65,7 @@ H = Hs[3]
 
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    noise![H](rng, Yt)
+    rand!(rng, noise[H], Yt)
     plot!(plt, tt, Yt)
 end
 plt
@@ -78,7 +78,7 @@ H = Hs[2]
 
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    noise![H](rng, Yt)
+    rand!(rng, noise[H], Yt)
     plot!(plt, tt, Yt)
 end
 plt
@@ -91,7 +91,7 @@ H = Hs[1]
 
 plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    noise![H](rng, Yt)
+    rand!(rng, noise[H], Yt)
     plot!(plt, tt, Yt)
 end
 plt
@@ -109,7 +109,7 @@ nothing # hide
 Now we generate the sets of sample paths for each Hurst parameter.
 
 ```@example fBm
-W = Dict(H => reduce(hcat, RODEConvergence.fBm_daviesharte(rng, T, N, H) for _ in 1:M) for H in Hs)
+W = Dict(H => reduce(hcat, rand!(rng, noise[H], Yt) for _ in 1:M) for H in Hs)
 
 means = Dict(H => mean(W[H], dims=2) for H in Hs)
 stds = Dict(H => std(W[H], dims=2) for H in Hs)
@@ -242,12 +242,12 @@ Looks good!
 
 ## Benchmark
 
-The function `fBm_noise(t0, T, y0, H, N)` returns a fractional Brownian motion *sampler.* That means when we set `noise! = fBm_noise(t0, T, y0, H, N)`, then `noise!` is a function that takes a random number generator `rng` and a vector `Yt` so that, upon calling `noise!(rng, Yt)`, it fills up the vector `Yt` with a sample path.
+The function `fBm_noise(t0, T, y0, H, N)` returns a fractional Brownian motion *sampler.* That means when we set `noise = FractionalBrownianMotionProcess(t0, T, y0, H, N)`, then `noise` is a sampler, from which we draw sample paths with `rand!(rng, noise, Yt)`, filling up the preallocated vector `Yt` with a sample path.
 
-When calling `fBm_noise(t0, T, y0, H, N)`, a few cache vectors are created to hold the intermediate results needed when generating each sample path, including going through inverse and direct fast Fourier transforms. Besised creating the auxiliary cache vectors, it also builds the FFT plans used in the FFT transforms via [FFTW.jl](https://github.com/JuliaMath/FFTW.jl). In this way, the resulting method `noise!` contains everthing pre-allocated so generating a sample is non-allocating. This can be benchmarked as follows.
+When calling `FractionalBrownianMotionProcess(t0, T, y0, H, N)`, a composite type is created containing cache vectors to hold the intermediate results needed when generating each sample path, including going through inverse and direct fast Fourier transforms. Besised creating the auxiliary cache vectors, it also builds the FFT plans used in the FFT transforms via [FFTW.jl](https://github.com/JuliaMath/FFTW.jl). In this way, the resulting sampler `noise` contains everthing pre-allocated so generating a sample is non-allocating. This can be benchmarked as follows.
 
 ```@example fBm
 H = Hs[1]
-@btime $(noise![H])($rng, $Yt)
+@btime rand!($rng, $(noise[H]), $Yt)
 nothing # hide
 ```

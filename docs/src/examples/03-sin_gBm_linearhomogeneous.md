@@ -51,7 +51,7 @@ X0law = Normal()
 μ = 1.0
 σ = 0.2
 y0 = 1.0
-noise! = gBm_noise(t0, tf, y0, μ, σ)
+noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 f(t, x, y) = sin(y) * x
 
 Ntgt = 2^18
@@ -84,7 +84,7 @@ target! = solve_euler!
 ### An illustrative sample path
 
 ````@example 03-sin_gBm_linearhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Nsample; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
 nothing # hide
 ````
 
@@ -103,7 +103,7 @@ plt
 With everything set up, we compute the errors:
 
 ````@example 03-sin_gBm_linearhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 

@@ -105,7 +105,7 @@ The noise process `noise! = CompoundPoisson_noise(t0, tf, λ, dYlaw)` returned b
 
 The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dYlaw`, during each mesh time interval.
 
-This is an alternative implementation to [`CompoundPoisson_noise`](@ref).
+This is an alternative implementation to [`CompoundPoissonProcess`](@ref).
 """
 struct CompoundPoissonProcessAlt{T, G} <: AbstractProcess
     t0::T
@@ -316,10 +316,10 @@ function Random.rand!(rng::AbstractRNG, Y::FractionalBrownianMotionProcess{P1, P
 end
 
 """
-    MultiNoise()
+    MultiProcess(noises...)
 
 """
-function MultiProcess_noise(noises...)
+function MultiProcess(noises::AbstractProcess...)
     fn = function (rng::AbstractRNG, yt::AbstractMatrix; noises::Tuple=noises)
         axes(eachcol(yt)) == axes(noises) || throw(
             DimensionMismatch("Columns of `yt` and list of noises in `noises` must match indices; got $(axes(eachcol(yt))) and $(axes(noises)).")

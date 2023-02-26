@@ -118,7 +118,7 @@ t0 = 0.0
 tf = 1.0
 X0law = Normal()
 y0 = 0.0
-noise! = Wiener_noise(t0, tf, y0)
+noise = WienerProcess(t0, tf, y0)
 f(t, x, y) = - x + y
 
 Ntgt = 2^16
@@ -163,7 +163,7 @@ end
 ### An illustrative sample path
 
 ````@example 02-wiener_linearnonhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Nsample; info)
+plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
 nothing # hide
 ````
 
@@ -182,7 +182,7 @@ plt
 With everything set up, we compute the errors:
 
 ````@example 02-wiener_linearnonhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise!, target!, Ntgt, Ns, M)
+@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
 nothing # hide
 ````
 

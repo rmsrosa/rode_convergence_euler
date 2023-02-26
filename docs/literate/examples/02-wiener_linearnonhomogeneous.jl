@@ -111,7 +111,7 @@ t0 = 0.0
 tf = 1.0
 X0law = Normal()
 y0 = 0.0
-noise! = Wiener_noise(t0, tf, y0)
+noise = WienerProcess(t0, tf, y0)
 f(t, x, y) = - x + y
 
 Ntgt = 2^16

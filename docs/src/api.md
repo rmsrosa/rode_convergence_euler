@@ -1,31 +1,35 @@
 # API
 
-Here we include the docstrings of the functions implemented in `RODEConvergence.jl`, starting with the exported functions and ending with some internal and other functions used for tests.
+Here we include the docstrings of the functions implemented in `RODEConvergence.jl`.
 
 ## Noises
 
 ```@docs
-Wiener_noise
+WienerProcess
 ```
 
 ```@docs
-gBm_noise
+GeometricBrownianMotionProcess
 ```
 
 ```@docs
-CompoundPoisson_noise
+CompoundPoissonProcess
 ```
 
 ```@docs
-StepPoisson_noise
+PoissonStepProcess
 ```
 
 ```@docs
-Transport_noise
+TransportProcess
 ```
 
 ```@docs
-fBm_noise
+FractionalBrownianMotionProcess
+```
+
+```@docs
+MultiProcess
 ```
 
 ## Solvers
@@ -70,20 +74,10 @@ plot_dt_vs_error
 plot_t_vs_errors
 ```
 
-## Internal or extra functions
+## Extras
+
+These are non-exported.
 
 ```@docs
-RODEConvergence.CompoundPoisson_noise_alt
-```
-
-```@docs
-RODEConvergence.fG_daviesharte
-```
-
-```@docs
-RODEConvergence.fG_daviesharte_naive
-```
-
-```@docs
-RODEConvergence.fBm_daviesharte
+RODEConvergence.CompoundPoissonProcessAlt
 ```
