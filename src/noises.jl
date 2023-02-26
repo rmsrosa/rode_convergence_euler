@@ -85,7 +85,7 @@ function Random.rand!(rng::AbstractRNG, Y::CompoundPoissonProcess{T, G}, yt::Abs
     dt = (Y.tf - Y.t0) / (N - 1)
     dN = Poisson(Y.λ * dt)
     n1 = firstindex(yt)
-    Yt[n1] = Y.y0
+    yt[n1] = Y.y0
     for n in Iterators.drop(eachindex(yt), 1)
         Ni = rand(rng, dN)
         yt[n] = yt[n1]
@@ -180,16 +180,25 @@ struct TransportProcess{T, F, G} <: AbstractProcess
     Ylaw::G
     f::F
     rv::Vector{T}
-    TransportProcess{T, F, G}(t0, tf, Ylaw, f, ny) where {T, F, G} = new(t0, tf, Ylaw, f, zeros(T, ny))
+    TransportProcess(t0::T, tf::T, Ylaw::G, f::F, ny::Int64) where {T, F, G} = new{T, F, G}(t0, tf, Ylaw, f, zeros(T, ny))
+end
+
+struct Bar{T}
+    x::T
+    v::Vector{T}
+    function Bar(x::T, n::Int64) where {T} 
+        z = zeros(T, n)
+        new{T}(x, z)
+    end
 end
 
 function Random.rand!(rng::AbstractRNG, Y::TransportProcess{T, F, G}, yt::AbstractVector{T}) where {T, F, G}
     N = length(yt)
     dt = (Y.tf - Y.t0) / (N - 1)
     for i in eachindex(Y.rv)
-        Y.rv[i] = rand(rng, Ylaw)
+        Y.rv[i] = rand(rng, Y.Ylaw)
     end
-    # Or rand!(rng, Ylaw, Y.rv) ?
+    # rand!(rng, Y.Ylaw, Y.rv) # Beta allocates but others don't; maybe a bug in Beta
     t = Y.t0 - dt
     for n in eachindex(yt)
         t += dt
@@ -223,7 +232,7 @@ struct FractionalBrownianMotionProcess{P1, P2} <: AbstractProcess
     plan_inverse::P1
     plan_direct::P2
 
-    function FractionalBrownianMotionProcess{P1, P2}(t0::Float64, tf::Float64, y0::Float64, H::Float64, N::Int; flags=FFTW.MEASURE) where {P1, P2}
+    function FractionalBrownianMotionProcess(t0::Float64, tf::Float64, y0::Float64, H::Float64, N::Int; flags=FFTW.MEASURE)
         ispow2(N) || throw(
             ArgumentError(
                 "Desired maximum length `N` must be a power of 2 for this implementation of the Davies-Harte method."
@@ -241,7 +250,7 @@ struct FractionalBrownianMotionProcess{P1, P2} <: AbstractProcess
         plan_inverse = plan_ifft(cache_real; flags)
         plan_direct = plan_fft(cache_complex; flags)
 
-        new(t0, tf, y0, H, N, cache_real, cache_complex, cache_complex2, plan_inverse, plan_direct)
+        new{typeof(plan_inverse), typeof(plan_direct)}(t0, tf, y0, H, N, cache_real, cache_complex, cache_complex2, plan_inverse, plan_direct)
     end
 end
 
@@ -302,7 +311,7 @@ function Random.rand!(rng::AbstractRNG, Y::FractionalBrownianMotionProcess{P1, P
     # fGn is made of the first N values of Z 
     yt[begin] = y0
     yt[begin+1:end] .= view(Y.cache_real, 2:length(yt))
-    # fBm sample Yt is made of the first N values of Z 
+    # fBm sample yt is made of the first N values of Z 
     cumsum!(yt, yt)
 end
 

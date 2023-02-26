@@ -98,6 +98,8 @@
 
     @testset "Transport process" begin
         rng = Xoshiro(123)
+        α = 2.0
+        β = 15.0
         Ylaw = Beta(α, β)
         f = (t, r) -> mapreduce(ri -> sin(ri*t), +, r)
         ny = 5
