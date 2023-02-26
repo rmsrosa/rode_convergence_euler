@@ -196,9 +196,9 @@ function Random.rand!(rng::AbstractRNG, Y::TransportProcess{T, F, G}, yt::Abstra
     N = length(yt)
     dt = (Y.tf - Y.t0) / (N - 1)
     for i in eachindex(Y.rv)
-        Y.rv[i] = rand(rng, Y.Ylaw)
+        @inbounds Y.rv[i] = rand(rng, Y.Ylaw)
     end
-    # rand!(rng, Y.Ylaw, Y.rv) # Beta allocates but others don't; maybe a bug in Beta
+    # rand!(rng, Y.Ylaw, Y.rv) # Beta allocates but others don't, so roll out the loop explicitly; see https://github.com/JuliaStats/Distributions.jl/pull/1281
     t = Y.t0 - dt
     for n in eachindex(yt)
         t += dt
