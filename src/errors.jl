@@ -55,7 +55,7 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 """
-function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::ContinuousUnivariateDistribution, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, F, G}
+function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::Union{ContinuousUnivariateDistribution, Vector{<:ContinuousUnivariateDistribution}}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, F, G}
     
     # get whether a system 
     xisinplace = Xt isa Matrix
@@ -63,7 +63,7 @@ function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, X
     for _ in 1:M
         # draw initial condition
         if xisinplace
-            rand!(rng, X0law, view(Xt, 1, :))
+            Xt[1, :] .= rand.(rng, X0law)
         else
             Xt[1] = rand(rng, X0law)
         end
