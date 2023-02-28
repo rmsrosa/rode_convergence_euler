@@ -328,7 +328,32 @@ function Random.rand!(rng::AbstractRNG, Y::Vector{<:AbstractProcess}, yt::Abstra
     axes(eachcol(yt)) == axes(Y) || throw(
         DimensionMismatch("Columns of `yt` and vector of noises `Y` must match indices.")
     )
-    for (Yi, yti) in zip(Y, eachcol(yt))
-        rand!(rng, Yi, yti)
+    for (i, yti) in enumerate(eachcol(yt))
+        rand!(rng, Y[i], yti)
     end
+    #for i in eachindex(Y)
+    #    rand!(rng, Y[i], view(yt, :, i))
+    #end
+    #ntuple(i -> rand!(rng, Y[i], view(yt, :, i)), length(Y))
+    #nothing
+#    for (Yi, yti) in zip(Y, eachcol(yt))
+#        rand!(rng, Yi, yti)
+#    end
+end
+
+function Random.rand!(rng::AbstractRNG, Y::Tuple{Vararg{AbstractProcess}}, yt::AbstractMatrix)
+    axes(eachcol(yt)) == axes(Y) || throw(
+        DimensionMismatch("Columns of `yt` and of tuple `Y` of noises must match indices.")
+    )
+    for (i, yti) in enumerate(eachcol(yt))
+        rand!(rng, Y[i], yti)
+    end
+    #for i in eachindex(Y)
+    #    rand!(rng, Y[i], view(yt, :, i))
+    #end
+    #ntuple(i -> rand!(rng, Y[i], view(yt, :, i)), length(Y))
+    #nothing
+#    for (Yi, yti) in zip(Y, eachcol(yt))
+#        rand!(rng, Yi, yti)
+#    end
 end

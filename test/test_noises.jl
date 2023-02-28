@@ -2,7 +2,7 @@
     t0 = 0.0
     tf = 2.0
     N = 2^8
-    M = 4_000
+    M = 5_000
     Ythf = Vector{Float64}(undef, M)
     Ytf = Vector{Float64}(undef, M)
     Yt = Vector{Float64}(undef, N)
