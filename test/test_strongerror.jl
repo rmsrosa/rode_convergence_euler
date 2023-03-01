@@ -41,10 +41,10 @@
 
         X0law = Normal()
         y0 = 0.0
-        noise = [
+        noise = ProductProcess(
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
-        ]
+        )
         f = (t, x, y) -> (y[1] + 3y[2])/4 * x
 
         target_exact! = function (rng, xt, t0, tf, x0, f, yt)
@@ -72,8 +72,10 @@
     end
 
     @testset "Vector/scalar Euler" begin
-        X0law = MvNormal(I(2)) # two independent normals
-        # X0law = product_distribution(Normal(), Normal()) # alternative implementation
+        # two independent normals
+        X0law = MvNormal(I(2))
+        # alternative implementation:
+        # X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
         f! = (dx, t, x, y) -> (dx .= y * x)
@@ -103,13 +105,15 @@
     end
 
     @testset "Vector/Vector Euler" begin
-        X0law = MvNormal(I(2)) # two independent normals
-        # X0law = product_distribution(Normal(), Normal()) # alternative implementation
+        # two independent normals
+        X0law = MvNormal(I(2))
+        # alternative implementation:
+        # X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
-        noise = [
+        noise = ProductProcess(
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
-        ]
+        )
         f! = (dx, t, x, y) -> (dx .= (y[1] + 3y[2]) * x / 4)
 
         target_exact! = function (rng, xt, t0, tf, x0, f!, yt)

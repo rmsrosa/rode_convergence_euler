@@ -13,7 +13,7 @@ export WienerProcess, GeometricBrownianMotionProcess
 export CompoundPoissonProcess, PoissonStepProcess
 export TransportProcess
 export FractionalBrownianMotionProcess
-export MultiProcess
+export ProductProcess
 
 # solvers
 export solve_euler!, solve_heun!

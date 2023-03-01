@@ -55,14 +55,14 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 """
-function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::Union{ContinuousUnivariateDistribution, ContinuousMultivariateDistribution}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, F, G}
+function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::ContinuousDistribution{N0}, f::F, noise::AbstractProcess{NY}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, N0, NY, F, G}
     
     # get whether a system 
-    xisinplace = Xt isa Matrix
-    yisinplace = Yt isa Matrix
+    xisinplace = N0 == Multivariate
+    yisinplace = NY == Multivariate
     for _ in 1:M
         # draw initial condition
-        if xisinplace
+        if N0 == Multivariate
             rand!(rng, X0law, view(Xt, 1, :))
         else
             Xt[1] = rand(rng, X0law)
@@ -72,7 +72,7 @@ function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, X
         rand!(rng, noise, Yt)
 
         # generate target path
-        if xisinplace
+        if N0 == Multivariate
             target!(rng, Xt, t0, tf, view(Xt, 1, :), f, Yt)
         else
             target!(rng, Xt, t0, tf, Xt[1], f, Yt)
@@ -83,18 +83,18 @@ function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, X
 
             deltas[i] = (tf - t0) / (Nsi - 1)
 
-            if xisinplace && yisinplace
+            if N0 == Multivariate && NY == Multivariate
                 solve_euler!(rng, view(XNt, 1:Nsi, :), t0, tf, view(Xt, 1, :), f, view(Yt, 1:nstep:1+nstep*(Nsi-1), :))
-            elseif xisinplace
+            elseif N0 == Multivariate
                 solve_euler!(rng, view(XNt, 1:Nsi, :), t0, tf, view(Xt, 1, :), f, view(Yt, 1:nstep:1+nstep*(Nsi-1)))
-            elseif yisinplace
+            elseif NY == Multivariate
                 solve_euler!(rng, view(XNt, 1:Nsi), t0, tf, Xt[1], f, view(Yt, 1:nstep:1+nstep*(Nsi-1), :))
             else
                 solve_euler!(rng, view(XNt, 1:Nsi), t0, tf, Xt[1], f, view(Yt, 1:nstep:1+nstep*(Nsi-1)))
             end
 
             for n in 2:Nsi
-                if xisinplace
+                if N0 == Multivariate
                     for j in eachindex(axes(XNt, 2))
                         trajerrors[n, i] += abs(XNt[n, j] - Xt[1 + (n-1) * nstep, j])
                     end
@@ -127,9 +127,9 @@ The strong errors are computed via Monte Carlo method, with the number of realiz
 
 What this function do is actually to call [`prepare_variables`](@ref) to pre-allocate the necessary variables and next to call [`calculate_errors!`](@ref) to mutate the pre-allocated vectors.
 """
-function calculate_errors(rng::AbstractRNG, t0::T, tf::T, X0law::Union{ContinuousUnivariateDistribution, ContinuousMultivariateDistribution}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, Ntgt::Int, Ns::Vector{Int}, M::Int) where {T, F, G}
-    nx = X0law isa ContinuousMultivariateDistribution ? length(X0law) : 0
-    ny = noise isa Vector ? length(noise) : 0
+function calculate_errors(rng::AbstractRNG, t0::T, tf::T, X0law::ContinuousDistribution{N0}, f::F, noise::AbstractProcess{NY}, target!::G, Ntgt::Int, Ns::Vector{Int}, M::Int) where {T, N0, NY, F, G}
+    nx = N0 == Multivariate ? length(X0law) : 0
+    ny = NY == Multivariate ? length(noise) : 0
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns; nx, ny)
 
     calculate_errors!(rng, Yt, Xt, XNt, X0law, f, noise, target!, trajerrors, M, t0, tf, Ns, nsteps, deltas)
