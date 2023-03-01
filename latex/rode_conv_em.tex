@@ -1271,6 +1271,35 @@ almost surely.
 
 Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is of strong order 1.
 
+\subsection{Kanai-Tajimi Earthquake model}
+
+The Kanai-Tajimi model for the oscillations of a single-storey building is usually written as the second-order equation (see \cite[Chapter 18]{NeckelRupp2013})
+\[
+  \ddot x + 2\zeta_g\omega_g \dot x - \omega_g^2 x = \dot \xi,
+\]
+where $\zeta_g$ and $\omega_g$ are damping and frequency model parameters, taken to be $\zeta_g = 0.64$ and $\omega_g = 15.56 \;\texttt{rad}/\texttt{s}$, respectively, and where $\dot \xi$ is a white noise excitation. This can be written as a system of stochastic differential equations as
+\begin{equation}
+    \begin{cases}
+        \mathrm{d} x = -y \;\mathrm{d}t, \\
+        \mathrm{d} y = (-2\zeta_g\omega_g y + \omega_g^2x) \;\mathrm{d} t + \;\mathrm{d}W_t,
+    \end{cases}
+\end{equation}
+where $\{W_t\}_t$ is a standard Wiener process.
+
+The Kanai-Tajimi model can also be written as a system of random ordinary differential equations, taking the form
+\begin{equation}
+    \begin{cases}
+        \dot z_1 = -z_2 + O_t, \\
+        \dot z_2 = -2\zeta_g\omega_g(z_2 + O_t) + \omega_g^2 z_1 + O_t,
+    \end{cases}
+\end{equation}
+where $\{O_t\}_t$ is an Orstein-Uhlenbeck process satisfying
+\begin{equation}
+    \label{OUforKanaiTajimi}
+    \mathrm{d}O_t = - O_t\;\mathrm{d}t + \mathrm{d}W_t,
+\end{equation}
+which can be solved exactly.
+
 \subsection{Earthquake and other impulse driven models}
 
 Now we consider a simple structural model driven by an earthquake-type random disturbance in the form of a transport process, proposed by \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models) as a starting point of a model driven by a transport process as the source of ground motion excitation. There are a number of models for earthquake-type forcing, such as Kanai-Tajima and Clough-Penzien. We chose the Bogdanoff-Goldberg-Bernard model due to the different type of noise, so we can illustrate the improved convergence in the case of a transport process noise.
