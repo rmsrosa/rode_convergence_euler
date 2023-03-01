@@ -1,7 +1,6 @@
-using Random, Distributions
+using Random, LinearAlgebra, Statistics
+using Distributions, BenchmarkTools
 using RODEConvergence
-using BenchmarkTools
-using Statistics
 using Test
 
 include("test_noises.jl")

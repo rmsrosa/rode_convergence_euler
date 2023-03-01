@@ -72,7 +72,8 @@
     end
 
     @testset "Vector/scalar Euler" begin
-        X0law = product_distribution(Normal(), Normal())
+        X0law = MvNormal(I(2)) # two independent normals
+        # X0law = product_distribution(Normal(), Normal()) # alternative implementation
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
         f! = (dx, t, x, y) -> (dx .= y * x)
@@ -102,7 +103,8 @@
     end
 
     @testset "Vector/Vector Euler" begin
-        X0law = product_distribution(Normal(), Normal())
+        X0law = MvNormal(I(2)) # two independent normals
+        # X0law = product_distribution(Normal(), Normal()) # alternative implementation
         y0 = 0.0
         noise = [
             WienerProcess(t0, tf, y0),
