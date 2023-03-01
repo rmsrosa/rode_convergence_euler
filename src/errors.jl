@@ -55,7 +55,7 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 """
-function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::Union{ContinuousUnivariateDistribution, Vector{<:ContinuousUnivariateDistribution}}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, F, G}
+function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, XNt::VecOrMat{T}, X0law::Union{ContinuousUnivariateDistribution, ContinuousMultivariateDistribution}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, trajerrors::Matrix{T}, M::Int, t0::T, tf::T, Ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, F, G}
     
     # get whether a system 
     xisinplace = Xt isa Matrix
@@ -63,7 +63,7 @@ function calculate_errors!(rng::AbstractRNG, Yt::VecOrMat{T}, Xt::VecOrMat{T}, X
     for _ in 1:M
         # draw initial condition
         if xisinplace
-            Xt[1, :] .= rand.(rng, X0law)
+            rand!(rng, X0law, view(Xt, 1, :))
         else
             Xt[1] = rand(rng, X0law)
         end
@@ -127,8 +127,8 @@ The strong errors are computed via Monte Carlo method, with the number of realiz
 
 What this function do is actually to call [`prepare_variables`](@ref) to pre-allocate the necessary variables and next to call [`calculate_errors!`](@ref) to mutate the pre-allocated vectors.
 """
-function calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
-    nx = X0law isa Vector ? length(X0law) : 0
+function calculate_errors(rng::AbstractRNG, t0::T, tf::T, X0law::Union{ContinuousUnivariateDistribution, ContinuousMultivariateDistribution}, f::F, noise::Union{AbstractProcess, Vector{<:AbstractProcess}}, target!::G, Ntgt::Int, Ns::Vector{Int}, M::Int) where {T, F, G}
+    nx = X0law isa ContinuousMultivariateDistribution ? length(X0law) : 0
     ny = noise isa Vector ? length(noise) : 0
     nsteps, deltas, trajerrors, Yt, Xt, XNt = prepare_variables(Ntgt, Ns; nx, ny)
 

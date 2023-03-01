@@ -72,7 +72,7 @@
     end
 
     @testset "Vector/scalar Euler" begin
-        X0law = [Normal(), Normal()]
+        X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
         f! = (dx, t, x, y) -> (dx .= y * x)
@@ -102,7 +102,7 @@
     end
 
     @testset "Vector/Vector Euler" begin
-        X0law = [Normal(), Normal()]
+        X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
         noise = [
             WienerProcess(t0, tf, y0),
