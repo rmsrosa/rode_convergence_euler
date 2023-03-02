@@ -1,8 +1,23 @@
+"""
+    AbstractProcess{N}
+
+Abstract super type for every noise process, with parameter `N` being either `Univariate` or `Multivariate`, with
+
+* UnivariateProcess = AbstractProcess{Univariate}
+* MultivariateProcess = AbstractProcess{Multivariate}
+
+The parameter types are borrowed from Distributions.Univariate and Distributions.Multivariate.
+"""
 abstract type AbstractProcess{N} end
 
 const UnivariateProcess = AbstractProcess{Univariate}
 const MultivariateProcess = AbstractProcess{Multivariate}
 
+"""
+    rand!(::AbstractRNG, noise::AbstractProcess, yt::T)
+
+Populate the vector or matrix `yt` with a sample path of the process `noise`, with random numbers generated from `rng`. See each noise type for details.
+"""
 function Random.rand!(::AbstractRNG, noise::AbstractProcess, ::T) where {T} 
     throw(
         ArgumentError(
@@ -16,7 +31,9 @@ end
 
 Construct a Wiener process on the interval `t0` to `tf`, with initial condition `y0`.
 
-The noise process `noise = WienerProcess(t0, tf, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = WienerProcess(t0, tf, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
@@ -41,9 +58,14 @@ end
 """
     GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)
 
-Construct a Geometric Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`.
+Construct a Geometric Brownian motion process ``Y_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`, as defined by
+```math
+\mathrm{d}Y_t = \mu Y_t \;\mathrm{d}t + \sigma Y_t \;\mathrm{d}W_t.
+```
 
-The noise process `noise = GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process, defined by ``dY_t = \\mu Y_t dt + \\sigma Y_t dW_t``.
+The noise process `noise = GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
@@ -73,13 +95,21 @@ end
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dylaw`.
 
-The noise process `noise! = CompoundPoissonProcess(t0, tf, λ, dylaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = CompoundPoissonProcess(t0, tf, λ, dylaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
-The noise process returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i``, where ``N_t`` is the number of events up to time ``t``.
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
 
-Each sample path is obtained by first drawing the number `n`of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
+The noise process returned by the constructor yields a random sample path of
+```math
+Y_t = \sum_{i=1}^{N_t} \;\mathrm{d}Y_i,
+```
+where ``N_t`` is the number of events up to time ``t``.
+
+Each sample path is obtained by first drawing the number `n` of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given increment distribution `dylaw`.
+
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is set to `yt[1] = 0`, corresponding to the value at time `t0`.
 """
 struct CompoundPoissonProcess{T, G} <: UnivariateProcess
     t0::T
@@ -109,9 +139,11 @@ end
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dylaw`.
 
-The noise process `noise! = CompoundPoissonProcessAlt(t0, tf, λ, dylaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = CompoundPoissonProcessAlt(t0, tf, λ, dylaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
-The noise returned by the constructor yields a random sample path of ``Y_t = \\sum_{i=1}^{N_t} dY_i`` obtained by first drawing the interarrival times, along with the increments given by `dylaw`, during each mesh time interval.
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
+
+The noise returned by the constructor yields a random sample path by first drawing the interarrival times, along with the increments given by `dylaw`, during each mesh time interval.
 
 This is an alternative implementation to [`CompoundPoissonProcess`](@ref).
 """
@@ -144,11 +176,15 @@ end
 
 Construct a point Poisson process on the interval `t0` to `tf`, with a point Poisson counter with rate parameter `λ` and step values given by the distribution `steplaw`.
 
-The noise process `noise! = PoissonStepProcess(t0, tf, λ, steplaw)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = PoissonStepProcess(t0, tf, λ, steplaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
 
 The noise returned by the constructor yields a random sample path of ``Y_t = Y_{N_t}`` obtained by first drawing the number `n` of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
 
-Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
+Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set to a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
+
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
 struct PoissonStepProcess{T, G} <: UnivariateProcess
     t0::T
@@ -170,15 +206,18 @@ function Random.rand!(rng::AbstractRNG, noise::PoissonStepProcess{T, G}, yt::Abs
     end
 end
 
-
 """
     TransportProcess(t0, tf, f, ylaw, n)
 
 Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `ylaw`.
 
-The noise process `noise! = TransportProcess(t0, tf, f, ylaw, n)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = TransportProcess(t0, tf, f, ylaw, n)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
 
 Each random sample path is obtained by first drawing `n` realizations of the distribution `ylaw` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
+
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
 struct TransportProcess{T, F, G} <: UnivariateProcess
     t0::T
@@ -195,7 +234,7 @@ function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::Ab
     for i in eachindex(noise.rv)
         @inbounds noise.rv[i] = rand(rng, noise.ylaw)
     end
-    # rand!(rng, noise.ylaw, noise.rv) # Most distributions don't allocate but Beta does (see https://github.com/JuliaStats/Distributions.jl/pull/1281), so roll out the loop explicitly
+    # rand!(rng, noise.ylaw, noise.rv) # Most distributions don't allocate but Beta does (see https://github.com/JuliaStats/Distributions.jl/pull/1281), so I prefer to roll out the loop explicitly
     t = noise.t0 - dt
     for n in eachindex(yt)
         t += dt
@@ -205,17 +244,19 @@ end
 
 
 """
-    FractionalBrownianMotionProcess(t0, tf, y0, H, N; flags=FFTW.MEASURE)
+    FractionalBrownianMotionProcess(t0, tf, y0, hurst, len; flags=FFTW.MEASURE)
 
-Construct a fractional Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, Husrt parameter `H` and length up to `N`.
+Construct a fractional Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, Hurst parameter `hurst` and length up to `len`.
 
-The noise process `noise! = FractionalBrownianMotionProcess(t0, tf, y0, H, N; flags=FFTW.MEASURE)` returned by the constructor is a function that takes a RNG `rng` and a pre-allocated vector `yt` and, upon each call to `noise!(rng, yt)`, mutates the vector `yt`, filling it up with a new sample path of the process.
+The noise process `noise = FractionalBrownianMotionProcess(t0, tf, y0, hurst, len; flags=FFTW.MEASURE)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
-The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`. The length of `yt` must be smaller than or equal to the length `N` given in the constructor and used for the pre-allocation of the auxiliary vectors.
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`. The length of `yt` must be smaller than or equal to the length `len` given in the constructor and used for the pre-allocation of the auxiliary vectors.
 
 The method implemented is the one developed by Davies and Harte and uses an FFT transform to drop the order of complexity to O(N log N). For the transform, we use `FFTW.jl`, and use the flag `flags=FFTW.MEASURE` for generating the plans. Other common flags can be passed instead.
 
-Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
+This implementation of fractional Brownian motion via Davies-Harte method follows [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
 struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess
     t0::Float64
@@ -313,6 +354,15 @@ end
 """
     ProductProcess(noises...)
 
+Construct a multivariate process from independent univariate processes.
+
+The noise process `noise = ProductProcess(noises...)` returned by the constructor is a subtype of `AbstractNoise{Multivariate}`.
+
+Sample paths are obtained by populating a pre-allocated matrix `yt` with the sample path, via `rand!(rng, noise, yt)`.
+    
+The number of steps for the sample path is determined by the number of rows of the given matrix `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`.
+    
+Each columns of `yt` is populated with a sample path from each univariate process in `noise`.
 """
 struct ProductProcess{D} <: MultivariateProcess
     processes::D
@@ -335,38 +385,3 @@ function Random.rand!(rng::AbstractRNG, Y::ProductProcess, yt::AbstractMatrix)
         rand!(rng, Y.processes[i], yti)
     end
 end
-#= 
-function Random.rand!(rng::AbstractRNG, noise::Vector{<:AbstractProcess}, yt::AbstractMatrix)
-    axes(eachcol(yt)) == axes(noise) || throw(
-        DimensionMismatch("Columns of `yt` and vector of noises `Y` must match indices.")
-    )
-    for (i, yti) in enumerate(eachcol(yt))
-        rand!(rng, noise[i], yti)
-    end
-    #for i in eachindex(Y)
-    #    rand!(rng, Y[i], view(yt, :, i))
-    #end
-    #ntuple(i -> rand!(rng, Y[i], view(yt, :, i)), length(Y))
-    #nothing
-#    for (Yi, yti) in zip(Y, eachcol(yt))
-#        rand!(rng, Yi, yti)
-#    end
-end
-
-function Random.rand!(rng::AbstractRNG, Y::Tuple{Vararg{AbstractProcess}}, yt::AbstractMatrix)
-    axes(eachcol(yt)) == axes(Y) || throw(
-        DimensionMismatch("Columns of `yt` and of tuple `Y` of noises must match indices.")
-    )
-    for (i, yti) in enumerate(eachcol(yt))
-        rand!(rng, Y[i], yti)
-    end
-    #for i in eachindex(Y)
-    #    rand!(rng, Y[i], view(yt, :, i))
-    #end
-    #ntuple(i -> rand!(rng, Y[i], view(yt, :, i)), length(Y))
-    #nothing
-#    for (Yi, yti) in zip(Y, eachcol(yt))
-#        rand!(rng, Yi, yti)
-#    end
-end
- =#
