@@ -29,17 +29,12 @@
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f, noise, target_exact!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
-
         target_approx! = solve_euler!
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f, noise, target_approx!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
+        results = @test_nowarn solve!(rng, suite)
+        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.p ≈ 1.0 (atol = 0.1)
     end
 
     @testset "Scalar/Vector Euler" begin
@@ -68,17 +63,12 @@
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f, noise, target_exact!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
-
         target_approx! = solve_euler!
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f, noise, target_approx!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
+        results = @test_nowarn solve!(rng, suite)
+        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.p ≈ 1.0 (atol = 0.1)
     end
 
     @testset "Vector/scalar Euler" begin
@@ -106,17 +96,12 @@
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f!, noise, target_exact!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
-
         target_approx! = solve_euler!
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f!, noise, target_approx!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
+        results = @test_nowarn solve!(rng, suite)
+        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.p ≈ 1.0 (atol = 0.1)
     end
 
     @testset "Vector/Vector Euler" begin
@@ -147,17 +132,12 @@
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f!, noise, target_exact!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
-
         target_approx! = solve_euler!
 
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f!, noise, target_approx!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
+        results = @test_nowarn solve!(rng, suite)
+        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.p ≈ 1.0 (atol = 0.1)
     end
 
     t0 = 0.0
@@ -188,10 +168,5 @@
         results = @test_nowarn solve!(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-
-        deltas, errors, trajerrors, lc, p = @test_nowarn calculate_errors(rng, t0, tf, x0law, f, noise, target_exact!, ntgt, ns, m)
-
-        @test deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test p ≈ 1.0 (atol = 0.1)
     end
 end
