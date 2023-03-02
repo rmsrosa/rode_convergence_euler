@@ -20,7 +20,7 @@ struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
         )
         all(mod(ntgt, n) == 0 for n in ns) || throw(
             ArgumentError(
-                "The length `ntgt = $ntgt` should be divisible by any of the lengths in `ns=$ns`"
+                "The length of `ntgt` should be divisible by any of the lengths in `ns`"
             )
         )
     
