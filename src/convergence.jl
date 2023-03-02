@@ -1,3 +1,27 @@
+"""
+    ConvergenceSuite(t0, tf, x0law, f, noise, target!, method!, ntgt, ns, m)
+
+Gather the data needed for computing the convergence error for a given RODE.
+```math
+    \\begin{cases}
+        \\frac{\\mathrm{d}X_t}{\\mathrm{d}t} = f(t, X_t, Y_t), & t_0 \\leq t \\leq t_f \\
+        X_{t_0} = X_0.
+    \\end{cases}
+```
+
+The data comprises of the following:
+* the initial and final times `t0` and `tf`;
+* the univariate or multivariate distribution `x0law` for the initial condition \$X_0\$;
+* the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation, or in the in-place form `f=f(dx, t, x, y)`, for a system of equations;
+* the univariate or multivariate process `noise` for the noise term \$Y_t\$;
+* the function `target!` to compute the target solution for the error calculation via `target!(rng, xt, t0, tf, x0, f, yt)`;
+* the function `method!` with the given method to approximate the solution, typically the [`euler_method!`](@ref), also in the form `method!(rng, xt, t0, tf, x0, f, yt)`;
+* the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
+* the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
+* the number `m` of sample paths to be computed for estimating the strong error via Monte Carlo method.
+
+The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
+"""
 struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
     t0::T
     tf::T
