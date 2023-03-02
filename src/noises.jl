@@ -1,5 +1,8 @@
 abstract type AbstractProcess{N} end
 
+const UnivariateProcess = AbstractProcess{Univariate}
+const MultivariateProcess = AbstractProcess{Multivariate}
+
 function Random.rand!(::AbstractRNG, noise::AbstractProcess, ::T) where {T} 
     throw(
         ArgumentError(
@@ -17,7 +20,7 @@ The noise process `noise = WienerProcess(t0, tf, y0)` returned by the constructo
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct WienerProcess{T} <: AbstractProcess{Univariate}
+struct WienerProcess{T} <: UnivariateProcess
     t0::T
     tf::T
     y0::T
@@ -44,7 +47,7 @@ The noise process `noise = GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)` r
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct GeometricBrownianMotionProcess{T} <: AbstractProcess{Univariate}
+struct GeometricBrownianMotionProcess{T} <: UnivariateProcess
     t0::T
     tf::T
     y0::T
@@ -78,7 +81,7 @@ Each sample path is obtained by first drawing the number `n`of events between co
 
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given increment distribution `dylaw`.
 """
-struct CompoundPoissonProcess{T, G} <: AbstractProcess{Univariate}
+struct CompoundPoissonProcess{T, G} <: UnivariateProcess
     t0::T
     tf::T
     λ::T
@@ -112,7 +115,7 @@ The noise returned by the constructor yields a random sample path of ``Y_t = \\s
 
 This is an alternative implementation to [`CompoundPoissonProcess`](@ref).
 """
-struct CompoundPoissonProcessAlt{T, G} <: AbstractProcess{Univariate}
+struct CompoundPoissonProcessAlt{T, G} <: UnivariateProcess
     t0::T
     tf::T
     λ::T
@@ -147,7 +150,7 @@ The noise returned by the constructor yields a random sample path of ``Y_t = Y_{
 
 Then, based on the number `n` of events, the next state is repeated from the previous value, if `n` is zero, or set a new sample value of `Y`, if `n` is positive. Since it is not cumulative and it has the Markov property, it doesn't make any difference, for the discretized sample, whether `n` is larger than `1` or not.
 """
-struct PoissonStepProcess{T, G} <: AbstractProcess{Univariate}
+struct PoissonStepProcess{T, G} <: UnivariateProcess
     t0::T
     tf::T
     λ::T
@@ -177,7 +180,7 @@ The noise process `noise! = TransportProcess(t0, tf, f, ylaw, n)` returned by th
 
 Each random sample path is obtained by first drawing `n` realizations of the distribution `ylaw` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
 """
-struct TransportProcess{T, F, G} <: AbstractProcess{Univariate}
+struct TransportProcess{T, F, G} <: UnivariateProcess
     t0::T
     tf::T
     ylaw::G
@@ -214,7 +217,7 @@ The method implemented is the one developed by Davies and Harte and uses an FFT 
 
 Implementation of fractional Brownian motion via Davies-Harte method following [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
-struct FractionalBrownianMotionProcess{P1, P2} <: AbstractProcess{Univariate}
+struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess
     t0::Float64
     tf::Float64
     y0::Float64
@@ -311,16 +314,16 @@ end
     ProductProcess(noises...)
 
 """
-struct ProductProcess{D} <: AbstractProcess{Multivariate}
+struct ProductProcess{D} <: MultivariateProcess
     processes::D
     len::Int
-    function ProductProcess(p::D) where {D <: Tuple{Vararg{AbstractProcess{Univariate}}}} 
+    function ProductProcess(p::D) where {D <: Tuple{Vararg{UnivariateProcess}}} 
         isempty(p) && error("product process must consist of at least one univariate process")
         return new{D}(p, length(p))
     end
 end
 
-ProductProcess(p::AbstractProcess{Univariate}...) = ProductProcess(p)
+ProductProcess(p::UnivariateProcess...) = ProductProcess(p)
 
 Base.length(noise::ProductProcess) = noise.len
 
