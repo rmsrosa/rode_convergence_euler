@@ -41,7 +41,7 @@ function prepare_variables(ntgt::Int, ns::Vector{Int}; nx::Int = 0, ny::Int = 0)
 end
 
 """
-    calculate_errors!(rng, yt, xt, xnt, x0law, f, noise, target!, trajerrors, M, t0, tf, ns, nsteps, deltas)
+    calculate_errors!(rng, trajerrors, yt, xt, xnt, x0law, f, noise, target!, M, t0, tf, ns, nsteps, deltas)
 
 Calculate the strong error for the Euler method.
 
@@ -55,7 +55,7 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 """
-function calculate_errors!(rng::AbstractRNG, yt::VecOrMat{T}, xt::VecOrMat{T}, xnt::VecOrMat{T}, x0law::ContinuousDistribution{N0}, f::F, noise::AbstractProcess{NY}, target!::G, trajerrors::Matrix{T}, m::Int, t0::T, tf::T, ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, N0, NY, F, G}
+function calculate_errors!(rng::AbstractRNG, trajerrors::Matrix{T}, yt::VecOrMat{T}, xt::VecOrMat{T}, xnt::VecOrMat{T}, x0law::ContinuousDistribution{N0}, f::F, noise::AbstractProcess{NY}, target!::G, m::Int, t0::T, tf::T, ns::Vector{Int}, nsteps::Vector{Int}, deltas::Vector{T}) where {T, N0, NY, F, G}
 
     for _ in 1:m
         # draw initial condition
@@ -129,7 +129,7 @@ function calculate_errors(rng::AbstractRNG, t0::T, tf::T, x0law::ContinuousDistr
     ny = NY == Multivariate ? length(noise) : 0
     nsteps, deltas, trajerrors, yt, xt, xnt = prepare_variables(ntgt, ns; nx, ny)
 
-    calculate_errors!(rng, yt, xt, xnt, x0law, f, noise, target!, trajerrors, m, t0, tf, ns, nsteps, deltas)
+    calculate_errors!(rng, trajerrors, yt, xt, xnt, x0law, f, noise, target!, m, t0, tf, ns, nsteps, deltas)
 
     errors = maximum(trajerrors, dims=1)[1, :]
 

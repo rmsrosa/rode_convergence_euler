@@ -9,9 +9,6 @@ struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
     ntgt::Int
     ns::Vector{Int}
     m::Int
-    nsteps::Vector{Int}
-    deltas::Vector{T}
-    trajerrors::Matrix{T}
     yt::VecOrMat{T}
     xt::VecOrMat{T}
     xnt::VecOrMat{T}
@@ -26,11 +23,6 @@ struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
                 "The length `ntgt = $ntgt` should be divisible by any of the lengths in `ns=$ns`"
             )
         )
-    
-        nsteps = div.(ntgt, ns)
-    
-        deltas = Vector{Float64}(undef, length(ns))
-        trajerrors = zeros(last(ns), length(ns))
     
         if N0 == Univariate
             xt = Vector{Float64}(undef, ntgt)
@@ -58,6 +50,30 @@ struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
             )
         end
 
-        return new{T, N0, NY, F1, F2, F3}(t0, tf, x0law, f, noise, target!, method, ntgt, ns, m, nsteps, deltas, trajerrors, yt, xt, xnt)
+        return new{T, N0, NY, F1, F2, F3}(t0, tf, x0law, f, noise, target!, method, ntgt, ns, m, yt, xt, xnt)
     end
+end
+
+struct ConvergenceResults{T, S}
+    suite::S
+    deltas::Vector{T}
+    trajerrors::Matrix{T}
+    errors::Vector{T}
+    lc::T
+    p::T
+end
+
+function solve!(rng, suite::ConvergenceSuite)
+    nsteps = div.(suite.ntgt, suite.ns)
+    deltas = (suite.tf - suite.t0) ./ (suite.ns .- 1)
+    trajerrors = zeros(last(suite.ns), length(suite.ns))
+
+    calculate_errors!(rng, trajerrors, suite.yt, suite.xt, suite.xnt, suite.x0law, suite.f, suite.noise, suite.target!, suite.m, suite.t0, suite.tf, suite.ns, nsteps, deltas)
+
+    errors = maximum(trajerrors, dims=1)[1, :]
+
+    lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
+
+    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p)
+    return results
 end
