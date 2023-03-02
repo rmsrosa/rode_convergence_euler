@@ -61,9 +61,30 @@ struct ConvergenceResults{T, S}
     errors::Vector{T}
     lc::T
     p::T
+    vandermonde::Matrix{T} # cache
+    logerrors::Vector{T} # cache
 end
 
-function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+function init(suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+    t0 = suite.t0
+    tf = suite.tf
+    ns = suite.ns
+
+    deltas = (tf - t0) ./ (ns .- 1)
+    vandermonde = [one.(deltas) log.(deltas)]
+    trajerrors = zeros(last(ns), length(ns))
+
+    errors = Vector{T}(undef, last(ns))
+    logerrors = Vector{T}(undef, last(ns))
+    lc = zero(T)
+    p = zero(T)
+
+    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p, logerrors, vandermonde)
+
+    return results
+end
+
+function solve!(rng, results::ConvergenceResults{T, S}, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3, S}
     t0 = suite.t0
     tf = suite.tf
     x0law = suite.x0law
@@ -78,9 +99,9 @@ function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0
     xt = suite.xt
     xnt = suite.xnt
     
-    nsteps = div.(ntgt, ns)
-    deltas = (tf - t0) ./ (ns .- 1)
-    trajerrors = zeros(last(ns), length(ns))
+    deltas = results.deltas
+    trajerros = results.trajerrors
+    errors = results.errors
 
     for _ in 1:m
         # draw initial condition
@@ -101,8 +122,10 @@ function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0
         end
 
         # solve approximate solutions at selected time steps and update strong errors
-        for (i, (nstep, nsi)) in enumerate(zip(nsteps, ns))
+        #for (i, (nstep, nsi)) in enumerate(zip(nsteps, ns))
+        for (i, nsi) in enumerate(ns)
 
+            nstep = div(ntgt, nsi)
             deltas[i] = (tf - t0) / (nsi - 1)
 
             if N0 == Multivariate && NY == Multivariate
@@ -134,9 +157,90 @@ function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0
     errors = maximum(trajerrors, dims=1)[1, :]
 
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
-    lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
+    results.lc, results.p = [one.(deltas) log.(deltas)] \ log.(errors)
+
+    return nothing
+end
+
+
+function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+    t0 = suite.t0
+    tf = suite.tf
+    x0law = suite.x0law
+    f = suite.f
+    noise = suite.noise
+    target! = suite.target!
+    method! = suite.method!
+    ntgt = suite.ntgt
+    ns = suite.ns
+    m = suite.m
+    yt = suite.yt
+    xt = suite.xt
+    xnt = suite.xnt
+    
+    # nsteps = div.(ntgt, ns)
+    deltas = (tf - t0) ./ (ns .- 1)
+    trajerrors = zeros(last(ns), length(ns))
+
+    for _ in 1:m
+        # draw initial condition
+        if N0 == Multivariate
+            rand!(rng, x0law, view(xt, 1, :))
+        else
+            xt[1] = rand(rng, x0law)
+        end
+
+        # generate noise sample path
+        rand!(rng, noise, yt)
+
+        # generate target path
+        if N0 == Multivariate
+            target!(rng, xt, t0, tf, view(xt, 1, :), f, yt)
+        else
+            target!(rng, xt, t0, tf, xt[1], f, yt)
+        end
+
+        # solve approximate solutions at selected time steps and update strong errors
+        #for (i, (nstep, nsi)) in enumerate(zip(nsteps, ns))
+        for (i, nsi) in enumerate(ns)
+
+            nstep = div(ntgt, nsi)
+            deltas[i] = (tf - t0) / (nsi - 1)
+
+            if N0 == Multivariate && NY == Multivariate
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
+            elseif N0 == Multivariate
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)))
+            elseif NY == Multivariate
+                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
+            else
+                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)))
+            end
+
+            for n in 2:nsi
+                if N0 == Multivariate
+                    for j in eachindex(axes(xnt, 2))
+                        trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j])
+                    end
+                else
+                    trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
+                end
+            end
+        end
+    end
+
+    # normalize trajectory errors
+    trajerrors ./= m
+
+    # compute maximum errors
+    errors = maximum(trajerrors, dims=1)[1, :]
+
+    # fit to errors ∼ C Δtᵖ with lc = ln(C)
+    vandermonde = [one.(deltas) log.(deltas)]
+    logerrors = log.(errors)
+    lc, p =  vandermonde \ logerrors
 
     # return results as `ConvergenceResults`
-    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p)
+    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p, vandermonde, logerrors)
     return results
 end
