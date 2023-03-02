@@ -19,7 +19,7 @@ export ProductProcess
 export solve_euler!, solve_heun!
 
 # convergence calculation
-export ConvergenceSuite, ConvergenceResults, solve!
+export ConvergenceSuite, ConvergenceResults, solve
 
 # output
 export plot_sample_approximations, generate_error_table, plot_dt_vs_error, plot_t_vs_errors

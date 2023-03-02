@@ -63,7 +63,7 @@ struct ConvergenceResults{T, S}
     p::T
 end
 
-function solve!(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+function solve(rng, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
     t0 = suite.t0
     tf = suite.tf
     x0law = suite.x0law

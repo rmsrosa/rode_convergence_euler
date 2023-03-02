@@ -25,14 +25,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
     end
@@ -59,14 +59,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
     end
@@ -92,14 +92,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
     end
@@ -128,14 +128,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
     end
@@ -165,7 +165,7 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve!(rng, suite)
+        results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
     end
