@@ -4,21 +4,27 @@
 Gather the data needed for computing the convergence error for a given RODE.
 ```math
     \\begin{cases}
-        \\frac{\\mathrm{d}X_t}{\\mathrm{d}t} = f(t, X_t, Y_t), & t_0 \\leq t \\leq t_f \\
+        \\frac{\\mathrm{d}X_t}{\\mathrm{d}t} = f(t, X_t, Y_t), & t_0 \\leq t \\leq t_f \\\\
         X_{t_0} = X_0.
     \\end{cases}
 ```
 
 The data comprises of the following:
 * the initial and final times `t0` and `tf`;
-* the univariate or multivariate distribution `x0law` for the initial condition \$X_0\$;
-* the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation, or in the in-place form `f=f(dx, t, x, y)`, for a system of equations;
-* the univariate or multivariate process `noise` for the noise term \$Y_t\$;
+* the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
+* the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
+* the univariate or multivariate process `noise` for the noise term ``Y_t``;
 * the function `target!` to compute the target solution for the error calculation via `target!(rng, xt, t0, tf, x0, f, yt)`;
 * the function `method!` with the given method to approximate the solution, typically the [`euler_method!`](@ref), also in the form `method!(rng, xt, t0, tf, x0, f, yt)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
 * the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
 * the number `m` of sample paths to be computed for estimating the strong error via Monte Carlo method.
+
+Besides these data obtained from the supplied arguments, a few cache vectors or matrices are created:
+* a vector or matrix `yt` to hold the sample paths of the noise on the finest mesh, with length or row-length being `ntgt` and the shape depending on whether the noise is univariate or multivariate;
+* a vector or matrix `xt` to hold the sample paths of the target solution, on the finest mesh, with length or row-length being `ntgt` and the shape depending on whether the law for the initial condition being univariate or multivariate;
+* a vector or matrix `xnt` to hold the sample paths of the approximate solution, with length or row-length being the maximum of those in `ns` and the shape depending on whether the law for the initial condition being univariate or multivariate.
+* ``
 
 The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
 """
