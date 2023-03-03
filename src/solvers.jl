@@ -42,7 +42,7 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractVector{T}, t0::T, tf::T, x0:
     xt[i1] = x0
     ti1 = t0
     for i in Iterators.drop(eachindex(xt), 1)
-        xt[i] = xt[i1] + dt * f(ti1, xt[i1], yt[i1, :])
+        xt[i] = xt[i1] + dt * f(ti1, xt[i1], view(yt, i1, :))
         i1 = i
         ti1 += dt
     end
@@ -66,7 +66,10 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0:
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
         # use row of xt as a temporary cache variable for dX
         f(view(xt, i, :), ti1, view(xt, i-1, :), yt[i-1])
-        xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
+        # xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
+        for j in eachindex(axes(xt, 2))
+            xt[i, j] = xt[i-1, j] + dt * xt[i, j]
+        end
         i1 = i
         ti1 += dt
     end
@@ -88,9 +91,12 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0:
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        # use row of xt as a temporary cache variable for dX
-        f(view(xt, i, :), ti1, view(xt, i-1, :), yt[i-1, :])
-        xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
+        # use ith row of xt as a temporary cache variable for dx_t
+        f(view(xt, i, :), ti1, view(xt, i-1, :), view(yt, i-1, :))
+        #xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
+        for j in eachindex(axes(xt, 2))
+            xt[i, j] = xt[i-1, j] + dt * xt[i, j]
+        end
         i1 = i
         ti1 += dt
     end

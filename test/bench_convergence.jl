@@ -1,10 +1,11 @@
-@testset "Test convergence" begin
+@testset "Bench Convergence" begin
     rng = Xoshiro(123)
     t0 = 0.0
     tf = 1.0
-    ntgt = 2^14
-    ns = 2 .^ (4:7)
-    m = 500
+    ntgt = 2^10
+    ns = 2 .^ (4:6)
+    m = 100
+    trajerrors = zeros(last(ns), length(ns))
 
     @testset "Scalar/Scalar Euler" begin
 
@@ -25,16 +26,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 
     @testset "Scalar/Vector Euler" begin
@@ -59,16 +58,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 
     @testset "Vector/scalar Euler" begin
@@ -95,16 +92,14 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 
     @testset "Vector/Vector Euler" begin
@@ -135,45 +130,13 @@
         end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
 
         target_approx! = solve_euler!
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
-    end
 
-    t0 = 0.0
-    tf = 2.0
-    ntgt = 2^16
-    ns = 2 .^ (5:8)
-    m = 500
-
-    @testset "Scalar/Scalar Euler 2" begin
-
-        x0law = Normal()
-        y0 = 0.0
-        noise = WienerProcess(t0, tf, y0)
-        f = (t, x, y) -> y * x / 10
-
-        target_exact! = function (rng, xt, t0, tf, x0, f, yt)
-            ntgt = size(xt, 1)
-            dt = (tf - t0) / (ntgt - 1)
-            xt[1] = x0
-            integral = 0.0
-            for n in 2:ntgt
-                integral += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
-                xt[n] = x0 * exp(integral / 10)
-            end
-        end
-
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target_exact!, solve_euler!, ntgt, ns, m)
-        results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
-        @test results.p ≈ 1.0 (atol = 0.1)
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 end
