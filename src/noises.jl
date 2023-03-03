@@ -60,7 +60,7 @@ end
 
 Construct a Geometric Brownian motion process ``Y_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`, as defined by
 ```math
-\mathrm{d}Y_t = \mu Y_t \;\mathrm{d}t + \sigma Y_t \;\mathrm{d}W_t.
+\\mathrm{d}Y_t = \\mu Y_t \\;\\mathrm{d}t + \\sigma Y_t \\;\\mathrm{d}W_t.
 ```
 
 The noise process `noise = GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
@@ -101,7 +101,7 @@ Sample paths are obtained by populating a pre-allocated vector `yt` with the sam
 
 The noise process returned by the constructor yields a random sample path of
 ```math
-Y_t = \sum_{i=1}^{N_t} \;\mathrm{d}Y_i,
+Y_t = \\sum_{i=1}^{N_t} \\;\\mathrm{d}Y_i,
 ```
 where ``N_t`` is the number of events up to time ``t``.
 
