@@ -1,4 +1,4 @@
-@testset "Strong error" begin
+@testset "Convergence" begin
     rng = Xoshiro(123)
     t0 = 0.0
     tf = 1.0
