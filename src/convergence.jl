@@ -28,12 +28,12 @@ Besides these data obtained from the supplied arguments, a few cache vectors or 
 
 The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
 """
-struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
+struct ConvergenceSuite{T, D, P, F1, F2, F3}
     t0::T
     tf::T
-    x0law::ContinuousDistribution{N0}
+    x0law::D
     f::F1
-    noise::AbstractProcess{NY}
+    noise::P
     target!::F2
     method!::F3
     ntgt::Int
@@ -42,45 +42,38 @@ struct ConvergenceSuite{T, N0, NY, F1, F2, F3}
     yt::VecOrMat{T} # cache
     xt::VecOrMat{T} # cache
     xnt::VecOrMat{T} # cache
-    function ConvergenceSuite(t0::T, tf::T, x0law::ContinuousDistribution{N0}, f::F1, noise::AbstractProcess{NY}, target!::F2, method::F3, ntgt::Int, ns::Vector{Int}, m::Int) where {T, N0, NY, F1, F2, F3}
-        ( ntgt > 0 && all(>(0), ns) ) || throw(
-            ArgumentError(
-                "`ntgt` and `ns` arguments must be positive integers."
-            )
+    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F1, noise::P, target!::F2, method::F3, ntgt::Int, ns::Vector{Int}, m::Int) where {T, D, P, F1, F2, F3}
+        ( ntgt > 0 && all(>(0), ns) ) || error(
+            "`ntgt` and `ns` arguments must be positive integers."
+
         )
-        all(mod(ntgt, n) == 0 for n in ns) || throw(
-            ArgumentError(
-                "The length of `ntgt` should be divisible by any of the lengths in `ns`"
-            )
+        all(mod(ntgt, n) == 0 for n in ns) || error(
+            "The length of `ntgt` should be divisible by any of the lengths in `ns`"
         )
     
-        if N0 == Univariate
+        if D <: ContinuousUnivariateDistribution
             xt = Vector{Float64}(undef, ntgt)
             xnt = Vector{Float64}(undef, last(ns))
-        elseif N0 == Multivariate
+        elseif D <: ContinuousMultivariateDistribution
             nx = length(x0law)
             xt = Matrix{Float64}(undef, ntgt, nx)
             xnt = Matrix{Float64}(undef, last(ns), nx)
         else
-            throw(
-                ArgumentError(
-                    "`xlaw` should be either `ContinuousUnivariateDistribution` or `ContinuousMultivariateDistribution`."
-                )
+            error(
+                "`xlaw` should be either `ContinuousUnivariateDistribution` or `ContinuousMultivariateDistribution`."
             )
         end
-        if NY == Univariate
+        if P <: UnivariateProcess
             yt = Vector{Float64}(undef, ntgt)
-        elseif NY == Multivariate
+        elseif P <: MultivariateProcess
             yt = Matrix{Float64}(undef, ntgt, length(noise))
         else
-            throw(
-                ArgumentError(
-                    "`noise` should be either a `UnivariateProcess` or a `MultivariateProcess`."
-                )
+            error(
+                "`noise` should be either a `UnivariateProcess` or a `MultivariateProcess`."
             )
         end
 
-        return new{T, N0, NY, F1, F2, F3}(t0, tf, x0law, f, noise, target!, method, ntgt, ns, m, yt, xt, xnt)
+        return new{T, D, P, F1, F2, F3}(t0, tf, x0law, f, noise, target!, method, ntgt, ns, m, yt, xt, xnt)
     end
 end
 
@@ -95,7 +88,7 @@ struct ConvergenceResults{T, S}
     logerrors::Vector{T} # cache
 end
 
-function init(suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+function init(suite::ConvergenceSuite{T}) where {T}
     t0 = suite.t0
     tf = suite.tf
     ns = suite.ns
@@ -114,7 +107,7 @@ function init(suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, 
     return results
 end
 
-function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, N0, NY, F1, F2, F3}) where {T, N0, NY, F1, F2, F3}
+function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
     t0 = suite.t0
     tf = suite.tf
     x0law = suite.x0law
@@ -131,20 +124,20 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
 
     for _ in 1:m
         # draw initial condition
-        if N0 == Multivariate
-            rand!(rng, x0law, view(xt, 1, :))
-        else
+        if D <: ContinuousUnivariateDistribution
             xt[1] = rand(rng, x0law)
+        else
+            rand!(rng, x0law, view(xt, 1, :)) 
         end
 
         # generate noise sample path
         rand!(rng, noise, yt)
 
         # generate target path
-        if N0 == Multivariate
-            target!(rng, xt, t0, tf, view(xt, 1, :), f, yt)
-        else
+        if D <: ContinuousUnivariateDistribution
             target!(rng, xt, t0, tf, xt[1], f, yt)
+        else
+            target!(rng, xt, t0, tf, view(xt, 1, :), f, yt)            
         end
 
         # solve approximate solutions at selected time steps and update strong errors
@@ -153,23 +146,23 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
 
             nstep = div(ntgt, nsi)
 
-            if N0 == Multivariate && NY == Multivariate
-                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
-            elseif N0 == Multivariate
-                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)))
-            elseif NY == Multivariate
-                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
-            else
+            if D <: ContinuousUnivariateDistribution && P <: UnivariateProcess
                 solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)))
+            elseif D <: ContinuousUnivariateDistribution
+                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
+            elseif P <: UnivariateProcess
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)))
+            else
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
             end
 
             for n in 2:nsi
-                if N0 == Multivariate
+                if D <: ContinuousUnivariateDistribution
+                    trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
+                else
                     for j in eachindex(axes(xnt, 2))
                         trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j])
                     end
-                else
-                    trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
                 end
             end
         end

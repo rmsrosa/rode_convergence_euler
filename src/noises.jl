@@ -369,6 +369,7 @@ struct ProductProcess{D} <: MultivariateProcess
     len::Int
     function ProductProcess(p::D) where {D <: Tuple{Vararg{UnivariateProcess}}} 
         isempty(p) && error("product process must consist of at least one univariate process")
+        all(pi -> pi isa UnivariateProcess, p) || error("each and every element must be a univariate process")
         return new{D}(p, length(p))
     end
 end
