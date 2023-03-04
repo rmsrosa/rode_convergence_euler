@@ -1,12 +1,52 @@
+abstract type RODEMethod{N1, N2} end
+
+struct RandomEuler{T, N1, N2} <: RODEMethod{N1, N2}
+    cachex::Vector{T}
+    cachey::Vector{T}
+    function RandomEuler(T::DataType, n::NTuple{2, Int})
+        all(n .≥ 0) || error(
+            "dimensions must be non-negative"
+        )
+        cachex = Vector{T}(undef, n[1])
+        cachey = Vector{T}(undef, n[2])
+        N1 = n[1] == 0 ? Univariate : Multivariate
+        N2 = n[2] == 0 ? Univariate : Multivariate
+        return new{T, N1, N2}(cachex, cachey)
+    end
+end
+
+RandomEuler(T::DataType) = RandomEuler(T, (0, 0))
+RandomEuler(T::DataType, n::Int...) = RandomEuler(T, n)
+RandomEuler(n::NTuple{2, Int}) = RandomEuler(Float64, n)
+RandomEuler(n::Int...) = RandomEuler(Float64, n)
+RandomEuler() = RandomEuler(Float64, (0, 0))
+
+struct RandomHeun{T, N1, N2} <: RODEMethod{N1, N2}
+    cachex1::Vector{T}
+    cachex2::Vector{T}
+    cachey::Vector{T}
+    function RandomHeun(T::DataType, n::NTuple{2, Int})
+        all(n .≥ 0) || error(
+            "dimensions must be non-negative"
+        )
+        cachex1 = Vector{T}(undef, n[1])
+        cachex2 = Vector{T}(undef, n[1])
+        cachey = Vector{T}(undef, n[2])
+        N1 = n[1] == 0 ? Univariate : Multivariate
+        N2 = n[2] == 0 ? Univariate : Multivariate
+        return new{T, N1, N2}(cachex1, cachex2, cachey)
+    end
+end
+
 """
-    solve_euler!(rng, xt, t0, tf, x0, f, yt)
+    solve!(xt, t0:, tf, x0, f, yt, method::RandomEuler)
 
 Solve inplace, via Euler method, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` for an unknown `x_t` and a given (noise path) `y_t`, with the following arguments:
 
 * a function `f(t, x, y)`, if `x` is a scalar, or `f(dx, t, x, y)`, if `x` is a vector;
 * a scalar or vector initial condition `x0`;
 * a time interval `t0` to `tf`;
-* a sample path `yt` of a "noise", either an vector (for scalar noise) or a matrix (for vectorial noise).
+* a sample path `yt` of a "noise", either a vector (for scalar noise) or a matrix (for vectorial noise).
 
 The values of `xt` are updated with the computed solution values.
 
@@ -14,11 +54,12 @@ The time step is obtained from the length `n` of the vector `xt` via `dt = (tf -
 
 The noise `yt` should be of the same (row) length as `xt`.
 """
-# scalar unknown, scalar noise
-function solve_euler!(rng::AbstractRNG, xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}) where {T, F}
+# scalar solution, scalar noise
+function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::RandomEuler{T, Univariate, Univariate}) where {T, F}
     axes(xt) == axes(yt) || throw(
-        DimensionMismatch("The vectors `xt` and `yt` must match indices; got $(axes(xt)) and $(axes(yt)).")
+        DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
+
     N = length(xt)
     dt = (tf - t0) / (N - 1)
     i1 = firstindex(xt)
@@ -31,10 +72,10 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractVector{T}, t0::T, tf::T, x0:
     end
 end
 
-# scalar unknown, vector noise
-function solve_euler!(rng::AbstractRNG, xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}) where {T, F}
+# scalar solution, vector noise
+function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Matrix{T}, ::RandomEuler{T, Univariate, Multivariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
-        DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices; got $(axes(xt, 1)) and $(axes(yt, 1)).")
+        DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices")
     )
     n = length(xt)
     dt = (tf - t0) / (n - 1)
@@ -48,14 +89,14 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractVector{T}, t0::T, tf::T, x0:
     end
 end
 
-# vector unknown, scalar noise
-function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}) where {T, F}
+# vector solution, scalar noise
+function solve!(xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Vector{T}, method::RandomEuler{T, Multivariate, Univariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
-        DimensionMismatch("The rows of the matrix `xt` and the vector `yt` must match indices; got $(axes(xt, 1)) and $(axes(yt, 1)).")
+        DimensionMismatch("The rows of the matrix `xt` and the vector `yt` must match indices")
     )
     axes(xt, 2) == axes(x0, 1) || throw(
         ArgumentError(
-            "Column of `xt` and `x0` must match indices; got $(axes(xt, 2)) and $(axes(x0, 1))"
+            "Column of `xt` and `x0` must match indices."
         )
     )
     n = size(xt, 1)
@@ -64,25 +105,23 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0:
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        # use row of xt as a temporary cache variable for dX
-        f(view(xt, i, :), ti1, view(xt, i-1, :), yt[i-1])
-        # xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
-        for j in eachindex(axes(xt, 2))
-            xt[i, j] = xt[i-1, j] + dt * xt[i, j]
+        f(method.cachex, ti1, view(xt, i-1, :), yt[i-1])
+        for j in eachindex(axes(xt, 2), axes(method.cachex, 1))
+            @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
         end
         i1 = i
         ti1 += dt
     end
 end
 
-# vector unknown, vector noise
-function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}) where {T, F}
+# vector solution, vector noise
+function solve!(xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Matrix{T}, method::RandomEuler{T, Multivariate, Multivariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
-        DimensionMismatch("The rows of the matrices `xt` and `yt` must match indices; got $(axes(xt, 1)) and $(axes(yt, 1)).")
+        DimensionMismatch("The rows of the matrices `xt` and `yt` must match indices")
     )
     axes(xt, 2) == axes(x0, 1) || throw(
         ArgumentError(
-            "Columns of `xt` and `x0` must match indices; got $(axes(xt, 2)) and $(axes(x0, 1))"
+            "Columns of `xt` and `x0` must match indices"
         )
     )
     n = size(xt, 1)
@@ -91,11 +130,9 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0:
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        # use ith row of xt as a temporary cache variable for dx_t
-        f(view(xt, i, :), ti1, view(xt, i-1, :), view(yt, i-1, :))
-        #xt[i, :] .= view(xt, i-1, :) .+ dt * view(xt, i, :)
-        for j in eachindex(axes(xt, 2))
-            xt[i, j] = xt[i-1, j] + dt * xt[i, j]
+        f(method.cachex, ti1, view(xt, i-1, :), view(yt, i-1, :))
+        for j in eachindex(axes(xt, 2), axes(method.cachex, 1))
+            @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
         end
         i1 = i
         ti1 += dt
@@ -103,7 +140,7 @@ function solve_euler!(rng::AbstractRNG, xt::AbstractMatrix{T}, t0::T, tf::T, x0:
 end
 
 """
-    solve_heun!(rng, xt, t0, tf, x0, f, yt)
+    solve!(xt, t0, tf, x0, f, yt, method::RandomHeun)
 
 Solve inplace, via Heun method, (a sample path of) the scalar (R)ODE `dx_t/dt = f(t, x_t, y_t),` with a given scalar noise `y_t`, with the following arguments:
 
@@ -118,9 +155,9 @@ The time step is obtained from the length `n` of the vector `xt` via `dt = (tf -
 
 The noise vector `yt` should be of the same length as `xt`.
 """
-function solve_heun!(rng::AbstractRNG, xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Union{Vector{T}, SubArray{T, 1, Vector{T}, Tuple{StepRange{Int64, Int64}}, true}}) where {T, F}
+function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::RandomHeun{T, Univariate, Univariate}) where {T, F}
     axes(xt) == axes(yt) || throw(
-        DimensionMismatch("vectors `xt` and `yt` must match indices; got $(axes(xt)) and $(axes(yt)).")
+        DimensionMismatch("vectors `xt` and `yt` must match indices")
     )
     n = length(xt)
     dt = (tf - t0) / (n - 1)
