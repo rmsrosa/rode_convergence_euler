@@ -20,7 +20,7 @@ function RODEConvergence.solve!(xt::Vector{Float64}, t0::Float64, tf::Float64, x
     xt[i1] = x0
     integral = 0.0
     for i in Iterators.drop(eachindex(xt, yt), 1)
-        integral += (yt[i] + yt[i1]) * dt / 2 # + sqrt(dt^3 / 12) * randn(method.rng)
+        integral += (yt[i] + yt[i1]) * dt / 2 + sqrt(dt^3 / 12) * randn(method.rng)
         xt[i] = x0 * exp(integral)
         i1 = i
     end
