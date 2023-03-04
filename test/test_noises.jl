@@ -11,6 +11,7 @@
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -33,6 +34,7 @@
         σ = 0.2
         noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated $rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -56,6 +58,7 @@
         dylaw = Normal(μ, σ)
         noise = CompoundPoissonProcess(t0, tf, λ, dylaw)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated $rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -79,6 +82,7 @@
         steplaw = Beta(α, β)
         noise = PoissonStepProcess(t0, tf, λ, steplaw)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated $rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -103,6 +107,7 @@
         f = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
         noise = TransportProcess(t0, tf, ylaw, f, nr)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated $rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -124,6 +129,7 @@
         H = 0.25
         noise = FractionalBrownianMotionProcess(t0, tf, y0, H, n)
         
+        @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
         @test (@ballocated $rand!($rng, $noise, $yt)) == 0
         @test_nowarn (@inferred rand!(rng, noise, yt))
@@ -146,6 +152,8 @@
             WienerProcess(t0, tf, y0)
         )
 
+        @test eltype(noise) == Float64
+        
         ymt = Matrix{Float64}(undef, n, length(noise))
         ymtf = Matrix{Float64}(undef, m, length(noise))
 
@@ -190,6 +198,8 @@
             TransportProcess(t0, tf, ylaw, f, nr),
             FractionalBrownianMotionProcess(t0, tf, y0, H, n)
         )
+
+        @test eltype(noise) == Float64
 
         ymt = Matrix{Float64}(undef, n, length(noise))
         ymtf = Matrix{Float64}(undef, m, length(noise))

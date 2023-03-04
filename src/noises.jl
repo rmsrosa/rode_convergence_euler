@@ -1,24 +1,30 @@
 """
-    AbstractProcess{N}
+    AbstractProcess{T, N}
 
-Abstract super type for every noise process, with parameter `N` being either `Univariate` or `Multivariate`, with
+Abstract super type for every noise process, with parameter `N` being either `Univariate` or `Multivariate` and `T` being the eltype of the process.
+    
+The following aliaes are also defined:
 
-* UnivariateProcess = AbstractProcess{Univariate}
-* MultivariateProcess = AbstractProcess{Multivariate}
+* UnivariateProcess{T} = AbstractProcess{T, Univariate}
+* MultivariateProcess{T} = AbstractProcess{T, Multivariate}
 
 The parameter types are borrowed from Distributions.Univariate and Distributions.Multivariate.
 """
-abstract type AbstractProcess{N} end
+abstract type AbstractProcess{T, N} end
 
-const UnivariateProcess = AbstractProcess{Univariate}
-const MultivariateProcess = AbstractProcess{Multivariate}
+const UnivariateProcess{T} = AbstractProcess{T, Univariate} where {T}
+const MultivariateProcess{T} = AbstractProcess{T, Multivariate} where {T}
+
+Base.eltype(::AbstractProcess{T}) where {T} = T
+
+Base.length(noise::UnivariateProcess) = 1
 
 """
-    rand!(::AbstractRNG, noise::AbstractProcess, yt::T)
+    rand!(::AbstractRNG, noise::AbstractProcess{T}, yt::T)
 
 Populate the vector or matrix `yt` with a sample path of the process `noise`, with random numbers generated from `rng`. See each noise type for details.
 """
-function Random.rand!(::AbstractRNG, noise::AbstractProcess, ::T) where {T} 
+function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::T) where {T} 
     throw(
         ArgumentError(
             "`rand!(rng, noise, yt)` not implemente for `noise` of type $(typeof(noise))"
@@ -37,7 +43,7 @@ Sample paths are obtained by populating a pre-allocated vector `yt` with the sam
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct WienerProcess{T} <: UnivariateProcess
+struct WienerProcess{T} <: UnivariateProcess{T}
     t0::T
     tf::T
     y0::T
@@ -69,7 +75,7 @@ Sample paths are obtained by populating a pre-allocated vector `yt` with the sam
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct GeometricBrownianMotionProcess{T} <: UnivariateProcess
+struct GeometricBrownianMotionProcess{T} <: UnivariateProcess{T}
     t0::T
     tf::T
     y0::T
@@ -111,7 +117,7 @@ Then, based on the number `n` of events, the increment is performed by adding `n
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is set to `yt[1] = 0`, corresponding to the value at time `t0`.
 """
-struct CompoundPoissonProcess{T, G} <: UnivariateProcess
+struct CompoundPoissonProcess{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
     λ::T
@@ -147,7 +153,7 @@ The noise returned by the constructor yields a random sample path by first drawi
 
 This is an alternative implementation to [`CompoundPoissonProcess`](@ref).
 """
-struct CompoundPoissonProcessAlt{T, G} <: UnivariateProcess
+struct CompoundPoissonProcessAlt{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
     λ::T
@@ -186,7 +192,7 @@ Then, based on the number `n` of events, the next state is repeated from the pre
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct PoissonStepProcess{T, G} <: UnivariateProcess
+struct PoissonStepProcess{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
     λ::T
@@ -219,7 +225,7 @@ Each random sample path is obtained by first drawing `n` realizations of the dis
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct TransportProcess{T, F, G} <: UnivariateProcess
+struct TransportProcess{T, F, G} <: UnivariateProcess{T}
     t0::T
     tf::T
     ylaw::G
@@ -236,9 +242,9 @@ function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::Ab
     end
     # rand!(rng, noise.ylaw, noise.rv) # Most distributions don't allocate but Beta does (see https://github.com/JuliaStats/Distributions.jl/pull/1281), so I prefer to roll out the loop explicitly
     t = noise.t0 - dt
-    for n in eachindex(yt)
+    for j in eachindex(yt)
         t += dt
-        yt[n] = noise.f(t, noise.rv)
+        @inbounds yt[j] = noise.f(t, noise.rv)
     end
 end
 
@@ -258,7 +264,7 @@ The method implemented is the one developed by Davies and Harte and uses an FFT 
 
 This implementation of fractional Brownian motion via Davies-Harte method follows [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
-struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess
+struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess{Float64}
     t0::Float64
     tf::Float64
     y0::Float64
@@ -364,13 +370,21 @@ The number of steps for the sample path is determined by the number of rows of t
     
 Each columns of `yt` is populated with a sample path from each univariate process in `noise`.
 """
-struct ProductProcess{D} <: MultivariateProcess
+struct ProductProcess{T, D} <: MultivariateProcess{T}
     processes::D
     len::Int
     function ProductProcess(p::D) where {D <: Tuple{Vararg{UnivariateProcess}}} 
-        isempty(p) && error("product process must consist of at least one univariate process")
-        all(pi -> pi isa UnivariateProcess, p) || error("each and every element must be a univariate process")
-        return new{D}(p, length(p))
+        isempty(p) && error(
+            "ProductProcess must consist of at least one univariate process"
+        )
+        all(pi -> pi isa UnivariateProcess, p) || error(
+            "each and every element must be a univariate process"
+        )
+        T = eltype(first(p))
+        all(pi -> eltype(pi) == T, p) || error(
+            "all processes must have same eltype"
+        )
+        return new{T, D}(p, length(p))
     end
 end
 
@@ -378,7 +392,7 @@ ProductProcess(p::UnivariateProcess...) = ProductProcess(p)
 
 Base.length(noise::ProductProcess) = noise.len
 
-function Random.rand!(rng::AbstractRNG, Y::ProductProcess, yt::AbstractMatrix)
+function Random.rand!(rng::AbstractRNG, Y::ProductProcess{T}, yt::AbstractMatrix{T}) where {T}
     axes(eachcol(yt)) == axes(Y.processes) || throw(
         DimensionMismatch("Columns of `yt` must match indices of product processes.")
     )
