@@ -15,19 +15,10 @@
         yt = cos.(tt)
         xt = Vector{Float64}(undef, n)
         sol = x0 * exp.( 2 * sin.(tt))
-        method = RODEConvergence.RandomEuler()
+        method = RandomEuler()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
-    end
-    @testset "scalar/scalar Heun" begin
-        x0 = 0.5
-        f = (t, x, y) -> ( y + cos(t) ) * x
-        Yt = cos.(tt)
-        Xt = Vector{Float64}(undef, n)
-        sol = x0 * exp.( 2 * sin.(tt))
-        @test_nowarn solve_heun!(rng, Xt, t0, tf, x0, f, Yt)
-        @test maximum(abs, Xt .- sol) < 0.05
     end
     @testset "scalar/vector Euler" begin
         x0 = 0.5
@@ -35,7 +26,7 @@
         yt = [0.3 0.7] .* cos.(tt)
         xt = Vector{Float64}(undef, n)
         sol = x0 * exp.( 2 * sin.(tt))
-        method = RODEConvergence.RandomEuler(0, 2)
+        method = RandomEuler()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
@@ -46,7 +37,7 @@
         yt = cos.(tt)
         xt = Matrix{Float64}(undef, n, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
-        method = RODEConvergence.RandomEuler(2, 0)
+        method = RandomEuler(2)
         @test_nowarn solve!(xt, t0, tf, x0, f!, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $method)) == 0
@@ -57,9 +48,20 @@
         yt = [0.2 0.2 0.6] .* cos.(tt)
         xt = Matrix{Float64}(undef, n, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
-        method = RODEConvergence.RandomEuler(2, 2)
+        method = RandomEuler(2)
         @test_nowarn solve!(xt, t0, tf, x0, f!, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $method)) == 0
+    end
+    @testset "scalar/scalar Heun" begin
+        x0 = 0.5
+        f = (t, x, y) -> ( y + cos(t) ) * x
+        yt = cos.(tt)
+        xt = Vector{Float64}(undef, n)
+        sol = x0 * exp.( 2 * sin.(tt))
+        method = RandomHeun()
+        @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
+        @test maximum(abs, xt .- sol) < 0.05
+        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
     end
 end
