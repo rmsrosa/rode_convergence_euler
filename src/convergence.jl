@@ -52,21 +52,21 @@ struct ConvergenceSuite{T, D, P, F1, F2, F3}
         )
     
         if D <: ContinuousUnivariateDistribution
-            xt = Vector{Float64}(undef, ntgt)
-            xnt = Vector{Float64}(undef, last(ns))
+            xt = Vector{T}(undef, ntgt)
+            xnt = Vector{T}(undef, last(ns))
         elseif D <: ContinuousMultivariateDistribution
             nx = length(x0law)
-            xt = Matrix{Float64}(undef, ntgt, nx)
-            xnt = Matrix{Float64}(undef, last(ns), nx)
+            xt = Matrix{T}(undef, ntgt, nx)
+            xnt = Matrix{T}(undef, last(ns), nx)
         else
             error(
                 "`xlaw` should be either `ContinuousUnivariateDistribution` or `ContinuousMultivariateDistribution`."
             )
         end
         if P <: UnivariateProcess
-            yt = Vector{Float64}(undef, ntgt)
+            yt = Vector{T}(undef, ntgt)
         elseif P <: MultivariateProcess
-            yt = Matrix{Float64}(undef, ntgt, length(noise))
+            yt = Matrix{T}(undef, ntgt, length(noise))
         else
             error(
                 "`noise` should be either a `UnivariateProcess` or a `MultivariateProcess`."
