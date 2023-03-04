@@ -21,7 +21,7 @@ export ProductProcess
 
 # solvers
 export solve_euler!, solve_heun!
-export RandomEuler, RandomHeun, solve!
+export RODEMethod, RandomEuler, RandomHeun, solve!
 
 # convergence calculation
 export ConvergenceSuite, ConvergenceResults, solve
