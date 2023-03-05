@@ -190,6 +190,26 @@
         f = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
         ylaw = Beta(α, β)
         H = 0.25
+
+        noise = ProductProcess(
+            WienerProcess(t0, tf, y0),
+            WienerProcess(t0, tf, y0),
+            WienerProcess(t0, tf, y0),
+            WienerProcess(t0, tf, y0),
+            WienerProcess(t0, tf, y0)
+        )
+
+        @test eltype(noise) == Float64
+
+        ymt = Matrix{Float64}(undef, n, length(noise))
+        ymtf = Matrix{Float64}(undef, m, length(noise))
+
+        @test_nowarn rand!(rng, noise, ymt)
+
+        @test (@ballocated rand!($rng, $noise, $ymt)) == 0
+        
+        @test_nowarn (@inferred rand!(rng, noise,ymt))
+
         noise = ProductProcess(
             WienerProcess(t0, tf, y0),
             GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
@@ -206,7 +226,7 @@
 
         @test_nowarn rand!(rng, noise, ymt)
 
-        # `ProductProcess` is allocating a little when there are multiple process, but it is not affecting performance. It might be due to failed inference
+        # `ProductProcess` is allocating a little when there are different process in `ProductProcess`, but it is not affecting performance. It might be due to failed inference
         @test_broken (@ballocated rand!($rng, $noise, $ymt)) == 0
         
         @test_nowarn (@inferred rand!(rng, noise,ymt))
