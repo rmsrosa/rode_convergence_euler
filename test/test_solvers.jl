@@ -95,7 +95,7 @@ end
         xt = Vector{Float64}(undef, n)
         sol = x0 * exp.( sin.(tt))
 
-        method = CustomMethod(custom_solver, nothing)
+        method = CustomUnivariateMethod(custom_solver, nothing)
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
@@ -117,7 +117,7 @@ end
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
 
-        method = CustomMethod(custom_solver, rng)
+        method = CustomUnivariateMethod(custom_solver, rng)
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0

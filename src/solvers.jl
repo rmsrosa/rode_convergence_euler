@@ -23,18 +23,27 @@ struct CustomMethod{F, P, N} <: RODEMethod{N}
     params::P
 end
 
-const CustomUnivariateMethod{F, P} = CustomMethod{F, P, Univariate}
-const CustomMultivariateMethod{F, P} = CustomMethod{F, P, Multivariate}
+const CustomUnivariateMethod{F, P} = CustomMethod{F, P, Univariate} where {F, P}
+const CustomMultivariateMethod{F, P} = CustomMethod{F, P, Multivariate} where {F, P}
 
 CustomMethod{N}(solver::F, params::P) where {F, P, N} = CustomMethod{F, P, N}(solver, params)
 
-CustomMethod(solver::F, params::P) where {F, P} = CustomMethod{F, P, Univariate}(solver, params)
+CustomUnivariateMethod(solver::F, params::P) where {F, P} = CustomMethod{F, P, Univariate}(solver, params)
 
-CustomMethod(solver::F, params::P, n::Int) where {F, P} = CustomMethod{F, P, n > 0 ? Multivariate : Univariate}(solver, params)
+CustomMultivariateMethod(solver::F, params::P) where {F, P} = CustomMethod{F, P, Multivariate}(solver, params)
 
-function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, method::CustomMethod) where {T, F}
-    axes(xt) == axes(yt) || throw(
-        DimensionMismatch("The vectors `xt` and `yt` must match indices")
-    )
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, method::CustomUnivariateMethod) where {T, F}
+    method.solver(xt, t0, tf, x0, f, yt, method.params)
+end
+
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, method::CustomUnivariateMethod) where {T, F}
+    method.solver(xt, t0, tf, x0, f, yt, method.params)
+end
+
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, method::CustomMultivariateMethod) where {T, F}
+    method.solver(xt, t0, tf, x0, f, yt, method.params)
+end
+
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::CustomMultivariateMethod) where {T, F}
     method.solver(xt, t0, tf, x0, f, yt, method.params)
 end

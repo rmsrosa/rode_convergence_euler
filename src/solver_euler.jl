@@ -1,7 +1,7 @@
 """
     RandomEuler(T::DataType=Float64, n::Int=0)
 
-Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method (see [solve!(xt, t0, tf, x0, f::F, yt::Vector{T}, ::RandomEuler))](@ref))..
+Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method (see [solve!(xt, t0, tf, x0, f::F, yt::AbstractVector{T}, ::RandomEuler))](@ref))..
 
 Set `n` to `0` for solving a scalar equation and set `n` to the length of the system (e.g. the length of the initial condition).
 """
@@ -38,7 +38,7 @@ The time step is obtained from the length `n` of the vector `xt` via `dt = (tf -
 The noise `yt` should be of the same (row) length as `xt`.
 """
 # scalar solution, scalar noise
-function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::RandomEuler{T, Univariate}) where {T, F}
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, ::RandomEuler{T, Univariate}) where {T, F}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -56,7 +56,7 @@ function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::Rando
 end
 
 # scalar solution, vector noise
-function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Matrix{T}, ::RandomEuler{T, Univariate}) where {T, F}
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, ::RandomEuler{T, Univariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices")
     )
@@ -73,7 +73,7 @@ function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Matrix{T}, ::Rando
 end
 
 # vector solution, scalar noise
-function solve!(xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Vector{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, method::RandomEuler{T, Multivariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The rows of the matrix `xt` and the vector `yt` must match indices")
     )
@@ -98,7 +98,7 @@ function solve!(xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Vector{T},
 end
 
 # vector solution, vector noise
-function solve!(xt::Matrix{T}, t0::T, tf::T, x0::Vector{T}, f::F, yt::Matrix{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::RandomEuler{T, Multivariate}) where {T, F}
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The rows of the matrices `xt` and `yt` must match indices")
     )

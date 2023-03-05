@@ -1,5 +1,5 @@
 """
-    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+    ConvergenceSuite(t0, tf, x0law, f, noise, target!, method!, ntgt, ns, m)
 
 Gather the data needed for computing the convergence error for a given RODE.
 ```math
@@ -28,21 +28,21 @@ Besides these data obtained from the supplied arguments, a few cache vectors or 
 
 The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
 """
-struct ConvergenceSuite{T, D, P, F, M1, M2}
+struct ConvergenceSuite{T, D, P, F1, F2, F3}
     t0::T
     tf::T
     x0law::D
-    f::F
+    f::F1
     noise::P
-    target::M1
-    method::M2
+    target!::F2
+    method!::F3
     ntgt::Int
     ns::Vector{Int}
     m::Int
     yt::VecOrMat{T} # cache
     xt::VecOrMat{T} # cache
     xnt::VecOrMat{T} # cache
-    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int) where {T, D, P, F, M1, M2}
+    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F1, noise::P, target!::F2, method::F3, ntgt::Int, ns::Vector{Int}, m::Int) where {T, D, P, F1, F2, F3}
         ( ntgt > 0 && all(>(0), ns) ) || error(
             "`ntgt` and `ns` arguments must be positive integers."
 
@@ -51,9 +51,6 @@ struct ConvergenceSuite{T, D, P, F, M1, M2}
             "The length of `ntgt` should be divisible by any of the lengths in `ns`"
         )
     
-        ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
-            "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
-        )
         if D <: ContinuousUnivariateDistribution
             xt = Vector{T}(undef, ntgt)
             xnt = Vector{T}(undef, last(ns))
@@ -76,7 +73,7 @@ struct ConvergenceSuite{T, D, P, F, M1, M2}
             )
         end
 
-        return new{T, D, P, F, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, yt, xt, xnt)
+        return new{T, D, P, F1, F2, F3}(t0, tf, x0law, f, noise, target!, method, ntgt, ns, m, yt, xt, xnt)
     end
 end
 
@@ -116,8 +113,8 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
     x0law = suite.x0law
     f = suite.f
     noise = suite.noise
-    target = suite.target
-    method = suite.method
+    target! = suite.target!
+    method! = suite.method!
     ntgt = suite.ntgt
     ns = suite.ns
     m = suite.m
@@ -138,9 +135,9 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
 
         # generate target path
         if D <: ContinuousUnivariateDistribution
-            solve!(xt, t0, tf, xt[1], f, yt, target)
+            target!(rng, xt, t0, tf, xt[1], f, yt)
         else
-            solve!(xt, t0, tf, view(xt, 1, :), f, yt, target)            
+            target!(rng, xt, t0, tf, view(xt, 1, :), f, yt)            
         end
 
         # solve approximate solutions at selected time steps and update strong errors
@@ -150,13 +147,13 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
             nstep = div(ntgt, nsi)
 
             if D <: ContinuousUnivariateDistribution && P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)))
             elseif D <: ContinuousUnivariateDistribution
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
             elseif P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)))
             else
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
             end
 
             for n in 2:nsi
