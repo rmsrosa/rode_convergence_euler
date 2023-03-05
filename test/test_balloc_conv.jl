@@ -29,7 +29,9 @@ end
 target_exact3! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, rng::AbstractRNG) where {T, F}
     ntgt = size(xt, 1)
     dt = (tf - t0) / (ntgt - 1)
-    xt[1, :] .= x0
+    for j in eachindex(axes(xt, 2), x0)
+        xt[1, j] = x0[j]
+    end
     integral = 0.0
     for n in 2:ntgt
         integral += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
@@ -40,7 +42,9 @@ end
 target_exact4! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, rng::AbstractRNG) where {T, F}
     ntgt = size(xt, 1)
     dt = (tf - t0) / (ntgt - 1)
-    xt[1, :] .= x0
+    for j in eachindex(axes(xt, 2), x0)
+        xt[1, j] = x0[j]
+    end
     integral = 0.0
     for n in 2:ntgt
         integral += (yt[n, 1] + yt[n-1, 1] + 3yt[n, 2] + 3yt[n-1, 2]) * dt / 8 + sqrt(dt^3 / 12) * randn(rng)
@@ -104,7 +108,7 @@ end
         method = RandomEuler(length(x0law))
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
-        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 
     @testset "Vector/Vector Euler" begin
@@ -126,6 +130,6 @@ end
         method = RandomEuler(length(x0law))
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
-        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
     end
 end
