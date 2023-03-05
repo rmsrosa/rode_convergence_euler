@@ -372,7 +372,6 @@ Each columns of `yt` is populated with a sample path from each univariate proces
 """
 struct ProductProcess{T, D} <: MultivariateProcess{T}
     processes::D
-    len::Int
     function ProductProcess(p::D) where {D <: Tuple{Vararg{UnivariateProcess}}} 
         isempty(p) && error(
             "ProductProcess must consist of at least one univariate process"
@@ -384,13 +383,13 @@ struct ProductProcess{T, D} <: MultivariateProcess{T}
         all(pi -> eltype(pi) == T, p) || error(
             "all processes must have same eltype"
         )
-        return new{T, D}(p, length(p))
+        return new{T, D}(p)
     end
 end
 
 ProductProcess(p::UnivariateProcess...) = ProductProcess(p)
 
-Base.length(noise::ProductProcess) = noise.len
+Base.length(noise::ProductProcess) = length(noise.processes)
 
 function Random.rand!(rng::AbstractRNG, Y::ProductProcess{T}, yt::AbstractMatrix{T}) where {T}
     axes(eachcol(yt)) == axes(Y.processes) || throw(
