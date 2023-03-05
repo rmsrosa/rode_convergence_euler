@@ -1,5 +1,3 @@
-abstract type RODEMethod{N} end
-
 """
     RandomEuler(T::DataType=Float64, n::Int=0)
 

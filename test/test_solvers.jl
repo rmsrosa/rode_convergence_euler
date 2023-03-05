@@ -4,12 +4,9 @@
 # The solution is $x(t) = x0 e^{2\sin(t)}$.
 # For vectorial unknown and vectorial noises, we simply repeat the equations and/or noise
 
-# This is for the user-defined (exact) solver tested at the end
-struct HomLinWienerExact{R} <: RODEMethod{Univariate}
-    rng::R
-end
-
-function RODEConvergence.solve!(xt::Vector{Float64}, t0::Float64, tf::Float64, x0::Float64, f::F, yt::Vector{Float64}, method::HomLinWienerExact) where {F}
+# This is for testing the CustomMethod at the end of the test.
+# There is some scoping problem that gives me extra allocations if I define this inside the test
+custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::P) where {T, F, P}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -20,14 +17,16 @@ function RODEConvergence.solve!(xt::Vector{Float64}, t0::Float64, tf::Float64, x
     xt[i1] = x0
     integral = 0.0
     for i in Iterators.drop(eachindex(xt, yt), 1)
-        integral += (yt[i] + yt[i1]) * dt / 2 + sqrt(dt^3 / 12) * randn(method.rng)
+        integral += (yt[i] + yt[i1]) * dt / 2
+        if params isa AbstractRNG
+            integral += sqrt(dt^3 / 12) * randn(params)
+        end
         xt[i] = x0 * exp(integral)
         i1 = i
     end
 end
 
 @testset "Test solvers" begin
-    rng = Xoshiro(123)
     t0 = 0.0
     tf = 2.0
     n = 2^12
@@ -90,14 +89,13 @@ end
 
     @testset "User solver 1" begin
         rng = Xoshiro(123)
-    
         x0 = 0.5
         f = (t, x, y) -> y * x
         yt = cos.(tt)
         xt = Vector{Float64}(undef, n)
         sol = x0 * exp.( sin.(tt))
-    
-        method = HomLinWienerExact(rng)
+
+        method = CustomMethod(custom_solver, nothing)
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
@@ -119,7 +117,7 @@ end
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0
 
-        method = HomLinWienerExact(rng)
+        method = CustomMethod(custom_solver, rng)
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
         @test maximum(abs, xt .- sol) < 0.05
         @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $method)) == 0

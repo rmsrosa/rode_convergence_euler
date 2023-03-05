@@ -21,7 +21,8 @@ export ProductProcess
 
 # solvers
 export solve_euler!, solve_heun!
-export RODEMethod, RandomEuler, RandomHeun, solve!
+export RODEMethod, CustomMethod, CustomUnivariateMethod, CustomMultivariateMethod, solve!
+export RandomEuler, RandomHeun
 
 # convergence calculation
 export ConvergenceSuite, ConvergenceResults, solve
@@ -31,6 +32,7 @@ export plot_sample_approximations, generate_error_table, plot_dt_vs_error, plot_
 
 include("rode.jl")
 include("noises.jl")
+include("solvers.jl")
 include("solver_euler.jl")
 include("solver_heun.jl")
 include("solvers_old.jl")
