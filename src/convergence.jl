@@ -28,7 +28,7 @@ Besides these data obtained from the supplied arguments, a few cache vectors or 
 
 The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
 """
-struct ConvergenceSuite{T, D, P, F, M1, M2}
+struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     t0::T
     tf::T
     x0law::D
@@ -39,9 +39,9 @@ struct ConvergenceSuite{T, D, P, F, M1, M2}
     ntgt::Int
     ns::Vector{Int}
     m::Int
-    yt::VecOrMat{T} # cache
-    xt::VecOrMat{T} # cache
-    xnt::VecOrMat{T} # cache
+    yt::Array{T, N1} # cache
+    xt::Array{T, N2} # cache
+    xnt::Array{T, N2} # cache
     function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int) where {T, D, P, F, M1, M2}
         ( ntgt > 0 && all(>(0), ns) ) || error(
             "`ntgt` and `ns` arguments must be positive integers."
@@ -57,10 +57,12 @@ struct ConvergenceSuite{T, D, P, F, M1, M2}
         if D <: ContinuousUnivariateDistribution
             xt = Vector{T}(undef, ntgt)
             xnt = Vector{T}(undef, last(ns))
+            N2 = 1
         elseif D <: ContinuousMultivariateDistribution
             nx = length(x0law)
             xt = Matrix{T}(undef, ntgt, nx)
             xnt = Matrix{T}(undef, last(ns), nx)
+            N2 = 2
         else
             error(
                 "`xlaw` should be either `ContinuousUnivariateDistribution` or `ContinuousMultivariateDistribution`."
@@ -68,15 +70,17 @@ struct ConvergenceSuite{T, D, P, F, M1, M2}
         end
         if P <: UnivariateProcess
             yt = Vector{T}(undef, ntgt)
+            N1 = 1
         elseif P <: MultivariateProcess
             yt = Matrix{T}(undef, ntgt, length(noise))
+            N1 = 2
         else
             error(
                 "`noise` should be either a `UnivariateProcess` or a `MultivariateProcess`."
             )
         end
 
-        return new{T, D, P, F, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, yt, xt, xnt)
+        return new{T, D, P, F, N1, N2, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, yt, xt, xnt)
     end
 end
 
