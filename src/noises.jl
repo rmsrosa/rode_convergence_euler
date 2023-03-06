@@ -383,6 +383,7 @@ struct ProductProcess{T, D} <: MultivariateProcess{T}
         all(pi -> eltype(pi) == T, p) || error(
             "all processes must have same eltype"
         )
+
         return new{T, D}(p)
     end
 end
@@ -391,11 +392,36 @@ ProductProcess(p::UnivariateProcess...) = ProductProcess(p)
 
 Base.length(noise::ProductProcess) = length(noise.processes)
 
-function Random.rand!(rng::AbstractRNG, Y::ProductProcess{T}, yt::AbstractMatrix{T}) where {T}
-    axes(eachcol(yt)) == axes(Y.processes) || throw(
-        DimensionMismatch("Columns of `yt` must match indices of product processes.")
+#= function Random.rand!(rng::AbstractRNG, noise::ProductProcess{T}, yt::AbstractMatrix{T}) where {T}
+    axes(eachcol(yt)) == axes(noise.processes) || throw(
+        DimensionMismatch("Columns of `mat` must have same length and match the indices of `noise.processes`.")
     )
     for (i, yti) in enumerate(eachcol(yt))
-        rand!(rng, Y.processes[i], yti)
+        rand!(rng, noise.processes[i], yti)
     end
+end =#
+
+# `ProductProcess` was allocating a little when drawing `rand!(rng, noise, yt)` with different types of processes in `noise::ProductProcess`.
+# It was just a small overhead, apparently not affecting performance.
+# It could be due to failed inference and/or type instability.
+# Anyway, I changed it to the generated function below, with specialized rolled out loop and it is fine, now, non-allocating.
+
+@generated function Random.rand!(rng::AbstractRNG, noise::ProductProcess{T, D}, yt::AbstractMatrix{T}) where {T, D}
+    n = length(D.parameters)
+    ex = quote
+            axes(eachcol(yt)) == axes(noise.processes) || throw(
+            DimensionMismatch("Columns of `mat` must have same length and match the indices of `noise.processes`.")
+        )
+    end
+    for i in 1:n
+        ex = quote
+            $ex
+            rand!(rng, noise.processes[$i], view(yt, :, $i))
+        end
+    end
+    ex = quote
+        $ex
+        nothing
+    end
+    return ex
 end

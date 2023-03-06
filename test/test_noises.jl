@@ -226,8 +226,10 @@
 
         @test_nowarn rand!(rng, noise, ymt)
 
-        # `ProductProcess` is allocating a little when there are different process in `ProductProcess`, but it is not affecting performance. It might be due to failed inference
-        @test_broken (@ballocated rand!($rng, $noise, $ymt)) == 0
+        # `ProductProcess` was allocating a little when there were different types of processes in `ProductProcess`, but just an overhead, not affecting performance.
+        # It could be due to failed inference and/or type instability.
+        # Anyway, I changed it to a generated function with specialized rolled out loop and it is fine, now!
+        @test (@ballocated rand!($rng, $noise, $ymt)) == 0
         
         @test_nowarn (@inferred rand!(rng, noise,ymt))
 
