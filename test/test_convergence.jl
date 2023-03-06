@@ -15,7 +15,7 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
     end
 end
 
-@testset "Test convergence" begin
+@testset "Convergence" begin
     rng = Xoshiro(123)
     t0 = 0.0
     tf = 1.0

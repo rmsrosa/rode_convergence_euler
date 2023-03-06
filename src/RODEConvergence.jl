@@ -8,9 +8,6 @@ using Plots
 
 import Random: rand
 
-# rode
-export RODEIVP # not used yet
-
 # noises
 export AbstractProcess, UnivariateProcess, MultivariateProcess
 export WienerProcess, GeometricBrownianMotionProcess
@@ -20,16 +17,15 @@ export FractionalBrownianMotionProcess
 export ProductProcess
 
 # solvers
-export RODEMethod, CustomMethod, CustomUnivariateMethod, CustomMultivariateMethod, solve!
+export RODEMethod, CustomUnivariateMethod, CustomMultivariateMethod, solve!
 export RandomEuler, RandomHeun
 
 # convergence calculation
-export ConvergenceSuite, ConvergenceResults, solve
+export ConvergenceSuite, ConvergenceResult, solve
 
 # output
 export plot_sample_approximations, generate_error_table, plot_dt_vs_error, plot_t_vs_errors
 
-include("rode.jl") # not used yet
 include("noises.jl")
 include("solvers.jl")
 include("solver_euler.jl")

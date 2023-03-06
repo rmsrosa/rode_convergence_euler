@@ -84,34 +84,13 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     end
 end
 
-struct ConvergenceResults{T, S}
+struct ConvergenceResult{T, S}
     suite::S
     deltas::Vector{T}
     trajerrors::Matrix{T}
     errors::Vector{T}
     lc::T
     p::T
-    vandermonde::Matrix{T} # cache
-    logerrors::Vector{T} # cache
-end
-
-function init(suite::ConvergenceSuite{T}) where {T}
-    t0 = suite.t0
-    tf = suite.tf
-    ns = suite.ns
-
-    deltas = (tf - t0) ./ (ns .- 1)
-    vandermonde = [one.(deltas) log.(deltas)]
-    trajerrors = zeros(last(ns), length(ns))
-
-    errors = Vector{T}(undef, last(ns))
-    logerrors = Vector{T}(undef, last(ns))
-    lc = zero(T)
-    p = zero(T)
-
-    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p, logerrors, vandermonde)
-
-    return results
 end
 
 function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
@@ -195,7 +174,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     logerrors = log.(errors)
     lc, p =  vandermonde \ logerrors
 
-    # return results as `ConvergenceResults`
-    results = ConvergenceResults(suite, deltas, trajerrors, errors, lc, p, vandermonde, logerrors)
+    # return results as a `ConvergenceResult`
+    results = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p)
     return results
 end

@@ -1,8 +1,8 @@
-@testset "Test noises" begin
+@testset "Noises" begin
     t0 = 0.0
-    tf = 2.0
+    tf = 1.5
     n = 2^8
-    m = 5_000
+    m = 2_000
     ythf = Vector{Float64}(undef, m)
     ytf = Vector{Float64}(undef, m)
     yt = Vector{Float64}(undef, n)

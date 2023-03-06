@@ -52,7 +52,7 @@ target_exact4! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVect
     end
 end
 
-@testset "Alloc convergence" begin
+@testset "No alloc conv." begin
     rng = Xoshiro(123)
     t0 = 0.0
     tf = 1.0

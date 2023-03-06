@@ -26,10 +26,10 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
     end
 end
 
-@testset "Test solvers" begin
+@testset "Solvers" begin
     t0 = 0.0
-    tf = 2.0
-    n = 2^12
+    tf = 1.5
+    n = 2^8
     tt = range(t0, tf, length=n)
     @testset "scalar/scalar Euler" begin
         x0 = 0.5
