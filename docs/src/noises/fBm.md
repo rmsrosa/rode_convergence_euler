@@ -21,14 +21,14 @@ using RODEConvergence
 
 ## Setup
 
-We fix the initial condition `y0` and the initial and final times `t0` and `tf` of the time interval of the desired fractional Brownian motion process. We also fix the size $N$ of the sample paths. The sample paths will be generated for a set of `N` times uniformly distributed within the time interval from `t0` to `tf`, which yields a time mesh which we define as `tt`:
+We fix the initial condition `y0` and the initial and final times `t0` and `tf` of the time interval of the desired fractional Brownian motion process. We also fix the size $N$ of the sample paths. The sample paths will be generated for a set of `n` times uniformly distributed within the time interval from `t0` to `tf`, which yields a time mesh which we define as `tt`:
 
 ```@example fBm
 y0 = 0.0
 t0 = 0.0
-T = 2.0
-N = 2^9
-tt = range(t0, T, length=N)
+tf = 2.0
+n = 2^9
+tt = range(t0, tf, length=n)
 nothing # hide
 ```
 
@@ -42,7 +42,7 @@ nothing # hide
 With this setup, we create the corresponding fractional Brownian motion processes:
 
 ```@example fBm
-noise = Dict(H => FractionalBrownianMotionProcess(t0, T, y0, H, N) for H in Hs)
+noise = Dict(H => FractionalBrownianMotionProcess(t0, tf, y0, H, n) for H in Hs)
 nothing # hide
 ```
 
@@ -50,7 +50,7 @@ This `noise` is a `Dict` with the keys being the chosen Hurst parameters and wit
 
 ```@example fBm
 rng = Xoshiro(123)
-Yt = Vector{Float64}(undef, N)
+yt = Vector{Float64}(undef, n)
 nothing # hide
 ```
 
@@ -63,10 +63,10 @@ First with a Hurst parameter within the range $1/2 < H < 1$.
 ```@example fBm
 H = Hs[3]
 
-plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
+plt = plot(title="Sample paths of fractional Brownian motion of length $n with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    rand!(rng, noise[H], Yt)
-    plot!(plt, tt, Yt)
+    rand!(rng, noise[H], yt)
+    plot!(plt, tt, yt)
 end
 plt
 ```
@@ -76,10 +76,10 @@ Now with $H=1/2$, which yields a standard Brownian motion.
 ```@example fBm
 H = Hs[2]
 
-plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
+plt = plot(title="Sample paths of fractional Brownian motion of length $n with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    rand!(rng, noise[H], Yt)
-    plot!(plt, tt, Yt)
+    rand!(rng, noise[H], yt)
+    plot!(plt, tt, yt)
 end
 plt
 ```
@@ -89,10 +89,10 @@ Finally a rougher path with $0 < H < 1/2$.
 ```@example fBm
 H = Hs[1]
 
-plt = plot(title="Sample paths of fractional Brownian motion of length $N with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
+plt = plot(title="Sample paths of fractional Brownian motion of length $n with Hurst parameter H=$H", titlefont=8, xlabel="t", ylabel="W", legend=nothing, size=(800, 400))
 for _ in 1:3
-    rand!(rng, noise[H], Yt)
-    plot!(plt, tt, Yt)
+    rand!(rng, noise[H], yt)
+    plot!(plt, tt, yt)
 end
 plt
 ```
@@ -102,14 +102,14 @@ plt
 Now we simulate a bunch of sample paths and check their statistics. We start by defining how much is "a bunch":
 
 ```@example fBm
-M = 1_000
+m = 1_000
 nothing # hide
 ```
 
 Now we generate the sets of sample paths for each Hurst parameter.
 
 ```@example fBm
-W = Dict(H => reduce(hcat, rand!(rng, noise[H], Yt) for _ in 1:M) for H in Hs)
+W = Dict(H => reduce(hcat, rand!(rng, noise[H], yt) for _ in 1:m) for H in Hs)
 
 means = Dict(H => mean(W[H], dims=2) for H in Hs)
 stds = Dict(H => std(W[H], dims=2) for H in Hs)
@@ -164,10 +164,10 @@ At each time $t$, the distribution of $B_H(t)$ is a Normal distribution with mea
 H = Hs[1]
 xx = -3*last(tt)^H:0.01:3*last(tt)^H
 plts = []
-for n in div.(N, (100, 10, 2, 1))
-    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[n], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
-    histogram!(plt, view(W[H], n, :), bins=40, normalize=true)
-    plot!(plt, xx, x -> pdf(Normal(0.0, tt[n]^H), x))
+for ni in div.(n, (100, 10, 2, 1))
+    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[ni], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
+    histogram!(plt, view(W[H], ni, :), bins=40, normalize=true)
+    plot!(plt, xx, x -> pdf(Normal(0.0, tt[ni]^H), x))
     push!(plts, plt)
 end
 plot(plts...)
@@ -177,10 +177,10 @@ plot(plts...)
 H = Hs[2]
 xx = -3*last(tt)^H:0.01:3*last(tt)^H
 plts = []
-for n in div.(N, (100, 10, 2, 1))
-    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[n], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
-    histogram!(plt, view(W[H], n, :), bins=40, normalize=true)
-    plot!(plt, xx, x -> pdf(Normal(0.0, tt[n]^H), x))
+for ni in div.(n, (100, 10, 2, 1))
+    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[ni], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
+    histogram!(plt, view(W[H], ni, :), bins=40, normalize=true)
+    plot!(plt, xx, x -> pdf(Normal(0.0, tt[ni]^H), x))
     push!(plts, plt)
 end
 plot(plts...)
@@ -190,10 +190,10 @@ plot(plts...)
 H = Hs[3]
 xx = -3*last(tt)^H:0.01:3*last(tt)^H
 plts = []
-for n in div.(N, (100, 10, 2, 1))
-    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[n], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
-    histogram!(plt, view(W[H], n, :), bins=40, normalize=true)
-    plot!(plt, xx, x -> pdf(Normal(0.0, tt[n]^H), x))
+for ni in div.(n, (100, 10, 2, 1))
+    plt = plot(title="Histogram and PDF for H=$H at t=$(round(tt[ni], sigdigits=3))", xlims=(first(xx), last(xx)), titlefont=8, legend=nothing)
+    histogram!(plt, view(W[H], ni, :), bins=40, normalize=true)
+    plot!(plt, xx, x -> pdf(Normal(0.0, tt[ni]^H), x))
     push!(plts, plt)
 end
 plot(plts...)
@@ -248,6 +248,6 @@ When calling `FractionalBrownianMotionProcess(t0, T, y0, H, N)`, a composite typ
 
 ```@example fBm
 H = Hs[1]
-@btime rand!($rng, $(noise[H]), $Yt)
+@btime rand!($rng, $(noise[H]), $yt)
 nothing # hide
 ```

@@ -84,6 +84,19 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     end
 end
 
+"""
+ConvergenceResult
+
+Stores the result of `solve(rng, suite)` with fields
+* `suite`
+* `deltas`
+* `trajerrors`
+* `errors`
+* `lc`
+* `p`
+* `eps`
+"""
+
 struct ConvergenceResult{T, S}
     suite::S
     deltas::Vector{T}
@@ -91,6 +104,7 @@ struct ConvergenceResult{T, S}
     errors::Vector{T}
     lc::T
     p::T
+    eps::T
 end
 
 function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
@@ -174,10 +188,20 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     logerrors = log.(errors)
     lc, p =  vandermonde \ logerrors
 
+    # uncertainty in `p` ? 95% confidence interval (p - eps, p + eps) where
+
+    standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
+    eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
+
     # return results as a `ConvergenceResult`
-    results = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p)
+    results = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p, eps)
     return results
 end
+
+# Think about a non-allocating solver for the convergence results/# By adding `trajerrors`, `vandermonde`, `logerrors`, `logdeltas` and `inv(vandermonde' * vandermonde)[2, 2]` as cache arguments to ConvergenceResult
+# Adding an `results = init(suite)` with whatever initialization is necessary
+# Adding a non-allocating solve!(rng, results, suite)
+# Then rewrite `solve` to call `init` and then `solve!`.
 
 """
     generate_error_table(results, info)

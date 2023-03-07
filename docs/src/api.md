@@ -29,49 +29,53 @@ FractionalBrownianMotionProcess
 ```
 
 ```@docs
-MultiProcess
+ProductProcess
 ```
 
-## Solvers
+## Methods
 
 ```@docs
-solve_euler!
+RandomEuler
 ```
 
 ```@docs
-solve_heun!
+RandomHeun
+```
+
+```@docs
+CustomUnivariateMethod
+```
+
+```@docs
+CustomMultivariateMethod
 ```
 
 ## Error estimation
 
 ```@docs
-prepare_variables
+ConvergenceSuite
 ```
 
 ```@docs
-calculate_errors
+ConvergenceResult
 ```
 
 ```@docs
-calculate_errors!
+RODEConvergence.solve
+```
+
+```@docs
+RODEConvergence.solve!
+```
+
+```@docs
+calculate_trajerrors!
 ```
 
 ## Output
 
 ```@docs
-plot_sample_approximations
-```
-
-```@docs
 generate_error_table
-```
-
-```@docs
-plot_dt_vs_error
-```
-
-```@docs
-plot_t_vs_errors
 ```
 
 ## Extras
@@ -80,4 +84,8 @@ These are non-exported.
 
 ```@docs
 RODEConvergence.CompoundPoissonProcessAlt
+```
+
+```@docs
+RODEConvergence.CustomMethod
 ```

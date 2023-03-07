@@ -23,7 +23,24 @@ struct CustomMethod{F, P, N} <: RODEMethod{N}
     params::P
 end
 
+"""
+    CustomUnivariateMethod
+
+Custom method for solving a scalar Random ODE. It has two fields:
+
+* `solver`: a function `solver(xt, t0, tf, x0, f, yt, params)` to solve, on the interval `t0` to `tf`, a Random ODE with right hand side `f`, "noise" sample path `yt`, initial condition `x0` and extra paramters `params`;
+* `params`: any argument or series of arguments necessary for the custom solver.
+"""
 const CustomUnivariateMethod{F, P} = CustomMethod{F, P, Univariate} where {F, P}
+
+"""
+    CustomMultivariateMethod
+
+Custom method for solving a system of Random ODEs. It has two fields:
+
+* `solver`: a function `solver(xt, t0, tf, x0, f, yt, params)` to solve, on the interval `t0` to `tf`, a Random ODE with right hand side `f`, "noise" sample path `yt`, initial condition `x0` and extra paramters `params`;
+* `params`: any argument or series of arguments necessary for the custom solver.
+"""
 const CustomMultivariateMethod{F, P} = CustomMethod{F, P, Multivariate} where {F, P}
 
 CustomMethod{N}(solver::F, params::P) where {F, P, N} = CustomMethod{F, P, N}(solver, params)
