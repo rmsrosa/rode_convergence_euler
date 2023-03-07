@@ -178,3 +178,28 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     results = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p)
     return results
 end
+
+"""
+    generate_error_table(results, info)
+
+Generate the markdown table with the data for the strong `results.errors` obtained with time steps `results.deltas` and lengths `results.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
+"""
+function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(results.suite.x0law))), noise=string(nameof(typeof(results.suite.noise)))))
+    t0 = results.suite.t0
+    tf = results.suite.tf
+    ns = results.suite.ns
+    m = results.suite.m
+    ntgt = results.suite.ntgt
+    deltas = results.deltas
+    errors = results.errors
+    table = "\\begin{tabular}[htb]{|l|l|l|}\n
+    \\hline N & dt & error\\\\\n
+    \\hline \\hline\n"
+    for (n, dt, error) in zip(ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
+        table *= "$n & $dt & $error \\\\\n"
+    end
+    table *= "\\hline \\\\\n
+    \\end{tabular}\n
+    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$2^{$(Int(log2(ntgt)))}=$(ntgt)\$ points.}"
+    return table
+end

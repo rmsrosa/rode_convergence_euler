@@ -37,7 +37,14 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
+        info = (equation = "dx/dt = yx", ic = "Normal()", noise="Wiener process noise")
+        str = @test_nowarn generate_error_table(results, info)
+        @test all(n -> occursin(string(n), str), ns)
+        @test occursin(info.equation, str)
+        @test occursin(info.ic, str)
+        @test occursin(info.noise, str)
 
         target = RandomEuler()
         method = RandomEuler()
@@ -46,7 +53,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
     end
 
     @testset "Scalar/Vector Euler" begin
@@ -77,7 +85,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler()
         method = RandomEuler()
@@ -87,7 +96,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
     end
 
     @testset "Vector/scalar Euler" begin
@@ -120,7 +130,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler(length(x0law))
         method = RandomEuler(length(x0law))
@@ -129,7 +140,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
     end
 
     @testset "Vector/Vector Euler" begin
@@ -166,7 +178,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler(length(x0law))
         method = RandomEuler(length(x0law))
@@ -175,7 +188,8 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
-        # @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        str = @test_nowarn generate_error_table(results)
+        @test all(n -> occursin(string(n), str), ns)
     end
 
     t0 = 0.0

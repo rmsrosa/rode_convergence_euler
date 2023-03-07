@@ -21,7 +21,7 @@ end
     tf = 1.0
     ntgt = 2^12
     ns = 2 .^ (4:8)
-    m = 1
+    m = 100
 
     @testset "Scalar/Scalar Euler" begin
 
@@ -39,6 +39,7 @@ end
         @test_nowarn plot(suite, shownoise=true)
         @test_nowarn plot(suite, shownoise=true, showtarget=true, showapprox=false)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
+        @test_nowarn plot(results)
     end
 
     @testset "Scalar/Vector Euler" begin
@@ -61,6 +62,7 @@ end
         @test_nowarn plot(suite, shownoise=true)
         @test_nowarn plot(suite, shownoise=true, showtarget=true, showapprox=false)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
+        @test_nowarn plot(results)
     end
 
     @testset "Vector/scalar Euler" begin
@@ -87,6 +89,7 @@ end
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=2)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=1:2)
+        @test_nowarn plot(results)
     end
 
     @testset "Vector/Vector Euler" begin
@@ -116,5 +119,6 @@ end
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=2)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=1:2)
+        @test_nowarn plot(results)
     end
 end

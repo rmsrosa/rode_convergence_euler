@@ -24,7 +24,7 @@ export RandomEuler, RandomHeun
 export ConvergenceSuite, ConvergenceResult, solve
 
 # output
-export plot_sample_approximations, generate_error_table, plot_dt_vs_error, plot_t_vs_errors
+export generate_error_table
 
 include("noises.jl")
 include("solvers.jl")
@@ -32,6 +32,5 @@ include("solver_euler.jl")
 include("solver_heun.jl")
 include("convergence.jl")
 include("recipes.jl")
-include("output.jl")
 
 end # module RODEConvergence

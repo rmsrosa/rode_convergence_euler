@@ -1,3 +1,14 @@
+"""
+    plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+
+Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or by an alternate keyword `ns` with a vector of mesh point numbers.
+
+The noise, the target solution, and the approximations can be displayed or not, according to the keywords `shownoise=false`, `showtarget=true`, `showapprox=true` being true or not.
+
+The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
+
+If `suite` refers to a system of equations (i.e. with `x0law` a ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyworkd `idxs`, e.g. `idxs=2`, or `idxs=1:3`).
+"""
 @recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
@@ -16,7 +27,7 @@
     xnt = suite.xnt
 
     # draw noise
-    if shownoise
+    if shownoise == true
         @series begin
             linecolor --> 2
             linewidth --> 1
@@ -27,7 +38,7 @@
     end
 
     # solve and draw approximate solutions at selected resolutions
-    if showapprox
+    if showapprox == true
         for (i, nsi) in enumerate(ns)
 
             nstep = div(ntgt, nsi)
@@ -57,7 +68,7 @@
     end
 
     # draw target solution
-    if showtarget
+    if showtarget == true
         @series begin
             linecolor --> 1
             linewidth --> 2
@@ -66,5 +77,37 @@
                 xt : view(xt, :, idxs)
             range(t0, tf, length=ntgt), x
         end
+    end
+end
+
+"""
+    plot(results::ConvergenceResult)
+
+Plot the convergence estimate in a log-log scale (time step vs strong error) based on the values provided in `results`, as computed by [`solve(::ConvergenceSuite)`](@ref).
+
+A scatter plot for the `results.errors` and a line plot from the fitted `errors ≈ C Δtᵖ`, where `C = exp(lc)`, with `Δt` in `results.deltas`, `lc = results.lc`, and `p = results.p`.
+"""
+@recipe function plot(results::ConvergenceResult)
+    deltas = results.deltas
+    lc = results.lc
+    p = results.p
+    errors = results.errors
+    fit = exp(lc) * deltas .^ p
+
+    xlabel := "\$\\Delta t\$"
+    ylabel := "\$\\textrm{error}\$"
+    xscale := :log10
+    yscale := :log10
+
+    @series begin
+        linestyle --> :solid
+        label --> "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))"
+        deltas, fit
+    end
+
+    @series begin
+        seriestype --> :scatter
+        label --> "strong errors"
+        deltas, errors
     end
 end
