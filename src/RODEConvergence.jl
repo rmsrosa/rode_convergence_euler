@@ -31,6 +31,7 @@ include("solvers.jl")
 include("solver_euler.jl")
 include("solver_heun.jl")
 include("convergence.jl")
+include("recipes.jl")
 include("output.jl")
 
 end # module RODEConvergence
