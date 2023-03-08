@@ -119,6 +119,10 @@ end
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=2)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=1:2)
+        @test_nowarn plot(suite, ns=[64, 128, 160, 192], idxs=:)
+        @test_nowarn plot(suite, ns=[64, 128, 160, 192], noiseidxs=2)
+        @test_nowarn plot(suite, ns=[64, 128, 160, 192], noiseidxs=1:2)
+        @test_nowarn plot(suite, ns=[64, 128, 160, 192], noiseidxs=:)
         @test_nowarn plot(results)
     end
 end

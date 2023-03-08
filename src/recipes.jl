@@ -1,5 +1,5 @@
 """
-    plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+    plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
 
 Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or by an alternate keyword `ns` with a vector of mesh point numbers.
 
@@ -8,8 +8,10 @@ The noise, the target solution, and the approximations can be displayed or not, 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
 If `suite` refers to a system of equations (i.e. with `x0law` a ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyworkd `idxs`, e.g. `idxs=2`, or `idxs=1:3`).
+
+If `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents by specifying the keyword `noiseidxs`, e.g. `noiseidxs=1`, or `noiseidexs=2:3`.
 """
-@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=:, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
@@ -33,7 +35,9 @@ If `suite` refers to a system of equations (i.e. with `x0law` a ContinuousMultiv
             linewidth --> 1
             linealpha --> noisealpha
             label --> "noise"
-            range(t0, tf, length=ntgt), yt
+            y = noise isa UnivariateProcess ?
+                    yt : view(yt, :, noiseidxs)
+            range(t0, tf, length=ntgt), y
         end
     end
 
