@@ -96,7 +96,6 @@ Stores the result of `solve(rng, suite)` with fields
 * `p`: the order of the strong convergence;
 * `eps`: an estimate of the half-width of the 95% confidence interval for `p` in the least square fit as a maximum likelyhood estimate.
 """
-
 struct ConvergenceResult{T, S}
     suite::S
     deltas::Vector{T}
@@ -109,6 +108,8 @@ end
 
 """
     calculate_trajerrors!(rng, trajerrors, suite)
+
+Calculate the strong error at each time step along the trajectory.
 """
 function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
     t0 = suite.t0
@@ -177,6 +178,11 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
     return nothing
 end
 
+"""
+    solve(rng, suite::ConvergenceSuite)
+
+Compute the strong errors and the order of convergence.
+"""
 function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
     trajerrors = zeros(T, last(suite.ns), length(suite.ns))

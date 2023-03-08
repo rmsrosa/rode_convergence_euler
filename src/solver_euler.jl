@@ -37,8 +37,8 @@ The time step is obtained from the length `n` of the vector `xt` via `dt = (tf -
 
 The noise `yt` should be of the same (row) length as `xt`.
 """
-# scalar solution, scalar noise
 function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, ::RandomEuler{T, Univariate}) where {T, F}
+    # scalar solution, scalar noise
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -55,8 +55,8 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVe
     end
 end
 
-# scalar solution, vector noise
 function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, ::RandomEuler{T, Univariate}) where {T, F}
+    # scalar solution, vector noise
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices")
     )
@@ -72,8 +72,8 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMa
     end
 end
 
-# vector solution, scalar noise
 function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+    # vector solution, scalar noise
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The rows of the matrix `xt` and the vector `yt` must match indices")
     )
@@ -97,8 +97,8 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     end
 end
 
-# vector solution, vector noise
 function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+    # vector solution, vector noise
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The rows of the matrices `xt` and `yt` must match indices")
     )

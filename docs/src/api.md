@@ -43,10 +43,6 @@ RandomHeun
 ```
 
 ```@docs
-CustomMethod
-```
-
-```@docs
 RODEConvergence.CustomMethod
 ```
 
@@ -54,11 +50,11 @@ RODEConvergence.CustomMethod
 ## Error estimation
 
 ```@docs
-ConvergenceSuite
+RODEConvergence.ConvergenceSuite
 ```
 
 ```@docs
-ConvergenceResult
+RODEConvergence.ConvergenceResult
 ```
 
 ```@docs
@@ -66,11 +62,11 @@ RODEConvergence.solve
 ```
 
 ```@docs
-solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
+RODEConvergence.solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
 ```
 
 ```@docs
-solve!(xt, t0, tf, x0, f, yt, method::RandomHeun)
+RODEConvergence.solve!(xt, t0, tf, x0, f, yt, method::RandomHeun)
 ```
 
 ```@docs

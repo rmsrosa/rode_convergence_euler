@@ -40,6 +40,7 @@ The time step is obtained from the length `n` of the vector `xt` via `dt = (tf -
 The noise vector `yt` should be of the same length as `xt`.
 """
 function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::RandomHeun{T, Univariate}) where {T, F}
+    # scalar solution, scalar noise
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("vectors `xt` and `yt` must match indices")
     )
