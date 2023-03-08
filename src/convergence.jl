@@ -1,7 +1,7 @@
 """
     ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 
-Gather the data needed for computing the convergence error for a given RODE.
+Gather the data needed for computing the convergence error for a given RODE of the form
 ```math
     \\begin{cases}
         \\frac{\\mathrm{d}X_t}{\\mathrm{d}t} = f(t, X_t, Y_t), & t_0 \\leq t \\leq t_f \\\\
@@ -10,12 +10,13 @@ Gather the data needed for computing the convergence error for a given RODE.
 ```
 
 The data comprises of the following:
+
 * the initial and final times `t0` and `tf`;
 * the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
 * the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
 * the univariate or multivariate process `noise` for the noise term ``Y_t``;
-* the function `target!` to compute the target solution for the error calculation via `target!(rng, xt, t0, tf, x0, f, yt)`;
-* the function `method!` with the given method to approximate the solution, typically the [`euler_method!`](@ref), also in the form `method!(rng, xt, t0, tf, x0, f, yt)`;
+* the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically [`EulerMethod`](@ref) with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution [`CustomMethod`](@ref) with an exact distribution of the possible solutions conditioned to the already computed noise points;
+* the `method` to approximate the solution, typically the [`EulerMethod`](@ref), also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
 * the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
 * the number `m` of sample paths to be computed for estimating the strong error via Monte Carlo method.
@@ -24,9 +25,8 @@ Besides these data obtained from the supplied arguments, a few cache vectors or 
 * a vector or matrix `yt` to hold the sample paths of the noise on the finest mesh, with length or row-length being `ntgt` and the shape depending on whether the noise is univariate or multivariate;
 * a vector or matrix `xt` to hold the sample paths of the target solution, on the finest mesh, with length or row-length being `ntgt` and the shape depending on whether the law for the initial condition being univariate or multivariate;
 * a vector or matrix `xnt` to hold the sample paths of the approximate solution, with length or row-length being the maximum of those in `ns` and the shape depending on whether the law for the initial condition being univariate or multivariate.
-* ``
 
-The actual error is obtained by solving a ConvergenceSuite via [`solve(rng, suite)`](@ref), with a given RNG.
+The actual error is obtained by solving a ConvergenceSuite via `solve(rng::AbstractRNG, suite::ConvergenceSuite{T})` with a given RNG.
 """
 struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     t0::T
@@ -88,13 +88,13 @@ end
 ConvergenceResult
 
 Stores the result of `solve(rng, suite)` with fields
-* `suite`
-* `deltas`
-* `trajerrors`
-* `errors`
-* `lc`
-* `p`
-* `eps`
+* `suite`: the `ConvergenceSuite` which is to be solved for;
+* `deltas`: the time steps associated with the number of mesh points in the vector `suite.ns`;
+* `trajerrors`: a matrix where each column corresponds to the strong error at each mesh point in time, for each number of mesh points in `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
+* `errors`: the maximum of the `trajerrors` along the trajectory;
+* `lc`: the logarithm ``\\log(C)`` of the multiplicative constant in the fitted error `CΔtᵖ`;
+* `p`: the order of the strong convergence;
+* `eps`: an estimate of the half-width of the 95% confidence interval for `p` in the least square fit as a maximum likelyhood estimate.
 """
 
 struct ConvergenceResult{T, S}
@@ -107,6 +107,9 @@ struct ConvergenceResult{T, S}
     eps::T
 end
 
+"""
+    calculate_trajerrors!(rng, trajerrors, suite)
+"""
 function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
     t0 = suite.t0
     tf = suite.tf

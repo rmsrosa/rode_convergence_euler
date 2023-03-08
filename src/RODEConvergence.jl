@@ -17,7 +17,7 @@ export FractionalBrownianMotionProcess
 export ProductProcess
 
 # solvers
-export RODEMethod, CustomUnivariateMethod, CustomMultivariateMethod, solve!
+export RODEMethod, CustomMethod, CustomUnivariateMethod, CustomMultivariateMethod, solve!
 export RandomEuler, RandomHeun
 
 # convergence calculation

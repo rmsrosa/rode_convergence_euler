@@ -22,7 +22,7 @@ RandomEuler(n::Int) = RandomEuler(Float64, n)
 RandomEuler() = RandomEuler(Float64, 0)
 
 """
-    solve!(xt, t0:, tf, x0, f, yt, method::RandomEuler)
+    solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
 
 Solve inplace, via Euler method, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` for an unknown `x_t` and a given (noise path) `y_t`, with the following arguments:
 

@@ -366,7 +366,7 @@ The noise process `noise = ProductProcess(noises...)` returned by the constructo
 
 Sample paths are obtained by populating a pre-allocated matrix `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
-The number of steps for the sample path is determined by the number of rows of the given matrix `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`.
+The number of steps for the sample path is determined by the number of rows of the given matrix `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (size(yt, 1) - 1)`.
     
 Each columns of `yt` is populated with a sample path from each univariate process in `noise`.
 """
