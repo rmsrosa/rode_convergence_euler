@@ -44,7 +44,7 @@ function f(t, x, y)
     λ = 1.0
     ϵ = 0.3
     r = 1.0
-    α = λ / 2 # critical bifurcation value is λ / 2
+    α = λ / 2
     dx = λ * (1 + ϵ * sin(y[1])) * x * (r - x) - α * y[2]
     return dx
 end
