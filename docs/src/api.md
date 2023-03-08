@@ -43,12 +43,13 @@ RandomHeun
 ```
 
 ```@docs
-CustomUnivariateMethod
+CustomMethod
 ```
 
 ```@docs
-CustomMultivariateMethod
+RODEConvergence.CustomMethod
 ```
+
 
 ## Error estimation
 
@@ -65,7 +66,15 @@ RODEConvergence.solve
 ```
 
 ```@docs
-RODEConvergence.solve!
+solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
+```
+
+```@docs
+solve!(xt, t0, tf, x0, f, yt, method::RandomHeun)
+```
+
+```@docs
+RODEConvergence.calculate_trajerrors!
 ```
 
 ```@docs
@@ -84,8 +93,4 @@ These are non-exported.
 
 ```@docs
 RODEConvergence.CompoundPoissonProcessAlt
-```
-
-```@docs
-RODEConvergence.CustomMethod
 ```

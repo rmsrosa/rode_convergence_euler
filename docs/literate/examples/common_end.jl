@@ -1,66 +1,44 @@
-# ### An illustrative sample path
-
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
-nothing # hide
-
-# 
-
-plt_noise
-
-# 
-
-plt
-
-# ### An illustrative ensemble of solutions
-
 # ### Order of convergence
 
-# With everything set up, we compute the errors:
+# With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
-nothing # hide
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 
-# 
-# 
-# The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+# Then we are ready to compute the errors:
+
+@time result = solve(rng, suite)
+
+# The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
 
-table = generate_error_table(Ns, deltas, errors, info)
+table = generate_error_table(result, info)
 
 println(table) # hide
 nothing # hide
 
 # 
 # 
-# The calculated order of convergence is given by `p`:
+# The calculated order of convergence is given by `result.p`:
 
-println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 
 # 
 # 
 # ### Plots
 # 
-# We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
+# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
-nothing # hide
-
-# 
-# One can use that to plot the figure here:
-
-plot(plt; title)
-
-# While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
-
-plot(plt)
-
-println(title)
+plot(result)
 
 # 
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
+# savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
+# nothing # hide
 
-# We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
+# For the sake of illustration, we plot a sample of an approximation of a target solution:
 
-plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
+plot(suite, ns=nsample)
+
+# We can also visualize the noise associated with this sample solution:
+
+plot(suite, shownoise=true, showapprox=false, showtarget=false)

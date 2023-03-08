@@ -15,7 +15,7 @@ More precisely, we consider the RODE
   \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 ```
-where $\{W_t\}_{t\geq 0}$ is a Wiener process.
+where $\{W_t\}_{t\geq 0}$ is a standard Wiener process.
 
 The explicit solution is
 ```math
@@ -110,126 +110,141 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables
+Then we set up some variables, starting by choosing the `Xoshiro256++` pseudo-random number generator, and setting its seed for the sake of reproducibility:
 
 ````@example 01-wiener_linearhomogeneous
 rng = Xoshiro(123)
-t0 = 0.0
-tf = 1.0
-X0law = Normal()
-y0 = 0.0
-noise = WienerProcess(t0, tf, y0)
-f(t, x, y) = y * x
-
-Ntgt = 2^16
-Ns = 2 .^ (4:14)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 1_000
 ````
 
-And add some information about the simulation:
+We set the right hand side of the equation:
+
+````@example 01-wiener_linearhomogeneous
+f(t, x, y) = y * x
+````
+
+Next we set up the time interval and the initial distribution law for the initial value problem:
+
+````@example 01-wiener_linearhomogeneous
+t0 = 0.0
+tf = 1.0
+x0law = Normal()
+````
+
+The noise as a `WienerProcess` starting at ``y_0 = 0``:
+
+````@example 01-wiener_linearhomogeneous
+y0 = 0.0
+noise = WienerProcess(t0, tf, y0)
+````
+
+The number of mesh points for the target solution, the approximations, and for a visualization of the one sample approximation:
+
+````@example 01-wiener_linearhomogeneous
+ntgt = 2^18
+ns = 2 .^ (4:10)
+nsample = ns[[1, 2, 3, 4]]
+````
+
+Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
+
+````@example 01-wiener_linearhomogeneous
+m = 1_000
+````
+
+and add some information about the simulation:
 
 ````@example 01-wiener_linearhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_wiener_linearhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 ````
 
-We define the *target* solution as described above.
+The *target* solution as described above is implemented as
 
 ````@example 01-wiener_linearhomogeneous
-target! = function (rng, xt, t0, tf, x0, f, yt)
-    Ntgt = length(yt)
-    dt = (tf - t0) / (Ntgt - 1)
-    xt[1] = x0
-    It = 0.0
-    for n in 2:Ntgt
-        It += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
-        xt[n] = x0 * exp(It)
+function target_solver!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+    axes(xt) == axes(yt) || throw(
+        DimensionMismatch("The vectors `xt` and `yt` must match indices")
+    )
+
+    n = size(xt, 1)
+    dt = (tf - t0) / (n - 1)
+    i1 = firstindex(xt)
+    xt[i1] = x0
+    integral = zero(T)
+    zscale = sqrt(dt^3 / 12)
+    for i in Iterators.drop(eachindex(xt, yt), 1)
+        integral += (yt[i] + yt[i1]) * dt / 2 + zscale * randn(rng)
+        xt[i] = x0 * exp(integral)
+        i1 = i
     end
 end
 ````
 
-### An illustrative sample path
+and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 ````@example 01-wiener_linearhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
-nothing # hide
+target = CustomUnivariateMethod(target_solver!, rng)
 ````
+
+The method for which want to estimate the rate of convergence is, naturally, the Euler method:
 
 ````@example 01-wiener_linearhomogeneous
-plt_noise
+method = RandomEuler()
 ````
-
-````@example 01-wiener_linearhomogeneous
-plt
-````
-
-### An illustrative ensemble of solutions
 
 ### Order of convergence
 
-With everything set up, we compute the errors:
+With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 01-wiener_linearhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
-nothing # hide
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
-The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+Then we are ready to compute the errors:
 
 ````@example 01-wiener_linearhomogeneous
-table = generate_error_table(Ns, deltas, errors, info)
+@time result = solve(rng, suite)
+````
+
+The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+
+````@example 01-wiener_linearhomogeneous
+table = generate_error_table(result, info)
 
 println(table) # hide
 nothing # hide
 ````
 
-The calculated order of convergence is given by `p`:
+The calculated order of convergence is given by `result.p`:
 
 ````@example 01-wiener_linearhomogeneous
-println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 ````
 
 ### Plots
 
-We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
+We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 01-wiener_linearhomogeneous
-plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
-nothing # hide
+plot(result)
 ````
 
-One can use that to plot the figure here:
-
-````@example 01-wiener_linearhomogeneous
-plot(plt; title)
-````
-
-While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
-
-````@example 01-wiener_linearhomogeneous
-plot(plt)
-
-println(title)
-````
-
-````@example 01-wiener_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
-````
 
-We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
+For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 ````@example 01-wiener_linearhomogeneous
-plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
+plot(suite, ns=nsample)
+````
+
+We can also visualize the noise associated with this sample solution:
+
+````@example 01-wiener_linearhomogeneous
+plot(suite, shownoise=true, showapprox=false, showtarget=false)
 ````
 
 ---

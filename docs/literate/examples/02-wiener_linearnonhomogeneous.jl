@@ -1,6 +1,6 @@
 # # Non-homogenous linear RODE with a Wiener process noise coefficient
 
-# Next we consider another linear equation, but in which a Wiener process noise enters as the non-homogeneous term.
+# Our second example is another linear equation, but in which a Wiener process noise enters as the non-homogeneous term.
 
 # ## The equation
 
@@ -104,48 +104,61 @@ using Random
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables
+# Then we set up some variables, as in the first example
 
 rng = Xoshiro(123)
-t0 = 0.0
-tf = 1.0
-X0law = Normal()
-y0 = 0.0
-noise = WienerProcess(t0, tf, y0)
+
 f(t, x, y) = - x + y
 
-Ntgt = 2^16
-Ns = 2 .^ (4:14)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 10_000
+t0 = 0.0
+tf = 1.0
+x0law = Normal()
+
+y0 = 0.0
+noise = WienerProcess(t0, tf, y0)
+
+ntgt = 2^16
+ns = 2 .^ (4:14)
+nsample = ns[[1, 2, 3, 4]]
+m = 1_000
 
 # And add some information about the simulation:
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_wiener_linearnonhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 
 # We define the *target* solution as described above.
 
-target! = function (rng, xt, t0, tf, x0, f, yt)
-    Ntgt = length(yt)
-    dt = (tf - t0) / (Ntgt - 1)
-    xt[1] = x0
-    It = 0.0
-    tn1 = 0.0
-    for n in 2:Ntgt
-        tn = tn1 + dt
-        It += (yt[n] - yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
-        xt[n] = exp(-tn) * (x0 - It) + yt[n]
-        tn1 = tn
+target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+    axes(xt) == axes(yt) || throw(
+        DimensionMismatch("The vectors `xt` and `yt` must match indices")
+    )
+
+    n = size(xt, 1)
+    dt = (tf - t0) / (n - 1)
+    i1 = firstindex(xt)
+    xt[i1] = x0
+    integral = zero(T)
+    ti1 = zero(T)
+    zscale = sqrt(dt^3 / 12)
+    for i in Iterators.drop(eachindex(xt, yt), 1)
+        ti = ti1 + dt
+        integral += (yt[i] - yt[i1]) * (exp(ti) - exp(ti1)) / dt +  zscale * randn(rng)
+        xt[i] = exp(-ti) * (x0 - integral) + yt[i]
+        ti1 = ti
+        i1 = i
     end
 end
+
+# and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
+
+target = CustomUnivariateMethod(target_solver!, rng)
+
+# The method for which want to estimate the rate of convergence is, naturally, the Euler method:
+
+method = RandomEuler()
 
 include(@__DIR__() * "/common_end.jl")

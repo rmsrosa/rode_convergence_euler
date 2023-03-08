@@ -11,7 +11,7 @@
 #   \left. X_t \right|_{t = 0} = X_0,
 #   \end{cases}
 # ```
-# where $\{W_t\}_{t\geq 0}$ is a Wiener process.
+# where $\{W_t\}_{t\geq 0}$ is a standard Wiener process.
 
 # The explicit solution is
 # ```math
@@ -104,45 +104,68 @@ using Random
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables
+# Then we set up some variables, starting by choosing the `Xoshiro256++` pseudo-random number generator, and setting its seed for the sake of reproducibility:
 
 rng = Xoshiro(123)
-t0 = 0.0
-tf = 1.0
-X0law = Normal()
-y0 = 0.0
-noise = WienerProcess(t0, tf, y0)
+
+# We set the right hand side of the equation:
+
 f(t, x, y) = y * x
 
-Ntgt = 2^16
-Ns = 2 .^ (4:14)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 1_000
+# Next we set up the time interval and the initial distribution law for the initial value problem:
+t0 = 0.0
+tf = 1.0
+x0law = Normal()
 
-# And add some information about the simulation:
+# The noise as a `WienerProcess` starting at ``y_0 = 0``:
+
+y0 = 0.0
+noise = WienerProcess(t0, tf, y0)
+
+# The number of mesh points for the target solution, the approximations, and for a visualization of the one sample approximation:
+
+ntgt = 2^18
+ns = 2 .^ (4:10)
+nsample = ns[[1, 2, 3, 4]]
+
+# Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
+
+m = 1_000
+
+# and add some information about the simulation:
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_wiener_linearhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 
-# We define the *target* solution as described above.
+# The *target* solution as described above is implemented as
 
-target! = function (rng, xt, t0, tf, x0, f, yt)
-    Ntgt = length(yt)
-    dt = (tf - t0) / (Ntgt - 1)
-    xt[1] = x0
-    It = 0.0
-    for n in 2:Ntgt
-        It += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
-        xt[n] = x0 * exp(It)
+function target_solver!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+    axes(xt) == axes(yt) || throw(
+        DimensionMismatch("The vectors `xt` and `yt` must match indices")
+    )
+
+    n = size(xt, 1)
+    dt = (tf - t0) / (n - 1)
+    i1 = firstindex(xt)
+    xt[i1] = x0
+    integral = zero(T)
+    zscale = sqrt(dt^3 / 12)
+    for i in Iterators.drop(eachindex(xt, yt), 1)
+        integral += (yt[i] + yt[i1]) * dt / 2 + zscale * randn(rng)
+        xt[i] = x0 * exp(integral)
+        i1 = i
     end
 end
+
+# and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
+
+target = CustomUnivariateMethod(target_solver!, rng)
+
+# The method for which want to estimate the rate of convergence is, naturally, the Euler method:
+
+method = RandomEuler()
 
 include(@__DIR__() * "/common_end.jl")

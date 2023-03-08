@@ -38,35 +38,34 @@ using RODEConvergence
 # Then we set up some variables
 
 rng = Xoshiro(123)
+
+f(t, x, y) = sin(y) * x
+
 t0 = 0.0
 tf = 1.0
-X0law = Normal()
+x0law = Normal()
+
 μ = 1.0
 σ = 0.2
 y0 = 1.0
 noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
-f(t, x, y) = sin(y) * x
 
-Ntgt = 2^18
-Ns = 2 .^ (4:9)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 1_000
+ntgt = 2^18
+ns = 2 .^ (4:9)
+nsample = ns[[1, 2, 3, 4]]
+m = 1_000
 
 # And add some information about the simulation:
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = \\sin(Y_t) X_t\$",
     noise = "a geometric Brownian motion process noise \$\\{Y_t\\}_t\$ (drift=$μ; diffusion=$σ)",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_sin_gBm_linearhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 
-# We define the *target* solution as the Euler approximation, which is to be computed with the target number `Ntgt` of mesh points:
+# We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-target! = solve_euler!
+target = RandomEuler()
+method = RandomEuler()
 
 include(@__DIR__() * "/common_end.jl")

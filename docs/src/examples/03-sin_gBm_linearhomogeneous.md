@@ -45,19 +45,22 @@ Then we set up some variables
 
 ````@example 03-sin_gBm_linearhomogeneous
 rng = Xoshiro(123)
+
+f(t, x, y) = sin(y) * x
+
 t0 = 0.0
 tf = 1.0
-X0law = Normal()
+x0law = Normal()
+
 μ = 1.0
 σ = 0.2
 y0 = 1.0
 noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
-f(t, x, y) = sin(y) * x
 
-Ntgt = 2^18
-Ns = 2 .^ (4:9)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 1_000
+ntgt = 2^18
+ns = 2 .^ (4:9)
+nsample = ns[[1, 2, 3, 4]]
+m = 1_000
 ````
 
 And add some information about the simulation:
@@ -66,94 +69,67 @@ And add some information about the simulation:
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = \\sin(Y_t) X_t\$",
     noise = "a geometric Brownian motion process noise \$\\{Y_t\\}_t\$ (drift=$μ; diffusion=$σ)",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_sin_gBm_linearhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 ````
 
-We define the *target* solution as the Euler approximation, which is to be computed with the target number `Ntgt` of mesh points:
+We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
 ````@example 03-sin_gBm_linearhomogeneous
-target! = solve_euler!
+target = RandomEuler()
+method = RandomEuler()
 ````
-
-### An illustrative sample path
-
-````@example 03-sin_gBm_linearhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
-nothing # hide
-````
-
-````@example 03-sin_gBm_linearhomogeneous
-plt_noise
-````
-
-````@example 03-sin_gBm_linearhomogeneous
-plt
-````
-
-### An illustrative ensemble of solutions
 
 ### Order of convergence
 
-With everything set up, we compute the errors:
+With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 03-sin_gBm_linearhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
-nothing # hide
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
-The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+Then we are ready to compute the errors:
 
 ````@example 03-sin_gBm_linearhomogeneous
-table = generate_error_table(Ns, deltas, errors, info)
+@time result = solve(rng, suite)
+````
+
+The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+
+````@example 03-sin_gBm_linearhomogeneous
+table = generate_error_table(result, info)
 
 println(table) # hide
 nothing # hide
 ````
 
-The calculated order of convergence is given by `p`:
+The calculated order of convergence is given by `result.p`:
 
 ````@example 03-sin_gBm_linearhomogeneous
-println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 ````
 
 ### Plots
 
-We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
+We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 03-sin_gBm_linearhomogeneous
-plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
-nothing # hide
+plot(result)
 ````
 
-One can use that to plot the figure here:
-
-````@example 03-sin_gBm_linearhomogeneous
-plot(plt; title)
-````
-
-While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
-
-````@example 03-sin_gBm_linearhomogeneous
-plot(plt)
-
-println(title)
-````
-
-````@example 03-sin_gBm_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
-````
 
-We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
+For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 ````@example 03-sin_gBm_linearhomogeneous
-plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
+plot(suite, ns=nsample)
+````
+
+We can also visualize the noise associated with this sample solution:
+
+````@example 03-sin_gBm_linearhomogeneous
+plot(suite, shownoise=true, showapprox=false, showtarget=false)
 ````
 
 ---

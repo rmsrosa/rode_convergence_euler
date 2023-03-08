@@ -4,7 +4,7 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/02-wie
 
 # Non-homogenous linear RODE with a Wiener process noise coefficient
 
-Next we consider another linear equation, but in which a Wiener process noise enters as the non-homogeneous term.
+Our second example is another linear equation, but in which a Wiener process noise enters as the non-homogeneous term.
 
 ## The equation
 
@@ -110,21 +110,24 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables
+Then we set up some variables, as in the first example
 
 ````@example 02-wiener_linearnonhomogeneous
 rng = Xoshiro(123)
-t0 = 0.0
-tf = 1.0
-X0law = Normal()
-y0 = 0.0
-noise = WienerProcess(t0, tf, y0)
+
 f(t, x, y) = - x + y
 
-Ntgt = 2^16
-Ns = 2 .^ (4:14)
-Nsample = Ns[[1, 2, 3, 4]]
-M = 10_000
+t0 = 0.0
+tf = 1.0
+x0law = Normal()
+
+y0 = 0.0
+noise = WienerProcess(t0, tf, y0)
+
+ntgt = 2^16
+ns = 2 .^ (4:14)
+nsample = ns[[1, 2, 3, 4]]
+m = 1_000
 ````
 
 And add some information about the simulation:
@@ -133,106 +136,97 @@ And add some information about the simulation:
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$",
-    tspan="\$[0, T] = [$t0, $tf]\$",
-    M = M,
-    Ntgt = Ntgt,
-    Ns = Ns,
-    filename = "order_wiener_linearnonhomogenous.png"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 ````
 
 We define the *target* solution as described above.
 
 ````@example 02-wiener_linearnonhomogeneous
-target! = function (rng, xt, t0, tf, x0, f, yt)
-    Ntgt = length(yt)
-    dt = (tf - t0) / (Ntgt - 1)
-    xt[1] = x0
-    It = 0.0
-    tn1 = 0.0
-    for n in 2:Ntgt
-        tn = tn1 + dt
-        It += (yt[n] - yt[n-1]) * (exp(tn) - exp(tn1)) / dt + randn(rng) * sqrt(dt^3 / 12)
-        xt[n] = exp(-tn) * (x0 - It) + yt[n]
-        tn1 = tn
+target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+    axes(xt) == axes(yt) || throw(
+        DimensionMismatch("The vectors `xt` and `yt` must match indices")
+    )
+
+    n = size(xt, 1)
+    dt = (tf - t0) / (n - 1)
+    i1 = firstindex(xt)
+    xt[i1] = x0
+    integral = zero(T)
+    ti1 = zero(T)
+    zscale = sqrt(dt^3 / 12)
+    for i in Iterators.drop(eachindex(xt, yt), 1)
+        ti = ti1 + dt
+        integral += (yt[i] - yt[i1]) * (exp(ti) - exp(ti1)) / dt +  zscale * randn(rng)
+        xt[i] = exp(-ti) * (x0 - integral) + yt[i]
+        ti1 = ti
+        i1 = i
     end
 end
 ````
 
-### An illustrative sample path
+and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 ````@example 02-wiener_linearnonhomogeneous
-plt, plt_noise, = plot_sample_approximations(rng, t0, tf, X0law, f, noise, target!, Ntgt, Nsample; info)
-nothing # hide
+target = CustomUnivariateMethod(target_solver!, rng)
 ````
+
+The method for which want to estimate the rate of convergence is, naturally, the Euler method:
 
 ````@example 02-wiener_linearnonhomogeneous
-plt_noise
+method = RandomEuler()
 ````
-
-````@example 02-wiener_linearnonhomogeneous
-plt
-````
-
-### An illustrative ensemble of solutions
 
 ### Order of convergence
 
-With everything set up, we compute the errors:
+With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 02-wiener_linearnonhomogeneous
-@time deltas, errors, trajerrors, lc, p = calculate_errors(rng, t0, tf, X0law, f, noise, target!, Ntgt, Ns, M)
-nothing # hide
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
-The computed strong errors are stored in `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+Then we are ready to compute the errors:
 
 ````@example 02-wiener_linearnonhomogeneous
-table = generate_error_table(Ns, deltas, errors, info)
+@time result = solve(rng, suite)
+````
+
+The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+
+````@example 02-wiener_linearnonhomogeneous
+table = generate_error_table(result, info)
 
 println(table) # hide
 nothing # hide
 ````
 
-The calculated order of convergence is given by `p`:
+The calculated order of convergence is given by `result.p`:
 
 ````@example 02-wiener_linearnonhomogeneous
-println("Order of convergence `C Δtᵖ` with p = $(round(p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 ````
 
 ### Plots
 
-We create a plot with the rate of convergence with the help of `plot_dt_vs_error`. This returns a handle for the plot and a title.
+We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 02-wiener_linearnonhomogeneous
-plt, title = plot_dt_vs_error(deltas, errors, lc, p, info)
-nothing # hide
+plot(result)
 ````
 
-One can use that to plot the figure here:
-
-````@example 02-wiener_linearnonhomogeneous
-plot(plt; title)
-````
-
-While for the article, you plot a figure without the title and use `title` to create the caption for the latex source:
-
-````@example 02-wiener_linearnonhomogeneous
-plot(plt)
-
-println(title)
-````
-
-````@example 02-wiener_linearnonhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
 nothing # hide
-````
 
-We can also plot the time-evolution of the strong errors along the time mesh, just for the sake of illustration:
+For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 ````@example 02-wiener_linearnonhomogeneous
-plot_t_vs_errors(Ns, deltas, trajerrors, t0, tf)
+plot(suite, ns=nsample)
+````
+
+We can also visualize the noise associated with this sample solution:
+
+````@example 02-wiener_linearnonhomogeneous
+plot(suite, shownoise=true, showapprox=false, showtarget=false)
 ````
 
 ---
