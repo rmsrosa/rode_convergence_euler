@@ -16,7 +16,7 @@
 # For the sake of simplicity, we fix $\lambda = 10.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.05$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, so we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
 # More precisely, we choose a Beta distribution as the step law, with mean a little below $1/2$, so it stays mostly below the critical value, but often above it.
 #
-# The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.2$ and initial value $y_0 = 0.1$.
+# The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.8$ and initial value $y_0 = 0.1$.
 #
 # The point Poisson step process
 #
@@ -57,7 +57,7 @@ tf = 1.0
 x0law = Beta(α, β)
 
 μ = 1.0
-σ = 0.2
+σ = 0.8
 y0 = 0.1
 noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
