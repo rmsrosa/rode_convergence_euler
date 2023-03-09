@@ -34,7 +34,11 @@ If `noise` is a `ProductProcess`, onde can choose to display one or more specifi
             linecolor --> 2
             linewidth --> 1
             linealpha --> noisealpha
-            label --> "noise"
+            if noiseidxs == (:)
+                noiseidxs = 1:length(noise)
+            end
+            label --> noise isa UnivariateProcess ?
+            "noise" : reshape(["noise $i" for i in idxs], 1, :)
             y = noise isa UnivariateProcess ?
                     yt : view(yt, :, noiseidxs)
             range(t0, tf, length=ntgt), y
