@@ -42,6 +42,12 @@ The noise process `noise = WienerProcess(t0, tf, y0)` returned by the constructo
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
+
+Since, by definition, ``\\Delta W_t \\sim \\mathcal{N}(0, t)``, a sample path is constructed recursively by solving the recursive relation
+```math
+W_{t_i} = W_{t_{i-1}} + \\sqrt{dt} z_i, \\qquad i = 1, \\ldots,
+```
+where at each step `z_i` is drawn from a standard Normal distribution.
 """
 struct WienerProcess{T} <: UnivariateProcess{T}
     t0::T
@@ -50,14 +56,65 @@ struct WienerProcess{T} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::WienerProcess{T}, yt::AbstractVector{T}) where {T}
-    N = length(yt)
-    dt = (noise.tf - noise.t0) / (N - 1)
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
     sqrtdt = sqrt(dt)
-    n1 = firstindex(yt)
-    yt[n1] = noise.y0
-    for n in Iterators.drop(eachindex(yt), 1)
-        yt[n] = yt[n1] + sqrtdt * randn(rng)
-        n1 = n
+    i1 = firstindex(yt)
+    yt[i1] = noise.y0
+    for i in Iterators.drop(eachindex(yt), 1)
+        yt[i] = yt[i1] + sqrtdt * randn(rng)
+        i1 = i
+    end
+end
+
+"""
+    OrnsteinUhlenbeckProcess(t0, tf, ν, σ, y0)
+
+Construct an Ornstein Uhlenbeck process ``O_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `-θ` and diffusion `σ`, as defined by the equation
+```math
+\\mathrm{d}O_t = -\\nu O_t \\;\\mathrm{d}t + \\sigma \\;\\mathrm{d}W_t.
+```
+
+The solution is
+```math
+O_t = e^{-\\nu t}O_0 + \\sigma \\int_0^t e^{-\\nu (t - s)}\\;\\mathrm{d}W_s.
+```
+
+The noise process `noise = OrnsteinUhlenbeckProcess(t0, tf, μ, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
+    
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
+
+Notice the integral term is a Normal random variable with zero mean and variance
+```math
+\\mathbb{E}\\left[ \\left( \\sigma \\int_0^t e^{-\\nu (t - s)} \\;\\mathrm{d}W_s\\right)^2\\right] = \\frac{\\sigma^2}{2\\nu}\\left( 1 - e^{-2\\nu t} \\right).
+```
+
+Thus, a sample path is constructed with exact distribution by solving the recursion relation
+```math
+O_{t_i} = e^{-\\nu \\Delta t} O_{t_{i-1}} + \\frac{\\sigma}{\\sqrt{2\\nu}} \\sqrt{1 - e^{-2\\nu \\Delta t}} z_i, \\qquad i = 1, \\ldots,
+```
+where at each time step `z_i` is drawn from a standard Normal distribution.
+"""
+struct OrnsteinUhlenbeckProcess{T} <: UnivariateProcess{T}
+    t0::T
+    tf::T
+    y0::T
+    ν::T
+    σ::T
+end
+
+function Random.rand!(rng::AbstractRNG, noise::OrnsteinUhlenbeckProcess{T}, yt::AbstractVector{T}) where {T}
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    a = exp(-noise.ν * dt)
+    b = noise.σ * √((1 - a ^ 2) / (2 * noise.ν))
+    i1 = firstindex(yt)
+    yt[i1] = noise.y0
+    for i in Iterators.drop(eachindex(yt), 1)
+        yt[i] = a * yt[i1] + b * randn(rng)
+        i1 = i
     end
 end
 
@@ -84,15 +141,15 @@ struct GeometricBrownianMotionProcess{T} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::GeometricBrownianMotionProcess{T}, yt::AbstractVector{T}) where {T}
-    N = length(yt)
-    dt = (noise.tf - noise.t0) / (N - 1)
-    sqrtdt = sqrt(dt)
-    a = (noise.μ + noise.σ^2/2)
-    n1 = firstindex(yt)
-    yt[n1] = noise.y0
-    for n in Iterators.drop(eachindex(yt), 1)
-        yt[n] = yt[n1] * exp(a * dt + noise.σ * sqrtdt * randn(rng))
-        n1 = n
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    a = (noise.μ + noise.σ^2/2) * dt
+    b = noise.σ * sqrt(dt)
+    i1 = firstindex(yt)
+    yt[i1] = noise.y0
+    for i in Iterators.drop(eachindex(yt), 1)
+        yt[i] = yt[i1] * exp(a + b * randn(rng))
+        i1 = i
     end
 end
 
@@ -125,18 +182,18 @@ struct CompoundPoissonProcess{T, G} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T, G}, yt::AbstractVector{T}) where {T, G}
-    N = length(yt)
-    dt = (noise.tf - noise.t0) / (N - 1)
-    dN = Poisson(noise.λ * dt)
-    n1 = firstindex(yt)
-    yt[n1] = zero(T)
-    for n in Iterators.drop(eachindex(yt), 1)
-        Ni = rand(rng, dN)
-        yt[n] = yt[n1]
-        for _ in 1:Ni
-            yt[n] += rand(rng, noise.dylaw)
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    dnlaw = Poisson(noise.λ * dt)
+    i1 = firstindex(yt)
+    yt[i1] = zero(T)
+    for i in Iterators.drop(eachindex(yt), 1)
+        numi = rand(rng, dnlaw)
+        yt[i] = yt[i1]
+        for _ in 1:numi
+            yt[i] += rand(rng, noise.dylaw)
         end
-        n1 = n
+        i1 = i
     end
 end
 
@@ -161,18 +218,18 @@ struct CompoundPoissonProcessAlt{T, G} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcessAlt{T, G}, yt::Vector{T}) where {T, G}
-    N = length(yt)
-    dt = (tf - t0) / (N - 1)
+    n = length(yt)
+    dt = (tf - t0) / (n - 1)
     n1 = firstindex(yt)
     yt[n1] = zero(T)
-    while ni < N
+    while ni < n
         Yn1 = yt[n1]
         ni += 1
         yt[i] = Yn1
         r = - log(rand(rng)) / noise.λ
         while r < dt
             yt[ni] += rand(rng, noise.dylaw)
-            r += -log(rand(rng)) / noise.λ
+            r -= log(rand(rng)) / noise.λ
         end
     end
 end
@@ -200,15 +257,15 @@ struct PoissonStepProcess{T, G} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::PoissonStepProcess{T, G}, yt::AbstractVector{T}) where {T, G}
-    N = length(yt)
-    dt = (noise.tf - noise.t0) / (N - 1)
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
     dnlaw = Poisson(noise.λ * dt)
-    n1 = firstindex(yt)
-    yt[n1] = zero(T)
-    for n in Iterators.drop(eachindex(yt), 1)
-        Ni = rand(rng, dnlaw)
-        yt[n] = iszero(Ni) ? yt[n1] : rand(rng, noise.steplaw)
-        n1 = n
+    i1 = firstindex(yt)
+    yt[i1] = zero(T)
+    for i in Iterators.drop(eachindex(yt), 1)
+        numi = rand(rng, dnlaw)
+        yt[i] = iszero(numi) ? yt[i1] : rand(rng, noise.steplaw)
+        i1 = i
     end
 end
 
@@ -235,8 +292,8 @@ struct TransportProcess{T, F, G} <: UnivariateProcess{T}
 end
 
 function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::AbstractVector{T}) where {T, F, G}
-    N = length(yt)
-    dt = (noise.tf - noise.t0) / (N - 1)
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
     for i in eachindex(noise.rv)
         @inbounds noise.rv[i] = rand(rng, noise.ylaw)
     end
@@ -247,7 +304,6 @@ function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::Ab
         @inbounds yt[j] = noise.f(t, noise.rv)
     end
 end
-
 
 """
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, len; flags=FFTW.MEASURE)

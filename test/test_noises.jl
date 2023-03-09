@@ -25,6 +25,30 @@
         @test var(ythf) ≈ tf/2 (atol = 0.1)
         @test mean(ytf) ≈ y0 (atol = 0.1)
         @test var(ytf) ≈ tf (atol = 0.1)
+        @test cov(ytf, ythf) ≈ tf/2 (atol = 0.02)
+    end
+
+    @testset "OU process" begin
+        rng = Xoshiro(123)
+        y0 = 0.4
+        ν = 0.3
+        σ = 0.2
+        noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
+        
+        @test eltype(noise) == Float64
+        @test_nowarn rand!(rng, noise, yt)
+        @test (@ballocated $rand!($rng, $noise, $yt)) == 0
+        @test_nowarn (@inferred rand!(rng, noise, yt))
+
+        for mi in 1:m
+            rand!(rng, noise, yt)
+            ythf[mi] = yt[div(n, 2)]
+            ytf[mi] = last(yt)
+        end
+        @test mean(ythf) ≈ y0 * exp( -ν * (tf / 2)) (atol = 0.1)
+        @test var(ythf) ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf / 2) ) (atol = 0.1)
+        @test mean(ytf) ≈ y0 * exp( -ν * tf) (atol = 0.1)
+        @test var(ytf) ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf) ) (atol = 0.1)
     end
 
     @testset "gBm process" begin
