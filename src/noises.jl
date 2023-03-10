@@ -41,7 +41,7 @@ Generate sample paths of the `noise` process.
 
 Populate the vector or matrix `yt` with a sample path of the process `noise`, with random numbers generated from `rng`. See each noise type for details.
 """
-function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::VecOrMat{T}) where {T}
+function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::S) where {T, S}
     throw(
         ArgumentError(
             "`rand!(rng, noise, yt)` not implemente for `noise` of type $(typeof(noise))"

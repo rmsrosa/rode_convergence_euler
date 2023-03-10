@@ -16,8 +16,6 @@ COMMON_SCRIPT = "common_end.jl"
 
 mkpath(GENERATED_DIR)
 
-append_common_script(content) = replace(content, """include(@__DIR__() * "/common_end.jl")""" => read(joinpath(LITERATE_DIR, COMMON_SCRIPT), String))
-
 generated_examples = String[]
 
 for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir(LITERATE_DIR))
@@ -25,8 +23,7 @@ for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir(LITERATE
         joinpath(LITERATE_DIR, fn),
         GENERATED_DIR,
         documenter=true,
-        execute=false,
-        preprocess = append_common_script,
+        execute=true,
         repo_root_url = "https://github.com/rmsrosa/rode_conv_em"
     )
     push!(generated_examples, replace(joinpath(GENERATED_RELATIVE_DIR, fn), ".jl" => ".md"))

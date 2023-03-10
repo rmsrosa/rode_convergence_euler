@@ -7,7 +7,7 @@ The noise, the target solution, and the approximations can be displayed or not, 
 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
-If `suite` refers to a system of equations (i.e. with `x0law` a ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyworkd `idxs`, e.g. `idxs=2`, or `idxs=1:3`).
+If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `idxs`, e.g. `idxs=2`, or `idxs=1:3`, or even the sum of all the coordinates, with `idxs=:sum`).
 
 If `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents by specifying the keyword `noiseidxs`, e.g. `noiseidxs=1`, or `noiseidexs=2:3`.
 """
