@@ -3,16 +3,31 @@
 
 Abstract super type for every noise process, with parameter `N` being either `Univariate` or `Multivariate` and `T` being the eltype of the process.
     
-The following aliaes are also defined:
+The following aliases are also defined:
 
-* UnivariateProcess{T} = AbstractProcess{T, Univariate}
-* MultivariateProcess{T} = AbstractProcess{T, Multivariate}
+* `UnivariateProcess{T} = AbstractProcess{T, Univariate}`
+* `MultivariateProcess{T} = AbstractProcess{T, Multivariate}`
 
 The parameter types are borrowed from Distributions.Univariate and Distributions.Multivariate.
 """
 abstract type AbstractProcess{T, N} end
 
+"""
+    UnivariateProcess{T}
+
+Supertype for univariate noise processes.
+
+Alias for `AbstractProcess{T, Univariate}`.
+"""
 const UnivariateProcess{T} = AbstractProcess{T, Univariate} where {T}
+
+"""
+    MultivariateProcess{T}
+
+Supertype for multivariate noise processes.
+
+Alias for `AbstractProcess{T, Multivariate}`.
+"""
 const MultivariateProcess{T} = AbstractProcess{T, Multivariate} where {T}
 
 Base.eltype(::AbstractProcess{T}) where {T} = T
@@ -20,11 +35,13 @@ Base.eltype(::AbstractProcess{T}) where {T} = T
 Base.length(noise::UnivariateProcess) = 1
 
 """
-    rand!(::AbstractRNG, noise::AbstractProcess{T}, yt::T)
+    rand!(rng::AbstractRNG, noise::AbstractProcess{T}, yt::VecOrMat{T})
+
+Generate sample paths of the `noise` process.
 
 Populate the vector or matrix `yt` with a sample path of the process `noise`, with random numbers generated from `rng`. See each noise type for details.
 """
-function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::T) where {T} 
+function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::VecOrMat{T}) where {T}
     throw(
         ArgumentError(
             "`rand!(rng, noise, yt)` not implemente for `noise` of type $(typeof(noise))"

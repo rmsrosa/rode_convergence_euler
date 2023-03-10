@@ -15,8 +15,8 @@ The data comprises of the following:
 * the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
 * the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
 * the univariate or multivariate process `noise` for the noise term ``Y_t``;
-* the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically [`EulerMethod`](@ref) with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution [`CustomMethod`](@ref) with an exact distribution of the possible solutions conditioned to the already computed noise points;
-* the `method` to approximate the solution, typically the [`EulerMethod`](@ref), also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
+* the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically `EulerMethod()` with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution `CustomMethod() with an exact distribution of the possible solutions conditioned to the already computed noise points;
+* the `method` to approximate the solution, typically the `EulerMethod()`, also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
 * the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
 * the number `m` of sample paths to be computed for estimating the strong error via Monte Carlo method.
@@ -85,13 +85,13 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
 end
 
 """
-ConvergenceResult
+    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, errors::Vector{T}, lc::T, p::T,eps::T) where {T, S}
 
 Stores the result of `solve(rng, suite)` with fields
 * `suite`: the `ConvergenceSuite` which is to be solved for;
 * `deltas`: the time steps associated with the number of mesh points in the vector `suite.ns`;
-* `trajerrors`: a matrix where each column corresponds to the strong error at each mesh point in time, for each number of mesh points in `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
-* `errors`: the maximum of the `trajerrors` along the trajectory;
+* `trajerrors`: a matrix where each column corresponds to the strong error, along the trajectory, at each mesh resolution determined by `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
+* `errors`: the maximum, along the trajectory, of the `trajerrors`;
 * `lc`: the logarithm ``\\log(C)`` of the multiplicative constant in the fitted error `CΔtᵖ`;
 * `p`: the order of the strong convergence;
 * `eps`: an estimate of the half-width of the 95% confidence interval for `p` in the least square fit as a maximum likelyhood estimate.
@@ -197,7 +197,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     logerrors = log.(errors)
     lc, p =  vandermonde \ logerrors
 
-    # uncertainty in `p` ? 95% confidence interval (p - eps, p + eps) where
+    # uncertainty in `p`: 95% confidence interval (p - eps, p + eps) where
 
     standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
     eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]

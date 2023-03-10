@@ -11,6 +11,8 @@ If `suite` refers to a system of equations (i.e. with `x0law` a ContinuousMultiv
 
 If `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents by specifying the keyword `noiseidxs`, e.g. `noiseidxs=1`, or `noiseidexs=2:3`.
 """
+plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
+
 @recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=:, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
@@ -39,8 +41,12 @@ If `noise` is a `ProductProcess`, onde can choose to display one or more specifi
             end
             label --> noise isa UnivariateProcess ?
             "noise" : reshape(["noise $i" for i in idxs], 1, :)
-            y = noise isa UnivariateProcess ?
-                    yt : view(yt, :, noiseidxs)
+            y = ( noise isa UnivariateProcess || 
+                noiseidxs == (:) ) ?
+                yt :
+                noiseidxs == :sum ?
+                sum(yt, dims=2) :
+                view(yt, :, noiseidxs)
             range(t0, tf, length=ntgt), y
         end
     end
@@ -95,6 +101,8 @@ Plot the convergence estimate in a log-log scale (time step vs strong error) bas
 
 A scatter plot for the `results.errors` and a line plot from the fitted `errors ≈ C Δtᵖ`, where `C = exp(lc)`, with `Δt` in `results.deltas`, `lc = results.lc`, and `p = results.p`.
 """
+plot_convergence(results::ConvergenceResult) = plot(results)
+
 @recipe function plot(results::ConvergenceResult)
     deltas = results.deltas
     lc = results.lc

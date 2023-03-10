@@ -1,7 +1,7 @@
 """
     RandomEuler(T::DataType=Float64, n::Int=0)
 
-Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method (see [solve!(xt, t0, tf, x0, f::F, yt::AbstractVector{T}, ::RandomEuler))](@ref))..
+Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method, solved by `solve!(xt, t0, tf, x0, f::F, yt::AbstractVector{T}, ::RandomEuler))]`
 
 Set `n` to `0` for solving a scalar equation and set `n` to the length of the system (e.g. the length of the initial condition).
 """
@@ -21,22 +21,6 @@ RandomEuler(T::DataType) = RandomEuler(T, 0)
 RandomEuler(n::Int) = RandomEuler(Float64, n)
 RandomEuler() = RandomEuler(Float64, 0)
 
-"""
-    solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
-
-Solve inplace, via Euler method, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` for an unknown `x_t` and a given (noise path) `y_t`, with the following arguments:
-
-* a function `f(t, x, y)`, if `x` is a scalar, or `f(dx, t, x, y)`, if `x` is a vector;
-* a scalar or vector initial condition `x0`;
-* a time interval `t0` to `tf`;
-* a sample path `yt` of a "noise", either a vector (for scalar noise) or a matrix (for vectorial noise).
-
-The values of `xt` are updated with the computed solution values.
-
-The time step is obtained from the length `n` of the vector `xt` via `dt = (tf - t0) / (n - 1)`.
-
-The noise `yt` should be of the same (row) length as `xt`.
-"""
 function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, ::RandomEuler{T, Univariate}) where {T, F}
     # scalar solution, scalar noise
     axes(xt) == axes(yt) || throw(

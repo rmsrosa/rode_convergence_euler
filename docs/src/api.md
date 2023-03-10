@@ -9,6 +9,10 @@ WienerProcess
 ```
 
 ```@docs
+OrnsteinUhlenbeckProcess
+```
+
+```@docs
 GeometricBrownianMotionProcess
 ```
 
@@ -32,6 +36,18 @@ FractionalBrownianMotionProcess
 ProductProcess
 ```
 
+```@docs
+RODEConvergence.UnivariateProcess{T}
+```
+
+```@docs
+RODEConvergence.MultivariateProcess{T}
+```
+
+```@docs
+RODEConvergence.rand!
+```
+
 ## Methods
 
 ```@docs
@@ -45,7 +61,6 @@ RandomHeun
 ```@docs
 RODEConvergence.CustomMethod
 ```
-
 
 ## Error estimation
 
@@ -62,22 +77,22 @@ RODEConvergence.solve
 ```
 
 ```@docs
-RODEConvergence.solve!(xt, t0, tf, x0, f, yt, method::RandomEuler)
-```
-
-```@docs
-RODEConvergence.solve!(xt, t0, tf, x0, f, yt, method::RandomHeun)
+RODEConvergence.solve!
 ```
 
 ```@docs
 RODEConvergence.calculate_trajerrors!
 ```
 
+## Output
+
 ```@docs
-calculate_trajerrors!
+RODEConvergence.plot_suite
 ```
 
-## Output
+```@docs
+RODEConvergence.plot_convergence
+```
 
 ```@docs
 generate_error_table
@@ -85,7 +100,13 @@ generate_error_table
 
 ## Extras
 
-These are non-exported.
+```@docs
+AbstractProcess
+```
+
+```@docs
+RODEConvergence.RODEMethod
+```
 
 ```@docs
 RODEConvergence.CompoundPoissonProcessAlt

@@ -2,9 +2,9 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-kanaitajimi.jl"
 ```
 
-# Kanai-Tajimi Earthquake model
+# Modified Kanai-Tajimi earthquake model
 
-Now we consider a single-storey Kanai-Tajimi Earthquake model.
+Now we consider an example based on the single-storey Kanai-Tajimi Earthquake model. The model uses a white noise source of groundshake excitations driving a mechanical structure. This can be turned into a Random ODE by means of an Orstein-Uhlenbeck process. Similar models use a transport process exciting a few specific frequencies. The white noise enters the stochastic equation as an additive noise and in this case the order of convergence is known to be of first order. On the other hand, this particular transport process also leads to a first order convergence since the sample paths are smooth. Since the main point is not the model itself but rather the convergence even for rough noises, we modify the problem a bit and use a geometric Brownian motion process, which is a multiplicative noise, together with a transport process with Hölder continuous sample paths. Our results show that we still get the order 1 convergence, which is illustrated in the simulations performed here.
 
 ## The equation
 
@@ -40,15 +40,15 @@ tf = 1.0
 
 x0law = MvNormal(zeros(2), I(2))
 
-μ = 1.0
+μ = -1.0
 σ = 0.8
-y0 = 0.1
+y0 = 1.0
 noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ) # It should actually be an Orstein-Uhlenbeck, but apparently I haven't implemented it yet
 
 α = 2.0
 β = 15.0
 ylaw = Beta(α, β)
-nr = 25
+nr = 12
 g(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
 noise2 = TransportProcess(t0, tf, ylaw, g, nr)
 
@@ -79,7 +79,7 @@ method = RandomEuler(length(x0law))
 
 ### Order of convergence
 
-With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
+With all the parameters set up, we build the convergence suite:
 
 ````@example 05-kanaitajimi
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
@@ -123,10 +123,12 @@ For the sake of illustration, we plot a sample of an approximation of a target s
 plot(suite, ns=nsample)
 ````
 
-We can also visualize the noise associated with this sample solution:
+We can also visualize the noise separate or combined:
 
 ````@example 05-kanaitajimi
 plot(suite, shownoise=true, showapprox=false, showtarget=false)
+
+plot(suite, shownoise=true, showapprox=false, showtarget=false, noiseidxs = :sum)
 ````
 
 ---
