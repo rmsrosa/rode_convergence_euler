@@ -2,9 +2,15 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-kanaitajimi.jl"
 ```
 
-# Modified Kanai-Tajimi earthquake model
+# Earthquake model
 
-Now we consider an example based on the single-storey Kanai-Tajimi Earthquake model. The model uses a white noise source of groundshake excitations driving a mechanical structure. This can be turned into a Random ODE by means of an Orstein-Uhlenbeck process. Similar models use a transport process exciting a few specific frequencies. The white noise enters the stochastic equation as an additive noise and in this case the order of convergence is known to be of first order. On the other hand, this particular transport process also leads to a first order convergence since the sample paths are smooth. Since the main point is not the model itself but rather the convergence even for rough noises, we modify the problem a bit and use a geometric Brownian motion process, which is a multiplicative noise, together with a transport process with Hölder continuous sample paths. Our results show that we still get the order 1 convergence, which is illustrated in the simulations performed here.
+Now we consider a mechanical structure problem under ground-shaking excitations, motivated by Earthquake models.
+
+Classical models use a white noise source of groundshaking excitations driving a mechanical structure, leading to a stochastic differential equations. This can be turned into a Random ODE by means of an Orstein-Uhlenbeck process. Other models use a colored noise or a transport process exciting a few specific frequencies.
+
+The white noise enters the stochastic equation as an additive noise and in this case the order of convergence is known to be of first order. Similarly for the colored noisees. The typical transport process also leads to a first order convergence since the sample paths are smooth.
+
+Here, since the main point is not the model itself but rather the convergence even for rough noises, we modify the problem a bit and use a geometric Brownian motion process, which is a multiplicative noise, together with a transport process with Hölder continuous sample paths. Our results show that we still get the order 1 convergence, which is illustrated in the simulations performed here.
 
 ## The equation
 

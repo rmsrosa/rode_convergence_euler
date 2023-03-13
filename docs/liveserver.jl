@@ -34,4 +34,5 @@ LiveServer.servedocs(;
         # which then triggers a new run of make.jl etc.
         joinpath(REPO_ROOT, "docs/src/examples"),
     ],
+    literate=joinpath(REPO_ROOT, "docs/literate/examples")
 )
