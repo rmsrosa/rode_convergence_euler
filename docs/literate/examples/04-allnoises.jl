@@ -7,7 +7,7 @@
 # More precisely, we consider the RODE
 # ```math
 #   \begin{cases}
-#     \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
+#     \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \|\mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
 #   \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
 #   \end{cases}
 # ```
@@ -30,7 +30,7 @@ using RODEConvergence
 
 rng = Xoshiro(123)
 
-f!(dx, t, x, y) = (dx .= .- y .* x .+ sum(y))
+f!(dx, t, x, y) = (dx .= .- sum(abs2, y) .* x .+ y)
 
 t0 = 0.0
 tf = 1.0
@@ -114,18 +114,17 @@ plot(result)
 
 # 
 
-# savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-# nothing # hide
+## savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
+## nothing # hide
 
 # For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 plot(suite, ns=nsample)
 
-# We can also visualize the noise associated with this sample solution:
+# We can also visualize the noise associated with this sample solution, both individually
 
 plot(suite, xshow=false, yshow=true)
 
-#
+# and combined into a sum
 
 plot(suite, xshow=false, yshow=:sum)
-

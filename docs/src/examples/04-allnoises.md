@@ -11,7 +11,7 @@ This time we consider a linear system of equations with a noise that combines al
 More precisely, we consider the RODE
 ```math
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
+    \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \|\mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
   \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
   \end{cases}
 ```
@@ -37,7 +37,7 @@ Then we set up some variables, as in the first example
 ````@example 04-allnoises
 rng = Xoshiro(123)
 
-f!(dx, t, x, y) = (dx .= .- y .* x .+ sum(y))
+f!(dx, t, x, y) = (dx .= .- sum(abs2, y) .* x .+ y)
 
 t0 = 0.0
 tf = 1.0
@@ -128,8 +128,10 @@ We create a plot with the rate of convergence with the help of a plot recipe for
 plot(result)
 ````
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
+````@example 04-allnoises
+# savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
+# nothing # hide
+````
 
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 
@@ -137,11 +139,13 @@ For the sake of illustration, we plot a sample of an approximation of a target s
 plot(suite, ns=nsample)
 ````
 
-We can also visualize the noise associated with this sample solution:
+We can also visualize the noise associated with this sample solution, both individually
 
 ````@example 04-allnoises
 plot(suite, xshow=false, yshow=true)
 ````
+
+and combined into a sum
 
 ````@example 04-allnoises
 plot(suite, xshow=false, yshow=:sum)
