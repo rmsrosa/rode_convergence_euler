@@ -13,7 +13,7 @@ If `noise` is a `ProductProcess`, onde can choose to display one or more specifi
 """
 plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
-@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=:, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=:, xapply=idxs, yapply=noiseidxs, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
@@ -30,6 +30,11 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     xt = suite.xt
     xnt = suite.xnt
 
+    xapply == (:) && ( xapply = eachindex(eachcol(xt)) )
+    xapply isa Int && ( xapply = xapply:xapply )
+    yapply == (:) && ( yapply = eachindex(eachcol(yt)) )
+    yapply isa Int && ( yapply = yapply:yapply )
+
     # draw noise
     if shownoise == true
         @series begin
@@ -41,12 +46,11 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
             end
             label --> noise isa UnivariateProcess ?
             "noise" : reshape(["noise $i" for i in idxs], 1, :)
-            y = ( noise isa UnivariateProcess || 
-                noiseidxs == (:) ) ?
-                yt :
-                noiseidxs == :sum ?
+            y = yapply isa Function ?
+                map(yapply, eachrow(yt)) :
+                yapply == :sum ?
                 sum(yt, dims=2) :
-                view(yt, :, noiseidxs)
+                view(yt, :, yapply)
             range(t0, tf, length=ntgt), y
         end
     end
@@ -74,8 +78,11 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 markershape --> :auto
                 markercolor --> i + 2
                 label --> "n=$nsi"
-                x = x0law isa ContinuousUnivariateDistribution ?
-                    view(xnt, 1:nsi) : view(xnt, 1:nsi, idxs)
+                x = xapply isa Function ?
+                    map(xapply, eachrow(view(xnt, 1:nsi, :))) :
+                    xapply == :sum ?
+                    sum(view(xnt, 1:nsi, :), dims=2) :
+                    view(xnt, 1:nsi, xapply)
                 range(t0, tf, length=nsi), x
             end
         end
@@ -87,8 +94,11 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
             linecolor --> 1
             linewidth --> 2
             label --> "target"
-            x = x0law isa ContinuousUnivariateDistribution ?
-                xt : view(xt, :, idxs)
+            x = xapply isa Function ?
+                map(xapply, eachrow(xt)) :
+                xapply == :sum ?
+                sum(xt, dims=2) :
+                view(xt, :, xapply)
             range(t0, tf, length=ntgt), x
         end
     end
