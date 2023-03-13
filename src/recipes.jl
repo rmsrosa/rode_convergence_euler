@@ -7,7 +7,7 @@ The noise, the target solution, and the approximations can be displayed or not, 
 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
-If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
+If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or the Euclidian norm, if `xshow=:norm`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
 
 Similary, if `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents, or combinations of them, by specifying the keyword `yshow` in the same way as for `xshow` just described.
 """
@@ -15,7 +15,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
 @recipe function plot(suite::ConvergenceSuite; ns = suite.ns, xshow=1, yshow=false, noisealpha=nothing)
 
-    # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
+    # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` (from the last sample path of the Monte-Carlo simulation) and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
     xlabel := "\$t\$"
     ylabel := "\$x\$"
@@ -40,14 +40,24 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
             noisealpha = ( xshow === nothing || xshow === false ) ? 1.0 : 0.4
         end
         @series begin
+            linestyle --> :auto
             linecolor --> 2
             linewidth --> 1
             linealpha --> noisealpha
-            label --> "noise"
+            noiselabel = (yshow isa Function || noise isa UnivariateProcess ) ?
+                "noise" :
+                yshow == :sum ?
+                "sum of noises" :
+                yshow == :norm ?
+                "l2-norm noises" :
+                reshape([string(nameof(typeof(pr))) for pr in noise.processes], 1, :)
+            label --> noiselabel
             y = yshow isa Function ?
                 map(yshow, eachrow(yt)) :
                 yshow == :sum ?
                 sum(yt, dims=2) :
+                yshow == :norm ?
+                map(norm, eachrow(yt)) :
                 view(yt, :, yshow)
             range(t0, tf, length=ntgt), y
         end
@@ -80,6 +90,8 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                     map(xshow, eachrow(view(xnt, 1:nsi, :))) :
                     xshow == :sum ?
                     sum(view(xnt, 1:nsi, :), dims=2) :
+                    xshow == :norm ?
+                    map(norm, eachrow(view(xnt, 1:nsi, :))) :
                     view(xnt, 1:nsi, xshow)
                 range(t0, tf, length=nsi), x
             end
@@ -91,11 +103,20 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
         @series begin
             linecolor --> 1
             linewidth --> 2
-            label --> "target"
+            sollabel = (xshow isa Function || x0law isa ContinuousUnivariateDistribution ) ?
+                "target" :
+                xshow == :sum ?
+                "sum of target coordinates" :
+                xshow == :norm ?
+                "l2-norm of target" :
+                reshape(["target $i" for i in 1:length(x0law)], 1, :)
+            label --> sollabel
             x = xshow isa Function ?
                 map(xshow, eachrow(xt)) :
                 xshow == :sum ?
                 sum(xt, dims=2) :
+                xshow == :norm ?
+                map(norm, eachrow(xt)) :
                 view(xt, :, xshow)
             range(t0, tf, length=ntgt), x
         end
