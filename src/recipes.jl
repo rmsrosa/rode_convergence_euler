@@ -1,19 +1,19 @@
 """
-    plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=1, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+    plot(suite::ConvergenceSuite; ns = suite.ns, xshow=true, yshow=false, noisealpha=nothing)
 
-Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or by an alternate keyword `ns` with a vector of mesh point numbers.
+Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or as given by the keyword `ns` as a vector of integers with the desired numbers of mesh points.
 
-The noise, the target solution, and the approximations can be displayed or not, according to the keywords `shownoise=false`, `showtarget=true`, `showapprox=true` being true or not.
+The noise, the target solution, and the approximations can be displayed or not, according to the keywords `xshow`, `yshow` and `ns`. If any of them is set to `false` or `nothing`, then the corresponding series is not showed.
 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
-If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `idxs`, e.g. `idxs=2`, or `idxs=1:3`, or even the sum of all the coordinates, with `idxs=:sum`).
+If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
 
-If `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents by specifying the keyword `noiseidxs`, e.g. `noiseidxs=1`, or `noiseidexs=2:3`.
+Similary, if `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents, or combinations of them, by specifying the keyword `yshow` in the same way as for `xshow` just described.
 """
 plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
-@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, shownoise=false, showtarget=true, showapprox=true, idxs=1, noiseidxs=:, xapply=idxs, yapply=noiseidxs, noisealpha=((showtarget || showapprox) ? 0.4 : 1.0))
+@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, xshow=1, yshow=false, noisealpha=nothing)
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
@@ -30,33 +30,31 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     xt = suite.xt
     xnt = suite.xnt
 
-    xapply == (:) && ( xapply = eachindex(eachcol(xt)) )
-    xapply isa Int && ( xapply = xapply:xapply )
-    yapply == (:) && ( yapply = eachindex(eachcol(yt)) )
-    yapply isa Int && ( yapply = yapply:yapply )
+    
+    xshow = (xshow == (:) || xshow === true ) ? eachindex(eachcol(xt)) : xshow
+    yshow = (yshow == (:) || yshow === true ) ? eachindex(eachcol(yt)) : yshow
 
     # draw noise
-    if shownoise == true
+    if ( yshow !== nothing && yshow !== false )
+        if noisealpha === nothing
+            noisealpha = ( xshow === nothing || xshow === false ) ? 1.0 : 0.4
+        end
         @series begin
             linecolor --> 2
             linewidth --> 1
             linealpha --> noisealpha
-            if noiseidxs == (:)
-                noiseidxs = 1:length(noise)
-            end
-            label --> noise isa UnivariateProcess ?
-            "noise" : reshape(["noise $i" for i in idxs], 1, :)
-            y = yapply isa Function ?
-                map(yapply, eachrow(yt)) :
-                yapply == :sum ?
+            label --> "noise"
+            y = yshow isa Function ?
+                map(yshow, eachrow(yt)) :
+                yshow == :sum ?
                 sum(yt, dims=2) :
-                view(yt, :, yapply)
+                view(yt, :, yshow)
             range(t0, tf, length=ntgt), y
         end
     end
 
     # solve and draw approximate solutions at selected resolutions
-    if showapprox == true
+    if (ns !== nothing && ns !== false && !isempty(ns) && xshow !== nothing && xshow !== false)
         for (i, nsi) in enumerate(ns)
 
             nstep = div(ntgt, nsi)
@@ -78,27 +76,27 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 markershape --> :auto
                 markercolor --> i + 2
                 label --> "n=$nsi"
-                x = xapply isa Function ?
-                    map(xapply, eachrow(view(xnt, 1:nsi, :))) :
-                    xapply == :sum ?
+                x = xshow isa Function ?
+                    map(xshow, eachrow(view(xnt, 1:nsi, :))) :
+                    xshow == :sum ?
                     sum(view(xnt, 1:nsi, :), dims=2) :
-                    view(xnt, 1:nsi, xapply)
+                    view(xnt, 1:nsi, xshow)
                 range(t0, tf, length=nsi), x
             end
         end
     end
 
     # draw target solution
-    if showtarget == true
+    if ( xshow !== nothing && xshow !== false )
         @series begin
             linecolor --> 1
             linewidth --> 2
             label --> "target"
-            x = xapply isa Function ?
-                map(xapply, eachrow(xt)) :
-                xapply == :sum ?
+            x = xshow isa Function ?
+                map(xshow, eachrow(xt)) :
+                xshow == :sum ?
                 sum(xt, dims=2) :
-                view(xt, :, xapply)
+                view(xt, :, xshow)
             range(t0, tf, length=ntgt), x
         end
     end
