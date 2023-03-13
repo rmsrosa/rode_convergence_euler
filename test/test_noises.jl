@@ -205,15 +205,16 @@
         y0 = 0.2
         μ = 0.3
         σ = 0.2
+        ν = 0.3
         λ = 10.0
         α = 2.0
         β = 15.0
         dylaw = Normal(μ, σ)
         steplaw = Beta(α, β)
         nr = 50
-        f = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
+        transport = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
         ylaw = Beta(α, β)
-        H = 0.25
+        hurst = 0.25
 
         noise = ProductProcess(
             WienerProcess(t0, tf, y0),
@@ -236,11 +237,12 @@
 
         noise = ProductProcess(
             WienerProcess(t0, tf, y0),
+            OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ),
             GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
             CompoundPoissonProcess(t0, tf, λ, dylaw),
             PoissonStepProcess(t0, tf, λ, steplaw),
-            TransportProcess(t0, tf, ylaw, f, nr),
-            FractionalBrownianMotionProcess(t0, tf, y0, H, n)
+            TransportProcess(t0, tf, ylaw, transport, nr),
+            FractionalBrownianMotionProcess(t0, tf, y0, hurst, n)
         )
 
         @test eltype(noise) == Float64
@@ -269,19 +271,22 @@
         @test means[1] ≈ y0 (atol = 0.1)
         @test vars[1] ≈ tf (atol = 0.1)
 
-        @test means[2] ≈ y0 * exp(μ * tf) (atol = 0.1)
-        @test vars[2] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
+        @test means[2] ≈ y0 * exp( -ν * tf) (atol = 0.1)
+        @test vars[2] ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf) ) (atol = 0.1)
 
-        @test means[3] ≈ μ * λ * tf (atol = 0.1)
-        @test vars[3] ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
+        @test means[3] ≈ y0 * exp(μ * tf) (atol = 0.1)
+        @test vars[3] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
 
-        @test means[4] ≈ α/(α + β) (atol = 0.1)
-        @test vars[4] ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
+        @test means[4] ≈ μ * λ * tf (atol = 0.1)
+        @test vars[4] ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
 
-        @test means[5] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
-        @test vars[5] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
+        @test means[5] ≈ α/(α + β) (atol = 0.1)
+        @test vars[5] ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
 
-        @test means[6] ≈ y0 (atol = 0.1)
-        @test vars[6] ≈ tf^(2H) (atol = 0.1)
+        @test means[6] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
+        @test vars[6] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
+
+        @test means[7] ≈ y0 (atol = 0.1)
+        @test vars[7] ≈ tf^(2hurst) (atol = 0.1)
     end
 end
