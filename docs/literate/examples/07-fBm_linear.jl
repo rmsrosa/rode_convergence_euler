@@ -95,7 +95,7 @@ plot(suite, ns=nsample)
 
 # We can also visualize the noise:
 
-plot(suite, shownoise=true, showapprox=false, showtarget=false)
+plot(suite, xshow=false, yshow=true)
 
 # We save the order of convergence obtained
 

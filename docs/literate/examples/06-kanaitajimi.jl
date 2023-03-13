@@ -112,8 +112,10 @@ plot(result)
 
 plot(suite, ns=nsample)
 
-# We can also visualize the noise separate or combined:
+# We can also visualize the noise separate
 
-plot(suite, shownoise=true, showapprox=false, showtarget=false)
+plot(suite, xshow=false, yshow=true)
 
-plot(suite, shownoise=true, showapprox=false, showtarget=false, noiseidxs = :sum)
+# or combined
+
+plot(suite, xshow=false, yshow=:sum)

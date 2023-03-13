@@ -123,5 +123,9 @@ plot(suite, ns=nsample)
 
 # We can also visualize the noise associated with this sample solution:
 
-plot(suite, shownoise=true, showapprox=false, showtarget=false)
+plot(suite, xshow=false, yshow=true)
+
+#
+
+plot(suite, xshow=false, yshow=:sum)
 

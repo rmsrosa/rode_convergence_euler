@@ -226,7 +226,7 @@ plot(suite, ns=nsample)
 We can also visualize the noise associated with this sample solution:
 
 ````@example 02-wiener_linearnonhomogeneous
-plot(suite, shownoise=true, showapprox=false, showtarget=false)
+plot(suite, xshow=false, yshow=true)
 ````
 
 ---

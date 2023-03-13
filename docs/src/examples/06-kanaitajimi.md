@@ -129,12 +129,16 @@ For the sake of illustration, we plot a sample of an approximation of a target s
 plot(suite, ns=nsample)
 ````
 
-We can also visualize the noise separate or combined:
+We can also visualize the noise separate
 
 ````@example 06-kanaitajimi
-plot(suite, shownoise=true, showapprox=false, showtarget=false)
+plot(suite, xshow=false, yshow=true)
+````
 
-plot(suite, shownoise=true, showapprox=false, showtarget=false, noiseidxs = :sum)
+or combined
+
+````@example 06-kanaitajimi
+plot(suite, xshow=false, yshow=:sum)
 ````
 
 ---
