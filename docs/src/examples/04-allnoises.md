@@ -4,6 +4,8 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/04-all
 
 # Non-homogenous linear system of RODEs with all implemented noises
 
+This time we consider a linear system of equations with a noise that combines all the implemented noises.
+
 ## The equation
 
 More precisely, we consider the RODE
