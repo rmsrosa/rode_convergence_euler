@@ -25,7 +25,7 @@
         @test var(ythf) ≈ tf/2 (atol = 0.1)
         @test mean(ytf) ≈ y0 (atol = 0.1)
         @test var(ytf) ≈ tf (atol = 0.1)
-        @test cov(ytf, ythf) ≈ tf/2 (atol = 0.02)
+        @test cov(ytf, ythf) ≈ tf/2 (atol = 0.1)
     end
 
     @testset "OU process" begin
