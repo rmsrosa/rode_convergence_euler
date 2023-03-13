@@ -1,4 +1,6 @@
 # # Non-homogenous linear system of RODEs with all implemented noises
+#
+# This time we consider a linear system of equations with a noise that combines all the implemented noises.
 
 # ## The equation
 
@@ -28,7 +30,7 @@ using RODEConvergence
 
 rng = Xoshiro(123)
 
-f!(dx, t, x, y) = (dx .= .- x .+ y)
+f!(dx, t, x, y) = (dx .= .- y .* x .+ sum(y))
 
 t0 = 0.0
 tf = 1.0
@@ -36,6 +38,7 @@ tf = 1.0
 y0 = 0.2
 μ = 0.3
 σ = 0.2
+ν = 0.3
 λ = 10.0
 α = 2.0
 β = 15.0
@@ -53,6 +56,7 @@ m = 1_000
 
 noise = ProductProcess(
     WienerProcess(t0, tf, y0),
+    OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ),
     GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
     CompoundPoissonProcess(t0, tf, λ, dylaw),
     PoissonStepProcess(t0, tf, λ, steplaw),
