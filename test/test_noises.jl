@@ -125,8 +125,9 @@
     @testset "Transport process" begin
         rng = Xoshiro(123)
         α = 2.0
-        β = 15.0
-        ylaw = Beta(α, β)
+        θ = 0.06
+        # Most distributions don't allocate but Beta does, so use Gamma instead
+        ylaw = Gamma(α, θ)
         nr = 50
         f = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
         noise = TransportProcess(t0, tf, ylaw, f, nr)
@@ -209,11 +210,12 @@
         λ = 10.0
         α = 2.0
         β = 15.0
+        θ = 0.06
         dylaw = Normal(μ, σ)
         steplaw = Beta(α, β)
         nr = 50
         transport = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
-        ylaw = Beta(α, β)
+        ylaw = Gamma(α, θ)
         hurst = 0.25
 
         noise = ProductProcess(
