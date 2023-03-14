@@ -2,12 +2,7 @@
 
 # Now we consider a mechanical structure problem under ground-shaking excitations, motivated by Earthquake models.
 #
-# Classical models use a white noise source of groundshaking excitations driving a mechanical structure, leading to a stochastic differential equations. This can be turned into a Random ODE by means of an Orstein-Uhlenbeck process. Other models use a colored noise or a transport process exciting a few specific frequencies.
 #
-# The white noise enters the stochastic equation as an additive noise and in this case the order of convergence is known to be of first order. Similarly for the colored noisees. The typical transport process also leads to a first order convergence since the sample paths are smooth.
-#
-# Here, since the main point is not the model itself but rather the convergence even for rough noises, we modify the problem a bit and use a geometric Brownian motion process, which is a multiplicative noise, together with a transport process with Hölder continuous sample paths. Our results show that we still get the order 1 convergence, which is illustrated in the simulations performed here.
-
 # ## The equation
 #
 # ## Numerical approximation
@@ -30,24 +25,24 @@ function f(dx, t, x, y)
     ζ = 0.64
     ω = 15.56
     dx[1] = -x[2] + y[1]
-    dx[2] = -2 * ζ * ω * (x[2] + y[1]) + ω ^ 2 * x[1] + y[1] + y[2]
+    dx[2] = -2 * ζ * ω * (x[2] + y[1]) + ω ^ 2 * x[1] + y[1] * y[2]
     return dx
 end
 
 t0 = 0.0
-tf = 1.0
+tf = 2.0
 
-x0law = MvNormal(zeros(2), I(2))
+# The structure initially at rest
 
-μ = -1.0
-σ = 0.8
-y0 = 1.0
-noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ) # It should actually be an Orstein-Uhlenbeck, but apparently I haven't implemented it yet
+x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 
-α = 2.0
-β = 15.0
-ylaw = Beta(α, β)
-nr = 12
+# The noise is a Wiener process modulated by a transport process
+
+y0 = 0.0
+noise1 = WienerProcess(t0, tf, y0)
+
+ylaw = product_distribution(Uniform(0.0, 1.0), Uniform(0.0, 1.0), Uniform(1.0, 5.0), Exponential())
+g(t, r) = mapreduce()
 g(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
 noise2 = TransportProcess(t0, tf, ylaw, g, nr)
 
