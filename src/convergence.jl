@@ -54,18 +54,18 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
         ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
             "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
         )
-        if D <: ContinuousUnivariateDistribution
+        if D <: UnivariateDistribution
             xt = Vector{T}(undef, ntgt)
             xnt = Vector{T}(undef, last(ns))
             N2 = 1
-        elseif D <: ContinuousMultivariateDistribution
+        elseif D <: MultivariateDistribution
             nx = length(x0law)
             xt = Matrix{T}(undef, ntgt, nx)
             xnt = Matrix{T}(undef, last(ns), nx)
             N2 = 2
         else
             error(
-                "`xlaw` should be either `ContinuousUnivariateDistribution` or `ContinuousMultivariateDistribution`."
+                "`xlaw` should be either `UnivariateDistribution` or `MultivariateDistribution`."
             )
         end
         if P <: UnivariateProcess
@@ -128,7 +128,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
 
     for _ in 1:m
         # draw initial condition
-        if D <: ContinuousUnivariateDistribution
+        if D <: UnivariateDistribution
             xt[1] = rand(rng, x0law)
         else
             rand!(rng, x0law, view(xt, 1, :)) 
@@ -138,7 +138,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
         rand!(rng, noise, yt)
 
         # generate target path
-        if D <: ContinuousUnivariateDistribution
+        if D <: UnivariateDistribution
             solve!(xt, t0, tf, xt[1], f, yt, target)
         else
             solve!(xt, t0, tf, view(xt, 1, :), f, yt, target)            
@@ -150,9 +150,9 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
 
             nstep = div(ntgt, nsi)
 
-            if D <: ContinuousUnivariateDistribution && P <: UnivariateProcess
+            if D <: UnivariateDistribution && P <: UnivariateProcess
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
-            elseif D <: ContinuousUnivariateDistribution
+            elseif D <: UnivariateDistribution
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
             elseif P <: UnivariateProcess
                 solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
@@ -161,7 +161,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
             end
 
             for n in 2:nsi
-                if D <: ContinuousUnivariateDistribution
+                if D <: UnivariateDistribution
                     trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
                 else
                     for j in eachindex(axes(xnt, 2))

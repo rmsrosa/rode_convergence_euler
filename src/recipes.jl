@@ -7,7 +7,7 @@ The noise, the target solution, and the approximations can be displayed or not, 
 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
-If `suite` refers to a system of equations (i.e. with `x0law` as a `ContinuousMultivariateDistribution` instead of a `ContinuousUnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or the Euclidian norm, if `xshow=:norm`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
+If `suite` refers to a system of equations (i.e. with `x0law` as a `MultivariateDistribution` instead of a `UnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or the Euclidian norm, if `xshow=:norm`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
 
 Similary, if `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents, or combinations of them, by specifying the keyword `yshow` in the same way as for `xshow` just described.
 """
@@ -69,9 +69,9 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
             nstep = div(ntgt, nsi)
 
-            if x0law isa ContinuousUnivariateDistribution && noise isa UnivariateProcess
+            if x0law isa UnivariateDistribution && noise isa UnivariateProcess
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
-            elseif x0law isa ContinuousUnivariateDistribution
+            elseif x0law isa UnivariateDistribution
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
             elseif noise isa UnivariateProcess
                 solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
@@ -103,7 +103,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
         @series begin
             linecolor --> 1
             linewidth --> 2
-            sollabel = (xshow isa Function || x0law isa ContinuousUnivariateDistribution ) ?
+            sollabel = (xshow isa Function || x0law isa UnivariateDistribution ) ?
                 "target" :
                 xshow == :sum ?
                 "sum of target coordinates" :
