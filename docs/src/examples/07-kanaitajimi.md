@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/06-kanaitajimi.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/07-kanaitajimi.jl"
 ```
 
 # Earthquake model
@@ -20,7 +20,7 @@ Here, since the main point is not the model itself but rather the convergence ev
 
 First we load the necessary packages
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 using Plots
 using Random
 using LinearAlgebra
@@ -30,7 +30,7 @@ using RODEConvergence
 
 Then we set up some variables
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 rng = Xoshiro(123)
 
 function f(dx, t, x, y)
@@ -68,7 +68,7 @@ m = 1_000
 
 And add some information about the simulation:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 info = (
     equation = "Kanai-Tajimi model",
     noise = "Orstein-Uhlenbeck and Transport Process",
@@ -78,7 +78,7 @@ info = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 target = RandomEuler(length(x0law))
 method = RandomEuler(length(x0law))
 ````
@@ -87,19 +87,19 @@ method = RandomEuler(length(x0law))
 
 With all the parameters set up, we build the convergence suite:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 @time result = solve(rng, suite)
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 table = generate_error_table(result, info)
 
 println(table) # hide
@@ -108,7 +108,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 ````
 
@@ -116,7 +116,7 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 plot(result)
 ````
 
@@ -125,19 +125,19 @@ nothing # hide
 
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 plot(suite, ns=nsample)
 ````
 
 We can also visualize the noise separate
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 plot(suite, xshow=false, yshow=true)
 ````
 
 or combined
 
-````@example 06-kanaitajimi
+````@example 07-kanaitajimi
 plot(suite, xshow=false, yshow=:sum)
 ````
 
