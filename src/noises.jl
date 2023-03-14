@@ -299,20 +299,30 @@ Each random sample path is obtained by first drawing `n` realizations of the dis
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
-struct TransportProcess{T, F, G} <: UnivariateProcess{T}
+struct TransportProcess{T, F, G, N} <: UnivariateProcess{T}
     t0::T
     tf::T
     ylaw::G
     f::F
-    rv::Vector{T}
-    TransportProcess(t0::T, tf::T, ylaw::G, f::F, ny::Int64) where {T, F, G} = new{T, F, G}(t0, tf, ylaw, f, zeros(T, ny))
+    rv::Array{T, N}
+    function TransportProcess(t0::T, tf::T, ylaw::G, f::F, ny::Int64) where {T, F, G}
+        N = length(ylaw)
+        rv = ylaw isa ContinuousUnivariateDistribution ? zeros(T, ny) : zeros(T, ny, N)
+        new{T, F, G, N}(t0, tf, ylaw, f, rv)
+    end
 end
 
 function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::AbstractVector{T}) where {T, F, G}
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
-    for i in eachindex(noise.rv)
-        @inbounds noise.rv[i] = rand(rng, noise.ylaw)
+    if noise.ylaw isa ContinuousUnivariateDistribution
+        for i in eachindex(noise.rv)
+            @inbounds noise.rv[i] = rand(rng, noise.ylaw)
+        end
+    else
+        for i in eachindex(eachrow(noise.rv))
+            rand!(rng, noise.ylaw, view(noise.rv, i, :))
+        end
     end
     # rand!(rng, noise.ylaw, noise.rv) # Most distributions don't allocate but Beta does (see https://github.com/JuliaStats/Distributions.jl/pull/1281), so I prefer to roll out the loop explicitly
     t = noise.t0 - dt
