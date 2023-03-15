@@ -87,7 +87,7 @@ end
 """
     OrnsteinUhlenbeckProcess(t0, tf, ν, σ, y0)
 
-Construct an Ornstein Uhlenbeck process ``O_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `-θ` and diffusion `σ`, as defined by the equation
+Construct an Ornstein Uhlenbeck process ``O_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `-ν` and diffusion `σ`, as defined by the equation
 ```math
 \\mathrm{d}O_t = -\\nu O_t \\;\\mathrm{d}t + \\sigma \\;\\mathrm{d}W_t.
 ```
@@ -97,7 +97,7 @@ The solution is
 O_t = e^{-\\nu t}O_0 + \\sigma \\int_0^t e^{-\\nu (t - s)}\\;\\mathrm{d}W_s.
 ```
 
-The noise process `noise = OrnsteinUhlenbeckProcess(t0, tf, μ, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+The noise process `noise = OrnsteinUhlenbeckProcess(t0, tf, ν, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
@@ -113,6 +113,12 @@ Thus, a sample path is constructed with exact distribution by solving the recurs
 O_{t_i} = e^{-\\nu \\Delta t} O_{t_{i-1}} + \\frac{\\sigma}{\\sqrt{2\\nu}} \\sqrt{1 - e^{-2\\nu \\Delta t}} z_i, \\qquad i = 1, \\ldots,
 ```
 where at each time step `z_i` is drawn from a standard Normal distribution.
+
+The Ornstein-Uhlenbeck process has mean, variance, and covariance given by
+```math
+    \\mathbb{E}[O_t] = O_0 e^{-\nu t}, \\mathrm{Var}[O_t] = \\frac{\\nu\\sigma^2}{2}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\nu\\sigma^2}{2} e^{-\nu |t - s|}.
+```
+so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lessim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\nu\\sigma / 2 = \\sigma/2\\tau \rightarrow 1``, this approximates a Gaussian white noise.
 """
 struct OrnsteinUhlenbeckProcess{T} <: UnivariateProcess{T}
     t0::T
