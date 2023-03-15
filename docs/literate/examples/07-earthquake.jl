@@ -10,10 +10,10 @@
 # where $\{W_t\}_t$ is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift $\nu = 1/\tau$. This process, has mean, variance, and covariance given by
 #
 # ```math
-#   \mathbb{E}[O_t] = O_0 e^{-\frac{t}{\tau}}, \mathbb{E}[O_t] = \frac{\sigma^2}{2\tau}, \quad \mathbb{E}[O_tO_s] = \frac{\sigma^2}{2\tau} e^{-\frac{|t - s|}{\tau}}.
+#   \mathbb{E}[O_t] = O_0 e^{-\frac{t}{\tau}}, \mathbb{E}[O_t] = \frac{\tau\sigma^2}{2}, \quad \mathbb{E}[O_tO_s] = \frac{\tau\sigma^2}{2} e^{-\frac{|t - s|}{\tau}}.
 # ```
 #
-# Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lessim \tau$. When $\tau \rightarrow 0$ with $\sigma / 2\tau \rightarrow 1$, this approximates a Gaussian white noise.
+# Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lessim \tau$. When $\tau \rightarrow 0$ with $\tau\sigma / 2 \rightarrow 1$, this approximates a Gaussian white noise.
 #
 #
 # Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we module the OU process with a transport process composed of a series of time-translations of a initially Hölder-continuous front with exponential decay, $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$, with random parameters $\alpha, \beta, \gamma, \delta$, with arbitrarly small Hölder exponents $\alpha$.
@@ -55,9 +55,10 @@ x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 # The noise is a Wiener process modulated by a transport process
 
 y0 = 0.0
-θ = 200.0 # = 1 / 0.005 => time-scale = 0.005
+τ = 0.005 # time scale
+ν = 1/τ # drift
 σ = 20.0
-noise1 = OrnsteinUhlenbeckProcess(t0, tf, y0, θ, σ)
+noise1 = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 ylaw = product_distribution(Uniform(0.0, 2.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
 nr = 5
