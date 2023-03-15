@@ -306,13 +306,13 @@ struct TransportProcess{T, F, G, N} <: UnivariateProcess{T}
     f::F
     rv::Array{T, N}
     function TransportProcess(t0::T, tf::T, ylaw::G, f::F, ny::Int64) where {T, F, G}
-        N = length(ylaw)
-        rv = ylaw isa UnivariateDistribution ? zeros(T, ny) : zeros(T, ny, N)
+        N = ylaw isa UnivariateDistribution ? 1 : 2
+        rv = ylaw isa UnivariateDistribution ? zeros(T, ny) : zeros(T, length(ylaw), ny)
         new{T, F, G, N}(t0, tf, ylaw, f, rv)
     end
 end
 
-function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T, F, G}, yt::AbstractVector{T}) where {T, F, G}
+function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T}, yt::AbstractVector{T}) where {T}
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
     # Most distributions don't allocate but Beta does (see https://github.com/JuliaStats/Distributions.jl/pull/1281), so beware of that, or thing about getting back with the rooled out explicit loop.
