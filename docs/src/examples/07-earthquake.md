@@ -53,12 +53,20 @@ y0 = 0.0
 noise1 = WienerProcess(t0, tf, y0)
 
 ylaw = product_distribution(Uniform(0.0, 1.0), Uniform(0.0, 1.0), Uniform(1.0, 5.0), Exponential())
-g(t, r) = mapreduce()
-g(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
+nr = 5
+g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])), +, eachcol(r))
 noise2 = TransportProcess(t0, tf, ylaw, g, nr)
 
 noise = ProductProcess(noise1, noise2)
 
+yt = Vector{Float64}(undef, 2^8)
+
+rand!(rng, noise2, yt)
+
+plot(range(t0, tf, length=200), t -> g(t, noise2.rv))
+````
+
+````@example 07-earthquake
 ntgt = 2^18
 ns = 2 .^ (5:9)
 nsample = ns[[1, 2, 3, 4]]
@@ -131,13 +139,13 @@ plot(suite, ns=nsample)
 We can also visualize the noise separate
 
 ````@example 07-earthquake
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=2)
 ````
 
 or combined
 
 ````@example 07-earthquake
-plot(suite, xshow=false, yshow=:sum)
+plot!(suite, xshow=false, yshow=prod)
 ````
 
 ---
