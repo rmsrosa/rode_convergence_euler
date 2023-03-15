@@ -24,7 +24,7 @@ function f!(dx, t, x, y)
     axes(x, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
     dx² = (length(x) - 1)^2
-    dx[begin+1:end-1] .= ( x[begin:end-2] - 2x[begin+1:end-1] + x[begin+2:end] ) / dx² .+ y .* x[begin+1:end-1] .* ( 1 .- x[begin+1:end-1] )
+    dx[begin+1:end-1] .= ( x[begin:end-2] - 2x[begin+1:end-1] + x[begin+2:end] ) / dx² .+ max(0.0, min(1.0, y)) .* x[begin+1:end-1] .* ( 1 .- x[begin+1:end-1] )
 
     dx[end] = dx[begin] = ( x[end - 1] - 2x[begin] + x[begin+1]) / dx² .+ y .* x[begin] * ( 1 - x[begin] )
     return dx
@@ -42,14 +42,14 @@ x0law = product_distribution(Tuple(Dirac(sin(2π * k * li / l)) for li in 0:l)..
 # The noise is a Wiener process modulated by a transport process
 
 y0 = 0.0
-θ = 200.0 # = 1 / 0.005 => time-scale = 0.005
-σ = 20.0
+ν = 200.0 # = 1 / 0.005 => time-scale = 0.005
+σ = 10.0 # variance σ^2 / 2ν = 0.25
 noise = OrnsteinUhlenbeckProcess(t0, tf, y0, θ, σ)
 
 #
 
-ntgt = 2^14
-ns = 2 .^ (4:7)
+ntgt = 2^18
+ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3, 4]]
 m = 1_000
 
