@@ -116,9 +116,9 @@ where at each time step `z_i` is drawn from a standard Normal distribution.
 
 The Ornstein-Uhlenbeck process has mean, variance, and covariance given by
 ```math
-    \\mathbb{E}[O_t] = O_0 e^{-\nu t}, \\mathrm{Var}[O_t] = \\frac{\\nu\\sigma^2}{2}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\nu\\sigma^2}{2} e^{-\nu |t - s|}.
+    \\mathbb{E}[O_t] = O_0 e^{-\nu t}, \\mathrm{Var}[O_t] = \\frac{\\sigma^2}{2\\nu}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\sigma^2}{2\\nu} e^{-\nu |t - s|}.
 ```
-so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lessim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\nu\\sigma / 2 = \\sigma/2\\tau \rightarrow 1``, this approximates a Gaussian white noise.
+so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lessim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\sigma^2 / 2\\nu = \\tau\\sigma^2/2 \rightarrow 1``, this approximates a Gaussian white noise.
 """
 struct OrnsteinUhlenbeckProcess{T} <: UnivariateProcess{T}
     t0::T
