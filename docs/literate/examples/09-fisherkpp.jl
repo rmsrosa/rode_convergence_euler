@@ -23,11 +23,15 @@ rng = Xoshiro(123)
 function f!(dx, t, x, y)
     axes(x, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    dx² = (length(x) - 1)^2
-    dx[begin+1:end-1] .= ( x[begin:end-2] - 2x[begin+1:end-1] + x[begin+2:end] ) / dx² .+ max(0.0, min(1.0, y)) .* x[begin+1:end-1] .* ( 1 .- x[begin+1:end-1] )
+    l = length(x)
+    ds² = 1.0 / (l - 1)^2
+    #dx[begin+1:end-1] .= ( x[begin:end-2] .- 2.0 .* x[begin+1:end-1] .+ x[begin+2:end] ) ./ ds² .+ max(0.0, min(1.0, y)) .* x[begin+1:end-1] .* ( 1.0 .- x[begin+1:end-1] )
+    for j in 2:l-1
+        dx[j] = (x[j-1] - 2x[j] + x[j+1]) / ds² + max(0.0, min(1.0, y)) * x[j] * (1.0 - x[j])
+    end
 
-    dx[end] = dx[begin] = ( x[end - 1] - 2x[begin] + x[begin+1]) / dx² .+ y .* x[begin] * ( 1 - x[begin] )
-    return dx
+    dx[l] = dx[1] = ( x[l - 1] - 2x[1] + x[2]) / ds² .+ y .* x[1] * ( 1 - x[1] )
+    return nothing
 end
 
 t0 = 0.0
@@ -36,7 +40,7 @@ tf = 2.0
 # Initial condition
 
 l = 20
-k = 5.0
+k = 2.0
 x0law = product_distribution(Tuple(Dirac(sin(2π * k * li / l)) for li in 0:l)...)
 
 # The noise is a Wiener process modulated by a transport process
