@@ -80,6 +80,8 @@
         α = 2.0
         θ = 0.5
         dylaw = Gamma(α, θ)
+        μ = mean(dylaw)
+        σ = std(dylaw)
         noise = CompoundPoissonProcess(t0, tf, λ, dylaw)
         
         @test eltype(noise) == Float64
@@ -92,9 +94,9 @@
             ythf[mi] = yt[div(n, 2)]
             ytf[mi] = last(yt)
         end
-        @test mean(ythf) ≈ μ * λ * tf / 2 (atol = 0.1)
+        @test mean(ythf) ≈ μ * λ * tf / 2 (rtol = 0.1)
         @test var(ythf) ≈ λ * (tf/2) * ( μ^2 + σ^2 ) (rtol = 0.1)
-        @test mean(ytf) ≈ μ * λ * tf (atol = 0.1)
+        @test mean(ytf) ≈ μ * λ * tf (rtol = 0.1)
         @test var(ytf) ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
     end
 
