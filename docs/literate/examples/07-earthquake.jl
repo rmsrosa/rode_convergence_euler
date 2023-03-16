@@ -30,6 +30,7 @@
 using Plots
 using Random
 using LinearAlgebra
+using FFTW
 using Distributions
 using RODEConvergence
 
@@ -93,8 +94,8 @@ end
 #
 
 begin
-    plot(abs2.(fft(wt3)[begin:div(end,2)]), label="white noise")
-    plot!(abs2.(fft(yt1)[begin:div(end,2)]), label="OU")
+    plot(abs2.(rfft(wt3)), label="white noise spectrum")
+    plot!(abs2.(rfft(yt1)), label="OU spectrum")
 end
 
 #
