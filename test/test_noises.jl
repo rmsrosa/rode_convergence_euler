@@ -77,9 +77,9 @@
     @testset "Compound Poisson" begin
         rng = Xoshiro(123)
         λ = 10.0
-        μ = 0.5
-        σ = 0.2
-        dylaw = Normal(μ, σ)
+        α = 2.0
+        θ = 0.5
+        dylaw = Gamma(α, θ)
         noise = CompoundPoissonProcess(t0, tf, λ, dylaw)
         
         @test eltype(noise) == Float64
@@ -116,11 +116,41 @@
             ythf[mi] = yt[div(n, 2)]
             ytf[mi] = last(yt)
         end
+
         @test mean(ythf) ≈ α/(α + β) (atol = 0.1)
         @test var(ythf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
         @test mean(ytf) ≈ α/(α + β) (atol = 0.1)
         @test var(ytf) ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
     end
+
+    @testset "Hawkes" begin
+        rng = Xoshiro(123)
+        γ = 2.0
+        λ = 4.0
+        α = 2.0
+        θ = 0.5
+        δ = 0.8
+        dylaw = Gamma(α, θ)
+
+        noise = ExponentialHawkesProcess(t0, tf, γ, λ, δ, dylaw)
+        
+        @test eltype(noise) == Float64
+        @test_nowarn rand!(rng, noise, yt)
+        @test (@ballocated $rand!($rng, $noise, $yt)) == 0
+        @test_nowarn (@inferred rand!(rng, noise, yt))
+        
+        for mi in 1:m
+            rand!(rng, noise, yt)
+            ythf[mi] = yt[div(n, 2)]
+            ytf[mi] = last(yt)
+        end
+
+        @test_broken mean(ythf) ≈ γ * exp( (mean(dylaw) - δ) * tf / 2 ) (atol = 0.1)
+        #@test var(ythf) ≈ λ * (tf/2) * ( μ^2 + σ^2 ) (rtol = 0.1)
+        @test_broken mean(ytf) ≈ γ * exp( (mean(dylaw) - δ) * tf ) (atol = 0.1)
+        #@test var(ytf) ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
+    end
+
 
     @testset "Transport process" begin
         rng = Xoshiro(123)

@@ -205,37 +205,20 @@ end
 function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T}, yt::AbstractVector{T}) where {T}
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
+    ti = ti1 = noise.t0
+    ti -= log(rand(rng)) / noise.λ
     ni1 = firstindex(yt)
     yt[ni1] = zero(T)
     for ni in Iterators.drop(eachindex(yt), 1)
         yt[ni] = yt[ni1]
-        r = - log(rand(rng)) / noise.λ
-        while r < dt
+        ti1 += dt
+        while ti ≤ ti1
             yt[ni] += rand(rng, noise.dylaw)
-            r -= log(rand(rng)) / noise.λ
+            ti -= log(rand(rng)) / noise.λ
         end
         ni1 = ni
     end
 end
-
-#= 
-# The following sampler is about four times slower so drop it
-function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T}, yt::AbstractVector{T}) where {T}
-    n = length(yt)
-    dt = (noise.tf - noise.t0) / (n - 1)
-    dnlaw = Poisson(noise.λ * dt)
-    i1 = firstindex(yt)
-    yt[i1] = zero(T)
-    for i in Iterators.drop(eachindex(yt), 1)
-        numi = rand(rng, dnlaw)
-        yt[i] = yt[i1]
-        for _ in 1:numi
-            yt[i] += rand(rng, noise.dylaw)
-        end
-        i1 = i
-    end
-end
- =#
 
 """
     PoissonStepProcess(t0, tf, λ, steplaw)
@@ -286,6 +269,7 @@ The noise returned by the constructor yields a random sample path by first drawi
 struct ExponentialHawkesProcess{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
+    γ::T
     λ::T
     δ::T
     dylaw::G
@@ -296,7 +280,7 @@ function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::
     dt = (noise.tf - noise.t0) / (n - 1)
     dnlaw = Poisson(noise.λ * dt)
     ti1 = noise.t0
-    integral = zero(T)
+    integral = noise.γ
     yt[begin] = integral
     for i in Iterators.drop(eachindex(yt), 1)
         numi = rand(rng, dnlaw)
