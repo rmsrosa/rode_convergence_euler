@@ -6,7 +6,19 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/07-ear
 
 Now we consider a mechanical structure problem under ground-shaking excitations, based on Earthquake models, especially the Kanai-Tajimi model.
 
-The mechanical structure is forced by a stochastic noise modeling the effects of an Earthquake. Several types of noises have been considered in the literature. A typical one is a white noise. Further studies show that the noise is actually a colored noise. So, we model the noise with a Orsntein-Uhlenbeck (OU) process with a relative small type scale $\tau$ with drift $\nu = 1/\tau$, and relatively large dissipation $\sigma$. When $\sigma/\nu \rightarrow \infty$, the colored-noise OU process approaches a white noise.
+The mechanical structure is forced by a stochastic noise modeling the effects of an Earthquake. Several types of noises have been considered in the literature. A typical one is a white noise. Further studies show that the noise is actually a colored noise. So, we model the noise with a Orsntein-Uhlenbeck (OU) process $\{O_t\}_t$ with a relative small type scale $\tau$, i.e. satisfying the SDE
+
+```math
+  \tau \mathrm{d}O_t = - \mathrm{d}t + D \mathrm{d}W_t,
+```
+where $\{W_t\}_t$ is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift $\nu = 1/\tau$ and diffusion $\sigma = D/\tau$. This process, has mean, variance, and covariance given by
+
+```math
+  \mathbb{E}[O_t] = O_0 e^{-\frac{t}{\tau}}, \mathrm{Var}(O_t) = \frac{D^2}{2\tau}, \quad \mathrm{Cov}(O_t,O_s) = \frac{D^2}{2\tau} e^{-\frac{|t - s|}{\tau}}.
+```
+
+Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lessim \tau$. When $\tau \rightarrow 0$ with $D^2/2\tau \rightarrow 1$, this approximates a Gaussian white noise.
+
 
 Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we module the OU process with a transport process composed of a series of time-translations of a initially Hölder-continuous front with exponential decay, $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$, with random parameters $\alpha, \beta, \gamma, \delta$, with arbitrarly small Hölder exponents $\alpha$.
 
@@ -54,9 +66,11 @@ The noise is a Wiener process modulated by a transport process
 
 ````@example 07-earthquake
 y0 = 0.0
-θ = 200.0 # = 1 / 0.005 => time-scale = 0.005
-σ = 20.0
-noise1 = OrnsteinUhlenbeckProcess(t0, tf, y0, θ, σ)
+τ = 0.005 # time scale
+D = 0.1 # large-scale diffusion
+ν = 1/τ # drift
+σ = D/τ # diffusion
+noise1 = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 ylaw = product_distribution(Uniform(0.0, 2.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
 nr = 5
@@ -75,9 +89,9 @@ rand!(rng, noise1, yt1)
 rand!(rng, noise2, yt2)
 
 noise3 = WienerProcess(t0, tf, y0)
-yt3 = similar(yt)
+yt3 = similar(yt1)
 rand!(rng, noise3, yt3)
-dt = (tf - t0) / (length(yt) - 1)
+dt = (tf - t0) / (length(yt1) - 1)
 
 begin
     plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
