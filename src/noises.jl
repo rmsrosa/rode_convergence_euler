@@ -269,18 +269,17 @@ The noise returned by the constructor yields a random sample path by first drawi
 struct ExponentialHawkesProcess{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
-    γ::T
-    λ::T
+    λ₀::T
     δ::T
     dylaw::G
 end
-
+#= 
 function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::AbstractVector{T}) where {T}
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
-    dnlaw = Poisson(noise.λ * dt)
+    dnlaw = Poisson(noise.δ * dt)
     ti1 = noise.t0
-    integral = noise.γ
+    integral = noise.λ₀
     yt[begin] = integral
     for i in Iterators.drop(eachindex(yt), 1)
         numi = rand(rng, dnlaw)
@@ -291,6 +290,24 @@ function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::
         end
         yt[i] = exp(-noise.δ * ti) * integral
         ti1 = ti
+    end
+end =#
+
+function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::AbstractVector{T}) where {T}
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    ti1 = noise.t0
+    ni1 = firstindex(yt)
+    yt[ni1] = noise.λ₀ # initial intensity
+    ti = ti1 - log(rand(rng)) / yt[ni1] # next arrival
+    for ni in Iterators.drop(eachindex(yt), 1)
+        ti1 += dt
+        while ti ≤ ti1
+            yt[ni] = ( yt[ni1] + rand(rng, noise.dylaw) ) * exp(-noise.δ * (ti1 - ti)) # new increment with tiny decay
+            ti -= log(rand(rng)) / yt[ni] # next arrival
+        end
+        yt[ni] *= exp(-noise.δ * (ti1 - ti))
+        ni1 = ni
     end
 end
 
