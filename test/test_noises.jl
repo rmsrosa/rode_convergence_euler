@@ -127,14 +127,12 @@
 
     @testset "Hawkes" begin
         rng = Xoshiro(123)
-        γ = 2.0
-        λ = 4.0
+        λ₀ = 2.0
+        δ = 4.0
         α = 2.0
         θ = 0.5
-        δ = 0.8
         dylaw = Gamma(α, θ)
-
-        noise = ExponentialHawkesProcess(t0, tf, γ, λ, δ, dylaw)
+        noise = ExponentialHawkesProcess(t0, tf, λ₀, δ, dylaw)
         
         @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
@@ -147,9 +145,9 @@
             ytf[mi] = last(yt)
         end
 
-        @test_broken mean(ythf) ≈ γ * exp( (mean(dylaw) - δ) * tf / 2 ) (atol = 0.1)
+        @test_broken mean(ythf) ≈ λ₀ * exp( (mean(dylaw) - δ) * tf / 2 ) (atol = 0.1)
         #@test var(ythf) ≈ λ * (tf/2) * ( μ^2 + σ^2 ) (rtol = 0.1)
-        @test_broken mean(ytf) ≈ γ * exp( (mean(dylaw) - δ) * tf ) (atol = 0.1)
+        @test_broken mean(ytf) ≈ λ₀ * exp( (mean(dylaw) - δ) * tf ) (atol = 0.1)
         #@test var(ytf) ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
     end
 
