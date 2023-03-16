@@ -107,7 +107,3 @@ AbstractProcess
 ```@docs
 RODEConvergence.RODEMethod
 ```
-
-```@docs
-RODEConvergence.CompoundPoissonProcessAlt
-```
