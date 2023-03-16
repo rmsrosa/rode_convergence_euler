@@ -25,12 +25,14 @@ function f!(dx, t, x, y)
 
     l = length(x)
     ds² = 1.0 / (l - 1)^2
-    #dx[begin+1:end-1] .= ( x[begin:end-2] .- 2.0 .* x[begin+1:end-1] .+ x[begin+2:end] ) ./ ds² .+ max(0.0, min(1.0, y)) .* x[begin+1:end-1] .* ( 1.0 .- x[begin+1:end-1] )
     for j in 2:l-1
-        dx[j] = (x[j-1] - 2x[j] + x[j+1]) / ds² + max(0.0, min(1.0, y)) * x[j] * (1.0 - x[j])
+        dx[j] = (x[j-1] - 2x[j] + x[j+1]) / ds² + max(0.0, y) * x[j] * (1.0 - x[j])
     end
 
-    dx[l] = dx[1] = ( x[l - 1] - 2x[1] + x[2]) / ds² .+ y .* x[1] * ( 1 - x[1] )
+    dx[1] = (4x[2] - x[3] ) / 3 # Neumann no-flux
+    dx[l] = (4x[l-1] - x[l-2]) / 3 # Neumann no-flux
+    #dx[1] = ( x[l] - 2x[1] + x[2]) / ds² .+ y .* x[1] * ( 1 - x[1] )
+    #dx[l] = ( x[l-1] - 2x[l] + x[1]) / ds² .+ y .* x[l] * ( 1 - x[l] )
     return nothing
 end
 
@@ -39,22 +41,48 @@ tf = 2.0
 
 # Initial condition
 
-l = 20
-k = 2.0
-x0law = product_distribution(Tuple(Dirac(sin(2π * k * li / l)) for li in 0:l)...)
+l = 16
+x0law = product_distribution(Tuple(Dirac(sin(2π * li / l)^2) for li in 0:l)...)
+
+# Teste 
+
+function evolve(x0law, t0, tf)
+    x = rand(rng, x0law)
+    l = length(x)
+    ds² = 1 / (l - 1)^2
+    dt = ds² / 2
+    dx = similar(x)
+    y = 1.0
+    t = t0
+    while t < tf
+        f!(dx, t, x, y)
+        x .+= dt .* dx
+        t += dt
+        display(plot(range(0.0, 1.0, length=l), x))
+    end
+    return x
+end
+
+# x = evolve(x0law, t0, tf/100)
+
+# plot(range(0.0, 1.0, length=l), x)
 
 # The noise is a Wiener process modulated by a transport process
 
 y0 = 0.0
 ν = 200.0 # = 1 / 0.005 => time-scale = 0.005
 σ = 10.0 # variance σ^2 / 2ν = 0.25
-noise = OrnsteinUhlenbeckProcess(t0, tf, y0, θ, σ)
+noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 #
 
-ntgt = 2^18
-ns = 2 .^ (6:9)
-nsample = ns[[1, 2, 3, 4]]
+ntgt = 2^22
+ns = 2 .^ (9:11)
+
+ntgt = 2^15 * 3^3 * 5
+ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
+all(mod(ntgt, n) == 0 for n in ns)
+ntgt ≥ last(ns)^2
 m = 1_000
 
 # And add some information about the simulation:
