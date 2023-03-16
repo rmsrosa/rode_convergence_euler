@@ -233,6 +233,6 @@ function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equa
     end
     table *= "\\hline \\\\\n
     \\end{tabular}\n
-    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$2^{$(Int(log2(ntgt)))}=$(ntgt)\$ points.}"
+    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points.}"
     return table
 end
