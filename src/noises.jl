@@ -191,8 +191,6 @@ Y_t = \\sum_{i=1}^{N_t} \\;\\mathrm{d}Y_i,
 ```
 where ``N_t`` is the number of events up to time ``t``.
 
-Each sample path is obtained by first drawing the number `n` of events between consecutive times with interval `dt` according to the Poisson distribution `n = N(t+dt) - N(t) = Poisson(λdt)`.
-
 Then, based on the number `n` of events, the increment is performed by adding `n` samples of the given increment distribution `dylaw`.
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is set to `yt[1] = 0`, corresponding to the value at time `t0`.
@@ -204,7 +202,25 @@ struct CompoundPoissonProcess{T, G} <: UnivariateProcess{T}
     dylaw::G
 end
 
-function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T, G}, yt::AbstractVector{T}) where {T, G}
+function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T}, yt::AbstractVector{T}) where {T}
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    ni1 = firstindex(yt)
+    yt[ni1] = zero(T)
+    for ni in Iterators.drop(eachindex(yt), 1)
+        yt[ni] = yt[ni1]
+        r = - log(rand(rng)) / noise.λ
+        while r < dt
+            yt[ni] += rand(rng, noise.dylaw)
+            r -= log(rand(rng)) / noise.λ
+        end
+        ni1 = ni
+    end
+end
+
+#= 
+# The following sampler is about four times slower so drop it
+function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T}, yt::AbstractVector{T}) where {T}
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
     dnlaw = Poisson(noise.λ * dt)
@@ -219,43 +235,7 @@ function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcess{T, G}, yt:
         i1 = i
     end
 end
-
-"""
-    CompoundPoissonProcessAlt(t0, tf, λ, dylaw)
-
-Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dylaw`.
-
-The noise process `noise = CompoundPoissonProcessAlt(t0, tf, λ, dylaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
-
-Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
-
-The noise returned by the constructor yields a random sample path by first drawing the interarrival times, along with the increments given by `dylaw`, during each mesh time interval.
-
-This is an alternative implementation to [`CompoundPoissonProcess`](@ref).
-"""
-struct CompoundPoissonProcessAlt{T, G} <: UnivariateProcess{T}
-    t0::T
-    tf::T
-    λ::T
-    dylaw::G
-end
-
-function Random.rand!(rng::AbstractRNG, noise::CompoundPoissonProcessAlt{T, G}, yt::Vector{T}) where {T, G}
-    n = length(yt)
-    dt = (tf - t0) / (n - 1)
-    n1 = firstindex(yt)
-    yt[n1] = zero(T)
-    while ni < n
-        Yn1 = yt[n1]
-        ni += 1
-        yt[i] = Yn1
-        r = - log(rand(rng)) / noise.λ
-        while r < dt
-            yt[ni] += rand(rng, noise.dylaw)
-            r -= log(rand(rng)) / noise.λ
-        end
-    end
-end
+ =#
 
 """
     PoissonStepProcess(t0, tf, λ, steplaw)
@@ -289,6 +269,44 @@ function Random.rand!(rng::AbstractRNG, noise::PoissonStepProcess{T, G}, yt::Abs
         numi = rand(rng, dnlaw)
         yt[i] = iszero(numi) ? yt[i1] : rand(rng, noise.steplaw)
         i1 = i
+    end
+end
+
+"""
+    ExponentialHawkesProcess(t0, tf, λ, δ, dylaw)
+
+Construct an Exponentially Decaying Hawkes process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ`, increments given by the distribution `dylaw`, and exponential decay with rate `δ`. 
+
+The noise process `noise = ExponentialHawkesProcess(t0, tf, λ, δ, dylaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
+
+The noise returned by the constructor yields a random sample path by first drawing the interarrival times, along with the increments given by `dylaw`, during each mesh time interval, and then applying the exponential decay.
+"""
+struct ExponentialHawkesProcess{T, G} <: UnivariateProcess{T}
+    t0::T
+    tf::T
+    λ::T
+    δ::T
+    dylaw::G
+end
+
+function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::AbstractVector{T}) where {T}
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    dnlaw = Poisson(noise.λ * dt)
+    ti1 = noise.t0
+    integral = zero(T)
+    yt[begin] = integral
+    for i in Iterators.drop(eachindex(yt), 1)
+        numi = rand(rng, dnlaw)
+        ti = ti1 + dt
+        for _ in 1:numi
+            ti1 += (ti - ti1) * rand(rng)
+            integral += rand(rng, noise.dylaw) * exp(noise.δ * ti1)
+        end
+        yt[i] = exp(-noise.δ * ti) * integral
+        ti1 = ti
     end
 end
 
