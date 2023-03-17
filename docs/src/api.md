@@ -1,6 +1,6 @@
 # API
 
-Here we include the docstrings of the functions implemented in `RODEConvergence.jl`.
+Here we include the docstrings of the methods implemented in `RODEConvergence.jl`, including [noise processes](#noises), [solver methods](#solver-methods), and [convergence estimate tools](#error-estimation).
 
 ## Noises
 
@@ -22,6 +22,10 @@ CompoundPoissonProcess
 
 ```@docs
 PoissonStepProcess
+```
+
+```@docs
+ExponentialHawkesProcess
 ```
 
 ```@docs
@@ -48,7 +52,7 @@ RODEConvergence.MultivariateProcess{T}
 RODEConvergence.rand!
 ```
 
-## Methods
+## Solver methods
 
 ```@docs
 RandomEuler
@@ -76,23 +80,7 @@ RODEConvergence.ConvergenceResult
 RODEConvergence.solve
 ```
 
-```@docs
-RODEConvergence.solve!
-```
-
-```@docs
-RODEConvergence.calculate_trajerrors!
-```
-
-## Output
-
-```@docs
-RODEConvergence.plot_suite
-```
-
-```@docs
-RODEConvergence.plot_convergence
-```
+## Latex output
 
 ```@docs
 generate_error_table
@@ -106,4 +94,12 @@ AbstractProcess
 
 ```@docs
 RODEConvergence.RODEMethod
+```
+
+```@docs
+RODEConvergence.solve!
+```
+
+```@docs
+RODEConvergence.calculate_trajerrors!
 ```
