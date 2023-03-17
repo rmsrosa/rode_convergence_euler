@@ -297,17 +297,21 @@ function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
     ti1 = noise.t0
+    ti = ti1 + dt
     ni1 = firstindex(yt)
     yt[ni1] = noise.λ₀ # initial intensity
-    ti = ti1 - log(rand(rng)) / yt[ni1] # next arrival
+    t = ti1 - log(rand(rng)) / yt[ni1] # next arrival
     for ni in Iterators.drop(eachindex(yt), 1)
-        ti1 += dt
-        while ti ≤ ti1
-            yt[ni] = ( yt[ni1] + rand(rng, noise.dylaw) ) * exp(-noise.δ * (ti1 - ti)) # new increment with tiny decay
-            ti -= log(rand(rng)) / yt[ni] # next arrival
+        yt[ni] = yt[ni1] * exp( -noise.δ * min(dt, t - ti1) ) # update decay to time t or ti = ti1 + dt, whichever is first
+        while t ≤ ti
+            yt[ni] += rand(rng, noise.dylaw) # add new increment at arrival time t
+            r = - log(rand(rng)) / yt[ni] # next interarrival
+            yt[ni] *= exp( -noise.δ * min(ti - t, r) ) # update decay to time t + r or ti, whichever is first
+            t += r            
         end
-        yt[ni] *= exp(-noise.δ * (ti1 - ti))
         ni1 = ni
+        ti1 = ti
+        ti += dt
     end
 end
 
