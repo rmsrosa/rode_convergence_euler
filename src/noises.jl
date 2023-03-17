@@ -256,58 +256,62 @@ function Random.rand!(rng::AbstractRNG, noise::PoissonStepProcess{T, G}, yt::Abs
 end
 
 """
-    ExponentialHawkesProcess(t0, tf, λ, δ, dylaw)
+    ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
 
 Construct an Exponentially Decaying Hawkes process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ`, increments given by the distribution `dylaw`, and exponential decay with rate `δ`. 
+
+An exponentially decaying Hawkes process is a self-exciting point process ``\\lambda_t``, representing a time-dependent intensity rate for an inhomogenous Poisson counter with an initial intensity ``\\lambda_0``, a reversion level ``a`` with ``\\lambda_0 > a \\geq 0``, an exponential decay with rate ``\\delta``, and jump increments ``S_k``, at each arrival time ``T_k``, with law given by `dylaw`. The process is define by
+
+```math
+    \\lambda_t = a + (\\lambda_0 - a) e^{-\\delta (t-t_0)} + \\sum_{t_0 \\leq T_k < t} S_k e^{-\\delta (t - T_k)}, \\quad t \\geq t_0.
+```
 
 The noise process `noise = ExponentialHawkesProcess(t0, tf, λ, δ, dylaw)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
 
 The noise returned by the constructor yields a random sample path by first drawing the interarrival times, along with the increments given by `dylaw`, during each mesh time interval, and then applying the exponential decay.
+
+This implementation of the Hawkes process follows [A. Dassius and H. Zhao, Exact simulation of Hawkes process with exponentially decaying intensity, Electron. Commun. Probab. 18 (2013), no. 62, 1-13.](https://projecteuclid.org/journals/electronic-communications-in-probability/volume-18/issue-none/Exact-simulation-of-Hawkes-process-with-exponentially-decayingintensity/10.1214/ECP.v18-2717.full)
 """
 struct ExponentialHawkesProcess{T, G} <: UnivariateProcess{T}
     t0::T
     tf::T
     λ₀::T
+    a::T
     δ::T
     dylaw::G
-end
-#= 
-function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::AbstractVector{T}) where {T}
-    n = length(yt)
-    dt = (noise.tf - noise.t0) / (n - 1)
-    dnlaw = Poisson(noise.δ * dt)
-    ti1 = noise.t0
-    integral = noise.λ₀
-    yt[begin] = integral
-    for i in Iterators.drop(eachindex(yt), 1)
-        numi = rand(rng, dnlaw)
-        ti = ti1 + dt
-        for _ in 1:numi
-            ti1 += (ti - ti1) * rand(rng)
-            integral += rand(rng, noise.dylaw) * exp(noise.δ * ti1)
-        end
-        yt[i] = exp(-noise.δ * ti) * integral
-        ti1 = ti
+    function ExponentialHawkesProcess(t0::T, tf::T, λ₀::T, a::T, δ::T, dylaw::G) where {T, G}
+        λ₀ > a ≥ zero(T) || error("Parameters must satisfy `λ₀ > a ≥ 0`")
+        dylaw isa Distribution && support(dylaw).lb ≥ zero(T) || error("Distribution `dylaw` must be nonnegative")
+        δ > 0 || error("Decay rate `δ` must be positive")
+        tf > t0 || error("Final time `tf` must be greater than initial time `t0`")
+        new{T, G}(t0, tf, λ₀, a, δ, dylaw)
     end
-end =#
+end
 
 function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::AbstractVector{T}) where {T}
+    δ = noise.δ
+    a = noise.a
     n = length(yt)
     dt = (noise.tf - noise.t0) / (n - 1)
     ti1 = noise.t0
     ti = ti1 + dt
     ni1 = firstindex(yt)
     yt[ni1] = noise.λ₀ # initial intensity
-    t = ti1 - log(rand(rng)) / yt[ni1] # next arrival
+    t = ti1 # starting arrival
+    d = 1 + δ * log( rand(rng) ) / (yt[ni1] - a)
+    s = -log(rand(rng)) / a
+    t += d ≤ 0.0 ? s : min(s, -log(d) / δ)
     for ni in Iterators.drop(eachindex(yt), 1)
-        yt[ni] = yt[ni1] * exp( -noise.δ * min(dt, t - ti1) ) # update decay to time t or ti = ti1 + dt, whichever is first
+        yt[ni] = (yt[ni1] - a) * exp( -δ * min(dt, t - ti1) ) + a # update decay to time t or ti = ti1 + dt, whichever is first
         while t ≤ ti
-            yt[ni] += rand(rng, noise.dylaw) # add new increment at arrival time t
-            r = - log(rand(rng)) / yt[ni] # next interarrival
-            yt[ni] *= exp( -noise.δ * min(ti - t, r) ) # update decay to time t + r or ti, whichever is first
-            t += r            
+            yt[ni] += rand(rng, noise.dylaw) 
+            d = 1 + δ * log( rand(rng) ) / (yt[ni] - a)
+            s = -log(rand(rng)) / a
+            r = d ≤ 0.0 ? s : min(s, -log(d) / δ)
+            yt[ni] = (yt[ni] - a) * exp( -δ * min(ti - t, r) ) + a # update decay to time t + r or ti, whichever is first
+            t += r
         end
         ni1 = ni
         ti1 = ti
@@ -366,7 +370,7 @@ The number of steps for the sample path is determined by the length of the given
 
 The method implemented is the one developed by Davies and Harte and uses an FFT transform to drop the order of complexity to O(N log N). For the transform, we use `FFTW.jl`, and use the flag `flags=FFTW.MEASURE` for generating the plans. Other common flags can be passed instead.
 
-This implementation of fractional Brownian motion via Davies-Harte method follows [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and A. [B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
+This implementation of fractional Brownian motion via Davies-Harte method follows [Dieker, T. (2004) Simulation of Fractional Brownian Motion. MSc Theses, University of Twente, Amsterdam](http://www.columbia.edu/~ad3217/fbm/thesis.pdf) and [A. B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, Probability in the Engineering and Informational Sciences, 17 (2003), 417-434](https://www.semanticscholar.org/paper/ON-SPECTRAL-SIMULATION-OF-FRACTIONAL-BROWNIAN-Dieker-Mandjes/b2d0d6a3d7553ae67a9f6bf0bbe21740b0914163)
 """
 struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess{Float64}
     t0::Float64

@@ -127,12 +127,13 @@
 
     @testset "Hawkes" begin
         rng = Xoshiro(123)
-        λ₀ = 2.0
-        δ = 4.0
-        α = 2.0
-        θ = 0.5
-        dylaw = Gamma(α, θ)
-        noise = ExponentialHawkesProcess(t0, tf, λ₀, δ, dylaw)
+        λ₀ = 1.8 # initial background intensity
+        a = 0.9 # asymptotic background intensity
+        δ = 1.4 # exponential decay rate
+        β = 1.8 # exponential rate for self-excited jumps
+        θ = 1 / β # (exponential) scale for the distribution of jumps
+        dylaw = Exponential(θ) # distribution of jumps
+        noise = ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
         
         @test eltype(noise) == Float64
         @test_nowarn rand!(rng, noise, yt)
@@ -145,12 +146,14 @@
             ytf[mi] = last(yt)
         end
 
-        @test_broken mean(ythf) ≈ λ₀ * exp( (mean(dylaw) - δ) * tf / 2 ) (atol = 0.1)
-        #@test var(ythf) ≈ λ * (tf/2) * ( μ^2 + σ^2 ) (rtol = 0.1)
-        @test_broken mean(ytf) ≈ λ₀ * exp( (mean(dylaw) - δ) * tf ) (atol = 0.1)
-        #@test var(ytf) ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
+        μ₁ = mean(dylaw) # first moment
+        μ₂ = μ₁^2 + var(dylaw) # second moment
+        κ = δ - μ₁
+        @test mean(ythf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf / 2 ) (rtol = 0.1)
+        @test var(ythf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf / 2) + ( λ₀ - a * δ / κ) * exp( -κ * tf / 2) + a * δ / 2κ) (rtol = 0.1)
+        @test mean(ytf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf ) (rtol = 0.1)
+        @test var(ytf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp( -κ * tf) + a * δ / 2κ) (rtol = 0.1)
     end
-
 
     @testset "Transport process" begin
         rng = Xoshiro(123)
