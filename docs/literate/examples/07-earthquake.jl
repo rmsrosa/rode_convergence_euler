@@ -2,12 +2,12 @@
 
 # Now we consider a mechanical structure problem under ground-shaking excitations, based on Earthquake models, especially the Kanai-Tajimi model.
 #
-# The mechanical structure is forced by a stochastic noise modeling the effects of an Earthquake. Several types of noises have been considered in the literature. A typical one is a white noise. Further studies show that the noise is actually a colored noise. So, we model the noise with a Orsntein-Uhlenbeck (OU) process $\{O_t\}_t$ with a relative small type scale $\tau$, i.e. satisfying the SDE
+# The mechanical structure is forced by a stochastic noise modeling the effects of an Earthquake. Several types of noises have been considered in the literature. A typical one is a white noise. Further studies show that the noise is actually a colored noise. Here, we model the colored noise with a Orsntein-Uhlenbeck (OU) process $\{O_t\}_t$ with a relative small time scale $\tau$, i.e. satisfying the SDE
 #
 # ```math
 #   \tau \mathrm{d}O_t = - \mathrm{d}t + D \mathrm{d}W_t,
 # ```
-# where $\{W_t\}_t$ is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift $\nu = 1/\tau$ and diffusion $\sigma = D/\tau$. This process, has mean, variance, and covariance given by
+# where $\{W_t\}_t$ is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift $\nu = 1/\tau$ and diffusion $\sigma = D/\tau$. This process has mean, variance, and covariance given by
 #
 # ```math
 #   \mathbb{E}[O_t] = O_0 e^{-\frac{t}{\tau}}, \mathrm{Var}(O_t) = \frac{D^2}{2\tau}, \quad \mathrm{Cov}(O_t,O_s) = \frac{D^2}{2\tau} e^{-\frac{|t - s|}{\tau}}.
@@ -15,9 +15,11 @@
 #
 # Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lessim \tau$. When $\tau \rightarrow 0$ with $D^2/2\tau \rightarrow 1$, this approximates a Gaussian white noise.
 #
+# Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we modulate the OU process with either a transport process or a self-excited point process.
 #
-# Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we module the OU process with a transport process composed of a series of time-translations of a initially Hölder-continuous front with exponential decay, $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$, with random parameters $\alpha, \beta, \gamma, \delta$, with arbitrarly small Hölder exponents $\alpha$.
+# The transport process is composed of a series of time-translations of a Hölder-continuous attack front, followed by an exponential decay: $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$. The parameters $\alpha, \beta, \gamma, \delta$ are random parameters, with the Hölder exponent $\alpha$ being arbitrarily small.
 #
+# The self-excited point process is an exponentially decaying Hawkes process, commonly used in modeling Earthquake shots and aftershocks.
 #
 # ## The equation
 #
@@ -60,47 +62,60 @@ y0 = 0.0
 D = 0.1 # large-scale diffusion
 ν = 1/τ # drift
 σ = D/τ # diffusion
-noise1 = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
+colored_noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 ylaw = product_distribution(Uniform(0.0, 2.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
 nr = 5
 g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])), +, eachcol(r))
-noise2 = TransportProcess(t0, tf, ylaw, g, nr)
+transport_envelope_noise = TransportProcess(t0, tf, ylaw, g, nr)
 
-noise = ProductProcess(noise1, noise2)
+λ₀ = 2.0
+a = 0.8
+δ = 0.9
+β = 1.8
+θ = 1/β
+dylaw = Exponential(θ)
+
+hawkes_envelope_noise = ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
+
+transportmodulated_noise = ProductProcess(colored_noise, transport_envelope_noise)
+
+hawkesmodulated_noise = ProductProcess(colored_noise, hawkes_envelope_noise)
 
 #
 
 ntgt = 2^12
 yt1 = Vector{Float64}(undef, ntgt)
-yt2 = similar(yt1)
+yt2 = Vector{Float64}(undef, ntgt)
+yt3 = Vector{Float64}(undef, ntgt)
+yt4 = Vector{Float64}(undef, ntgt)
 
-rand!(rng, noise1, yt1)
-rand!(rng, noise2, yt2)
+rand!(rng, colored_noise, yt1)
+rand!(rng, transport_envelope_noise, yt2)
+rand!(rng, hawkes_envelope_noise, yt3)
 
-noise3 = WienerProcess(t0, tf, y0)
-yt3 = similar(yt1)
-rand!(rng, noise3, yt3)
+wiener_noise = WienerProcess(t0, tf, y0)
+rand!(rng, wiener_noise, yt4)
 dt = (tf - t0) / (length(yt1) - 1)
-wt3 = (yt3[2:end] .- yt3[1:end-1])/dt^0.5
+wt = (yt4[2:end] .- yt4[1:end-1])/dt^0.5
 
 begin
     plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
-    plot!(t0+dt:dt:tf, wt3, label="white noise")
+    plot!(t0+dt:dt:tf, wt, label="white noise")
     plot!(t0:dt:tf, yt1, label="OU")
-    plot!(t0:dt:tf, yt3, label="Wiener")
+    plot!(t0:dt:tf, yt4, label="Wiener")
 end
 
 #
 
 begin
-    plot(abs2.(rfft(wt3)), label="white noise spectrum")
+    plot(abs2.(rfft(wt)), label="white noise spectrum")
     plot!(abs2.(rfft(yt1)), label="OU spectrum")
 end
 
 #
 
-mean(wt3)
+mean(wt)
 
 #
 
@@ -108,7 +123,7 @@ mean(yt1)
 
 #
 
-std(wt3)
+std(wt)
 
 #
 
@@ -120,6 +135,14 @@ begin
     plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
     plot!(t0:dt:tf, yt2 .* yt1, label="noise")
     plot!(t0:dt:tf, yt2, label="envelope")
+end
+
+#
+
+begin
+    plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
+    plot!(t0:dt:tf, yt3 .* yt1, label="noise")
+    plot!(t0:dt:tf, yt3, label="envelope")
 end
 
 #
