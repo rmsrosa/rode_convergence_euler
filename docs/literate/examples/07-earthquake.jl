@@ -17,9 +17,9 @@
 #
 # Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we modulate the OU process with either a transport process or a self-excited point process.
 #
-# The transport process is composed of a series of time-translations of a Hölder-continuous attack front, followed by an exponential decay: $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$. The parameters $\alpha, \beta, \gamma, \delta$ are random parameters, with the Hölder exponent $\alpha$ being arbitrarily small.
+# The transport process is composed of a series of time-translations of a Hölder-continuous "attack" front, followed by an exponential decay: $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$. The parameters $\alpha, \beta, \gamma, \delta$ are random parameters, with the Hölder exponent $\alpha$ being arbitrarily small.
 #
-# The self-excited point process is an exponentially decaying Hawkes process, commonly used in modeling Earthquake shots and aftershocks.
+# The aftershocks, however, tend to come in clusters, for which self-exciting intensity process have been successful in modeling the arrival times of the shocks, starting with the celebrated Omori formula. Here, for the sake of simplicity, we consider an exponentially decaying self-excited Hawkes process. The intensity of the process, for the interarrival times, is not necessarily related to the magnitude of the aftershocks, but, again, for the sake of simplicity, we use the intensity itself as an envelope for the noise.
 #
 # ## The equation
 #
@@ -38,24 +38,25 @@ using RODEConvergence
 
 # Then we set up some variables
 
+begin
 rng = Xoshiro(123)
 
-function f(dx, t, x, y)
+function f!(dx, t, x, y)
     ζ = 0.64
     ω = 15.56
-    dx[1] = -x[2] + y[1]
-    dx[2] = -2 * ζ * ω * (x[2] + y[1]) + ω ^ 2 * x[1] + y[1] * y[2]
+    dx[1] = x[2]
+    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] - y[1] * y[2]
     return dx
 end
 
 t0 = 0.0
-tf = 2.0
+tf = 4.0
 
 # The structure initially at rest
 
 x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 
-# The noise is a Wiener process modulated by a transport process
+# Two types of noise are considered, namely an Ornstein-Uhlenbeck process modulated by either a transport process or a Hawkes process
 
 y0 = 0.0
 τ = 0.005 # time scale
@@ -63,15 +64,16 @@ D = 0.1 # large-scale diffusion
 ν = 1/τ # drift
 σ = D/τ # diffusion
 colored_noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
+wiener_noise = WienerProcess(t0, tf, y0)
 
 ylaw = product_distribution(Uniform(0.0, 2.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
-nr = 5
+nr = 8
 g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])), +, eachcol(r))
 transport_envelope_noise = TransportProcess(t0, tf, ylaw, g, nr)
 
-λ₀ = 2.0
-a = 0.8
-δ = 0.9
+λ₀ = 3.0
+a = 0.3
+δ = 5.0
 β = 1.8
 θ = 1/β
 dylaw = Exponential(θ)
@@ -90,29 +92,28 @@ yt2 = Vector{Float64}(undef, ntgt)
 yt3 = Vector{Float64}(undef, ntgt)
 yt4 = Vector{Float64}(undef, ntgt)
 
+rand!(rng, wiener_noise, yt4)
 rand!(rng, colored_noise, yt1)
 rand!(rng, transport_envelope_noise, yt2)
 rand!(rng, hawkes_envelope_noise, yt3)
 
-wiener_noise = WienerProcess(t0, tf, y0)
-rand!(rng, wiener_noise, yt4)
 dt = (tf - t0) / (length(yt1) - 1)
 wt = (yt4[2:end] .- yt4[1:end-1])/dt^0.5
-
+#= 
 begin
     plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
     plot!(t0+dt:dt:tf, wt, label="white noise")
     plot!(t0:dt:tf, yt1, label="OU")
     plot!(t0:dt:tf, yt4, label="Wiener")
 end
-
+ =#
 #
-
+#= 
 begin
     plot(abs2.(rfft(wt)), label="white noise spectrum")
     plot!(abs2.(rfft(yt1)), label="OU spectrum")
 end
-
+ =#
 #
 
 mean(wt)
@@ -131,25 +132,29 @@ std(yt1)
 
 #
 
-begin
-    plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
-    plot!(t0:dt:tf, yt2 .* yt1, label="noise")
-    plot!(t0:dt:tf, yt2, label="envelope")
-end
+#begin
+    plt = plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
+    plot!(plt, t0:dt:tf, yt2 .* yt1, label="noise")
+    plot!(plt, t0:dt:tf, yt2, label="transport envelope")
+    display(plt)
+#end
 
 #
 
-begin
-    plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
-    plot!(t0:dt:tf, yt3 .* yt1, label="noise")
-    plot!(t0:dt:tf, yt3, label="envelope")
+#begin
+    plt = plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
+    plot!(plt, t0:dt:tf, yt3 .* yt1, label="noise")
+    plot!(plt, t0:dt:tf, yt3, label="Hawkes envelope")
+    display(plt)
+#end
+
 end
 
 #
 
 ntgt = 2^18
-ns = 2 .^ (5:9)
-nsample = ns[[1, 2, 3, 4]]
+ns = 2 .^ (6:9)
+nsample = ns[[1, 2, 3]]
 m = 1_000
 
 # And add some information about the simulation:
@@ -169,25 +174,38 @@ method = RandomEuler(length(x0law))
 
 # With all the parameters set up, we build the convergence suite:     
 
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+transportmodulated_suite = ConvergenceSuite(t0, tf, x0law, f!, transportmodulated_noise, target, method, ntgt, ns, m)
+
+hawkesmodulated_suite = ConvergenceSuite(t0, tf, x0law, f!, hawkesmodulated_noise, target, method, ntgt, ns, m)
 
 # Then we are ready to compute the errors:
 
-@time result = solve(rng, suite)
+@time transportmodulated_result = solve(rng, transportmodulated_suite)
 
-# The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
+#
+
+@time hawkesmodulated_result = solve(rng, hawkesmodulated_suite)
+
+# The computed strong error for each resolution in `ns` is stored in field `errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
 
-table = generate_error_table(result, info)
+println(generate_error_table(transportmodulated_result, info)) # hide
+nothing # hide
 
-println(table) # hide
+#
+
+println(generate_error_table(hawkesmodulated_result, info)) # hide
 nothing # hide
 
 # 
-# 
 # The calculated order of convergence is given by `result.p`:
 
-println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(transportmodulated_result.p, sigdigits=2))")
+
+#
+
+
+println("Order of convergence `C Δtᵖ` with p = $(round(hawkesmodulated_result.p, sigdigits=2))")
 
 # 
 # 
@@ -195,7 +213,11 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 # 
 # We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plot(result)
+plot(transportmodulated_result)
+
+# 
+
+plot(hawkesmodulated_result)
 
 # 
 
@@ -204,4 +226,8 @@ plot(result)
 
 # For the sake of illustration, we plot a sample of an approximation of a target solution:
 
-plot(suite, ns=nsample)
+plot(transportmodulated_suite, ns=nsample)
+
+#
+
+plot(hawkesmodulated_suite, ns=nsample)
