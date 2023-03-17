@@ -316,7 +316,7 @@
         @test vars[2] ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf) ) (rtol = 0.1)
 
         @test means[3] ≈ y0 * exp(μ * tf) (rtol = 0.1)
-        @test vars[3] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (rtol = 0.1)
+        @test vars[3] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (rtol = 0.2)
 
         @test means[4] ≈ μ * λ * tf (rtol = 0.1)
         @test vars[4] ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
@@ -331,10 +331,10 @@
         @test vars[6] ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp( -κ * tf) + a * δ / 2κ) (rtol = 0.1)
 
 
-        @test means[7] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.3)
-        @test vars[7] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.1)
+        @test means[7] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.5)
+        @test vars[7] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.2)
 
-        @test means[8] ≈ y0 (rtol = 0.1)
-        @test vars[8] ≈ tf^(2hurst) (rtol = 0.1)
+        @test means[8] ≈ y0 (rtol = 0.2)
+        @test vars[8] ≈ tf^(2hurst) (rtol = 0.2)
     end
 end

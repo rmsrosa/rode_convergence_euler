@@ -258,9 +258,9 @@ end
 """
     ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
 
-Construct an Exponentially Decaying Hawkes process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ`, increments given by the distribution `dylaw`, and exponential decay with rate `δ`. 
+Construct an Exponentially Decaying Hawkes process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ`, jump increments given by the distribution `dylaw`, and exponential decay with rate `δ`. 
 
-An exponentially decaying Hawkes process is a self-exciting point process ``\\lambda_t``, representing a time-dependent intensity rate for an inhomogenous Poisson counter with an initial intensity ``\\lambda_0``, a reversion level ``a`` with ``\\lambda_0 > a \\geq 0``, an exponential decay with rate ``\\delta``, and jump increments ``S_k``, at each arrival time ``T_k``, with law given by `dylaw`. The process is define by
+An exponentially decaying Hawkes process is a self-exciting point process ``\\lambda_t``, representing a time-dependent intensity rate for an inhomogenous Poisson counter with an initial intensity ``\\lambda_0``, a reversion level ``a`` with ``\\lambda_0 \\geq a \\geq 0``, an exponential decay with rate ``\\delta > 0``, and positive stationary random jump increments ``S_k``, at each arrival time ``T_k``. The process is define by
 
 ```math
     \\lambda_t = a + (\\lambda_0 - a) e^{-\\delta (t-t_0)} + \\sum_{t_0 \\leq T_k < t} S_k e^{-\\delta (t - T_k)}, \\quad t \\geq t_0.
@@ -282,7 +282,7 @@ struct ExponentialHawkesProcess{T, G} <: UnivariateProcess{T}
     δ::T
     dylaw::G
     function ExponentialHawkesProcess(t0::T, tf::T, λ₀::T, a::T, δ::T, dylaw::G) where {T, G}
-        λ₀ > a ≥ zero(T) || error("Parameters must satisfy `λ₀ > a ≥ 0`")
+        ( λ₀ ≥ a ≥ zero(T)) || error("Parameters must satisfy `λ₀ ≥ a ≥ 0`")
         dylaw isa Distribution && support(dylaw).lb ≥ zero(T) || error("Distribution `dylaw` must be nonnegative")
         δ > 0 || error("Decay rate `δ` must be positive")
         tf > t0 || error("Final time `tf` must be greater than initial time `t0`")
