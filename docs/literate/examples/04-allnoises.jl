@@ -42,16 +42,21 @@ y0 = 0.2
 λ = 10.0
 α = 2.0
 β = 15.0
+λ₀ = 2.0
+a = 0.8
+δ = 0.9
+β̃ = 1.8
+dylaw2 = Exponential(1/β̃)
 dylaw = Normal(μ, σ)
 steplaw = Beta(α, β)
 nr = 20
-transport(t, r) = mapreduce(ri -> sin(t/ri), +, r) / length(r)
+transport(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
 ylaw = Beta(α, β)
 hurst = 0.6
 
 ntgt = 2^18
-ns = 2 .^ (4:9)
-nsample = ns[[1, 2, 3, 4]]
+ns = 2 .^ (5:9)
+nsample = ns[[1, 2, 3]]
 m = 1_000
 
 noise = ProductProcess(
@@ -60,6 +65,7 @@ noise = ProductProcess(
     GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
     CompoundPoissonProcess(t0, tf, λ, dylaw),
     PoissonStepProcess(t0, tf, λ, steplaw),
+    ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw2),
     TransportProcess(t0, tf, ylaw, transport, nr),
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, ntgt)
 )
@@ -123,7 +129,7 @@ plot(suite, ns=nsample)
 
 # We can also visualize the noise associated with this sample solution, both individually
 
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=true, linecolor=:auto)
 
 # and combined into a sum
 
