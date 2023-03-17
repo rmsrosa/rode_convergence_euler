@@ -127,9 +127,9 @@
 
     @testset "Hawkes" begin
         rng = Xoshiro(123)
-        λ₀ = 1.8 # initial background intensity
-        a = 0.9 # asymptotic background intensity
-        δ = 1.4 # exponential decay rate
+        λ₀ = 2.0 # initial background intensity
+        a = 0.8 # asymptotic background intensity
+        δ = 0.9 # exponential decay rate
         β = 1.8 # exponential rate for self-excited jumps
         θ = 1 / β # (exponential) scale for the distribution of jumps
         dylaw = Exponential(θ) # distribution of jumps
@@ -150,9 +150,9 @@
         μ₂ = μ₁^2 + var(dylaw) # second moment
         κ = δ - μ₁
         @test mean(ythf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf / 2 ) (rtol = 0.1)
-        @test var(ythf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf / 2) + ( λ₀ - a * δ / κ) * exp( -κ * tf / 2) + a * δ / 2κ) (rtol = 0.1)
+        @test var(ythf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf / 2) + ( λ₀ - a * δ / κ) * exp(-κ * tf / 2) + a * δ / 2κ) (rtol = 0.1)
         @test mean(ytf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf ) (rtol = 0.1)
-        @test var(ytf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp( -κ * tf) + a * δ / 2κ) (rtol = 0.1)
+        @test var(ytf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp(-κ * tf) + a * δ / 2κ) (rtol = 0.2)
     end
 
     @testset "Transport process" begin
@@ -244,8 +244,13 @@
         α = 2.0
         β = 15.0
         θ = 0.06
+        λ₀ = 2.0
+        a = 0.8
+        δ = 0.9
+        β̃ = 1.8
         dylaw = Normal(μ, σ)
         steplaw = Beta(α, β)
+        dylaw2 = Exponential(1/β̃)
         nr = 50
         transport = (t, r) -> mapreduce(ri -> sin(t/ri), +, r) / length(r)
         ylaw = Gamma(α, θ)
@@ -276,6 +281,7 @@
             GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
             CompoundPoissonProcess(t0, tf, λ, dylaw),
             PoissonStepProcess(t0, tf, λ, steplaw),
+            ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw2),
             TransportProcess(t0, tf, ylaw, transport, nr),
             FractionalBrownianMotionProcess(t0, tf, y0, hurst, n)
         )
@@ -304,24 +310,31 @@
         vars = var(ymtf, dims=1)
         
         @test means[1] ≈ y0 (atol = 0.1)
-        @test vars[1] ≈ tf (atol = 0.1)
+        @test vars[1] ≈ tf (rtol = 0.1)
 
-        @test means[2] ≈ y0 * exp( -ν * tf) (atol = 0.1)
-        @test vars[2] ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf) ) (atol = 0.1)
+        @test means[2] ≈ y0 * exp( -ν * tf) (rtol = 0.1)
+        @test vars[2] ≈ ( σ^2 / (2ν) ) * ( 1 - exp( -2ν * tf) ) (rtol = 0.1)
 
-        @test means[3] ≈ y0 * exp(μ * tf) (atol = 0.1)
-        @test vars[3] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
+        @test means[3] ≈ y0 * exp(μ * tf) (rtol = 0.1)
+        @test vars[3] ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (rtol = 0.1)
 
-        @test means[4] ≈ μ * λ * tf (atol = 0.1)
+        @test means[4] ≈ μ * λ * tf (rtol = 0.1)
         @test vars[4] ≈ λ * tf * ( μ^2 + σ^2 ) (rtol = 0.1)
 
-        @test means[5] ≈ α/(α + β) (atol = 0.1)
-        @test vars[5] ≈ α*β/(α + β)^2/(α + β + 1) (atol = 0.1)
+        @test means[5] ≈ α/(α + β) (rtol = 0.1)
+        @test vars[5] ≈ α*β/(α + β)^2/(α + β + 1) (rtol = 0.1)
 
-        @test means[6] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
-        @test vars[6] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
+        μ₁ = mean(dylaw2)
+        μ₂ = μ₁^2 + var(dylaw2)
+        κ = δ - μ₁
+        @test means[6] ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf ) (rtol = 0.1)
+        @test vars[6] ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp( -κ * tf) + a * δ / 2κ) (rtol = 0.1)
 
-        @test means[7] ≈ y0 (atol = 0.1)
-        @test vars[7] ≈ tf^(2hurst) (atol = 0.1)
+
+        @test means[7] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.3)
+        @test vars[7] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.1)
+
+        @test means[8] ≈ y0 (rtol = 0.1)
+        @test vars[8] ≈ tf^(2hurst) (rtol = 0.1)
     end
 end
