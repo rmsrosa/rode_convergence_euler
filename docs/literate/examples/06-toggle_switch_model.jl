@@ -4,7 +4,7 @@
 
 # ## The equation
 
-# More precisely, we consider the RODE
+# The equation takes the form
 # ```math
 #   \begin{cases}
 #     \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \lambda(1 + \epsilon\sin(G_t)) X_t (r - X_t) - \alpha H_t, \qquad 0 \leq t \leq T, \\
@@ -37,9 +37,11 @@ using LinearAlgebra
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables
+# Then we define the random seed
 
 rng = Xoshiro(123)
+
+# The evolution law
 
 function f!(dx, t, x, y)
     a⁴ = c⁴ = 0.25 ^ 4
@@ -53,14 +55,24 @@ function f!(dx, t, x, y)
     return dx
 end
 
+# The time interval
+
 t0 = 0.0
 tf = 4.0
 
-x0law = product_distribution(Beta(5.0, 5.0), Beta(5.0, 5.0))
+# The law for the initial condition
+
+α = 5.0
+β = 5.0
+x0law = product_distribution(Beta(α, β), Beta(α, β))
+
+# The compound Poisson processes for the source terms
 
 λ = 12.0
 ylaw = Uniform(0.0, 0.5)
 noise = ProductProcess(CompoundPoissonProcess(t0, tf, λ, ylaw), CompoundPoissonProcess(t0, tf, λ, ylaw))
+
+# The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
 
 ntgt = 2^18
 ns = 2 .^ (4:9)
@@ -70,9 +82,9 @@ m = 5_000
 # And add some information about the simulation:
 
 info = (
-    equation = "population dynamics",
-    noise = "gBm and step process noises",
-    ic = "\$X_0 \\sim \\mathcal{B}($(round(α, sigdigits=1)), $(round(β, sigdigits=1)))\$"
+    equation = "toggle-swith model of gene regulation",
+    noise = "compound Poisson process noises",
+    ic = "\$X_0 \\sim \\mathcal{B}($(round(α, sigdigits=1)), $(round(β, sigdigits=1)))^2\$"
 )
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -99,7 +111,6 @@ println(table) # hide
 nothing # hide
 
 # 
-# 
 # The calculated order of convergence is given by `result.p`:
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
@@ -108,7 +119,7 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 # 
 # ### Plots
 # 
-# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
+# We plot the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 plot(result)
 
@@ -121,6 +132,6 @@ plot(result)
 
 plot(suite, ns=nsample)
 
-# We can also visualize the noise associated with this sample solution:
+# We can also visualize the noises associated with this sample solution:
 
 plot(suite, xshow=false, yshow=true)

@@ -80,10 +80,18 @@ RODEConvergence.ConvergenceResult
 RODEConvergence.solve
 ```
 
-## Latex output
+## Output
 
 ```@docs
 generate_error_table
+```
+
+```@docs
+RODEConvergence.plot_convergence
+```
+
+```@docs
+RODEConvergence.plot_suite
 ```
 
 ## Extras

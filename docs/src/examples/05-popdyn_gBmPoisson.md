@@ -2,9 +2,9 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-popdyn_gBmPoisson.jl"
 ```
 
-# Population dynamics with sin(gBm) growth and step process harvest
+# Population dynamics with sin of gBm growth and step process harvest
 
-Now we consider a population dynamics model with a coupled noise term, a geometric Brownian motion process affecting the growth and a point Poisson step process affecting the harvest
+This time we consider a population dynamics model with a coupled noise term, a geometric Brownian motion process affecting the growth and a point Poisson step process affecting the harvest.
 
 ## The equation
 
@@ -15,19 +15,19 @@ More precisely, we consider the RODE
   \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 ```
-where $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion process and $\{H_t\}_{t \geq 0}$ is a point Poisson step process.
+where $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion process and $\{H_t\}_{t \geq 0}$ is a point Poisson step process with Beta-distributed steps.
 
-For the sake of simplicity, we fix $\lambda = 10.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.05$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, so we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
-More precisely, we choose a Beta distribution as the step law, with mean a little below $1/2$, so it stays mostly below the critical value, but often above it.
+We fix $\lambda = 1.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.5$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, so we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
+
+We choose a Beta distribution as the step law, with mean a little below $1/2$, so it stays mostly below the critical value, but often above it.
 
 The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.8$ and initial value $y_0 = 0.1$.
 
-The point Poisson step process
+The Poisson counter for the point Poisson step process is chosen with rate 15.0, while the time interval is chosen with unit time span.
 
-As for the initial condition, we choose a Beta distribution with shape parameter
+As for the initial condition, we also choose a Beta distribution, so it stays within the growth region, and with the same parameters as for the steps.
 
-We don't have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
-
+We do not have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
 ## Numerical approximation
 
@@ -42,7 +42,7 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables
+Then we set up the problem parameters.
 
 ````@example 05-popdyn_gBmPoisson
 rng = Xoshiro(123)
@@ -59,9 +59,9 @@ end
 t0 = 0.0
 tf = 1.0
 
-α = 7.0
-β = 5.0
-x0law = Beta(α, β)
+α₀ = 7.0
+β₀ = 5.0
+x0law = Beta(α₀, β₀)
 
 μ = 1.0
 σ = 0.8
@@ -69,7 +69,7 @@ y0 = 0.1
 noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
 λₚ = 15.0
-steplaw = Beta(β, α)
+steplaw = Beta(β₀, α₀)
 noise2 = PoissonStepProcess(t0, tf, λₚ, steplaw)
 
 noise = ProductProcess(noise1, noise2)
@@ -86,7 +86,7 @@ And add some information about the simulation:
 info = (
     equation = "population dynamics",
     noise = "gBm and step process noises",
-    ic = "\$X_0 \\sim \\mathcal{B}($(round(α, sigdigits=1)), $(round(β, sigdigits=1)))\$"
+    ic = "\$X_0 \\sim \\mathcal{B}($(round(α₀, sigdigits=1)), $(round(β₀, sigdigits=1)))\$"
 )
 ````
 
