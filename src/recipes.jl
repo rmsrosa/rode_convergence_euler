@@ -29,7 +29,6 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     yt = suite.yt
     xt = suite.xt
     xnt = suite.xnt
-
     
     xshow = (xshow == (:) || xshow === true ) ? eachindex(eachcol(xt)) : xshow
     yshow = (yshow == (:) || yshow === true ) ? eachindex(eachcol(yt)) : yshow
@@ -52,14 +51,15 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm noises" :
                 reshape([string(nameof(typeof(pr))) for pr in noise.processes], 1, :)
             label --> noiselabel
+            inds = first(axes(yt, 1)):max(1, div(size(yt, 1), 2^9)):last(axes(yt, 1))
             y = yshow isa Function ?
-                map(yshow, eachrow(yt)) :
+                map(yshow, eachrow(view(yt, inds, :))) :
                 yshow == :sum ?
-                sum(yt, dims=2) :
+                sum(view(yt, inds, :), dims=2) :
                 yshow == :norm ?
-                map(norm, eachrow(yt)) :
-                view(yt, :, yshow)
-            range(t0, tf, length=ntgt), y
+                map(norm, eachrow(view(yt, inds, :))) :
+                view(yt, inds, yshow)
+            range(t0, tf, length=length(inds)), y
         end
     end
 
@@ -111,14 +111,15 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm of target" :
                 reshape(["target $i" for i in 1:length(x0law)], 1, :)
             label --> sollabel
+            inds = first(axes(xt, 1)):max(1, div(size(xt, 1), 2^9)):last(axes(xt, 1))
             x = xshow isa Function ?
-                map(xshow, eachrow(xt)) :
+                map(xshow, eachrow(view(xt, inds, :))) :
                 xshow == :sum ?
-                sum(xt, dims=2) :
+                sum(view(xt, inds, :), dims=2) :
                 xshow == :norm ?
-                map(norm, eachrow(xt)) :
-                view(xt, :, xshow)
-            range(t0, tf, length=ntgt), x
+                map(norm, eachrow(view(xt, inds, :))) :
+                view(xt, inds, xshow)
+            range(t0, tf, length=length(inds)), x
         end
     end
 end
