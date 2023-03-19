@@ -4,7 +4,7 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/02-wie
 
 # Non-homogenous linear RODE with a Wiener process noise coefficient
 
-Our second example is another linear equation, but in which a Wiener process noise enters as the non-homogeneous term.
+In our second linear example, a Wiener process noise enters as the non-homogeneous term.
 
 ## The equation
 
@@ -110,15 +110,14 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables, as in the first example
+Then we set up the relevant variables, as in the first example
 
 ````@example 02-wiener_linearnonhomogeneous
 rng = Xoshiro(123)
 
 f(t, x, y) = - x + y
 
-t0 = 0.0
-tf = 1.0
+t0, tf = 0.0, 1.0
 x0law = Normal()
 
 y0 = 0.0
@@ -128,16 +127,13 @@ ntgt = 2^16
 ns = 2 .^ (4:14)
 nsample = ns[[1, 2, 3, 4]]
 m = 1_000
-````
 
-And add some information about the simulation:
-
-````@example 02-wiener_linearnonhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
+nothing # hide
 ````
 
 We define the *target* solution as described above.
@@ -211,11 +207,14 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 02-wiener_linearnonhomogeneous
-plot(result)
+plt = plot(result)
 ````
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
+and save it for use in the article:
+
+````@example 02-wiener_linearnonhomogeneous
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png"))
+````
 
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 

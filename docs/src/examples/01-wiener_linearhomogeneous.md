@@ -4,11 +4,11 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/01-wie
 
 # Homogenous linear RODE with a Wiener process noise coefficient
 
-We start by considering a homogeneous linear equation in which the coefficient is a Wiener process.
+We start by considering a homogeneous linear equation in which the coefficient is a Wiener process. In this case, it is already know, by other means, that the Euler method converges strongly of order 1, because it can be regarded as system of stochastic differential equations with additive noise. Nevertheless, we use it here for illustrative purposes.
 
 ## The equation
 
-More precisely, we consider the RODE
+We consider the RODE
 ```math
   \begin{cases}
     \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
@@ -125,12 +125,11 @@ f(t, x, y) = y * x
 Next we set up the time interval and the initial distribution law for the initial value problem:
 
 ````@example 01-wiener_linearhomogeneous
-t0 = 0.0
-tf = 1.0
+t0, tf = 0.0, 1.0
 x0law = Normal()
 ````
 
-The noise as a `WienerProcess` starting at ``y_0 = 0``:
+The noise is a `WienerProcess` starting at ``y_0 = 0``:
 
 ````@example 01-wiener_linearhomogeneous
 y0 = 0.0
@@ -143,6 +142,7 @@ The number of mesh points for the target solution, the approximations, and for a
 ntgt = 2^16
 ns = 2 .^ (4:14)
 nsample = ns[[1, 2, 3, 4]]
+nothing # hide
 ````
 
 Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
@@ -189,7 +189,7 @@ and with that we construct the [`CustomMethod`](@ref) that solves the problem wi
 target = CustomUnivariateMethod(target_solver!, rng)
 ````
 
-The method for which want to estimate the rate of convergence is, naturally, the Euler method:
+The method for which we want to estimate the rate of convergence is, naturally, the Euler method:
 
 ````@example 01-wiener_linearhomogeneous
 method = RandomEuler()
@@ -207,6 +207,7 @@ Then we are ready to compute the errors:
 
 ````@example 01-wiener_linearhomogeneous
 @time result = solve(rng, suite)
+nothing # hide
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
@@ -229,11 +230,14 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 01-wiener_linearhomogeneous
-plot(result)
+plt = plot(result)
 ````
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
+We save for use in the article:
+
+````@example 01-wiener_linearhomogeneous
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png"))
+````
 
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 
