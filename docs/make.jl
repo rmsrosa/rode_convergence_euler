@@ -27,7 +27,20 @@ makedocs(
             "theory/results.md",
             "theory/idea.md",
         ],
-        "Examples" => generated_examples,
+        "Examples" => [
+            "Linear RODEs" => [
+                "examples/01-wiener_linearhomogeneous.md",
+                "examples/02-wiener_linearnonhomogeneous.md",
+                "examples/03-sin_gBm_linearhomogeneous.md",
+                "examples/04-allnoises.md"
+            ],
+            "examples/05-popdyn_gBmPoisson.md",
+            "examples/06-toggle_switch_model.md",
+            "examples/07-earthquake.md",
+            "examples/08-fBm_linear.md",
+            "examples/09-fisherkpp.md"
+        ],
+        # "Examples" => generated_examples,
         #= "DifferentialEquations.jl" => [
             "Nonhomogenous Wiener noise" => "sciml/wiener_nonhomogeneous.md",
             "Homogenous Wiener noise" => "sciml/wiener_homogeneous.md",

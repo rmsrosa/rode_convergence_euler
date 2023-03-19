@@ -1,4 +1,4 @@
-# # Toggle-switch model with compound Poisson external activation process
+# # A toggle-switch, gene-expression model with compound Poisson external activation process
 
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://bmcsystbiol.biomedcentral.com/articles/10.1186/1752-0509-8-43).
 
@@ -57,8 +57,7 @@ end
 
 # The time interval
 
-t0 = 0.0
-tf = 4.0
+t0, tf = 0.0, 4.0
 
 # The law for the initial condition
 
@@ -77,7 +76,7 @@ noise = ProductProcess(CompoundPoissonProcess(t0, tf, λ, ylaw), CompoundPoisson
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 5_000
+m = 1_000
 
 # And add some information about the simulation:
 
@@ -101,6 +100,8 @@ suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
 # Then we are ready to compute the errors:
 
 @time result = solve(rng, suite)
+
+nothing # hide
 
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
@@ -134,4 +135,4 @@ plot(suite, ns=nsample)
 
 # We can also visualize the noises associated with this sample solution:
 
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=true, label=["Compound Poisson noise 1" "Compound Poisson noise 2"])

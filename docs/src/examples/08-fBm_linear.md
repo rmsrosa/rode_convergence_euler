@@ -2,7 +2,7 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-fBm_linear.jl"
 ```
 
-# Linear equation with fractional Brownian motion
+# Linear RODE with fractional Brownian motion
 
 
 
