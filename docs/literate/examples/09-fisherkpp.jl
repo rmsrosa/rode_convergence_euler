@@ -107,6 +107,7 @@ suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
 # Then we are ready to compute the errors:
 
 @time result = solve(rng, suite)
+nothing
 
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 

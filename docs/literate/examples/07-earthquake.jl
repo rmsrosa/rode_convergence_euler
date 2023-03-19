@@ -122,6 +122,7 @@ rand!(rng, hawkes_envelope_noise, yt3)
 
 dt = (tf - t0) / (length(yt1) - 1)
 wt = (yt4[2:end] .- yt4[1:end-1])/dt^0.5
+nothing
 
 # Now we plot the Wiener process, the associated white noise, and the colored OU noise
 
