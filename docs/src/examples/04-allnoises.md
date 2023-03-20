@@ -177,9 +177,9 @@ nothing # hide
 For the sake of illustration, we plot a sample of the norms of a sequence of approximations of a target solution, along with the norm of the target:
 
 ````@example 04-allnoises
-plt = [plot(suite, ns=nsample, xshow=i, title="Coordinate $i", titlefont=8) for i in axes(suite.xt, 2)]
+plts = [plot(suite, ns=nsample, xshow=i, resolution=2^4, title="Coordinate $i", titlefont=8) for i in axes(suite.xt, 2)]
 
-plot(plt..., legend=false)
+plot(plts..., legend=false)
 ````
 
 We can also visualize the noises associated with this sample solution, both individually
