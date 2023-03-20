@@ -52,7 +52,9 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 reshape([string(nameof(typeof(pr))) for pr in noise.processes], 1, :)
             label --> noiselabel
             inds = first(axes(yt, 1)):max(1, div(size(yt, 1), 2^9)):last(axes(yt, 1))
-            y = yshow isa Function ?
+            y = yshow isa Function && noise isa UnivariateProcess ?
+                map(yshow, view(yt, inds)) :
+                yshow isa Function ?
                 map(yshow, eachrow(view(yt, inds, :))) :
                 yshow == :sum ?
                 sum(view(yt, inds, :), dims=2) :
@@ -86,7 +88,9 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 markershape --> :auto
                 markercolor --> i + 2
                 label --> "n=$nsi"
-                x = xshow isa Function ?
+                x = xshow isa Function && x0law isa UnivariateDistribution ?
+                    map(xshow, view(xnt, 1:nsi)) :
+                    xshow isa Function ?
                     map(xshow, eachrow(view(xnt, 1:nsi, :))) :
                     xshow == :sum ?
                     sum(view(xnt, 1:nsi, :), dims=2) :
@@ -112,7 +116,9 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 reshape(["target $i" for i in 1:length(x0law)], 1, :)
             label --> sollabel
             inds = first(axes(xt, 1)):max(1, div(size(xt, 1), 2^9)):last(axes(xt, 1))
-            x = xshow isa Function ?
+            x = xshow isa Function && x0law isa         UnivariateDistribution ?
+                map(xshow, view(xt, inds)) :
+                xshow isa Function ?
                 map(xshow, eachrow(view(xt, inds, :))) :
                 xshow == :sum ?
                 sum(view(xt, inds, :), dims=2) :
