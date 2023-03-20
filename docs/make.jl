@@ -18,7 +18,7 @@ ENV["GKSwstype"] = "100"
 # Generate markdown pages from Literate scripts and get the list of generated pages as `generate_examples`:
 include(joinpath(@__DIR__(), "literate.jl"))
 
-makedocs(
+@time makedocs(
     sitename = "Euler method for RODEs",
     repo = "https://github.com/rmsrosa/rode_conv_em",
     pages = [

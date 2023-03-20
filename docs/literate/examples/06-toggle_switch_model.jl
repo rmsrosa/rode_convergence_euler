@@ -1,4 +1,4 @@
-# # A toggle-switch, gene-expression model with compound Poisson external activation process
+# # A toggle-switch model for gene-expression with compound Poisson external activation process
 
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://bmcsystbiol.biomedcentral.com/articles/10.1186/1752-0509-8-43).
 

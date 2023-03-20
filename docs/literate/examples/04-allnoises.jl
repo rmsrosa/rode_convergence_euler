@@ -1,6 +1,6 @@
 # # Non-homogenous linear system of RODEs with all implemented noises
 #
-# This time we consider a linear system of equations with a noise that combines all the implemented noises.
+# This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
 
 # ## The equation
 
@@ -13,6 +13,7 @@
 # ```
 # where $\{\mathbf{Y}_t\}_{t\geq 0}$ is a vector-valued noise with each component being each of the implemented noises.
 #
+# Again, the *target* solution is construced by solving the system via Euler method at a much higher resolution.
 #
 # ## Numerical approximation
 # 
@@ -26,14 +27,29 @@ using Random
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables, as in the first example
+# Then we set up some variables, as in the first example. First, the RNG
 
 rng = Xoshiro(123)
 
+# Next the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
+
 f!(dx, t, x, y) = (dx .= .- sum(abs2, y) .* x .+ y)
 
-t0 = 0.0
-tf = 1.0
+# The time interval is given by the end points
+
+t0, tf = 0.0, 1.0
+
+# and the mesh parameters are set to 
+
+ntgt = 2^18
+ns = 2 .^ (5:9)
+nsample = ns[[1, 2, 3]]
+
+# The number of simulations for the Monte Carlo estimate is set to
+
+m = 1_000
+
+# Now we define all the noise parameters
 
 y0 = 0.2
 μ = 0.3
@@ -54,10 +70,7 @@ transport(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
 ylaw = Beta(α, β)
 hurst = 0.6
 
-ntgt = 2^18
-ns = 2 .^ (5:9)
-nsample = ns[[1, 2, 3]]
-m = 1_000
+# The noise is, then, defined as a (vectorial) [`ProductProcess`](@ref), where each coordinate is one of the implemented noise types:
 
 noise = ProductProcess(
     WienerProcess(t0, tf, y0),
@@ -70,18 +83,22 @@ noise = ProductProcess(
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, ntgt)
 )
 
+# Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also expected to be of order 1, just like for the other types of noises in `noise`.
+#
+
+# Now we set up the initial condition, taking into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
+
 x0law = MvNormal(zeros(length(noise)), I)
 
-# And add some information about the simulation:
+# We finally add some information about the simulation:
 
 info = (
-    equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
-    noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
-    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
+    equation = "\$\\mathrm{d}\\mathbf{X}_t/\\mathrm{d}t = - \\| \\mathbf{Y}_t\\|^2 \\mathbf{X}_t + \\mathbf{Y}_t\$",
+    noise = "vector valued noise \$\\{Y_t\\}_t\$ with all the implemented noises",
+    ic = "\$X_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
 )
 
-
-# The method for which want to estimate the rate of convergence is, naturally, the Euler method:
+# The method for which want to estimate the rate of convergence is, naturally, the Euler method, which is also used to compute the *target* solution, at the finest mesh:
 
 target = RandomEuler(length(noise))
 method = RandomEuler(length(noise))
@@ -92,9 +109,10 @@ method = RandomEuler(length(noise))
 
 suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
 
-# Then we are ready to compute the errors:
+# Then we are ready to compute the errors via [`solve`](@ref):
 
 @time result = solve(rng, suite)
+nothing # hide
 
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
@@ -105,32 +123,33 @@ println(table) # hide
 nothing # hide
 
 # 
-# 
 # The calculated order of convergence is given by `result.p`:
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+nothing # hide
 
-# 
 # 
 # ### Plots
 # 
-# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
+# We illustrate the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plot(result)
+plt = plot(result)
 
-# 
+# and we save the plot for inclusion in the article
 
-## savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-## nothing # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
+nothing # hide
 
-# For the sake of illustration, we plot a sample of an approximation of a target solution:
+# For the sake of illustration, we plot a sample of the norms of a sequence of approximations of a target solution, along with the norm of the target:
 
-plot(suite, ns=nsample)
+plt = [plot(suite, ns=nsample, xshow=i, title="Coordinate $i", titlefont=8) for i in axes(suite.xt, 2)]
 
-# We can also visualize the noise associated with this sample solution, both individually
+plot(plt..., legend=false)
+
+# We can also visualize the noises associated with this sample solution, both individually
 
 plot(suite, xshow=false, yshow=true, linecolor=:auto)
 
-# and combined into a sum
+# and their sum squared
 
-plot(suite, xshow=false, yshow=:sum)
+plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="sum of squares of noises")

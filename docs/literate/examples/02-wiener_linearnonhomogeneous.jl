@@ -12,7 +12,6 @@
 #   \end{cases}
 # ```
 # where $\{W_t\}_{t\geq 0}$ is a Wiener process.
-
 # The explicit solution is
 # ```math
 #   X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}W_s\;\mathrm{d}s.
@@ -20,7 +19,7 @@
 
 # ## Computing a solution with the exact distribution
 
-# The integral $\int_0^{t_j} e^s W_s\;\mathrm{d}s$ and, hence, the exact solution, is not uniquely defined from the values $W_{t_j}$ of the noise on the mesh points, no matter how fine it is. Hence, it makes no sense to compute the strong distance to "the exact solution". But we can estimate that by drawing sample solutions with the exact distribution conditioned on the mesh values.
+# As in the first example, the integral $\int_0^{t_j} e^s W_s\;\mathrm{d}s$ and, hence, the exact solution, is not uniquely defined from the values $W_{t_j}$ of the noise on the mesh points, no matter how fine it is. Thus we estimate the strong error by drawing sample solutions with the exact distribution conditioned on the mesh values.
 # 
 # We do that by first breaking down the sum into parts:
 # ```math
@@ -82,7 +81,7 @@
 # ```
 # for realizations $Z_i$ drawn from a normal distribution and scaled by the standard deviation $\sqrt{(t_{i+1} - t_i)^3/12}$. This is implemented by computing the integral recursively, via
 # ```math
-#     \begin{cases} \\
+#     \begin{cases}
 #         I_j = I_{j-1} + \frac{W_{t_{j-1}} + W_{t_j}}{t_{j} - t_{j-1}}\left(e^{t_{j} - e^{t_{j-1}}}\right) - Z_j, \\
 #         Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
 #         R_j \sim \mathcal{N}(0, 1), \\
@@ -97,7 +96,7 @@
 # 
 # ### Setting up the problem
 # 
-# First we load the necessary packages
+# We load the necessary packages
 
 using Plots
 using Random
@@ -155,7 +154,7 @@ end
 
 target = CustomUnivariateMethod(target_solver!, rng)
 
-# The method for which want to estimate the rate of convergence is, naturally, the Euler method:
+# The method for which want to estimate the rate of convergence is, naturally, the Euler method, implemented via [`RandomEuler`](@ref):
 
 method = RandomEuler()
 
@@ -165,7 +164,7 @@ method = RandomEuler()
 
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 
-# Then we are ready to compute the errors:
+# Then we are ready to compute the errors via [`solve`](@ref):
 
 @time result = solve(rng, suite)
 
@@ -181,11 +180,12 @@ nothing # hide
 # The calculated order of convergence is given by `result.p`:
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+nothing # hide
 
 # 
 # ### Plots
 # 
-# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
+# We draw a plot of the rate of convergence with the help of a plot recipe for [`ConvergenceResult`](@ref):
 
 plt = plot(result)
 
@@ -193,10 +193,10 @@ plt = plot(result)
 
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png"))
 
-# For the sake of illustration, we plot a sample of an approximation of a target solution:
+# For the sake of illustration, we plot an approximation of a sample target solution:
 
 plot(suite, ns=nsample)
 
 # We can also visualize the noise associated with this sample solution:
 
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=true, label="Wiener noise")

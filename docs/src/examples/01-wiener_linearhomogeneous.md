@@ -16,7 +16,6 @@ We consider the RODE
   \end{cases}
 ```
 where $\{W_t\}_{t\geq 0}$ is a standard Wiener process.
-
 The explicit solution is
 ```math
   X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.
@@ -86,7 +85,7 @@ Thus, once an Euler approximation is computed, along with realizations $\{W_{t_i
 ```
 for realizations $Z_i$ drawn from a normal distribution and scaled by the standard deviation $\sqrt{(t_{i+1} - t_i)^3/12}$. This is implemented by computing the integral recursively, via
 ```math
-    \begin{cases} \\
+    \begin{cases}
         I_j = I_{j-1} + \frac{1}{2}\left(W_{t_{j-1}} + W_{t_j}\right)(t_{j} - t_{j-1}) + Z_j, \\
         Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
         R_j \sim \mathcal{N}(0, 1), \\
@@ -122,14 +121,14 @@ We set the right hand side of the equation:
 f(t, x, y) = y * x
 ````
 
-Next we set up the time interval and the initial distribution law for the initial value problem:
+Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a [Distributions.Normal](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal) random variable:
 
 ````@example 01-wiener_linearhomogeneous
 t0, tf = 0.0, 1.0
 x0law = Normal()
 ````
 
-The noise is a `WienerProcess` starting at ``y_0 = 0``:
+The noise is a [`WienerProcess`](@ref) starting at ``y_0 = 0``:
 
 ````@example 01-wiener_linearhomogeneous
 y0 = 0.0
@@ -189,7 +188,7 @@ and with that we construct the [`CustomMethod`](@ref) that solves the problem wi
 target = CustomUnivariateMethod(target_solver!, rng)
 ````
 
-The method for which we want to estimate the rate of convergence is, naturally, the Euler method:
+The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted [`RandomEuler`](@ref):
 
 ````@example 01-wiener_linearhomogeneous
 method = RandomEuler()
@@ -203,7 +202,7 @@ With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
-Then we are ready to compute the errors:
+Then we are ready to compute the errors via [`solve`](@ref):
 
 ````@example 01-wiener_linearhomogeneous
 @time result = solve(rng, suite)
@@ -223,6 +222,7 @@ The calculated order of convergence is given by `result.p`:
 
 ````@example 01-wiener_linearhomogeneous
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+nothing # hide
 ````
 
 ### Plots
@@ -233,13 +233,13 @@ We create a plot with the rate of convergence with the help of a plot recipe for
 plt = plot(result)
 ````
 
-We save for use in the article:
+And save it for use in the article:
 
 ````@example 01-wiener_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png"))
 ````
 
-For the sake of illustration, we plot a sample of an approximation of a target solution:
+For the sake of illustration, we plot the approximations of a sample target solution:
 
 ````@example 01-wiener_linearhomogeneous
 plot(suite, ns=nsample)
@@ -248,7 +248,7 @@ plot(suite, ns=nsample)
 We can also visualize the noise associated with this sample solution:
 
 ````@example 01-wiener_linearhomogeneous
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=true, label="Wiener noise")
 ````
 
 ---
