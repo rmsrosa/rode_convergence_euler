@@ -38,6 +38,7 @@ end
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
         @test_nowarn plot(suite, yshow=true, xshow=true, ns=nothing)
+        @test_nowarn plot(suite, yshow=true, xshow=true, resolution=2^5)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(results)
     end
@@ -61,6 +62,7 @@ end
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
         @test_nowarn plot(suite, yshow=true, xshow=true, ns=nothing)
+        @test_nowarn plot(suite, yshow=true, xshow=true, resolution=2^5)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(results)
     end
@@ -85,6 +87,7 @@ end
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
         @test_nowarn plot(suite, yshow=true, xshow=true, ns=nothing)
+        @test_nowarn plot(suite, yshow=true, xshow=true, resolution=2^5)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], xshow=2)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], xshow=1:2)
@@ -117,6 +120,7 @@ end
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
         @test_nowarn plot(suite, yshow=true, xshow=true, ns=nothing)
+        @test_nowarn plot(suite, yshow=true, xshow=true, resolution=2^5)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192])
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], xshow=2)
         @test_nowarn plot(suite, ns=[64, 128, 160, 192], xshow=1:2)

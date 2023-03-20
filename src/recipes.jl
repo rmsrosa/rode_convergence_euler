@@ -1,5 +1,5 @@
 """
-    plot(suite::ConvergenceSuite; ns = suite.ns, xshow=true, yshow=false, noisealpha=nothing)
+    plot(suite::ConvergenceSuite; ns = suite.ns, xshow=true, yshow=false, noisealpha=nothing, resolution=2^9)
 
 Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or as given by the keyword `ns` as a vector of integers with the desired numbers of mesh points.
 
@@ -7,13 +7,15 @@ The noise, the target solution, and the approximations can be displayed or not, 
 
 The `linealpha` for plotting the noise can be changed via keyword `noiselpha`.
 
-If `suite` refers to a system of equations (i.e. with `x0law` as a `MultivariateDistribution` instead of a `UnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or the Euclidian norm, if `xshow=:norm`, or in any other way if `xshow` is a `Function` acting on each column of `x`, as `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
+If `suite` refers to a system of equations (i.e. with `x0law` as a `MultivariateDistribution` instead of a `UnivariateDistribution`, one can choose to display one or more specific coordinates by specifying the keyword `xshow` in several possible ways, e.g. `xshow=2` (for the second coordinate), or `xshow=1:3` (for the first to third coordinates as separate series), or even the sum of all the coordinates, with either `xshow=:sum`, or the Euclidian norm, if `xshow=:norm`, or in any other way if `xshow` is a `Function` acting on each element of `x`, when `x` is a scalar, or on each column of `x`, when `x` is vector-valued, such as `xshow=sqrt`, `xshow=sum` or `xshow=x->2x[1] + x[2]/2`, etc.).
 
 Similary, if `noise` is a `ProductProcess`, onde can choose to display one or more specific noise contituents, or combinations of them, by specifying the keyword `yshow` in the same way as for `xshow` just described.
+
+The `resolution` keyword can be used to set the maximum resolution for the display of paths, which can be originally about a million points, so reducing it to say the default value of `2^9=512` is plenty enough for the visualization and reduces considerably the size of the generated SVG images. When combining multiple plots into one, it helps reducing even more this value, say `resolution=2^7` or `2^8` (128 or 256 points). The resolution must be a factor of `suite.ntgt` and of all the values of `suite.ns`.
 """
 plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
-@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, xshow=1, yshow=false, noisealpha=nothing)
+@recipe function plot(suite::ConvergenceSuite; ns = suite.ns, xshow=1, yshow=false, noisealpha=nothing, resolution=2^9)
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` (from the last sample path of the Monte-Carlo simulation) and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
@@ -33,6 +35,14 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     xshow = (xshow == (:) || xshow === true ) ? eachindex(eachcol(xt)) : xshow
     yshow = (yshow == (:) || yshow === true ) ? eachindex(eachcol(yt)) : yshow
 
+    (rem(ntgt, resolution) == 0 || ntgt < resolution ) || error(
+        "`resolution` keyword must be either a factor of `suite.ntgt` or larger than `suite.ntgt`"
+    )
+
+    ( ns === nothing || ns === false || all( n < resolution || rem(n, resolution) == 0  for n in ns ) ) || error(
+        "`resolution` keyword must be either a factor of `n` or larger than `n`, for every `n` in `suite.ns`"
+    )
+
     # draw noise
     if ( yshow !== nothing && yshow !== false )
         if noisealpha === nothing
@@ -51,7 +61,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm noises" :
                 reshape([string(nameof(typeof(pr))) for pr in noise.processes], 1, :)
             label --> noiselabel
-            inds = first(axes(yt, 1)):max(1, div(size(yt, 1), 2^9)):last(axes(yt, 1))
+            inds = first(axes(yt, 1)):max(1, div(size(yt, 1), resolution)):last(axes(yt, 1))
             y = yshow isa Function && noise isa UnivariateProcess ?
                 map(yshow, view(yt, inds)) :
                 yshow isa Function ?
@@ -81,6 +91,8 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
             end
 
+            inds = first(axes(view(xnt, 1:nsi), 1)):max(1, div(size(view(xnt, 1:nsi), 1), resolution)):last(axes(view(xnt, 1:nsi), 1))
+
             @series begin
                 linecolor --> i + 2
                 linewidth --> 2
@@ -89,15 +101,15 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 markercolor --> i + 2
                 label --> "n=$nsi"
                 x = xshow isa Function && x0law isa UnivariateDistribution ?
-                    map(xshow, view(xnt, 1:nsi)) :
+                    map(xshow, view(xnt, inds)) :
                     xshow isa Function ?
-                    map(xshow, eachrow(view(xnt, 1:nsi, :))) :
+                    map(xshow, eachrow(view(xnt, inds, :))) :
                     xshow == :sum ?
-                    sum(view(xnt, 1:nsi, :), dims=2) :
+                    sum(view(xnt, inds, :), dims=2) :
                     xshow == :norm ?
-                    map(norm, eachrow(view(xnt, 1:nsi, :))) :
-                    view(xnt, 1:nsi, xshow)
-                range(t0, tf, length=nsi), x
+                    map(norm, eachrow(view(xnt, inds, :))) :
+                    view(xnt, inds, xshow)
+                range(t0, tf, length=length(inds)), x
             end
         end
     end
@@ -115,7 +127,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm of target" :
                 reshape(["target $i" for i in 1:length(x0law)], 1, :)
             label --> sollabel
-            inds = first(axes(xt, 1)):max(1, div(size(xt, 1), 2^9)):last(axes(xt, 1))
+            inds = first(axes(xt, 1)):max(1, div(size(xt, 1), resolution)):last(axes(xt, 1))
             x = xshow isa Function && x0law isa         UnivariateDistribution ?
                 map(xshow, view(xt, inds)) :
                 xshow isa Function ?
