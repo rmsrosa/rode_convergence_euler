@@ -1,4 +1,4 @@
-# # Sysmic excitations of mechanical structures with the Kanai-Takimi Earthquake model
+# # Seismic excitations of mechanical structures with the Kanai-Takimi Earthquake model
 
 # Now we consider a mechanical structure problem under ground-shaking excitations, based on the Kanai-Tajimi Earthquake model.
 #
@@ -10,7 +10,7 @@
 
 # Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise, whose amplitude decays in time, followed by smaller peaks in amplitude due to aftershocks.
 #
-# With this in mind, we model the background colored noise with a Orsntein-Uhlenbeck (OU) process $\{O_t\}_t$ with a relative small time scale $\tau$, i.e. satisfying the SDE
+# With this in mind, we model the background colored noise with an Orsntein-Uhlenbeck (OU) process $\{O_t\}_t$ with a relatively small time scale $\tau$. More precisely, we assume $\{O_t\}_t$ satisfies the stochastic differential equation
 #
 # ```math
 #   \tau \mathrm{d}O_t = - \mathrm{d}t + D \mathrm{d}W_t,
@@ -18,16 +18,16 @@
 # where $\{W_t\}_t$ is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift $\nu = 1/\tau$ and diffusion $\sigma = D/\tau$. This process has mean, variance, and covariance given by
 #
 # ```math
-#   \mathbb{E}[O_t] = O_0 e^{-\frac{t}{\tau}}, \mathrm{Var}(O_t) = \frac{D^2}{2\tau}, \quad \mathrm{Cov}(O_t,O_s) = \frac{D^2}{2\tau} e^{-\frac{|t - s|}{\tau}}.
+#   \mathbb{E}[O_t] = O_0 e^{-\frac{\displaystyle t}{\displaystyle\tau}}, \quad \mathrm{Var}(O_t) = \frac{D^2}{2\tau}, \quad \mathrm{Cov}(O_t,O_s) = \frac{D^2}{2\tau} e^{-\frac{\displaystyle |t - s|}{\displaystyle \tau}}.
 # ```
 #
-# Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lessim \tau$. When $\tau \rightarrow 0$ with $D^2/2\tau \rightarrow 1$, this approximates a Gaussian white noise.
+# Hence, $O_t$ and $O_s$ are significantly correlated only when $|t - s| \lesssim \tau$. When $\tau \rightarrow 0$ with $D^2/2\tau \rightarrow 1$, this process approximates a Gaussian white noise.
 #
 # Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, we modulate the OU process with either a transport process or a self-excited point process.
 #
 # The transport process is composed of a series of time-translations of a Hölder-continuous "attack" front, followed by an exponential decay: $\gamma (t - \delta)^\alpha e^{-\beta (t - \delta)}$, for $t \geq \delta$. The parameters $\alpha, \beta, \gamma, \delta$ are random parameters, with the Hölder exponent $\alpha$ being arbitrarily small. This is based on the model by [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293), which has a linear attack rate, an exponential decay, and a specific combination of frequencies as the background noise.
 #
-# The aftershocks, however, tend to come in clusters, with the ocurrence of an event incresing the chances for subsequent events. As such, self-exciting intensity processes have been successful in modeling the arrival times of the aftershocks [Pratiwi, Slamet, Saputro & Respatiwulan (2017)](https://doi.org/10.1088/1742-6596/855/1/012033). The decaying kernel is usually an inverse power law, starting with the celebrated Omori formula [T. Utsu, Y. Ogata & R. S. Matsu'ura, The centenary of the Omori formula for a decay law of aftershock activity, Journal of Physics of the Earth, Volume 43 (1995), no. 1, 1-33](https://doi.org/10.4294/jpe1952.43.1)). Here, we choose to consider an exponentially decaying self-excited Hawkes process. The intensity, or rate, of this inhomogenous Poisson point process, for the interarrival times, is not directly related to the magnitude of the aftershocks, but, again, for the sake of simplicity, we use the intensity itself as an envelope for the noise.
+# The aftershocks, however, tend to come in clusters, with the ocurrence of an event increasing the chances for subsequent events. As such, self-exciting intensity processes have been successful in modeling the arrival times of the aftershocks (see e.g. [Pratiwi, Slamet, Saputro & Respatiwulan (2017)](https://doi.org/10.1088/1742-6596/855/1/012033)). The decaying kernel is usually an inverse power law, starting with the celebrated Omori formula [T. Utsu, Y. Ogata & R. S. Matsu'ura, The centenary of the Omori formula for a decay law of aftershock activity, Journal of Physics of the Earth, Volume 43 (1995), no. 1, 1-33](https://doi.org/10.4294/jpe1952.43.1)). Here, we choose to consider an exponentially decaying self-excited Hawkes process, which is easier to implement and suffices for illustrating the rate of convergence. Moreover, the intensity, or rate, of this inhomogenous Poisson point process, for the interarrival times, is not directly related to the magnitude of the aftershocks, but, again, for the sake of simplicity, we use the intensity itself as an envelope for the noise.
 #
 # ## Numerical approximation
 # 
