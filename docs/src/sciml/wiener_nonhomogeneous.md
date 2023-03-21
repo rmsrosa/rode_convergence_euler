@@ -76,7 +76,7 @@ where the random variables $Z_j$ average out to zero, so the strong error to $X_
 
 First we load the necessary packages. We use [SciML/StochasticDiffEq.jl](https://github.com/SciML/StochasticDiffEq.jl) for solving the RODEs, [SciML/DiffEqDevTools.jl](https://github.com/SciML/DiffEqDevTools.jl) for facilitate the benchmark, [JuliaPlots/Plots.jl](https://github.com/JuliaPlots/Plots.jl) for plotting the results, and [Random](https://docs.julialang.org/en/v1/stdlib/Random/) for setting the seeds for reproducibility.
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 using StochasticDiffEq, DiffEqDevTools, Plots, Random
 ```
 
@@ -87,7 +87,7 @@ Now we set up the RODE problem. In [SciML/DifferentialEquations](https://diffeq.
 \frac{\mathrm{d}u}{\mathrm{d}t} = f(u, t, p, W)
 ```
 In our example, the right hand side takes the form
-```@example nonhomlinrode
+```julia nonhomlinrode
 f(u, p, t, W) = u + W
 ```
 
@@ -115,7 +115,7 @@ X_{t_j} = W_{t_j} + e^{-t_j}\left(X_0 + I_j\right).
 ```
 
 This is implemented below.
-```@example nonhomlinrode
+```julia nonhomlinrode
 function f_analytic!(sol)
     empty!(sol.u_analytic)
 
@@ -135,7 +135,7 @@ end
 
 With the right-hand-side and the analytic solutions defined, we construct the `RODEFunction` to be passed on to the RODE problem builder.
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 ff = RODEFunction(
     f,
     analytic = f_analytic!,
@@ -145,7 +145,7 @@ ff = RODEFunction(
 
 Now we set up the RODE problem, with initial condition `X0 = 1.0`, and time span `tspan = (0.0, 1.0)`:
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 X0 = 1.0
 tspan = (0.0, 1.0)
 
@@ -155,12 +155,12 @@ prob = RODEProblem(ff, X0, tspan)
 ### An illustrative sample path
 
 Just for the sake of illustration, we solve for a solution path, using the Euler method, which in SciML is provided as `RandomEM()`, and with a fixed time step. We fix the `seed` just for the sake of reproducibility:
-```@example nonhomlinrode
+```julia nonhomlinrode
 sol = solve(prob, RandomEM(), dt = 1/100, seed = 123)
 ```
 
 and display the result
-```@example nonhomlinrode
+```julia nonhomlinrode
 plot(
     sol,
     title = "Sample path of \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
@@ -173,15 +173,15 @@ plot(
 
 ### An illustrative ensemble of solutions
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 ensprob = EnsembleProblem(prob)
 ```
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 enssol = solve(ensprob, RandomEM(), dt = 1/100, trajectories=1000)
 ```
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 enssumm = EnsembleSummary(enssol; quantiles=[0.25,0.75])
 plot(enssumm,
     title = "Ensemble of solution paths of \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$\nwith 50% confidence interval",
@@ -206,7 +206,7 @@ instead of the form
 
 For that, we choose a sequence of time steps and relative and absolute tolerances to check how the error decays along the sequence.
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 reltols = 1.0 ./ 10.0 .^ (1:5)
 abstols = reltols
 dts = 1.0./5.0.^((1:length(reltols)) .+ 1)
@@ -214,7 +214,7 @@ N = 1_000
 ```
 
 With that, we set up and solve the `WorkPrecisionSet`:
-```@example nonhomlinrode
+```julia nonhomlinrode
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts)
 ]
@@ -223,7 +223,7 @@ wp = WorkPrecisionSet(prob,abstols,reltols,setups;numruns=N,maxiters=1e7,error_e
 ```
 
 There is already a plot recipe for the result of a `WorkPrecisionSet` that displays the order of convergence:
-```@example nonhomlinrode
+```julia nonhomlinrode
 plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
 ```
 
@@ -231,7 +231,7 @@ plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\
 
 We complement the above convergence order with a benchmark comparing the Euler method with the tamed Euler method and the Heun method. They all seem to achieve strong order 1, but with the Heun method being a bit more efficient.
 
-```@example nonhomlinrode
+```julia nonhomlinrode
 setups = [
     Dict(:alg=>RandomEM(), :dts => dts)
     Dict(:alg=>RandomTamedEM(), :dts => dts)
@@ -242,7 +242,7 @@ plot(wp, title="Benchmark with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", ti
 ```
 
 Built-in recipe for order of convergence.
-```@example nonhomlinrode
+```julia nonhomlinrode
 plot(wp, view=:dt_convergence,title="Strong convergence with \$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$", titlefont=12, legend=:topleft)
 ```
 
