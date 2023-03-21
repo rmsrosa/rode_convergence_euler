@@ -109,7 +109,12 @@ nothing # hide
 Now we generate the sets of sample paths for each Hurst parameter.
 
 ```@example fBm
-W = Dict(H => reduce(hcat, rand!(rng, noise[H], yt) for _ in 1:m) for H in Hs)
+W = Dict(H => Matrix{Float64}(undef, n, m) for H in Hs)
+for H in Hs
+    for i in 1:m
+        rand!(rng, noise[H], view(W[H], :, i))
+    end
+end
 
 means = Dict(H => mean(W[H], dims=2) for H in Hs)
 stds = Dict(H => std(W[H], dims=2) for H in Hs)
