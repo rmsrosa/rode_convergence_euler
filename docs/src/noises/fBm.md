@@ -102,7 +102,7 @@ plt
 Now we simulate a bunch of sample paths and check their statistics. We start by defining how much is "a bunch":
 
 ```@example fBm
-m = 1_000
+m = 200
 nothing # hide
 ```
 
