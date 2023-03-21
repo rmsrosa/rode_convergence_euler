@@ -10,16 +10,17 @@ Toogle switches in gene expression consist of genes that mutually repress each o
 
 ## The equation
 
-We consider the following simple model as discussed in [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), of two interacting genes with the concentration of their corresponding protein products denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
+We consider the following simple model as discussed in [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
 ```math
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \left( A_t^1 + \frac{X_t^4}{a^4 + X_t^4}\right)\left(\frac{b^4}{b^4 + Y_t^4}) - \mu X_t, \\
-    \displaystyle \frac{\mathrm{d}Y_t}{\mathrm{d} t} = \left( B_t^1 + \frac{Y_t^4}{c^4 + Y_t^4}\right)\left(\frac{d^4}{d^4 + X_t^4}) - \nu Y_t, \\
-  \left. X_t \right|_{t = 0} = X_0, \\
+  \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\ \\
+  \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t, \\ \\
+  \left. X_t \right|_{t = 0} = X_0, \\ \\
   \left. Y_t \right|_{t = 0} = Y_0,
   \end{cases}
 ```
-where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the tresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
+
+where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
 
 In the simulations below, we use the same parameters as in [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146): We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
 
@@ -153,15 +154,46 @@ plt = plot(result)
 And we save the convergence plot for inclusion in the article.
 
 ````@example 06-toggle_switch_model
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
+nothing # hide
 ````
 
-nothing # hide
-
-For the sake of illustration, we plot the approximations of a sample target solution:
+For the sake of illustration of the behavior of the system, we rebuild the problem with a longer time step and do a single run with it, for a single sample solution.
 
 ````@example 06-toggle_switch_model
-plot(suite, ns=nsample)
+t0, tf = 0.0, 10.0
+m = 1
+ns = 2 .^ (6:9)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+@time result = solve(rng, suite)
+nothing # hide
+````
+
+We visualize the pair of solutions
+
+````@example 06-toggle_switch_model
+plt = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
+plot!(plt, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="concentration")
+````
+
+and save it for display in the article
+
+````@example 06-toggle_switch_model
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png"))
+nothing # hide
+````
+
+We also illustrate the convergence to say the expression of the X gene:
+
+````@example 06-toggle_switch_model
+plt = plot(suite)
+````
+
+and save it:
+
+````@example 06-toggle_switch_model
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png"))
+nothing # hide
 ````
 
 We can also visualize the noises associated with this sample solution:
