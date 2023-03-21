@@ -1,29 +1,33 @@
 # # Population dynamics with sin of gBm growth and step process harvest
 
-# This time we consider a population dynamics model with a coupled noise term, a geometric Brownian motion process affecting the growth and a point Poisson step process affecting the harvest.
+# This time we consider a population dynamics model with two types of noise, a geometric Brownian motion process affecting the growth rate and a point Poisson step process affecting the harvest.
 
 # ## The equation
 
 # More precisely, we consider the RODE
 # ```math
 #   \begin{cases}
-#     \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \lambda(1 + \epsilon\sin(G_t)) X_t (r - X_t) - \alpha H_t, \qquad 0 \leq t \leq T, \\
+#     \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \Lambda_t X_t (r - X_t) - \alpha H_t, \qquad 0 \leq t \leq T, \\
 #   \left. X_t \right|_{t = 0} = X_0,
 #   \end{cases}
 # ```
+# with 
+# ```math
+#   \Lambda_t = \lambda(1 + \epsilon\sin(G_t))
+# ```
 # where $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion process and $\{H_t\}_{t \geq 0}$ is a point Poisson step process with Beta-distributed steps.
 #
-# We fix $\lambda = 1.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.5$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, so we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
+# We fix $\lambda = 1.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.5$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, and we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
 #
 # We choose a Beta distribution as the step law, with mean a little below $1/2$, so it stays mostly below the critical value, but often above it.
 #
-# The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.8$ and initial value $y_0 = 0.1$.
+# The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.8$ and initial value $y_0 = 1.0$.
 #
 # The Poisson counter for the point Poisson step process is chosen with rate 15.0, while the time interval is chosen with unit time span.
 #
-# As for the initial condition, we also choose a Beta distribution, so it stays within the growth region, and with the same parameters as for the steps.
+# As for the initial condition, we also choose a Beta distribution, so it stays within the growth region, and with the same parameters as for the steps, just for the sake of simplicity.
 
-# We do not have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
+# We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 #
 # ## Numerical approximation
 # 
@@ -37,8 +41,12 @@ using Distributions
 using RODEConvergence
 
 # Then we set up the problem parameters.
+#
+# We set the seed
 
 rng = Xoshiro(123)
+
+# The right hand side of the evolution equation
 
 function f(t, x, y)
     λ = 1.0
@@ -49,16 +57,21 @@ function f(t, x, y)
     return dx
 end
 
-t0 = 0.0
-tf = 1.0
+# The time interval
+
+t0, tf = 0.0, 1.0
+
+# The law for the initial condition
 
 α₀ = 7.0
 β₀ = 5.0
 x0law = Beta(α₀, β₀)
 
+# The noise parameters
+
 μ = 1.0
 σ = 0.8
-y0 = 0.1
+y0 = 1.0
 noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
 λₚ = 15.0
@@ -67,9 +80,14 @@ noise2 = PoissonStepProcess(t0, tf, λₚ, steplaw)
 
 noise = ProductProcess(noise1, noise2)
 
+# The mesh resolution
+
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
+
+# The number of samples for the Monte-Carlo estimate
+
 m = 1_000
 
 # And add some information about the simulation:
@@ -91,7 +109,7 @@ method = RandomEuler()
 
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 
-# Then we are ready to compute the errors:
+# Then we are ready to compute the errors via [`solve`](@ref):
 
 @time result = solve(rng, suite)
 
@@ -108,25 +126,29 @@ nothing # hide
 # The calculated order of convergence is given by `result.p`:
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+nothing # hide
 
 # 
 # 
 # ### Plots
 # 
-# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
+# We illustrate the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plot(result)
+plt = plot(result)
 
-# 
+# We save the plot for the inclusion in the article
 
-# savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
 # nothing # hide
 
-# For the sake of illustration, we plot a sample of an approximation of a target solution:
+# For the sake of illustration, we plot some approximations of a sample target solution:
 
 plot(suite, ns=nsample)
 
-# We can also visualize the noise associated with this sample solution:
+# We can also visualize the noises associated with this sample solution:
 
 plot(suite, xshow=false, yshow=true)
 
+# The gBm noises enters the equation via $\Lambda_t = \lambda(1 + \epsilon\sin(G_t))$. Using the chosen parameters, this noise can be visualized below
+
+plot(suite, xshow=false, yshow= y -> 1.0 + 0.3sin(y[1]), label="\$\\Lambda_t = \\lambda (1 + \\epsilon \\sin(G_t))\$")
