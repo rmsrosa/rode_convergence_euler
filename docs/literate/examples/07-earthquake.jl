@@ -131,7 +131,7 @@ begin
     plot!(t0+dt:dt:tf, wt, label="white noise")
     plot!(t0:dt:tf, yt1, label="OU")
     plot!(t0:dt:tf, yt4, label="Wiener")
-    savefig(joinpath(@__DIR__() * "../../../../latex/img/", "earthquake_ou_vs_whitenoise.svg"))
+    savefig(joinpath(@__DIR__() * "../../../../latex/img/", "earthquake_ou_vs_whitenoise.png"))
 end
 
 # We can also check their spectrum, using [JuliaMath/FFTW.jl](https://juliamath.github.io/FFTW.jl/stable/).
