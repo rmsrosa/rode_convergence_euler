@@ -95,7 +95,7 @@ plot!(0.0:0.01:1.0, u₀, label="initial condition")
 scatter!((0:l-1) ./ (l-1), u₀, label="discretization")
 ````
 
-For the discretization of the equation we use finite differences with a centered second-order discretization of the second derivative:
+For the discretization of the equation we use finite differences with the classic second-order discretization of the second derivative:
 
 ```math
   \frac{\partial^2 u}{\partial x^2}(t, x_j) \approx \frac{u(t, x_{j+1}) - 2u(t, x_j) + u(t, x_{j-1})}{\Delta x^2}, \quad j = 1, \ldots, l
@@ -104,7 +104,7 @@ For the discretization of the equation we use finite differences with a centered
 Notice this goes up to the boundary points $j=1$ and $j=l$, corresponding to $x=0$ and $x=1$, and depends on the "ghost" points $x_0 = -\Delta x$ and $x_{l+1} = 1 + \Delta x$. These points are solved for by using the Neumann boundary conditions and a centered second-order finite difference approximation of the first derivative, namely
 
 ```math
-  \frac{\partial u}{\partial x}(t, x_j) = \frac{u(t, x_{j+1} - u(t, x_{j-1}))}{\Delta x},
+  \frac{\partial u}{\partial x}(t, x_j) \approx \frac{u(t, x_{j+1} - u(t, x_{j-1}))}{2\Delta x},
 ```
 
 on the boundary points $j=1$ and $j=l$, so that
@@ -124,26 +124,47 @@ function f!(du, t, u, y)
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
-````
 
-interior points
-
-````@example 09-fisherkpp
+    # interior points
     for j in 2:l-1
         du[j] = (u[j-1] - 2u[j] + u[j+1]) / dx² + u[j] * (1.0 - u[j])
     end
-````
 
-ghost points
-
-````@example 09-fisherkpp
+    # ghost points
     gh1 = u[2] - 2dx * y[1]
     gh2 = u[l-1] - 2dx * y[2]
+
+    # boundary points
+    du[1] = ( u[2] - 2u[1] + gh1 ) / dx² + u[1] * ( 1.0 - u[1] )
+    du[l] = ( gh2 - 2u[l] + u[l-1] ) / dx² + u[l] * ( 1.0 - u[l] )
+    return nothing
+end
 ````
 
-boundary points
+Alternatively, we may use a second-order forward difference scheme for the first derivative at the left end point and a backward one at the right end point:
+
+```math
+  \frac{\partial u}{\partial x}(t, x_j) \approx \frac{-u(t, x_{j+2} + 4u(t, x_{j+1}) - 3u(t, x_{j}))}{2\Delta x}, \quad \frac{\partial u}{\partial x}(t, x_j) \approx \frac{3u(t, x_{j} - 4u(t, x_{j-1}) + u(t, x_{j-2}))}{2\Delta x}.
+```
 
 ````@example 09-fisherkpp
+function f_alt!(du, t, u, y)
+    axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
+
+    l = length(u)
+    dx = 1.0 / (l - 1)
+    dx² = dx ^ 2
+
+    # interior points
+    for j in 2:l-1
+        du[j] = (u[j-1] - 2u[j] + u[j+1]) / dx² + u[j] * (1.0 - u[j])
+    end
+
+    # ghost points
+    gh1 = ( 4 * u[2] - u[1] ) / 3 + 2dx * y[1]
+    gh2 = ( 4 * u[l] - u[l-1]) / 3 - 2dx * y[2]
+
+    # boundary points
     du[1] = ( u[2] - 2u[1] + gh1 ) / dx² + u[1] * ( 1.0 - u[1] )
     du[l] = ( gh2 - 2u[l] + u[l-1] ) / dx² + u[l] * ( 1.0 - u[l] )
     return nothing
@@ -202,8 +223,8 @@ info = (
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
 ````@example 09-fisherkpp
-target = RandomEuler(length(x0law))
-method = RandomEuler(length(x0law))
+target = RandomEuler(length(u0law))
+method = RandomEuler(length(u0law))
 ````
 
 ### Order of convergence
@@ -211,7 +232,7 @@ method = RandomEuler(length(x0law))
 With all the parameters set up, we build the convergence suite:
 
 ````@example 09-fisherkpp
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors:
@@ -234,6 +255,7 @@ The calculated order of convergence is given by `result.p`:
 
 ````@example 09-fisherkpp
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+nothing # hide
 ````
 
 ### Plots
@@ -241,13 +263,27 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 09-fisherkpp
-plot(result)
+plt = plot(result)
 ````
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
+and save it for inclusion in the article.
 
-For the sake of illustration, we plot a sample of an approximation of a target solution:
+````@example 09-fisherkpp
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.png")) # hide
+nothing # hide
+````
+
+For the sake of illustration, we plot the evolution of a sample target solution:
+
+````@example 09-fisherkpp
+dt = (tf - t0) / (ntgt - 1)
+
+anim = @animate for i in 1:div(ntgt, 2^10):div(ntgt, 2^2)
+    plot(range(0.0, 1.0, length=l), view(suite.xt, i, :), ylim=(0.0, 1.0), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", legend=false)
+end
+
+gif(anim, joinpath(@__DIR__() * "../../../../latex/img/","fisherkpp.gif"), fps = 30) # hide
+````
 
 ---
 
