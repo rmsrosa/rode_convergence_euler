@@ -44,7 +44,7 @@ Populate the vector or matrix `yt` with a sample path of the process `noise`, wi
 function Random.rand!(::AbstractRNG, noise::AbstractProcess{T}, ::S) where {T, S}
     throw(
         ArgumentError(
-            "`rand!(rng, noise, yt)` not implemente for `noise` of type $(typeof(noise))"
+            "`rand!(rng, noise, yt)` not implemented for `noise` of type $(typeof(noise))"
         )
     )
 end
@@ -85,7 +85,7 @@ function Random.rand!(rng::AbstractRNG, noise::WienerProcess{T}, yt::AbstractVec
 end
 
 """
-    OrnsteinUhlenbeckProcess(t0, tf, ν, σ, y0)
+    OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 Construct an Ornstein Uhlenbeck process ``O_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `-ν` and diffusion `σ`, as defined by the equation
 ```math
@@ -97,7 +97,7 @@ The solution is
 O_t = e^{-\\nu t}O_0 + \\sigma \\int_0^t e^{-\\nu (t - s)}\\;\\mathrm{d}W_s.
 ```
 
-The noise process `noise = OrnsteinUhlenbeckProcess(t0, tf, ν, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+The noise process `noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
@@ -142,14 +142,14 @@ function Random.rand!(rng::AbstractRNG, noise::OrnsteinUhlenbeckProcess{T}, yt::
 end
 
 """
-    GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)
+    GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
 Construct a Geometric Brownian motion process ``Y_t`` on the interval `t0` to `tf`, with initial condition `y0`, drift `μ` and diffusion `σ`, as defined by
 ```math
 \\mathrm{d}Y_t = \\mu Y_t \\;\\mathrm{d}t + \\sigma Y_t \\;\\mathrm{d}W_t.
 ```
 
-The noise process `noise = GeometricBrownianMotionProcess(t0, tf, μ, σ, y0)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+The noise process `noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
@@ -320,15 +320,15 @@ function Random.rand!(rng::AbstractRNG, noise::ExponentialHawkesProcess{T}, yt::
 end
 
 """
-    TransportProcess(t0, tf, f, ylaw, n)
+    TransportProcess(t0, tf, ylaw, f, d)
 
-Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `n` and distribution law for each coordinate given by `ylaw`.
+Construct a transport process on the time interval `t0` to `tf`, with function `f=f(t, y)` where `y` is a random vector with dimension `d` and distribution law for each coordinate given by `ylaw`.
 
-The noise process `noise = TransportProcess(t0, tf, f, ylaw, n)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+The noise process `noise = TransportProcess(t0, tf, ylaw, f, d)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
 
-Each random sample path is obtained by first drawing `n` realizations of the distribution `ylaw` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh obtained dividing the interval from `t0` to `tf` into `n-1` intervals.
+Each random sample path is obtained by first drawing `d` realizations of the distribution `ylaw` to build the sample value `y` and then defining the sample path by `Y_t = f(t, y)` for each `t` in the time mesh.
 
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
 """
@@ -338,9 +338,9 @@ struct TransportProcess{T, F, G, N} <: UnivariateProcess{T}
     ylaw::G
     f::F
     rv::Array{T, N}
-    function TransportProcess(t0::T, tf::T, ylaw::G, f::F, ny::Int64) where {T, F, G}
+    function TransportProcess(t0::T, tf::T, ylaw::G, f::F, d::Int64) where {T, F, G}
         N = ylaw isa UnivariateDistribution ? 1 : 2
-        rv = ylaw isa UnivariateDistribution ? zeros(T, ny) : zeros(T, length(ylaw), ny)
+        rv = ylaw isa UnivariateDistribution ? zeros(T, d) : zeros(T, length(ylaw), d)
         new{T, F, G, N}(t0, tf, ylaw, f, rv)
     end
 end
@@ -358,15 +358,15 @@ function Random.rand!(rng::AbstractRNG, noise::TransportProcess{T}, yt::Abstract
 end
 
 """
-    FractionalBrownianMotionProcess(t0, tf, y0, hurst, len; flags=FFTW.MEASURE)
+    FractionalBrownianMotionProcess(t0, tf, y0, hurst, d; flags=FFTW.MEASURE)
 
-Construct a fractional Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, Hurst parameter `hurst` and length up to `len`.
+Construct a fractional Brownian motion process on the interval `t0` to `tf`, with initial condition `y0`, Hurst parameter `hurst` and length up to `d`.
 
-The noise process `noise = FractionalBrownianMotionProcess(t0, tf, y0, hurst, len; flags=FFTW.MEASURE)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+The noise process `noise = FractionalBrownianMotionProcess(t0, tf, y0, hurst, d; flags=FFTW.MEASURE)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
-The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`. The length of `yt` must be smaller than or equal to the length `len` given in the constructor and used for the pre-allocation of the auxiliary vectors.
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`. The length of `yt` must be smaller than or equal to the length `d` given in the constructor and used for the pre-allocation of the auxiliary vectors.
 
 The method implemented is the one developed by Davies and Harte and uses an FFT transform to drop the order of complexity to O(N log N). For the transform, we use `FFTW.jl`, and use the flag `flags=FFTW.MEASURE` for generating the plans. Other common flags can be passed instead.
 
@@ -377,17 +377,17 @@ struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess{Float64}
     tf::Float64
     y0::Float64
     hurst::Float64
-    len::Int
+    d::Int
     cache_real::Vector{Float64}
     cache_complex::Vector{ComplexF64}
     cache_complex2::Vector{ComplexF64}
     plan_inverse::P1
     plan_direct::P2
 
-    function FractionalBrownianMotionProcess(t0::Float64, tf::Float64, y0::Float64, hurst::Float64, len::Int; flags=FFTW.MEASURE)
-        ispow2(len) || throw(
+    function FractionalBrownianMotionProcess(t0::Float64, tf::Float64, y0::Float64, hurst::Float64, d::Int; flags=FFTW.MEASURE)
+        ispow2(d) || throw(
             ArgumentError(
-                "Desired maximum length `len` must be a power of 2 for this implementation of the Davies-Harte method."
+                "Desired maximum length `d` must be a power of 2 for this implementation of the Davies-Harte method."
             )
         )
         0.0 < hurst < 1.0 || throw(
@@ -396,19 +396,19 @@ struct FractionalBrownianMotionProcess{P1, P2} <: UnivariateProcess{Float64}
             )
         )
 
-        cache_real = Vector{Float64}(undef, 2len)
-        cache_complex = Vector{ComplexF64}(undef, 2len)
-        cache_complex2 = Vector{ComplexF64}(undef, 2len)
+        cache_real = Vector{Float64}(undef, 2d)
+        cache_complex = Vector{ComplexF64}(undef, 2d)
+        cache_complex2 = Vector{ComplexF64}(undef, 2d)
         plan_inverse = plan_ifft(cache_real; flags)
         plan_direct = plan_fft(cache_complex; flags)
 
-        new{typeof(plan_inverse), typeof(plan_direct)}(t0, tf, y0, hurst, len, cache_real, cache_complex, cache_complex2, plan_inverse, plan_direct)
+        new{typeof(plan_inverse), typeof(plan_direct)}(t0, tf, y0, hurst, d, cache_real, cache_complex, cache_complex2, plan_inverse, plan_direct)
     end
 end
 
 function Random.rand!(rng::AbstractRNG, noise::FractionalBrownianMotionProcess, yt::AbstractVector{Float64})
 
-    length(yt) ≤ noise.len || throw(
+    length(yt) ≤ noise.d || throw(
         ArgumentError(
             "length of the sample path vector should be at most that given in the construction of the fBm noise process."
         )
@@ -418,7 +418,7 @@ function Random.rand!(rng::AbstractRNG, noise::FractionalBrownianMotionProcess, 
     tf = noise.tf
     H = noise.hurst
     y0 = noise.y0
-    n = noise.len
+    d = noise.d
     plan_inverse = noise.plan_inverse
     plan_direct = noise.plan_direct
 
@@ -427,23 +427,23 @@ function Random.rand!(rng::AbstractRNG, noise::FractionalBrownianMotionProcess, 
 
     # the first row of the circulant matrix in Dieker eq. (2.9)
     noise.cache_complex[1] = 1.0
-    noise.cache_complex[n+1] = 0.0
-    for k in 1:n-1
-        noise.cache_complex[2n-k+1] = noise.cache_complex[k+1] = gamma(k, H)
+    noise.cache_complex[d+1] = 0.0
+    for k in 1:d-1
+        noise.cache_complex[2d-k+1] = noise.cache_complex[k+1] = gamma(k, H)
     end
 
     # square-root of eigenvalues as in Dieker eq. (2.10) - using FFTW
     mul!(noise.cache_complex2, plan_inverse, noise.cache_complex)
-    map!(r -> sqrt(2n * real(r)), noise.cache_real, noise.cache_complex2)
+    map!(r -> sqrt(2d * real(r)), noise.cache_real, noise.cache_complex2)
 
     # generate Wⱼ according to step 2 in Dieker pages 16-17
     noise.cache_complex[1] = randn(rng)
-    noise.cache_complex[n+1] = randn(rng)
-    for j in 2:n
+    noise.cache_complex[d+1] = randn(rng)
+    for j in 2:d
         v1 = randn(rng)
         v2 = randn(rng)
         noise.cache_complex[j] = (v1 + im * v2) / √2
-        noise.cache_complex[2n-j+2] = (v1 - im * v2) / √2
+        noise.cache_complex[2d-j+2] = (v1 - im * v2) / √2
     end
 
     # multiply Wⱼ by √λⱼ to prep for DFT
@@ -451,12 +451,12 @@ function Random.rand!(rng::AbstractRNG, noise::FractionalBrownianMotionProcess, 
 
     # Discrete Fourier transform of √λⱼ Wⱼ according to Dieker eq. (2.12) via FFTW
     mul!(noise.cache_complex2, plan_direct, noise.cache_complex)
-    noise.cache_complex2 ./= √(2n)
+    noise.cache_complex2 ./= √(2d)
 
     map!(real, noise.cache_real, noise.cache_complex2)
 
     # Rescale from [0, N] to [0, T]
-    noise.cache_real .*= ((tf - t0)/n)^(H)
+    noise.cache_real .*= ((tf - t0)/d)^(H)
 
     # fGn is made of the first n values of Z 
     yt[begin] = y0
