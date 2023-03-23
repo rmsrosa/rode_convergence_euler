@@ -1061,13 +1061,12 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 
 \begin{figure}[htb]
     \label{figlinearhomogeneousrode}
-    \includegraphics[scale=0.7]{img/order_wienerhomogenous.png}
+    \includegraphics[scale=0.7]{img/order_wiener_linearhomogenous.png}
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
      computed with 1000 sample paths,
-    for each $\Delta t = 1/N$,  $N = 16, 32, 64, 128, 256, 512, 1024$.
-    }
+    for each $\Delta t = 1/N$,  $N = 16, 32, 64, 128, 256, 512, 1024$.}
 \end{figure}
 
 \begin{rmk}
@@ -1438,6 +1437,10 @@ Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{
 \end{multline}
 where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
+\subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
+
+\cite{KPP1937}
+
 \section*{Acknowledgments}
 
 \begin{thebibliography}{25}
@@ -1467,6 +1470,8 @@ where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propb
     \bibitem{HanKloeden2017} X. Han and P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017.
 
     \bibitem{HighamKloeden2021} D. J. Higham and P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
+
+    \bibitem{KPP1937} A. N. Kolmogorov, I. G. Petrovskii, N. S. Piskunov, A study of the diffusion equation with increase in the amount of substance, and its application to a biological problem. \emph{Bull. Moscow Univ. Math. Mech.} 1 (1937), 1--26.
 
     \bibitem{MandelbrotVanNess1968} B. B. Mandelbrot and J. W. Van Ness, Fractional Brownian Motions, Fractional Noises and Applications, \emph{Siam Review,} Vol. 10 (1968), no. 4, 422--437.
 
