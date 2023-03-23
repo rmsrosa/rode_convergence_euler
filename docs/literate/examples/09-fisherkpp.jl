@@ -11,7 +11,7 @@
 # The equation takes the form
 #
 # ```math
-#   \frac{\partial u}{\displaystyle \partial t} = \frac{\partial^2 u}{\partial x^2} + u(1 - u), \quad (t, x) \in (0, \infty) \times (0, 1),
+#   \frac{\partial u}{\displaystyle \partial t} = D\frac{\partial^2 u}{\partial x^2} + \lambda u(1 - \frac{u}{c_m}), \quad (t, x) \in (0, \infty) \times (0, 1),
 # ```
 # endowed with the boundary conditions
 #
@@ -24,15 +24,28 @@
 #   u(0, x) = u_0(x).
 # ```
 # 
-# The unknown $u(t, x)$ represents the population density at time $t$ and point $x$, relative to a given saturation value.
+# The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $c_m$ is a carrying capacity density coefficient.
+#
+# The random processes $\{A_t\}_t$ and $\{B_t\}_t$ driven the boundary fluxes are taken to be bounded processes of the form
+#
+# ```math
+#   A_t = \delta \cos(G_t^{(1)}); \quad B_t = \delta \cos(G_t^{(2)}),
+# ```
+# where $\{G_t^{(i)}\}_t$, $i = 1, 2$, are independent geometric Brownian motion processes, reflecting a short time random nature and a long time oscillatory behavior.
+#
+# This equations allows initial conditions to evolve towards traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda D}$. We choose $\lambda = 10$ and $D = 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $c_m = 1.0$.
+#
+# The coefficient $\delta$ for the noises are taken to be $\delta = 0.1$.
 #
 # The initial condition is taken to be of the form
+#
 # ```math
-#   u_0(x) = 2(x-1)^2(x + 1/2) = 2x^3 -3x^2 + 1,
+#   u_0(x) = a (x^2 - 1)^{2k},
 # ```
-# so that
+# where $0 < a < 1$ and $k \in \mathbb{N}$, so that
+#
 # ```math
-#   u_0(0) = 1, \quad u_0(1) = 0, \quad u_0'(0) = u_0'(1) = 0.
+#   u_0(0) = a, \quad u_0(1) = 0, \quad u_0'(0) = u_0'(1) = 0.
 # ```
 #
 
@@ -67,15 +80,15 @@ l = 16
 
 # Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
 
-# The initial condition is
+# The initial condition is chosen with $a = 0.8$ and $k = 6$:
 
-u₀(x) = 2x^3 - 3x^2 + 1
+u₀(x) = 0.8 * (x^2 - 1) ^ 12
 
 # The discretized initial condition is then
 
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 
-plot(title="Discretized initial condition", titlefont=8, xlabel="\$x\$", ylabel="\$u\$")
+plot(title="Discretized initial condition", titlefont=8, ylims=(0.0, 1.0), xlabel="\$x\$", ylabel="\$u\$")
 plot!(0.0:0.01:1.0, u₀, label="initial condition")
 scatter!((0:l-1) ./ (l-1), u₀, label="discretization")
 
@@ -105,22 +118,27 @@ scatter!((0:l-1) ./ (l-1), u₀, label="discretization")
 function f!(du, t, u, y)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
+    D = 0.009
+    λ = 10.0
+    cₘ = 1.0
+    δ = 1.0
+
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
 
     ## interior points
     for j in 2:l-1
-        du[j] = (u[j-1] - 2u[j] + u[j+1]) / dx² + u[j] * (1.0 - u[j])
+        du[j] = D * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / cₘ)
     end
 
     ## ghost points
-    gh1 = u[2] - 2dx * y[1] 
-    gh2 = u[l-1] - 2dx * y[2]
+    gh1 = u[2] - 2dx * δ * cos(y[1])
+    gh2 = u[l-1] - 2dx * δ * cos(y[2])
 
     ## boundary points
-    du[1] = ( u[2] - 2u[1] + gh1 ) / dx² + u[1] * ( 1.0 - u[1] )
-    du[l] = ( gh2 - 2u[l] + u[l-1] ) / dx² + u[l] * ( 1.0 - u[l] )
+    du[1] = D * ( u[2] - 2u[1] + gh1 ) / dx² + λ * u[1] * ( 1.0 - u[1] / cₘ )
+    du[l] = D * ( gh2 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
     return nothing
 end
 
@@ -134,13 +152,16 @@ end
 function f_alt!(du, t, u, y)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
+    D = 0.1
+    λ = 1.0
+
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
 
     ## interior points
     for j in 2:l-1
-        du[j] = (u[j-1] - 2u[j] + u[j+1]) / dx² + u[j] * (1.0 - u[j])
+        du[j] = D * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j])
     end
 
     ## ghost points
@@ -148,8 +169,8 @@ function f_alt!(du, t, u, y)
     gh2 = ( 4 * u[l] - u[l-1]) / 3 - 2dx * y[2]
 
     ## boundary points
-    du[1] = ( u[2] - 2u[1] + gh1 ) / dx² + u[1] * ( 1.0 - u[1] )
-    du[l] = ( gh2 - 2u[l] + u[l-1] ) / dx² + u[l] * ( 1.0 - u[l] )
+    du[1] = D * ( u[2] - 2u[1] + gh1 ) / dx² + λ * u[1] * ( 1.0 - u[1] )
+    du[l] = D * ( gh2 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] )
     return nothing
 end
 
@@ -158,26 +179,40 @@ end
 xx = 0.0:0.01:1.0
 u = sin.(π * xx) .^ 2
 du = similar(u)
+du_alt = similar(u)
 y = [0.0, 0.0]
 t = 0.0
 f!(du, t, u, y)
+f_alt!(du_alt, t, u, y)
 
 plot(xx, u, label="u")
 plot!(xx, du, label="du/dt")
+plot!(xx, du_alt, label="du/dt alt")
 
 #
 
 @btime f!($du, $t, $u, $y)
 nothing # hide
 
-# The noise is an approximation of a white noise
+# The noise terms $\{G_t^{(i)}\}_t$, $i=1, 2$, are taken to be geometric Brownian motion processes with no drift:
 
-y0 = 0.0
-ν = 200.0 # = 1 / 0.005 => time-scale = 0.005
-σ = 10.0 # variance σ^2 / 2ν = 0.25
-noise = ProductProcess(OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ), OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ))
+y0 = 1.0
+μ = 0.0 # 
+σ = 1.0 # 
+noise = ProductProcess(GeometricBrownianMotionProcess(t0, tf, y0, μ, σ), GeometricBrownianMotionProcess(t0, tf, y0, μ, σ))
 
-#
+# Here is a sample path of the noise
+
+tt = range(t0, tf, length=2^9)
+yt = Matrix{Float64}(undef, 2^9, 2)
+rand!(rng, noise, yt)
+plot(tt, yt, label=["gBm 1" "gBm 2"], xlabel="\$t\$", ylabel="\$y\$")
+
+# and of the cosine of the noise, which drives the boundary conditions
+
+plot(tt, cos.(yt), label=["cos(gBm 1)" "cos(gBm 2)"], xlabel="\$t\$", ylabel="\$y\$")
+
+# Now we set up the mesh parameters
 
 ntgt = 2^22
 ns = 2 .^ (9:11)
@@ -186,14 +221,17 @@ ntgt = 2^15 * 3^3 * 5
 ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
 all(mod(ntgt, n) == 0 for n in ns)
 ntgt ≥ last(ns)^2
+
+# The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 m = 1_000
+m = 1
 
 # And add some information about the simulation:
 
 info = (
     equation = "Fisher-KPP equation",
-    noise = "Orstein-Uhlenbeck modulated by a transport process",
-    ic = "\$X_0 = 2(x - 1)^2(x + 1/2)\$"
+    noise = "geometric Brownian motion noise",
+    ic = "\$X_0 = 0.8(x^2 - 1)^12\$"
 )
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
