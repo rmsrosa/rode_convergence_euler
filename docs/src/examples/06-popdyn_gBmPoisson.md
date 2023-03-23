@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-popdyn_gBmPoisson.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/06-popdyn_gBmPoisson.jl"
 ```
 
 # Population dynamics with sin of gBm growth and step process harvest
@@ -39,7 +39,7 @@ We do not have an explicit solution for the equation so we use as target for the
 
 First we load the necessary packages
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 using Plots
 using Random
 using Distributions
@@ -50,13 +50,13 @@ Then we set up the problem parameters.
 
 We set the seed
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 rng = Xoshiro(123)
 ````
 
 The right hand side of the evolution equation
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 function f(t, x, y)
     λ = 1.0
     ϵ = 0.3
@@ -69,13 +69,13 @@ end
 
 The time interval
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 t0, tf = 0.0, 1.0
 ````
 
 The law for the initial condition
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 α₀ = 7.0
 β₀ = 5.0
 x0law = Beta(α₀, β₀)
@@ -83,7 +83,7 @@ x0law = Beta(α₀, β₀)
 
 The noise parameters
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 μ = 1.0
 σ = 0.8
 y0 = 1.0
@@ -98,7 +98,7 @@ noise = ProductProcess(noise1, noise2)
 
 The mesh resolution
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
@@ -106,13 +106,13 @@ nsample = ns[[1, 2, 3, 4]]
 
 The number of samples for the Monte-Carlo estimate
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 m = 1_000
 ````
 
 And add some information about the simulation:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 info = (
     equation = "population dynamics",
     noise = "gBm and step process noises",
@@ -122,7 +122,7 @@ info = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 target = RandomEuler()
 method = RandomEuler()
 ````
@@ -131,19 +131,19 @@ method = RandomEuler()
 
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 @time result = solve(rng, suite)
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 table = generate_error_table(result, info)
 
 println(table) # hide
@@ -152,7 +152,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 nothing # hide
 ````
@@ -161,13 +161,13 @@ nothing # hide
 
 We illustrate the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 plt = plot(result)
 ````
 
 We save the plot for the inclusion in the article
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
 ````
 
@@ -175,19 +175,19 @@ nothing # hide
 
 For the sake of illustration, we plot some approximations of a sample target solution:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 plot(suite, ns=nsample)
 ````
 
 We can also visualize the noises associated with this sample solution:
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 plot(suite, xshow=false, yshow=true)
 ````
 
 The gBm noises enters the equation via $\Lambda_t = \lambda(1 + \epsilon\sin(G_t))$. Using the chosen parameters, this noise can be visualized below
 
-````@example 05-popdyn_gBmPoisson
+````@example 06-popdyn_gBmPoisson
 plot(suite, xshow=false, yshow= y -> 1.0 + 0.3sin(y[1]), label="\$\\Lambda_t = \\lambda (1 + \\epsilon \\sin(G_t))\$")
 ````
 

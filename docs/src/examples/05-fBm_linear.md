@@ -1,8 +1,8 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-fBm_linear.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-fBm_linear.jl"
 ```
 
-# Linear equation with fractional Brownian motion
+# Linear RODE with fractional Brownian motion
 
 
 
@@ -14,7 +14,7 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-fBm
 
 First we load the necessary packages
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 using Plots
 using Random
 using LinearAlgebra
@@ -24,7 +24,7 @@ using RODEConvergence
 
 Then we set up some variables
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 rng = Xoshiro(123)
 
 f(t, x, y) = - x + y
@@ -46,7 +46,7 @@ noise = FractionalBrownianMotionProcess(t0, tf, y0, first(hursts), ntgt)
 
 And add some information about the simulation:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 info = (
     equation = "linear equation",
     noise = "fBm noise",
@@ -56,7 +56,7 @@ info = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 target = RandomEuler()
 method = RandomEuler()
 ````
@@ -65,7 +65,7 @@ method = RandomEuler()
 
 With all the parameters set up, we build the convergence suite:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
 
 pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 1000 and so on
@@ -74,13 +74,13 @@ pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 
 
 Then we are ready to compute the errors:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 @time result = solve(rng, suite)
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 table = generate_error_table(result, info)
 
 println(table) # hide
@@ -89,7 +89,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 ````
 
@@ -97,7 +97,7 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 plot(result)
 ````
 
@@ -106,25 +106,25 @@ nothing # hide
 
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 plot(suite, ns=nsample)
 ````
 
 We can also visualize the noise:
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 plot(suite, xshow=false, yshow=true)
 ````
 
 We save the order of convergence obtained
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 ps = [result.p]
 ````
 
 Now we vary the Hurst parameter and record the corresponding order of convergence.
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 @info "h = $(first(hursts)); p = $(result.p)"
 
 for h in Iterators.drop(hursts, 1)
@@ -138,7 +138,7 @@ end
 
 Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - X_t + Y_t^H$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
 scatter!(plt, hursts, ps, label="computed")
 plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
@@ -147,7 +147,7 @@ scatter(hursts, ps)
 plot!(0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash)
 ````
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 f(t, x, y) = - y * x
 
 ps = Vector{Float64}()
@@ -155,7 +155,7 @@ ps = Vector{Float64}()
 
 Now we vary the Hurst parameter and record the corresponding order of convergence.
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 hursts = 0.05:0.05:0.45
 
 for h in hursts
@@ -169,7 +169,7 @@ end
 
 Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
 
-````@example 08-fBm_linear
+````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
 scatter!(plt, hursts, ps, label="computed")
 plot!(plt, 0.0:0.01:0.5, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")

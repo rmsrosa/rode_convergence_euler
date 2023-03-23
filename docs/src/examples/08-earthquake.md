@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/07-earthquake.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-earthquake.jl"
 ```
 
 # Seismic excitations of mechanical structures with the Kanai-Takimi Earthquake model
@@ -39,7 +39,7 @@ The aftershocks, however, tend to come in clusters, with the ocurrence of an eve
 
 First we load the necessary packages
 
-````@example 07-earthquake
+````@example 08-earthquake
 using Plots
 using Random
 using LinearAlgebra
@@ -50,13 +50,13 @@ using RODEConvergence
 
 Then we set up some variables, starting by setting the random seed for reproducibility of the pseudo-random number sequence generator
 
-````@example 07-earthquake
+````@example 08-earthquake
 rng = Xoshiro(123)
 ````
 
 We define the evolution law for the displacement $x$ driven by a noise $y$. Since it is a system of equations, we use the mutating form. Notice the noise is a product of the background colored noise `y[1]` and the envelope noise `y[2]`.
 
-````@example 07-earthquake
+````@example 08-earthquake
 function f!(dx, t, x, y)
     ζ = 0.64
     ω = 15.56
@@ -68,13 +68,13 @@ end
 
 The time interval is defined by the following end points
 
-````@example 07-earthquake
+````@example 08-earthquake
 t0, tf = 0.0, 4.0
 ````
 
 The structure is initially at rest, so the probability law is a Dirac delta function in $\mathbb{R}^2$:
 
-````@example 07-earthquake
+````@example 08-earthquake
 x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 ````
 
@@ -82,7 +82,7 @@ Two types of noise are considered, both with a colored Ornstein-Uhlenbeck (OU) b
 
 We define first the OU process
 
-````@example 07-earthquake
+````@example 08-earthquake
 y0 = 0.0
 τ = 0.005 # time scale
 D = 0.1 # large-scale diffusion
@@ -93,13 +93,13 @@ colored_noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 Just for the sake of comparison, we also define a Wiener process, in order to obtain a white noise (by finite differences)
 
-````@example 07-earthquake
+````@example 08-earthquake
 wiener_noise = WienerProcess(t0, tf, y0)
 ````
 
 The transport process is defined as follows
 
-````@example 07-earthquake
+````@example 08-earthquake
 ylaw = product_distribution(Uniform(0.0, 2.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
 nr = 8
 g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])), +, eachcol(r))
@@ -108,7 +108,7 @@ transport_envelope_noise = TransportProcess(t0, tf, ylaw, g, nr)
 
 Finally, we define the Hawkes process
 
-````@example 07-earthquake
+````@example 08-earthquake
 λ₀ = 3.0
 a = 0.3
 δ = 5.0
@@ -121,19 +121,19 @@ hawkes_envelope_noise = ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
 
 With those, we define the transport-modulated colored noise
 
-````@example 07-earthquake
+````@example 08-earthquake
 transportmodulated_noise = ProductProcess(colored_noise, transport_envelope_noise)
 ````
 
 and the Hawkes-modulated colored noise
 
-````@example 07-earthquake
+````@example 08-earthquake
 hawkesmodulated_noise = ProductProcess(colored_noise, hawkes_envelope_noise)
 ````
 
 Let us visualize a sample path of these process. We define the resolution, pre-allocate some vectors, and compute the sample paths.
 
-````@example 07-earthquake
+````@example 08-earthquake
 ntgt = 2^12
 yt1 = Vector{Float64}(undef, ntgt)
 yt2 = Vector{Float64}(undef, ntgt)
@@ -148,7 +148,7 @@ rand!(rng, hawkes_envelope_noise, yt3)
 
 The white noise is obtained, approximately, as a finite difference of the Wiener process, taking into account that $\mathrm{d}W_t \sim \sqrt{\mathrm{d}t}
 
-````@example 07-earthquake
+````@example 08-earthquake
 dt = (tf - t0) / (length(yt1) - 1)
 wt = (yt4[2:end] .- yt4[1:end-1])/dt^0.5
 nothing
@@ -156,7 +156,7 @@ nothing
 
 Now we plot the Wiener process, the associated white noise, and the colored OU noise
 
-````@example 07-earthquake
+````@example 08-earthquake
 begin
     plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
     plot!(t0+dt:dt:tf, wt, label="white noise")
@@ -168,7 +168,7 @@ end
 
 We can also check their spectrum, using [JuliaMath/FFTW.jl](https://juliamath.github.io/FFTW.jl/stable/).
 
-````@example 07-earthquake
+````@example 08-earthquake
 begin
     plot(abs2.(rfft(wt)), label="white noise spectrum")
     plot!(abs2.(rfft(yt1)), label="OU spectrum")
@@ -177,7 +177,7 @@ end
 
 For the sake of comparison, let us check their mean and variance
 
-````@example 07-earthquake
+````@example 08-earthquake
 println("Mean of the white noise: $(mean(wt))")
 
 println("Mean of the colored OU process: $(mean(yt1))")
@@ -191,7 +191,7 @@ nothing # hide
 
 Now we plot the modulated noises.
 
-````@example 07-earthquake
+````@example 08-earthquake
 begin
     plt1 = plot(xlabel="\$t\$", ylabel="\$\\mathrm{intensity}\$", guidefont=10)
     plot!(plt1, t0:dt:tf, yt2 .* yt1, label="noise")
@@ -207,7 +207,7 @@ end
 
 Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
 
-````@example 07-earthquake
+````@example 08-earthquake
 ntgt = 2^18
 ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3]]
@@ -216,7 +216,7 @@ m = 1_000
 
 We add some information about the simulation:
 
-````@example 07-earthquake
+````@example 08-earthquake
 info_ou = (
     equation = "Kanai-Tajimi Earthquake model",
     noise = "Orstein-Uhlenbeck colored noise modulated by a transport process",
@@ -232,7 +232,7 @@ info_hawkes = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 07-earthquake
+````@example 08-earthquake
 target = RandomEuler(length(x0law))
 method = RandomEuler(length(x0law))
 ````
@@ -241,7 +241,7 @@ method = RandomEuler(length(x0law))
 
 With all the parameters set up, we build the convergence suites for each noise:
 
-````@example 07-earthquake
+````@example 08-earthquake
 transportmodulated_suite = ConvergenceSuite(t0, tf, x0law, f!, transportmodulated_noise, target, method, ntgt, ns, m)
 
 hawkesmodulated_suite = ConvergenceSuite(t0, tf, x0law, f!, hawkesmodulated_noise, target, method, ntgt, ns, m)
@@ -249,33 +249,33 @@ hawkesmodulated_suite = ConvergenceSuite(t0, tf, x0law, f!, hawkesmodulated_nois
 
 Then we are ready to compute the errors:
 
-````@example 07-earthquake
+````@example 08-earthquake
 @time transportmodulated_result = solve(rng, transportmodulated_suite)
 ````
 
-````@example 07-earthquake
+````@example 08-earthquake
 @time hawkesmodulated_result = solve(rng, hawkesmodulated_suite)
 ````
 
 The computed strong error for each resolution in `ns` is stored in field `errors`, and raw LaTeX tables can be displayed for inclusion in the article:
 
-````@example 07-earthquake
+````@example 08-earthquake
 println(generate_error_table(transportmodulated_result, info_ou)) # hide
 nothing # hide
 ````
 
-````@example 07-earthquake
+````@example 08-earthquake
 println(generate_error_table(hawkesmodulated_result, info_hawkes)) # hide
 nothing # hide
 ````
 
 The calculated order of convergence is given by fieal `p`:
 
-````@example 07-earthquake
+````@example 08-earthquake
 println("Order of convergence `C Δtᵖ` with the transport-modulated noise with p = $(round(transportmodulated_result.p, sigdigits=2))")
 ````
 
-````@example 07-earthquake
+````@example 08-earthquake
 println("Order of convergence `C Δtᵖ` with the Hawkes-modulated nooise with p = $(round(hawkesmodulated_result.p, sigdigits=2))")
 ````
 
@@ -283,11 +283,11 @@ println("Order of convergence `C Δtᵖ` with the Hawkes-modulated nooise with p
 
 We create plots with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 07-earthquake
+````@example 08-earthquake
 plot(transportmodulated_result)
 ````
 
-````@example 07-earthquake
+````@example 08-earthquake
 plot(hawkesmodulated_result)
 ````
 
@@ -296,11 +296,11 @@ nothing # hide
 
 For the sake of illustration, we plot a sample of an approximation of a target solution, in each case:
 
-````@example 07-earthquake
+````@example 08-earthquake
 plot(transportmodulated_suite, ns=nsample)
 ````
 
-````@example 07-earthquake
+````@example 08-earthquake
 plot(hawkesmodulated_suite, ns=nsample)
 ````
 

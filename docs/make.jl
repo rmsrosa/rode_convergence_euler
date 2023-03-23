@@ -34,10 +34,10 @@ include(joinpath(@__DIR__(), "literate.jl"))
                 "examples/03-sin_gBm_linearhomogeneous.md",
                 "examples/04-allnoises.md"
             ],
-            "examples/05-popdyn_gBmPoisson.md",
-            "examples/06-toggle_switch_model.md",
-            "examples/07-earthquake.md",
-            "examples/08-fBm_linear.md",
+            "examples/05-fBm_linear.md",
+            "examples/06-popdyn_gBmPoisson.md",
+            "examples/07-toggle_switch_model.md",
+            "examples/08-earthquake.md",
             "examples/09-fisherkpp.md"
         ],
         # "Examples" => generated_examples,

@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/06-toggle_switch_model.jl"
+EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/07-toggle_switch_model.jl"
 ```
 
 # A toggle-switch model for gene expression with compound Poisson external activation process
@@ -34,7 +34,7 @@ We don't have an explicit solution for the equation so we just use as target for
 
 First we load the necessary packages
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 using Plots
 using Random
 using LinearAlgebra
@@ -44,13 +44,13 @@ using RODEConvergence
 
 Then we define the random seed
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 rng = Xoshiro(123)
 ````
 
 The evolution law
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 function f!(dx, t, x, y)
     a⁴ = c⁴ = 0.25 ^ 4
     b⁴ = d⁴ = 0.4 ^ 4
@@ -66,13 +66,13 @@ end
 
 The time interval
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 t0, tf = 0.0, 4.0
 ````
 
 The law for the initial condition
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 x0 = 10.0
 y0 = 10.0
 x0law = product_distribution(Dirac(x0), Dirac(y0))
@@ -80,7 +80,7 @@ x0law = product_distribution(Dirac(x0), Dirac(y0))
 
 The compound Poisson processes for the source terms
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 λ = 5.0
 ylaw = Uniform(0.0, 0.5)
 noise = ProductProcess(CompoundPoissonProcess(t0, tf, λ, ylaw), CompoundPoissonProcess(t0, tf, λ, ylaw))
@@ -88,7 +88,7 @@ noise = ProductProcess(CompoundPoissonProcess(t0, tf, λ, ylaw), CompoundPoisson
 
 The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
@@ -97,7 +97,7 @@ m = 1_000
 
 And add some information about the simulation:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 info = (
     equation = "toggle-switch model of gene regulation",
     noise = "compound Poisson process noises",
@@ -107,7 +107,7 @@ info = (
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 target = RandomEuler(length(x0law))
 method = RandomEuler(length(x0law))
 ````
@@ -116,20 +116,20 @@ method = RandomEuler(length(x0law))
 
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 @time result = solve(rng, suite)
 nothing # hide
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 table = generate_error_table(result, info)
 
 println(table) # hide
@@ -138,7 +138,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
 nothing # hide
 ````
@@ -147,20 +147,20 @@ nothing # hide
 
 We plot the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 plt = plot(result)
 ````
 
 And we save the convergence plot for inclusion in the article.
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
 nothing # hide
 ````
 
 For the sake of illustration of the behavior of the system, we rebuild the problem with a longer time step and do a single run with it, for a single sample solution.
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 t0, tf = 0.0, 10.0
 m = 1
 ns = 2 .^ (6:9)
@@ -171,34 +171,34 @@ nothing # hide
 
 We visualize the pair of solutions
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 plt = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
 plot!(plt, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="concentration")
 ````
 
 and save it for display in the article
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png"))
 nothing # hide
 ````
 
 We also illustrate the convergence to say the expression of the X gene:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 plt = plot(suite)
 ````
 
 and save it:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png"))
 nothing # hide
 ````
 
 We can also visualize the noises associated with this sample solution:
 
-````@example 06-toggle_switch_model
+````@example 07-toggle_switch_model
 plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"])
 ````
 

@@ -1,4 +1,4 @@
-# # Linear equation with fractional Brownian motion
+# # Linear RODE with fractional Brownian motion
 #
 # 
 #
