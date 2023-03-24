@@ -108,6 +108,92 @@ nr = 8
 g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])) * cos(16π * max(0.0, t - ri[4])) * exp(-8t), +, eachcol(r))
 transport_envelope_noise = TransportProcess(t0, tf, ylaw, g, nr)
 
+# We assume the ground motion is an additive combination of translated exponentially decaying wavefronts of the form
+# ```math
+#   m_i(t) = \gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)),
+# ```
+# where $(t - t_i)_+ = \max\{0, t - t_i\}$ vanishes for $t \leq t_i$ and is simply $(t - t_i)$ for $t\geq t_i$. The associated noise is a combination of the second derivatives $\ddot m_i(t)$, which has jump discontinuities. Indeed, we have the ground velocities
+#
+# ```math
+#   \begin{align*}
+#   \dot m_i(t) = & 2\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & -\alpha_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & -\omega_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i))
+#   \end{align*}
+# ```
+# and the ground accelerations
+#
+# ```math
+#   \begin{align*}
+#   \ddot m_i(t) = & 2\gamma_i H(t - t_i) e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & + \alpha_i^2\gamma_i (t - t_i)^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & -\omega_i^2\gamma_i (t - t_i)^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & -2\alpha_i\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
+#       & -2\omega_i\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i)) \\
+#       & +\alpha_i\omega_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i))
+#   \end{align*}
+# ```
+# where $H=H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
+#
+#
+# We implement these functions as
+
+function gm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
+    τ = max(zero(T), t - t0)
+    m = γ * τ ^2 * exp( -α * τ ) * cos( ω * τ )
+    return m
+end
+
+function dgm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
+    τ = max(zero(T), t - t0)
+    τ² = τ ^ 2
+    expατ = exp( -α * τ )
+    sinωτ, cosωτ = sincos(ω * τ)
+    ṁ = γ * ( ( 2τ + α * τ² ) * cosωτ - ω * τ²  * sinωτ ) * expατ
+    return ṁ
+end
+
+function ddgm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
+    h = convert(T, t ≥ t0)
+    τ = ( t - t0 ) * h
+    τ² = τ ^ 2
+    expατ = exp( -α * τ )
+    sinωτ, cosωτ = sincos(ω * τ)
+    m̈ = γ * ( ( 2h + ( α^2 - ω^2 ) * τ² - 2α * τ) * cosωτ + ( -2ω * τ + α * ω * τ² ) * sinωτ ) * expατ
+    return m̈
+end
+
+tt = range(t0, tf, length=2^9)
+dt = (tf - t0) / (length(tt) - 1)
+t0, γ, α, ω = tf / 4, 10.0, 1.0, 8π
+
+xx = gm.(tt, t0, γ, α, ω)
+dxx = dgm.(tt, t0, γ, α, ω)
+ddxx = ddgm.(tt, t0, γ, α, ω)
+
+dxxalt = [0; accumulate(+, (ddxx[2:end] .+ ddxx[1:end-1]) / 2) * dt]
+xxalt = [0; accumulate(+, (dxxalt[2:end] .+ dxxalt[1:end-1]) / 2) * dt]
+
+
+
+plot(tt, [xx xxalt])
+
+plot(tt, [dxx dxxalt])
+
+
+sum(abs2, dxx - dxxalt) / sum(abs2, dxx)
+sum(abs2, xx - xxalt) / sum(abs2, xx)
+
+#
+
+
+
+ylaw = product_distribution(Uniform(2.0, 10.0), Uniform(0.0, 0.5), Uniform(2.0, 8.0), Exponential())
+nr = 8
+g(t, r) = mapreduce(ri -> ri[1] * max(0.0, t - ri[4]) ^ ri[2] * exp(-ri[3] * max(0.0, t - ri[4])) * cos(16π * max(0.0, t - ri[4])) * exp(-8t), +, eachcol(r))
+transport_envelope_noise = TransportProcess(t0, tf, ylaw, g, nr)
+
+
 # Finally, we define the exponentially decaying Hawkes process
 
 λ₀ = 3.0
