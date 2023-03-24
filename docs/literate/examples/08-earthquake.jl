@@ -291,15 +291,14 @@ plot!(hawkesmodulated_suite, xshow = false, yshow = prod, ns=nothing)
 # And now with the Hawkes-modulated noise.
 
 dt = (tf - t0) / (ntgt - 1)
+ground = accumulate(+, accumulate(+, map(prod, eachrow(transportmodulated_suite.yt)))) * dt ^ 2
 
-@time anim = @animate for i in 1:div(ntgt, 2^12):div(ntgt, 2^4)
-    ground = prod(transportmodulated_suite.yt[i, :])
-    ceiling = ground + transportmodulated_suite.xt[i, 1]
-    heigth = 20.0
-    halfwidth = 10.0
-    plot([ground - halfwidth; ceiling - halfwidth; ceiling + halfwidth; ground + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-100.0, 100.0), ylim=(0.0, 100.0), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
+@time anim = @animate for i in 1:div(ntgt, 2^10):div(ntgt, 1)
+    ceiling = ground[i] + transportmodulated_suite.xt[i, 1]
+    heigth = 3.0
+    halfwidth = 0.1
+    plot([ground[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; ground[i] + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-0.2, 0.2), ylim=(0.0, 4.0), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
 end
-
 nothing # hide
 
 #
@@ -322,3 +321,18 @@ nothing # hide
 #
 
 gif(anim, fps = 30) # hide
+
+#
+
+tt = range(t0, tf, length=length(yt))
+rand!(rng, noise, yt)
+at = yt[:, 2] .* sin.(4π * tt)
+plot(at)
+bt = map(prod, eachrow(yt))
+nt = at .+ 0.1 .* yt[:, 1]
+plot(nt)
+
+dgrd = accumulate(+, nt) * dt
+grd = accumulate(+, dgrd) * dt
+
+plot(dgrd)
