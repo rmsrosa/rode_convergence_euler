@@ -107,12 +107,14 @@ nothing # hide
 For the sake of comparison, let us check their mean and variance
 
 ```@example colored
-for (i, ou_t) in enumerate(ous_t)
-    println("Mean of the $i-th colored OU process with time scale $(τs[i]): $(mean(ou_t))")
-    println("Variance of the $i-th colored OU process with time scale $(τs[i]): $(var(ou_t))")
+for (τ, ou_t) in zip(τs, ous_t)
+    println("OU process with τ=$τ:")
+    println("  Mean $(mean(ou_t))")
+    println("  Variance $(var(ou_t))")
 end
-println("Mean of the white noise: $(mean(w_t))")
-println("Variance of the white noise: $(var(w_t))")
+println("White noise:")
+println("  Mean $(mean(w_t))")
+println("  Variance $(var(w_t))")
 nothing # hide
 ```
 
