@@ -1,9 +1,5 @@
 # Ornstein-Uhlenbeck colored noise approximation of white noise
 
-```@meta
-Draft = false
-```
-
 White noise, as modeled by the "derivative" of the Wiener process, in a suitable distributional sense, is an ubiquotous noise in modelling stochastic behavior in evolutionary systems.
 
 In many situations, however, the actual noise is a colored noise, sometimes with a characteristic amplitude decay, giving a certain hue to the noise, or some other amplitude form.
