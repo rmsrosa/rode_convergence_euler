@@ -1,5 +1,9 @@
 # # Seismic excitations of mechanical structures with the Kanai-Takimi model
-
+# 
+# ```@meta
+# Draft = false
+# ```
+#
 # Now we consider a mechanical structure problem under ground-shaking excitations, based on the Kanai-Tajimi model.
 #
 # We consider a single-storey building, with its ground at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
@@ -45,7 +49,6 @@
 using Plots
 using Random
 using LinearAlgebra
-using FFTW
 using Distributions
 using RODEConvergence
 
@@ -61,7 +64,7 @@ function f!(dx, t, x, y)
     ζ = 0.064
     ω = 15.56
     dx[1] = x[2]
-    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] + y[1] * y[2]
+    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] + y
     return dx
 end
 
@@ -134,8 +137,8 @@ end
 
 #
 
-ylaw = product_distribution(InverseGamma(4.0, tf), Uniform(2.0, 8.0), Uniform(2.0, 6.0), Uniform(4π, 16π))
-nr = 4
+ylaw = product_distribution(Exponential(tf/8), Uniform(0.1, 0.6), Uniform(4.0, 8.0), Uniform(4π, 16π))
+nr = 8
 g(t, r) = mapreduce(ri -> ddgm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(r))
 noise = TransportProcess(t0, tf, ylaw, g, nr)
 
@@ -169,9 +172,9 @@ plot!(60et)
 
 # Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
 
-ntgt = 2^18
-ns = 2 .^ (6:9)
-m = 1 # 1_000
+ntgt = 2^20
+ns = 2 .^ (7:10)
+m = 500 # 1_000
 nothing # hide
 
 # We add some information about the simulation:
@@ -228,55 +231,26 @@ plot(suite, ns=nsample)
 # The displacement of the building is tiny compared to the ground, in this simulation
 
 plot(suite, ns=nothing)
-plot!(suite, xshow = false, yshow = prod, ns=nothing)
+
+#
+
+plot(suite, xshow = false, yshow = true, ns=nothing)
 
 # We also draw an animation of the motion of the single-storey building in each case. First the model with the transport-modulated noise.
 
 # And now with the Hawkes-modulated noise.
 
 dt = (tf - t0) / (ntgt - 1)
-ground = accumulate(+, accumulate(+, map(prod, eachrow(transportmodulated_suite.yt)))) * dt ^ 2
+mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(suite.yt))]
 
 @time anim = @animate for i in 1:div(ntgt, 2^10):div(ntgt, 1)
-    ceiling = ground[i] + transportmodulated_suite.xt[i, 1]
+    ceiling = mt[i] + suite.xt[i, 1]
     heigth = 3.0
     halfwidth = 0.1
-    plot([ground[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; ground[i] + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-0.2, 0.2), ylim=(0.0, 4.0), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
+    plot([mt[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; mt[i] + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-0.2, 0.2), ylim=(0.0, 4.0), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
 end
 nothing # hide
 
 #
 
 gif(anim, fps = 30) # hide
-
-# Now just the relative motion
-
-@time anim = @animate for i in 1:div(ntgt, 2^12):div(ntgt, 2^4)
-    suite = transportmodulated_suite
-    ground = 0.0
-    ceiling = ground + suite.xt[i, 1]
-    heigth = 0.02
-    halfwidth = 0.001
-    plot([ground - halfwidth; ceiling - halfwidth; ceiling + halfwidth; ground + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-0.004, 0.004), ylim=(0.0, 0.1), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
-end
-
-nothing # hide
-
-#
-
-gif(anim, fps = 30) # hide
-
-#
-
-tt = range(t0, tf, length=length(yt))
-rand!(rng, noise, yt)
-at = yt[:, 2] .* sin.(4π * tt)
-plot(at)
-bt = map(prod, eachrow(yt))
-nt = at .+ 0.1 .* yt[:, 1]
-plot(nt)
-
-dgrd = accumulate(+, nt) * dt
-grd = accumulate(+, dgrd) * dt
-
-plot(dgrd)
