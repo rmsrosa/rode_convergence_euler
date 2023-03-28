@@ -2,18 +2,18 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-earthquake.jl"
 ```
 
-# Seismic excitations of mechanical structures with the Kanai-Takimi model
+# Vibrations of a simple mechanical structure due to random seismic ground-motion excitations
 
 ```@meta
 Draft = false
 ```
 
-Now we consider a mechanical structure problem under ground-shaking excitations, based on the Kanai-Tajimi model.
+Now we consider a mechanical structure problem under ground-shaking excitations, inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293).
 
-We consider a single-storey building, with its ground at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
+A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\propto -\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
 
 ```math
-  \ddot X_t + 2\zeta\omega\dot X_t + \omega^2 X_t = \ddot M_t.
+  \ddot X_t + 2\zeta\omega\dot X_t + \omega^2 X_t = - \ddot M_t.
 ```
 where $\zeta$ and $\omega$ are damping and elastic model parameters depending on the structure.
 
@@ -22,7 +22,7 @@ For the numerical simulations, the second-order equation is written as a system 
 ```math
   \begin{cases}
       \dot X_t = V_t, \\
-      \dot V_t = - \omega^2 X_t - 2\zeta\omega X_t + Y_t,
+      \dot V_t = - \omega^2 X_t - 2\zeta\omega X_t - Y_t,
   \end{cases}
 ```
 
@@ -36,7 +36,9 @@ X_0 = 0, \quad V_0 = \dot X_0 = 0.
 
 Here, as in [Neckel & Rupp (2013)](https://doi.org/10.2478/9788376560267), based on [Housner & Jenning (1964)](https://doi.org/10.1061/JMCEA3.0000448), we use $\zeta = 0.64$ and $\omega = 15.56 \texttt{rad}/\texttt{s}$.
 
-Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise or have some specific oscillation frequencies depending on the type of ground motion and the composition of the rock layers, and is modulated, with amplitude decaying. In this regard, an important model is given by [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293), which has a linear attack rate, an exponential decay, and a specific combination of frequencies as the background noise.
+Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise and have specific spectral signatures, as in the Kanai-Tajimi model, the Clough-Penzen model, and the like.
+
+Some specific oscillation frequencies depending on the type of ground motion and the composition of the rock layers, and is modulated, with amplitude decaying. In this regard, an important model is given by [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293), which has a linear attack rate, an exponential decay, and a specific combination of frequencies as the background noise.
 
 Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, the actual motion can be simulated with a combination of modulated noises at different incidence times.
 
@@ -70,10 +72,8 @@ We define the evolution law for the displacement $X_t$ driven by a noise $Y_t$. 
 function f!(dx, t, x, y)
     ζ = 0.64
     ω = 15.56
-    ζ = 0.064
-    ω = 15.56
     dx[1] = x[2]
-    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] + y
+    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] - y
     return dx
 end
 ````
@@ -81,7 +81,7 @@ end
 The time interval is defined by the following end points
 
 ````@example 08-earthquake
-t0, tf = 0.0, 4.0
+t0, tf = 0.0, 2.0
 ````
 
 The structure is initially at rest, so the probability law is a vectorial product of two Dirac delta distributions, in $\mathbb{R}^2$:
@@ -151,51 +151,47 @@ end
 ````
 
 ````@example 08-earthquake
-ylaw = product_distribution(Exponential(tf/8), Uniform(0.1, 0.6), Uniform(4.0, 8.0), Uniform(4π, 16π))
-nr = 8
+ylaw = product_distribution(Exponential(tf/8), Uniform(0.0, 4.0), Uniform(8.0, 12.0), Uniform(8π, 32π))
+nr = 12
 g(t, r) = mapreduce(ri -> ddgm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(r))
 noise = TransportProcess(t0, tf, ylaw, g, nr)
 ````
 
 ````@example 08-earthquake
-ntgt = 2^12
-yt = Vector{Float64}(undef, ntgt)
+n = 2^12
+tt = range(t0, tf, length=n)
+yt = Vector{Float64}(undef, n)
 rand!(rng, noise, yt)
 ````
 
-ground excitation $\ddot m_t$:
-
-````@example 08-earthquake
-plot(yt)
-````
-
-ground motion $m_t$:
+Ground motion $m_t$:
 
 ````@example 08-earthquake
 mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
-
-plot(mt)
+nothing # hide
 ````
 
-envelope of ground excitation
+Envelope of ground excitation
 
 ````@example 08-earthquake
 et = [mapreduce(ri -> ddgm(t, ri[1], ri[2], ri[3], 0.0), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
-
-plot(et)
+nothing # hide
 ````
 
+Visualization
+
 ````@example 08-earthquake
-plot(yt)
-plot!(1000mt)
-plot!(60et)
+plt1 = plot(tt, mt, label="ground motion")
+plt2 = plot(tt, yt, label="ground acceleration")
+plt3 = plot(tt, et, label="envelope of acceleration")
+plot(plt1, plt2, plt3, layout = (3, 1))
 ````
 
 Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
 
 ````@example 08-earthquake
-ntgt = 2^20
-ns = 2 .^ (7:10)
+ntgt = 2^18
+ns = 2 .^ (6:9)
 m = 500 # 1_000
 nothing # hide
 ````
@@ -266,29 +262,20 @@ nsample = ns[[1, 2, 3]]
 plot(suite, ns=nsample)
 ````
 
-The displacement of the building is tiny compared to the ground, in this simulation
-
-````@example 08-earthquake
-plot(suite, ns=nothing)
-````
-
-````@example 08-earthquake
-plot(suite, xshow = false, yshow = true, ns=nothing)
-````
-
 We also draw an animation of the motion of the single-storey building in each case. First the model with the transport-modulated noise.
 
 And now with the Hawkes-modulated noise.
 
 ````@example 08-earthquake
 dt = (tf - t0) / (ntgt - 1)
-mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(suite.yt))]
+mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=ntgt)]
 
-@time anim = @animate for i in 1:div(ntgt, 2^10):div(ntgt, 1)
+@time anim = @animate for i in 1:div(ntgt, 2^9):div(ntgt, 1)
     ceiling = mt[i] + suite.xt[i, 1]
-    heigth = 3.0
-    halfwidth = 0.1
-    plot([mt[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; mt[i] + halfwidth], [0.0; heigth; heigth; 0.0], xlim = (-0.2, 0.2), ylim=(0.0, 4.0), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
+    height = 3.0
+    halfwidth = 2.0
+    aspectfactor = (4/6) * 4halfwidth / height
+    plot([mt[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; mt[i] + halfwidth], [0.0; height; height; 0.0], xlim = (-2halfwidth, 2halfwidth), ylim=(0.0, aspectfactor * height), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
 end
 nothing # hide
 ````
