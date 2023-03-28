@@ -1,8 +1,7 @@
 # # Vibrations of a simple mechanical structure due to random seismic ground-motion excitations
-
 # 
 # ```@meta
-# Draft = false
+# Draft = true
 # ```
 #
 # Now we consider a mechanical structure problem under ground-shaking excitations, inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293).
