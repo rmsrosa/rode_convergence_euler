@@ -231,8 +231,9 @@ function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equa
     for (n, dt, error) in zip(ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
         table *= "$n & $dt & $error \\\\\n"
     end
-    table *= "\\hline \\\\\n
+    table *= "\\hline \n
     \\end{tabular}\n
+    \\bigskip\n\n
     \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points.}"
     return table
 end
