@@ -63,7 +63,7 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o noise, point-process noise, fractional Brownian motion noise}.
 
 \begin{abstract}
-It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes. The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term. We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence below the attained order 1 in the examples above, but still above the $H$ order of convergence obtained in previous works.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which are not even continuous and have jump-type discontinuities); and to transport-type processes with sample paths of bounded variation. The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry. We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the previous examples, but still higher than the order $H$ of convergence expected from previous works.
 \end{abstract}
 
 \maketitle
@@ -928,7 +928,7 @@ We ommit the proof since it is just a combination of \cref{lemmonotonicbound} an
 
 \section{Numerical examples}
 
-In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We also illustrate the $H+1/2$ order of convergence in the case of a fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$.
+In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We also illustrate the $H + 1/2$ order of convergence in the case of a fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$.
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for samples $\omega_1, \ldots, \omega_M$, and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
@@ -937,45 +937,52 @@ For estimating the order of convergence, we use the Monte Carlo method, computin
 
 Here are the main parameters for the error estimate:
 \begin{enumerate}
-    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error, typically $M=1,000$ or $M=10,000$.
+    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error, typically $M=1,000$.
     \item The time interval $[0, T]$ for the initial-value problem, typically with $T=1.0$.
     \item The initial condition $X_0$, which is typically $X_0 \sim \mathcal{N}(0, 1)$.
     \item A series of time steps $\Delta_i = T/(N_i-1)$, with $N_i=2^{n_i}$, most often with $n_i=4, \ldots, 10$, hence $N_i=32, 64, \ldots, 1024$.
-    \item A number $N_{\mathrm{fine}}$ of mesh points for a fine discretization to compute a target solution path, typically $N_{\mathrm{fine}} = \max_i\{N_i^2\}$, e.g. $N=2^{20} = 1,048,576$;
-    \item The target solution path is either an exact pathwise solution, when available, or a higher-order approximation, thanks to the choice of $N_{\mathrm{fine}}$.
+    \item A number $N_{\mathrm{tgt}}$ of mesh points for a finer discretization to compute a target solution path.
+    \item The target solution path is either a pathwise solution with an exact distribution, when available, or a higher-order approximation, thanks to the choice of $N_{\mathrm{tgt}}$. The target resolution is typically $N_{\mathrm{tgt}} = \max_i\{N_i^2\}$, e.g. $N=2^{20} = 1,048,576$, unless an exact pathwise solution is available, in which case a coarser mesh of the order of can be used.
 \end{enumerate}
 
 And here is the method:
 \begin{enumerate}
-    \item For each sample $m=1, \ldots, M$, we first generate a discretization $\{Y_{t_j}\}_{j=0, N_{\mathrm{fine}}}$ of a sample path of the noise on the finest grid $\{t_j^{N_{\mathrm{fine}}}\}$, with $N_{\mathrm{fine}}$ points, using an exact distribution for the noise.
-    \item Next, we use the values of the noise at the finest time mesh to generate the target solution $\{X_{t_j}\}_{j=0, N_{\mathrm{fine}}}$, still on the fine mesh. This is constructed either using the Euler approximation itself, keeping in mind that the mesh is sufficiently fine, or by an exact distributions of the solution, when available.
-    \item Then, for each time step $N_i = 2^{n_i}$ in the selected range, we compute the Euler approximation using the computed noise values at the corresponding coarse mesh.
+    \item For each sample $m=1, \ldots, M$, we first generate a discretization $\{Y_{t_j}\}_{j=0, N_{\mathrm{tgt}}}$ of a sample path of the noise on the finest grid $\{t_j^{N_{\mathrm{tgt}}}\}$, with $N_{\mathrm{tgt}}$ points, using either an exact distribution for the noise or an approximation in a much finer mesh.
+    \item Next, we use the values of the noise at the target time mesh to generate the target solution $\{X_{t_j}\}_{j=0, N_{\mathrm{tgt}}}$, still on the fine mesh. This is constructed either using the Euler approximation itself, keeping in mind that the mesh is sufficiently fine, or by an exact distributions of the solution, when available.
+    \item Then, for each time step $N_i = 2^{n_i}$ in the selected range, we compute the Euler approximation using the computed noise values at the corresponding coarser mesh.
     \item We then compare each approximation $\{X_{t_j}^{N_i}\}_{j=0, \ldots, N_i}$ to the values of the target path on that coarse mesh and update the strong error
-\[
-    \epsilon_{t_j}^{N_i} = \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m)\right|
-\]
-at each mesh point.
+    \[
+        \epsilon_{t_j}^{N_i} = \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m)\right|
+    \]
+    at each mesh point.
     \item At the end of all the simulations, we take the maximum in time, on each corresponding coarse mesh, to obtain the error for each mesh,
-\[
-    \epsilon^{N_i} = \max_{j=0, \ldots, N_i} \epsilon_{t_j}^{N_i}
-\]
+    \[
+        \epsilon^{N_i} = \max_{j=0, \ldots, N_i} \epsilon_{t_j}^{N_i}
+    \]
     \item Finally, we fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, via linear least-square regression in log scale, for suitable $C$ and $p$, with $p$ giving the order of convergence.
 \end{enumerate}
 
-As for the implementation itself, all code is written in the Julia language \cite{Julia2017}. Julia is a high-performance programming language, suitable for scientific computing and computationally-demanding applications. Julia has a performant and feature-rich package for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations. For the sake of transparency, however, all the numerics presented below were implemented explicitly, complementing the aforementioned package, and made available in the github repository \cite{RODEConvEM2023}.
+As for the implementation itself, all code is written in the Julia language \cite{Julia2017}. Julia is a high-performance programming language, suitable for scientific computing and computationally-demanding applications.
 
-\subsection{Linear homogeneous equation}
+Julia has a performant and feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and so on.
+
+Although all the source code for the \texttt{DifferentialEquations.jl} ecosystem is available on the Github platform \cite{github}, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose not to use this ecosystem and, instead, implement our own code, with the minimum methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, would be easier. All the source code for the numerical simulations presented below are in the Github repository \cite{RODEConvEM2023}.
+
+\subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
 
-We start by considering the Euler approximation of one of the simplest random ordinary differential equation, that of a linear homogenous equation with a Wiener process as the coefficient:
+We start by considering the Euler approximation of one of the simplest Random ODEs, that of a linear homogenous equation with a Wiener process as the coefficient:
 \begin{equation}
     \label{linearhomogeneousrode}
     \begin{cases}
         \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
-        \left. X_t \right|_{t = 0} = X_0,
+        \left. X_t \right|_{t = 0} = X_0.
       \end{cases}
 \end{equation}
-This has the explicit solution
+
+Since the noise is simply a Wiener process, the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact and the Euler-Maruyama method for the SDE is equivalent to the Euler method for the RODE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1. Nevertheless, we illustrate the strong convergence directly for the Euler method for this RODE equation, for the sake of completeness.
+
+Equation \eqref{linearhomogeneousrode} has the explicit solution
 \begin{equation}
     X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
 \end{equation}
@@ -1043,20 +1050,25 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
 
 \begin{table}
     \label{tablinearhomogeneousrode}
-    \begin{tabular}[htb]{|l|l|l|}
-    \hline N & dt & error\\
-    \hline \hline
-    16 & 0.0667 & 0.0228 \\
-    32 & 0.0323 & 0.0116 \\
-    64 & 0.0159 & 0.00607 \\
-    128 & 0.00787 & 0.00301 \\
-    256 & 0.00392 & 0.00151 \\
-    512 & 0.00196 & 0.000751 \\
-    1024 & 0.000978 & 0.000367 \\
-    \hline \\
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        16 & 0.0667 & 0.0194 \\
+        32 & 0.0323 & 0.0108 \\
+        64 & 0.0159 & 0.00546 \\
+        128 & 0.00787 & 0.00278 \\
+        256 & 0.00392 & 0.00139 \\
+        512 & 0.00196 & 0.000687 \\
+        1024 & 0.000978 & 0.000345 \\
+        2048 & 0.000489 & 0.000172 \\
+        4096 & 0.000244 & 8.62e-5 \\
+        8192 & 0.000122 & 4.66e-5 \\
+        16384 & 6.1e-5 & 2.45e-5 \\
+        \hline
     \end{tabular}
+    \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $[0, T] = [0.0, 1.0]$, based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $2^{20}=1048576$ points.}    
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval (0.0, 1.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
 \end{table}
 
 \begin{figure}[htb]
@@ -1065,247 +1077,27 @@ The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtain
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
-     computed with 1000 sample paths,
-    for each $\Delta t = 1/N$,  $N = 16, 32, 64, 128, 256, 512, 1024$.}
+    computed with $M = 1000$ sample paths,
+    for each $\Delta t = 1/N$,  $N = 16,$ $32,$ $64,$ $128,$ $256,$ $512,$ $1024$.}
 \end{figure}
 
-\begin{rmk}
-The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to be, since these random variables are independent, of order 
-\begin{multline*}
-    \mathbb{E}\left[\left|e^{\sum_i Z_i} - 1\right|\right] \sim \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} \\
-    = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
-\end{multline*}
-hence of strong order 1 in $\Delta t_N$. Therefore, this term does not affect the order of convergence of the Euler method, but it is of crucial importance when analysing higher order methods.
-\end{rmk}
+%\begin{rmk}
+%The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to be, since these random variables are independent, of order 
+%\begin{multline*}
+%    \mathbb{E}\left[\left|e^{\sum_i Z_i} - 1\right|\right] \sim \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} \\
+%    = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
+%\end{multline*}
+%hence of strong order 1 in $\Delta t_N$. Therefore, this %term does not affect the order of convergence of the Euler %method, but it is of crucial importance when analysing %higher order methods.
+%\end{rmk}
 
-\subsection{Linear nonhomogeneous equation}
+\subsection{Non-homogeneous linear system of RODEs with several types of noises}
 
-We now consider the following linear equation with noise in the nonhomogenous term:
-\begin{equation}
-    \label{linearnonhomogeneousrode}
-    \begin{cases}
-        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = -X_t + W_t, \qquad 0 \leq t \leq T, \\
-        \left. X_t \right|_{t = 0} = X_0,
-      \end{cases}
-\end{equation}
-This has the explicit pathwise solution
-\begin{equation}
-    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}W_s\;\mathrm{d}s, \quad 0 \leq t \leq T.
-\end{equation}
-
-As in \cref{seclinearhomogeneousrode}, when we compute an approximate solution via Euler's method, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, i.e. only on the mesh points. We can find the exact distribution for $\int_0^{t_j} e^{s} W_s\;\mathrm{d}s$ given the values of the noise at the mesh points and use that to draw feasible exact solutions to estimate the strong error.
-
-First, we notice that
-\[
-    \mathrm{d}(e^tW_t) = e^t W_t\;\mathrm{d}t + e^t\;\mathrm{d}W_t.
-\]
-Thus, since $W_0 = 0$,
-\[
-    \int_0^t e^s W_s \;\mathrm{d}s = e^tW_t - \int_0^t e^t\;\mathrm{d}W_t.
-\]
-Now, for $t=t_j$, we break down the integral into parts:
-\begin{equation}
-    \int_0^{t_j} e^s \;\mathrm{d}W_s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s.
-\end{equation}
-On each mesh interval $[t_i, t_{i+1}]$, we consider, again, the Brownian bridge
-\begin{equation}
-    B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i}).
-\end{equation}
-Thus, on each mesh interval $[t_i, t_{i+1}]$, we have
-\[
-    \mathrm{d}W_t = \mathrm{d}B_t^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i} \;\mathrm{d}t.
-\]
-Hence, upon integration,
-\[
-    \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s = \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right).
-\]
-Putting them all together yields
-\begin{align*}
-    \int_0^{t_j} e^s W_s \;\mathrm{d}s & = e^{t_j}W_{t_j} - \int_0^{t_j} e^{t_j}\;\mathrm{d}W_t \\
-    & = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}W_s \\
-    & = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \left(\int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i + \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right)\right).
-\end{align*}
-
-Since the Brownian bridge vanishes at the endpoints, we have
-\[
-    \int_{t_i}^{t_{i+1}} e^s \;\mathrm{d}B_s^i = - \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s.
-\]
-Thus,
-\begin{equation}
-    \int_0^{t_j} e^s W_s \;\mathrm{d}s = e^{t_j}W_{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right) - Z_i \right),
-\end{equation}
-where
-\begin{equation}
-    Z_i = \int_{t_i}^{t_{i+1}} e^s B_s^i\;\mathrm{d}s.
-\end{equation}
-As before, the term $Z_i$ is a Gaussian with zero mean, and we need to compute its variance to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. As in the previous section, using the symmetry in $ts$,
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau e^s e^t B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
-    & = \int_0^\tau \int_0^\tau e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = 2\int_0^\tau \int_0^t e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \frac{2}{\tau}\int_0^\tau \int_0^t e^s e^t (\tau - t) s \;\mathrm{d}s\;\mathrm{d}t
-\end{align*}
-Upon integration,
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \frac{2}{\tau}\int_0^\tau e^t (\tau - t) (te^t - e^t + 1) \;\mathrm{d}t \\
-    & = 
-\end{align*}
-
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau e^s e^t B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
-    & = \int_0^\tau \int_0^\tau e^s e^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^\tau e^s e^t\left(\min\{t, s\} - \frac{ts}{\tau}\right) \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^t e^s e^t s\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau e^s e^t t\;\mathrm{d}s\;\mathrm{d}t - \int_0^\tau \int_0^\tau e^s e^t \frac{ts}{\tau} \;\mathrm{d}s\;\mathrm{d}t \\
-    & = \int_0^\tau \int_0^t e^s e^t s\left(1 - \frac{t}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t + \int_0^\tau \int_t^\tau e^s e^t t\left(1 - \frac{s}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t \\
-    & = \frac{1}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t + \frac{1}{\tau}\int_0^\tau \int_t^\tau e^s e^t t\left(\tau -s\right)\;\mathrm{d}s\;\mathrm{d}t.
-\end{align*}
-Switching the order of integration in the second integral and renaming the variables we see that
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \frac{1}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t + \frac{1}{\tau}\int_0^\tau \int_0^s e^s e^t t\left(\tau -s\right)\;\mathrm{d}t\;\mathrm{d}s \\
-    & = \frac{2}{\tau}\int_0^\tau \int_0^t e^s e^t s\left(\tau - t\right)\;\mathrm{d}s\;\mathrm{d}t \\
-    & = \frac{2}{\tau}\int_0^\tau e^t(\tau - t)(\tau e^\tau - e^\tau + 1)\;\mathrm{d}t \\
-    & = \frac{2(\tau e^\tau - e^\tau + 1)}{\tau}((e^\tau - 1)\tau - (\tau e^\tau - e^\tau + 1)) \\
-    & = \frac{2(\tau e^\tau - e^\tau + 1)}{\tau}(e^\tau - \tau - 1).
-\end{align*}
-Computing the inner integral we find
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] & = \int_0^\tau e^t(te^t-e^t+1)\;\mathrm{d}t + \int_0^\tau te^t(e^\tau - e^t)\;\mathrm{d}t \\
-    & \qquad - \int_0^\tau \frac{te^t}{\tau}\left(\tau e^\tau - e^\tau + 1\right)\;\mathrm{d}t \\
-    & = \int_0^\tau (e^t-e^{2t})\;\mathrm{d}t - \int_0^\tau \frac{te^t}{\tau}\left(1 - e^\tau\right)\;\mathrm{d}t
-\end{align*}
-Computing the remaining integral yields
-\[
-    \mathbb{E}\left[\left(\int_0^{\tau} e^s B_s\;\mathrm{d}s\right)^2\right] = e^{\tau} - e^{2\tau} - \frac{1 - e^\tau}{\tau}\left( \tau e^\tau\ - e^\tau + 1 \right)
-\]
-
-Back to $Z_i$, this means that
-\begin{equation}
-    \label{linearnonhomogeneousZidistribution}
-    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
-\end{equation}
-
-Hence, once an Euler approximation of \eqref{linearnonhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
-\begin{equation}
-    \label{Xtlinearnonhomogeneousrode}
-    X_t = e^{-t_j}\left(X_0 - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}} - W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}} - e^{t_i}\right) - Z_i \right) \right) + W_{t_j},
-\end{equation}
-for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearnonhomogeneousZidistribution}. Figure \ref{samplepathslinearnonhomogeneousrode} shows an approximate solution and a few sample paths of possible exact solutions associated with the given realizations of the noise on the mesh points.
-\begin{figure}
-    \label{samplepathslinearnonhomogeneousrode}
-    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
-\end{figure}
-
-The Table \ref{tablinearnonhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearnonhomogeneousrode} illustrates the order of convergence.
-
-\begin{table}
-    \label{tablinearnonhomogeneousrode}
-    \begin{tabular}[htb]{l|l|l}
-        1 & 2 & 3 \\
-        4 & 5 & 6
-    \end{tabular}
-    \caption{blah}
-\end{table}
-
-\begin{figure}[htb]
-    \label{figlinearnonhomogeneousrode}
-    \caption{Convergence of the strong error for the Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the time interval $[0, 1]$, based on 1000 sample paths, for each of the time steps in $\mathrm{d}t = 1/N$, with $N = 16, 32, 64, 128, 256, 512, 1024$.}
-\end{figure}
-
-\subsection{Population dynamics with harvest}
-
-Here, we consider a population dynamics modelled by a logistic equation (loosely inspired by \cite[Section 15.2]{HanKloeden2017}) with harvest:
-\begin{equation}
-    \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) - H_t
-\end{equation}
-where $r > 0$ is constant, $\{Z_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative point process playing the role of the harvest term. More specifically, $\{Z_t\}_{t \geq 0}$ is given by
-\[
-    Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
-\]
-where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is a geometric Brownian motion process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}, and $\{H_t\}_{t\geq 0}$ is a point process of the form ...
-
-We suppose the initial condition is non-negative and bounded almost surely:
-\[
-    0 \leq X_0 \leq R,
-\]
-for some $R > r$.
-
-The noise process $\{Z_t\}_{t \geq 0}$ itself satisfies
-\[
-    0 < \lambda - \varepsilon \leq Z_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
-\]
-
-Define 
-\[
-    f(t, x, z) = z x(r - x)
-\]
-and notice that $f(t, x, z)x \geq 0$, for $x \geq 0$ and $z \geq 0$, and $f(t, x, z)x \leq 0$, for $x \geq r$ and $z \geq 0$. Hence the interval $[0, R]$ in $x$ is positively invariant and the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
-\[
-    0 \leq X_t \leq R,
-\]
-for all $t \geq 0$.
-
-The function $f=f(t, x, z)$ is continuously differentiable infinitely many times and with
-\[
-    \left|\frac{\partial f}{\partial x}(t, x, z)\right| = |z(r - 2x)|\leq 2\lambda (2R - r),
-\]
-for $|x| \leq R$ and $0 \leq z \leq 2\lambda$. In turn, the function $z = z(y) = \lambda (1 + \varepsilon \sin(y))$ is also continuously differentiable infinitely many times and is uniformly bounded along with all its derivatives.
-
-The right hand side of \eqref{rodepopulationdynamics} is not globally Lipschitz, but, for the sake of analysis, since $X_t$ and $Y_t$ are bounded, the right hand side can be modified to a twice continuously differentiable, uniformly globally Lipschitz function $\tilde f(t, x, y)$ that coincides with $f(t, x, y)$ for $(t, x, y) \in \mathbb{R}\times [0, R]\times [0, 2\lambda]$ and satisfies \eqref{Lxassumptionbasic} with
-\[
-    L_X = 2\lambda (2R - r).
-\]
-
-Thus, the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$ almost surely, for some $R > r$, is equivalent to the RODE
-\begin{equation}
-    \label{rodepopulationdynamicstruncated}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \tilde f(t, X_t, Y_t).
-\end{equation}
-
-With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses1} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
-\[
-    |X_t| \leq |X_0|e^{2\lambda (2R - r)t} \leq R e^{2\lambda (2R - r)T}, \qquad 0 \leq t \leq T.
-\]
-almost surely. 
-
-Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is of strong order 1.
-
-\subsection{Kanai-Tajimi Earthquake model}
-
-The Kanai-Tajimi model for the oscillations of a single-storey building is usually written as the second-order equation (see \cite[Chapter 18]{NeckelRupp2013})
-\[
-  \ddot x + 2\zeta_g\omega_g \dot x - \omega_g^2 x = \dot \xi,
-\]
-where $\zeta_g$ and $\omega_g$ are damping and frequency model parameters, taken to be $\zeta_g = 0.64$ and $\omega_g = 15.56 \;\texttt{rad}/\texttt{s}$, respectively, and where $\dot \xi$ is a white noise excitation. This can be written as a system of stochastic differential equations as
-\begin{equation}
-    \begin{cases}
-        \mathrm{d} x = -y \;\mathrm{d}t, \\
-        \mathrm{d} y = (-2\zeta_g\omega_g y + \omega_g^2x) \;\mathrm{d} t + \;\mathrm{d}W_t,
-    \end{cases}
-\end{equation}
-where $\{W_t\}_t$ is a standard Wiener process.
-
-The Kanai-Tajimi model can also be written as a system of random ordinary differential equations, taking the form
-\begin{equation}
-    \begin{cases}
-        \dot z_1 = -z_2 + O_t, \\
-        \dot z_2 = -2\zeta_g\omega_g(z_2 + O_t) + \omega_g^2 z_1 + O_t,
-    \end{cases}
-\end{equation}
-where $\{O_t\}_t$ is an Orstein-Uhlenbeck process satisfying
-\begin{equation}
-    \label{OUforKanaiTajimi}
-    \mathrm{d}O_t = - O_t\;\mathrm{d}t + \mathrm{d}W_t,
-\end{equation}
-which can be solved exactly.
-
-\subsection{Earthquake and other impulse driven models}
-
-Now we consider a simple structural model driven by an earthquake-type random disturbance in the form of a transport process, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models). There are a number of models for earthquake-type forcing, such as the Kanai-Tajima and the Clough-Penzien. We chose the Bogdanoff-Goldberg-Bernard model due to the different type of noise, so we can illustrate the improved convergence in the case of a transport process noise.
+Now we consider a system of linear equations, and with a number of different types of noises. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
 
 \subsection{Fractional Brownian motion noise}
+\label{secfBmnoise}
 
-Here, we consider again the linear equation
+Here, we consider again a linear equation, of the form
 \begin{equation}
     \label{linearnonhomogeneousrode2}
     \begin{cases}
@@ -1319,9 +1111,9 @@ Although the above linear equation has the explicit solution
 \begin{equation}
     X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
 \end{equation}
-we check the convergence numerically by solving the equation with the Euler method itself, but using as target the approximation in the finest mesh.
+computing an distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by solving the equation with the Euler method itself, but on a much finer mesh. Nevertheless, the proof is done rigorously below, with the framework developed in the first sections.
 
-In this particular case, we can prove rigorously the strong order of convergence is $H+1/2$, for $0 < H < 1/2$. Indeed, we need to estimate the last term of \eqref{expectedestimateglobalerrorintegral}, in \cref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
+Indeed, we need to estimate the last term of \eqref{expectedestimateglobalerrorintegral}, in \cref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
 \begin{equation}
     \label{stepfBm}
     f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
@@ -1437,6 +1229,98 @@ Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{
 \end{multline}
 where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
+\subsection{Population dynamics with harvest}
+
+Here, we consider a population dynamics modelled by a logistic equation (loosely inspired by \cite[Section 15.2]{HanKloeden2017}) with harvest:
+\begin{equation}
+    \label{rodepopulationdynamics}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) - H_t
+\end{equation}
+where $r > 0$ is constant, $\{Z_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative point process playing the role of the harvest term. More specifically, $\{Z_t\}_{t \geq 0}$ is given by
+\[
+    Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
+\]
+where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is a geometric Brownian motion process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}, and $\{H_t\}_{t\geq 0}$ is a point process of the form ...
+
+We suppose the initial condition is non-negative and bounded almost surely:
+\[
+    0 \leq X_0 \leq R,
+\]
+for some $R > r$.
+
+The noise process $\{Z_t\}_{t \geq 0}$ itself satisfies
+\[
+    0 < \lambda - \varepsilon \leq Z_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
+\]
+
+Define 
+\[
+    f(t, x, z) = z x(r - x)
+\]
+and notice that $f(t, x, z)x \geq 0$, for $x \geq 0$ and $z \geq 0$, and $f(t, x, z)x \leq 0$, for $x \geq r$ and $z \geq 0$. Hence the interval $[0, R]$ in $x$ is positively invariant and the pathwise solutions of \eqref{rodepopulationdynamics} are almost surely bounded as well, with
+\[
+    0 \leq X_t \leq R,
+\]
+for all $t \geq 0$.
+
+The function $f=f(t, x, z)$ is continuously differentiable infinitely many times and with
+\[
+    \left|\frac{\partial f}{\partial x}(t, x, z)\right| = |z(r - 2x)|\leq 2\lambda (2R - r),
+\]
+for $|x| \leq R$ and $0 \leq z \leq 2\lambda$. In turn, the function $z = z(y) = \lambda (1 + \varepsilon \sin(y))$ is also continuously differentiable infinitely many times and is uniformly bounded along with all its derivatives.
+
+The right hand side of \eqref{rodepopulationdynamics} is not globally Lipschitz, but, for the sake of analysis, since $X_t$ and $Y_t$ are bounded, the right hand side can be modified to a twice continuously differentiable, uniformly globally Lipschitz function $\tilde f(t, x, y)$ that coincides with $f(t, x, y)$ for $(t, x, y) \in \mathbb{R}\times [0, R]\times [0, 2\lambda]$ and satisfies \eqref{Lxassumptionbasic} with
+\[
+    L_X = 2\lambda (2R - r).
+\]
+
+Thus, the RODE \eqref{rodepopulationdynamics} with $0\leq X_0 \leq R$ almost surely, for some $R > r$, is equivalent to the RODE
+\begin{equation}
+    \label{rodepopulationdynamicstruncated}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \tilde f(t, X_t, Y_t).
+\end{equation}
+
+With $\tilde f=\tilde f(t, x, y)$, the \cref{standinghypotheses1} hold. Moreover, it follows from \eqref{XtboundLXMt} (notice $M_t = 0$ here) that
+\[
+    |X_t| \leq |X_0|e^{2\lambda (2R - r)t} \leq R e^{2\lambda (2R - r)T}, \qquad 0 \leq t \leq T.
+\]
+almost surely. 
+
+Therefore, all the conditions of \cref{thmItonoise} hold and the Euler method is of strong order 1.
+
+\subsection{Kanai-Tajimi Earthquake model}
+
+The Kanai-Tajimi model for the oscillations of a single-storey building is usually written as the second-order equation (see \cite[Chapter 18]{NeckelRupp2013})
+\[
+  \ddot x + 2\zeta_g\omega_g \dot x - \omega_g^2 x = \dot \xi,
+\]
+where $\zeta_g$ and $\omega_g$ are damping and frequency model parameters, taken to be $\zeta_g = 0.64$ and $\omega_g = 15.56 \;\texttt{rad}/\texttt{s}$, respectively, and where $\dot \xi$ is a white noise excitation. This can be written as a system of stochastic differential equations as
+\begin{equation}
+    \begin{cases}
+        \mathrm{d} x = -y \;\mathrm{d}t, \\
+        \mathrm{d} y = (-2\zeta_g\omega_g y + \omega_g^2x) \;\mathrm{d} t + \;\mathrm{d}W_t,
+    \end{cases}
+\end{equation}
+where $\{W_t\}_t$ is a standard Wiener process.
+
+The Kanai-Tajimi model can also be written as a system of random ordinary differential equations, taking the form
+\begin{equation}
+    \begin{cases}
+        \dot z_1 = -z_2 + O_t, \\
+        \dot z_2 = -2\zeta_g\omega_g(z_2 + O_t) + \omega_g^2 z_1 + O_t,
+    \end{cases}
+\end{equation}
+where $\{O_t\}_t$ is an Orstein-Uhlenbeck process satisfying
+\begin{equation}
+    \label{OUforKanaiTajimi}
+    \mathrm{d}O_t = - O_t\;\mathrm{d}t + \mathrm{d}W_t,
+\end{equation}
+which can be solved exactly.
+
+\subsection{Earthquake and other impulse driven models}
+
+Now we consider a simple structural model driven by an earthquake-type random disturbance in the form of a transport process, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models). There are a number of models for earthquake-type forcing, such as the Kanai-Tajima and the Clough-Penzien. We chose the Bogdanoff-Goldberg-Bernard model due to the different type of noise, so we can illustrate the improved convergence in the case of a transport process noise.
+
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
 \cite{KPP1937}
@@ -1463,6 +1347,8 @@ where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propb
 
     \bibitem{GiraultRaviart1981} V. Girault and P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
 
+    \bibitem{github} github, \emph{GitHub,} available at \texttt{https://github.com/}, 2020.
+
     \bibitem{Gronwall1919} T. H. Gronwall, Note on the derivatives with respect to a parameter of the solutions of a system of differential equations, \emph{Ann. of Math.} (2) 20 (1919), 292--296.
 
     \bibitem{GruneKloeden2001} L. Gr\"une and P.E. Kloeden, Higher order numerical schemes for affinely controlled nonlinear systems, \emph{Numer. Math.} 89 (2001), 669--690.
@@ -1481,7 +1367,7 @@ where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propb
 
     \bibitem{Oksendal2003} B. {\O}ksendal, \emph{Stochastic Differential Equations - An Introduction with Applications,} Universitext, Springer-Verlag Berlin Heidelberg 2003.
 
-    \bibitem{RackauckasNie2017} C. Rackauckas and Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1.
+    \bibitem{RackauckasNie2017} C. Rackauckas and Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1, 1--15.
 
     \bibitem{RODEConvEM2023} P. Kloeden and R. Rosa, Numerical examples of strong order of convergence of the Euler method for random ordinary differential equations, \texttt{https://github.com/rmsrosa/rode\_conv\_em}.
 
