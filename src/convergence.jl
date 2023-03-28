@@ -225,15 +225,16 @@ function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equa
     ntgt = results.suite.ntgt
     deltas = results.deltas
     errors = results.errors
-    table = "\\begin{tabular}[htb]{|l|l|l|}\n
-    \\hline N & dt & error\\\\\n
-    \\hline \\hline\n"
+    table = "    \\begin{tabular}[htb]{|r|l|l|}
+        \\hline N & dt & error\\\\
+        \\hline \\hline\n"
     for (n, dt, error) in zip(ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
-        table *= "$n & $dt & $error \\\\\n"
+        table *= "        $n & $dt & $error \\\\\n"
     end
-    table *= "\\hline \n
-    \\end{tabular}\n
-    \\bigskip\n\n
+    table *= "        \\hline
+    \\end{tabular}
+    \\bigskip
+
     \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points.}"
     return table
 end
