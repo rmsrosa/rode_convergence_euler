@@ -39,7 +39,7 @@ x0law = Normal()
 ntgt = 2^18
 ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 400
+m = 200
 
 y0 = 0.0
 hursts = Iterators.flatten((0.1:0.1:0.5, 0.7:0.2:0.9))
@@ -145,7 +145,7 @@ We print them out for inclusing in the paper:
 [collect(hursts) ps]
 ````
 
-Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - X_t + Y_t^H$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
+The following plot helps visualizing the result.
 
 ````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
