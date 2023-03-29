@@ -20,7 +20,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` (from the last sample path of the Monte-Carlo simulation) and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
     xlabel := "\$t\$"
-    ylabel := "\$x\$"
+    ylabel := ( xshow !== nothing && xshow !== false ) ? "\$x\$" : "\$y\$"
     t0 = suite.t0
     tf = suite.tf
     x0law = suite.x0law
