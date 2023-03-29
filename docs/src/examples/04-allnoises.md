@@ -4,10 +4,6 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/04-all
 
 # Non-homogenous linear system of RODEs with all implemented noises
 
-```@meta
-Draft = false
-```
-
 This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
 
 ## The equation
@@ -118,8 +114,8 @@ We finally add some information about the simulation:
 ````@example 04-allnoises
 info = (
     equation = "\$\\mathrm{d}\\mathbf{X}_t/\\mathrm{d}t = - \\| \\mathbf{Y}_t\\|^2 \\mathbf{X}_t + \\mathbf{Y}_t\$",
-    noise = "vector-valued noise \$\\{Y_t\\}_t\$ with all the implemented noises",
-    ic = "\$X_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
+    noise = "vector-valued noise \$\\{\\mathbf{Y}_t\\}_t\$ with all the implemented noises",
+    ic = "\$\\mathbf{X}_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
 )
 ````
 
@@ -187,13 +183,13 @@ plot(plts..., legend=false)
 We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 ````@example 04-allnoises
-plot(suite, xshow=false, yshow=true, linecolor=:auto)
+plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "Ornstein-Uhlenbeck" "gBm" "Compound Poisson" "Step Poisson" "Hawkes" "Transport" "fBm"])
 ````
 
 and combined, with their sum squared, as it enters the homogenous term,
 
 ````@example 04-allnoises
-plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="sum of squares of noises")
+plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\mathbf{Y}_t\\right\\|\\right\\|^2\$")
 ````
 
 ---
