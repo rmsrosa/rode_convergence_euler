@@ -39,7 +39,7 @@ x0law = Normal()
 ntgt = 2^18
 ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 200
+m = 400
 
 y0 = 0.0
 hursts = Iterators.flatten((0.1:0.1:0.5, 0.7:0.2:0.9))
@@ -156,10 +156,9 @@ plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expecte
 Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
 
 ````@example 05-fBm_linear
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_H_fBm.png")) # hide
-````
-
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_H_fBm.png"))
 nothing # hide
+````
 
 ---
 
