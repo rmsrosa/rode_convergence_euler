@@ -1132,7 +1132,7 @@ Table \ref{taballnoises} shows the estimated strong error obtained from a 200 sa
 \end{table}
 
 \begin{figure}[htb]
-    \label{figlinearhomogeneousrode}
+    \label{figallnoises}
     \includegraphics[scale=0.7]{img/order_allnoises.png}
     \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
 \end{figure}
@@ -1272,7 +1272,13 @@ Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{
 \end{multline}
 where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
-As for the numerics, \eqref{linearnonhomogeneousfbm} is implemented with several values of $H$.
+As for the numerics, \eqref{linearnonhomogeneousfbm} is implemented with several values of $H$. Figure \ref{figorderdepfBm} shows the order of strong convergence obtained for each of a series of values of the Hurst parameter, compared with the expected value $p=\min\{H + 1/2, 1\}.$ 
+
+\begin{figure}[htb]
+    \label{figorderdepfBm}
+    \includegraphics[scale=0.7]{img/order_dep_on_H_fBm.png}
+    \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
+\end{figure}
 
 \subsection{Population dynamics with harvest}
 

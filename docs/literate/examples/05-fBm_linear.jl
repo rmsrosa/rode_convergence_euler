@@ -116,6 +116,10 @@ for h in Iterators.drop(hursts, 1)
     push!(ps, loc_result.p)
 end
 
+# We print them out for inclusing in the paper:
+
+[collect(hursts) ps]
+
 # Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - X_t + Y_t^H$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
 
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
@@ -123,3 +127,6 @@ scatter!(plt, collect(hursts), ps, label="computed")
 plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
 
 # Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
+
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_H_fBm.png")) # hide
+# nothing # hide
