@@ -1046,7 +1046,7 @@ for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearh
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
 \end{figure}
 
-The Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. The Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
     \label{tablinearhomogeneousrode}
@@ -1097,28 +1097,52 @@ Now we consider a system of linear equations with a series of different types of
 The system of equation takes the form
 \begin{equation}
     \begin{cases}
-        \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \|\mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
+        \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
         \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
     \end{cases}
 \end{equation}
 where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the following simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
 \begin{enumerate}
     \item A standard Wiener process;
-    \item An Ornstein-Uhlenbeck process with drift $\nu = 0.3,$ diffusion $\sigma = 0.2,$ and initial condition $y_0 = 0.2$;
-    \item A geometric Brownian motion process with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.3,$ and initial condition $y_0 = 0.2$;
-    \item A compound Poisson process with rate $\lambda = 2$ and jump law following a Normal distribution with mean $\mu = 0.3$ and standard deviation $\sigma = 0.3$;
-    \item A Poisson step process with rate $\lambda = 10.0$ and step law following a Beta distribution with shape parameters $\alpha = 2.0$ and $\beta = 15.0;$
-    \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 2.0$, base rate $a = 0.8$, exponential decay rate $\delta = 0.9$, and jump law following an exponential distribution with scale $\beta = 1.8,$ corresponding to a rate $\lambda = 1/1.8 \approx 0.56;$
-    \item A transport process of the form $t \mapsto \sum_{i=1}^{20} \sin^{1/3}(t/r_i)$, where $r_i$ are independent random variables following a Beta distribution with shape parameters $\alpha = 2.0$ and $\beta = 15.0;$
+    \item An Ornstein-Uhlenbeck process with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A geometric Brownian motion process with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A compound Poisson process with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
+    \item A Poisson step process with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
+    \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
+    \item A transport process of the form $t \mapsto \sum_{i=1}^{6} \sin^{1/3}(\omega_i t)$, where the frequencies $\omega_i$ are independent random variables following a Gamma distribution with shape parameter $\alpha = 7.5$ and scale $\theta = 2.0;$
     \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
+
+Table \ref{taballnoises} shows the estimated strong error obtained from a 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+
+\begin{table}
+    \label{taballnoises}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        64 & 0.0159 & 0.22 \\
+        128 & 0.00787 & 0.106 \\
+        256 & 0.00392 & 0.0525 \\
+        512 & 0.00196 & 0.0262 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{Y_t\}_t$ with all the implemented noises, on the time interval (0.0, 1.0), based on $m = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+\end{table}
+
+\begin{figure}[htb]
+    \label{figlinearhomogeneousrode}
+    \includegraphics[scale=0.7]{img/order_allnoises.png}
+    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
+\end{figure}
 
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
 
 Here, we consider again a linear equation, of the form
 \begin{equation}
-    \label{linearnonhomogeneousrode2}
+    \label{linearnonhomogeneousfbm}
     \begin{cases}
         \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = -X_t + B^H_t, \qquad 0 \leq t \leq T, \\
         \left. X_t \right|_{t = 0} = X_0,
@@ -1247,6 +1271,8 @@ Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{
     \leq C_H^{(4)} \Delta t_N + C_H^{(3)} \Delta t_N^{H + 1/2},
 \end{multline}
 where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
+
+As for the numerics, \eqref{linearnonhomogeneousfbm} is implemented with several values of $H$.
 
 \subsection{Population dynamics with harvest}
 
