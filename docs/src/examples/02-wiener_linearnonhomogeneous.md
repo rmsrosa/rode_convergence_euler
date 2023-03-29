@@ -4,7 +4,6 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/02-wie
 
 # Non-homogenous linear RODE with a Wiener process noise coefficient
 
-
 In our second linear example, a Wiener process noise enters as the non-homogeneous term.
 
 ## The equation

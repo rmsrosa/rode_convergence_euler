@@ -46,28 +46,28 @@ t0, tf = 0.0, 1.0
 # and the mesh parameters are set to 
 
 ntgt = 2^18
-ns = 2 .^ (5:9)
+ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3]]
 
 # The number of simulations for the Monte Carlo estimate is set to
 
-m = 1_000
+m = 200
 
 # Now we define all the noise parameters
 
 y0 = 0.2
 μ = 0.3
-σ = 0.2
+σ = 0.8
 ν = 0.3
 λ = 10.0
 α = 2.0
 β = 15.0
-λ₀ = 5.0
-a = 0.8
+λ₀ = 3.0
+a = 2.0
 δ = 3.0
 dylaw = Exponential(0.5)
 steplaw = Beta(5.0, 2.0)
-nr = 10
+nr = 8
 transport(t, r) = mapreduce(ri -> cbrt(sin(ri * t)), +, r) / length(r)
 ylaw = Gamma(7.5, 2.0)
 hurst = 0.6
@@ -85,7 +85,7 @@ noise = ProductProcess(
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, ntgt)
 )
 
-# Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also expected to be of order 1, just like for the other types of noises in `noise`.
+# Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also expected to be of order 1, just like for the other types of noises in `noise`. Both the Wiener and the Orsntein-Uhlenbeck processes are additive noises so the strong order 1 convergence is expected. All the others would be thought to have a lower order of convergence but our results prove they are still of order 1. Hence, their combination is also expected to be of order 1, as illustrated here.
 #
 
 # Now we set up the initial condition, taking into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
