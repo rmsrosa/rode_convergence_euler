@@ -1272,10 +1272,32 @@ Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{
 \end{multline}
 where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Applying this estimate to \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
-As for the numerics, \eqref{linearnonhomogeneousfbm} is implemented with several values of $H$. Figure \ref{figorderdepfBm} shows the order of strong convergence obtained for each of a series of values of the Hurst parameter, compared with the expected value $p=\min\{H + 1/2, 1\}.$ 
+As for the numerics, \eqref{linearnonhomogeneousfbm} is implemented with several values of $H$. Table \ref{taborderdepHfBm} shows the obtained convergence, for a series of Hurst parameters.
+
+\begin{table}
+    \label{taborderdepHfBm}
+    \begin{tabular}[htb]{|c|c|}
+        \hline H & p \\
+        \hline \hline
+        0.1 & 0.630713 \\
+        0.2  & 0.759896 \\
+        0.3  & 0.855504 \\
+        0.4  & 0.942058 \\
+        0.5  & 1.0012 \\
+        0.7  & 1.00544 \\
+        0.9  & 0.99782 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Hurst parameter $H$ and order $p$ of strong convergence for a number of Hurst values.}
+\end{table}
+
+
+Figure \ref{figorderdepHfBm} illustrates the dependency displayed in Table \ref{taborderdepHfBm}.
 
 \begin{figure}[htb]
-    \label{figorderdepfBm}
+    \label{figorderdepHfBm}
     \includegraphics[scale=0.7]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
 \end{figure}
