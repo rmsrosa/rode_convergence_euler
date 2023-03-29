@@ -1,6 +1,8 @@
 # # Linear RODE with fractional Brownian motion
 #
-# 
+# ```@meta
+# Draft = false
+# ```
 #
 # ## The equation
 #
@@ -27,21 +29,21 @@ tf = 1.0
 
 x0law = Normal()
 
-ntgt = 2^16
-ns = 2 .^ (4:8)
+ntgt = 2^18
+ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 1_000
+m = 200
 
 y0 = 0.0
-hursts = 0.1:0.1:0.9
+hursts = Iterators.flatten((0.1:0.1:0.5, 0.7:0.2:0.9))
 noise = FractionalBrownianMotionProcess(t0, tf, y0, first(hursts), ntgt)
 
 # And add some information about the simulation:
 
 info = (
-    equation = "linear equation",
+    equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + B^H_t\$",
     noise = "fBm noise",
-    ic = "\$X_0 \\sim \\mathcal{N}(\\mathbf{0}, I\\_2)\$"
+    ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -61,6 +63,7 @@ pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 
 # Then we are ready to compute the errors:
 
 @time result = solve(rng, suite)
+nothing # hide
 
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
@@ -116,32 +119,7 @@ end
 # Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - X_t + Y_t^H$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
 
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
-scatter!(plt, hursts, ps, label="computed")
+scatter!(plt, collect(hursts), ps, label="computed")
 plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
 
-scatter(hursts, ps)
-plot!(0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash)
-
-# 
-
-f(t, x, y) = - y * x
-
-ps = Vector{Float64}()
-
-# Now we vary the Hurst parameter and record the corresponding order of convergence.
-
-hursts = 0.05:0.05:0.45
-
-for h in hursts
-    loc_noise = FractionalBrownianMotionProcess(t0, tf, y0, h, ntgt)
-    loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, target, method, ntgt, ns, m)
-    @time loc_result = solve(rng, loc_suite)
-    @info "h = $h => p = $(loc_result.p)"
-    push!(ps, loc_result.p)
-end
-
 # Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
-
-plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
-scatter!(plt, hursts, ps, label="computed")
-plot!(plt, 0.0:0.01:0.5, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
