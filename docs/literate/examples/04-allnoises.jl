@@ -1,5 +1,9 @@
 # # Non-homogenous linear system of RODEs with all implemented noises
 #
+# ```@meta
+# Draft = false
+# ```
+#
 # This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
 
 # ## The equation
@@ -58,27 +62,25 @@ y0 = 0.2
 λ = 10.0
 α = 2.0
 β = 15.0
-λ₀ = 2.0
+λ₀ = 5.0
 a = 0.8
-δ = 0.9
-β̃ = 1.8
-dylaw2 = Exponential(1/β̃)
-dylaw = Normal(μ, σ)
-steplaw = Beta(α, β)
-nr = 20
-transport(t, r) = mapreduce(ri -> cbrt(sin(t/ri)), +, r) / length(r)
-ylaw = Beta(α, β)
+δ = 3.0
+dylaw = Exponential(0.5)
+steplaw = Beta(5.0, 2.0)
+nr = 10
+transport(t, r) = mapreduce(ri -> cbrt(sin(ri * t)), +, r) / length(r)
+ylaw = Gamma(7.5, 2.0)
 hurst = 0.6
 
 # The noise is, then, defined as a (vectorial) [`ProductProcess`](@ref), where each coordinate is one of the implemented noise types:
 
 noise = ProductProcess(
-    WienerProcess(t0, tf, y0),
+    WienerProcess(t0, tf, 0.0),
     OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ),
     GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
     CompoundPoissonProcess(t0, tf, λ, dylaw),
     PoissonStepProcess(t0, tf, λ, steplaw),
-    ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw2),
+    ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw),
     TransportProcess(t0, tf, ylaw, transport, nr),
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, ntgt)
 )
@@ -94,7 +96,7 @@ x0law = MvNormal(zeros(length(noise)), I)
 
 info = (
     equation = "\$\\mathrm{d}\\mathbf{X}_t/\\mathrm{d}t = - \\| \\mathbf{Y}_t\\|^2 \\mathbf{X}_t + \\mathbf{Y}_t\$",
-    noise = "vector valued noise \$\\{Y_t\\}_t\$ with all the implemented noises",
+    noise = "vector-valued noise \$\\{Y_t\\}_t\$ with all the implemented noises",
     ic = "\$X_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
 )
 
@@ -146,10 +148,10 @@ plts = [plot(suite, ns=nsample, xshow=i, resolution=2^4, title="Coordinate $i", 
 
 plot(plts..., legend=false)
 
-# We can also visualize the noises associated with this sample solution, both individually
+# We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 plot(suite, xshow=false, yshow=true, linecolor=:auto)
 
-# and their sum squared
+# and combined, with their sum squared, as it enters the homogenous term,
 
 plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="sum of squares of noises")
