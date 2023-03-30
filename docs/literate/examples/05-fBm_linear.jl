@@ -1,9 +1,5 @@
 # # Linear RODE with fractional Brownian motion
 #
-# ```@meta
-# Draft = false
-# ```
-#
 # ## The equation
 #
 # ## Numerical approximation
