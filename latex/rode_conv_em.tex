@@ -1315,16 +1315,20 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
 
 \subsection{Population dynamics with harvest}
 
-Here, we consider a population dynamics modelled by a logistic equation (loosely inspired by \cite[Section 15.2]{HanKloeden2017}) with harvest:
+Here, we consider a population dynamics modelled by a logistic equation, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with a harvest term:
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = Z_t X_t (r - X_t) - H_t
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \Lambda_t X_t (r - X_t) - H_t.
 \end{equation}
-where $r > 0$ is constant, $\{Z_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative point process playing the role of the harvest term. More specifically, $\{Z_t\}_{t \geq 0}$ is given by
+Here, $r > 0$ is constant, $\{\Lambda_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative point process playing the role of the harvest term. More specifically, $\{\Lambda_t\}_{t \geq 0}$ is given by
 \[
-    Z_t = \lambda (1 + \varepsilon \sin(Y_t)),
+    \Lambda_t = \lambda (1 + \varepsilon \sin(G_t)),
 \]
-where $0 < \varepsilon < 1$ and $\{Y_t\}_{t\geq 0}$ is a geometric Brownian motion process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}, and $\{H_t\}_{t\geq 0}$ is a point process of the form ...
+where $0 < \varepsilon < 1$ and $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. The harvest term $\{H_t\}_{t\geq 0}$ is a point-Poisson step process of the form
+\[
+    H_t = S_{N(t)}, \quad N(t) - 1 \leq t < N(t), \; i\in\mathbb{N},
+\]
+where $S_i$ are independent random variables following a given law, $T_0 = 0$, and $\{T_i\}_{i\in\mathbb{N}}$ is a Poisson process with rate $\lambda$.
 
 We suppose the initial condition is non-negative and bounded almost surely:
 \[
