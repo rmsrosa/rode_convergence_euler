@@ -53,11 +53,11 @@ rng = Xoshiro(123)
 # The right hand side of the evolution equation
 
 function f(t, x, y)
-    λ = 1.0
+    γ = 1.0
     ϵ = 0.3
     r = 1.0
-    α = λ / 2
-    dx = λ * (1 + ϵ * sin(y[1])) * x * (r - x) - α * y[2]
+    α = γ / 2
+    dx = x > zero(x) ? γ * (1 + ϵ * sin(y[1])) * x * (r - x) - α * y[2] : zero(x)
     return dx
 end
 
@@ -67,9 +67,7 @@ t0, tf = 0.0, 1.0
 
 # The law for the initial condition
 
-α₀ = 7.0
-β₀ = 5.0
-x0law = Beta(α₀, β₀)
+x0law = Beta(7.0, 5.0)
 
 # The noise parameters
 
@@ -78,9 +76,9 @@ x0law = Beta(α₀, β₀)
 y0 = 1.0
 noise1 = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
-λₚ = 15.0
-steplaw = Beta(β₀, α₀)
-noise2 = PoissonStepProcess(t0, tf, λₚ, steplaw)
+λ = 15.0
+steplaw = Beta(5.0, 7.0)
+noise2 = PoissonStepProcess(t0, tf, λ, steplaw)
 
 noise = ProductProcess(noise1, noise2)
 
@@ -99,7 +97,7 @@ m = 1_000
 info = (
     equation = "population dynamics",
     noise = "gBm and step process noises",
-    ic = "\$X_0 \\sim \\mathcal{B}($(round(α₀, sigdigits=1)), $(round(β₀, sigdigits=1)))\$"
+    ic = "\$X_0 \\sim \\mathrm{Beta}($(x0law.α), $(x0law.β))\$"
 )
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -151,8 +149,8 @@ plot(suite, ns=nsample)
 
 # We can also visualize the noises associated with this sample solution:
 
-plot(suite, xshow=false, yshow=true)
+plot(suite, xshow=false, yshow=true, label=["Z_t" "H_t"], linecolor=:auto)
 
-# The gBm noises enters the equation via $\Lambda_t = \lambda(1 + \epsilon\sin(G_t))$. Using the chosen parameters, this noise can be visualized below
+# The gBm noises enters the equation via $G_t = \gamma(1 + \epsilon\sin(Z_t))$. Using the chosen parameters, this noise can be visualized below
 
-plot(suite, xshow=false, yshow= y -> 1.0 + 0.3sin(y[1]), label="\$\\Lambda_t = \\lambda (1 + \\epsilon \\sin(G_t))\$")
+plot(suite, xshow=false, yshow= y -> 1.0 + 0.3sin(y[1]), label="\$G_t\$")
