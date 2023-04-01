@@ -1,7 +1,7 @@
-# # Vibrations of a simple mechanical structure due to random seismic ground-motion excitations
+# # Mechanical structural under random Earthquake-like seismic disturbances
 # 
 # ```@meta
-# Draft = true
+# Draft = false
 # ```
 #
 # Now we consider a mechanical structure problem under ground-shaking excitations, inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293).
@@ -30,7 +30,7 @@
 # X_0 = 0, \quad V_0 = \dot X_0 = 0.
 # ```
 #
-# Here, as in [Neckel & Rupp (2013)](https://doi.org/10.2478/9788376560267), based on [Housner & Jenning (1964)](https://doi.org/10.1061/JMCEA3.0000448), we use $\zeta = 0.64$ and $\omega = 15.56 \texttt{rad}/\texttt{s}$.
+# Here, as in [Neckel & Rupp (2013)](https://doi.org/10.2478/9788376560267), based on [Housner & Jenning (1964)](https://doi.org/10.1061/JMCEA3.0000448), we use $\zeta = 0.6$ and $\omega = 15 \texttt{rad}/\texttt{s}$.
 #
 # Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise and have specific spectral signatures, as in the Kanai-Tajimi model, the Clough-Penzen model, and the like.
 #
@@ -61,8 +61,8 @@ rng = Xoshiro(123)
 # We define the evolution law for the displacement $X_t$ driven by a noise $Y_t$. Since it is a system of equations, we use the in-place formulation. Notice the noise is a product of the background colored noise `y[1]` and the envelope noise `y[2]`. The parameters are hard-coded for simplicity.
 
 function f!(dx, t, x, y)
-    ζ = 0.64
-    ω = 15.56
+    ζ = 0.6
+    ω = 15
     dx[1] = x[2]
     dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] - y
     return dx
@@ -175,8 +175,8 @@ nothing # hide
 # We add some information about the simulation:
 
 info = (
-    equation = "Kanai-Tajimi Earthquake model",
-    noise = "Transport process",
+    equation = "mechanical structure model under ground-shacking random excitations",
+    noise = "transport process",
     ic = "\$X_0 = \\mathbf{0}\$"
 )
 
@@ -215,7 +215,7 @@ plt = plot(result)
 
 # and we save them for the article:
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_kanaitajimi.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.png")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot a sample of an approximation of a target solution, in each case:

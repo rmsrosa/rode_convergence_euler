@@ -1073,7 +1073,7 @@ Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained f
 
 \begin{figure}[htb]
     \label{figlinearhomogeneousrode}
-    \includegraphics[scale=0.7]{img/order_wiener_linearhomogenous.png}
+    \includegraphics[scale=0.5]{img/order_wiener_linearhomogenous.png}
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
@@ -1133,7 +1133,7 @@ Table \ref{taballnoises} shows the estimated strong error obtained from a 200 sa
 
 \begin{figure}[htb]
     \label{figallnoises}
-    \includegraphics[scale=0.7]{img/order_allnoises.png}
+    \includegraphics[scale=0.5]{img/order_allnoises.png}
     \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
 \end{figure}
 
@@ -1309,7 +1309,7 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
 
 \begin{figure}[htb]
     \label{figorderdepHfBm}
-    \includegraphics[scale=0.7]{img/order_dep_on_H_fBm.png}
+    \includegraphics[scale=0.5]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
 \end{figure}
 
@@ -1384,48 +1384,73 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
 
 \begin{figure}[htb]
     \label{figpopdyn}
-    \includegraphics[scale=0.7]{img/order_popdyn_gBmPoisson.png}
+    \includegraphics[scale=0.5]{img/order_popdyn_gBmPoisson.png}
     \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
 \end{figure}
 
 \begin{figure}[htb]
     \label{figsamplepopdyn}
-    \includegraphics[scale=0.7]{img/sample_popdyn_gBmPoisson.png}
-    \caption{An approximation sequence of a sample path of the solution process of the population dynamics equation \eqref{rodepopulationdynamics}.}
+    \includegraphics[scale=0.5]{img/sample_popdyn_gBmPoisson.png}
+    \caption{An approximation sequence of a sample path solution of the population dynamics equation \eqref{rodepopulationdynamics}.}
 \end{figure}
 
-\subsection{Kanai-Tajimi Earthquake model}
+\subsection{Mechanical structural under random Earthquake-like seismic disturbances}
 
-The Kanai-Tajimi model for the oscillations of a single-storey building is usually written as the second-order equation (see \cite[Chapter 18]{NeckelRupp2013})
+Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models). There are a number of models for earthquake-type forcing, such as the ubiquotous Kanai-Tajimi and the Clough-Penzien models, where the noise has a characteristic spectral density, obtained by solving a stochastic oscillator equation with a zero-mean Gaussian white noise. Another important model is that of Bogdanoff-Goldberg-Bernard, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples.
+
+A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\propto -\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
+
+\begin{equation}
+    \label{mechanicalstructuremodel}
+    \ddot X_t + 2\zeta\omega\dot X_t + \omega^2 X_t = - \ddot M_t.
+\end{equation}
+where $\zeta$ and $\omega$ are damping and elastic model parameters depending on the structure.
+
+For the numerical simulations, the second-order equation is written as a system of first-order equations:
 \[
-  \ddot x + 2\zeta_g\omega_g \dot x - \omega_g^2 x = \ddot \xi,
+    \begin{cases}
+        \dot X_t = V_t, \\
+        \dot V_t = - \omega^2 X_t - 2\zeta\omega X_t - Y_t,
+    \end{cases}
 \]
-where $\zeta_g$ and $\omega_g$ are damping and frequency model parameters, taken to be $\zeta_g = 0.64$ and $\omega_g = 15.56 \;\texttt{rad}/\texttt{s}$, respectively, and where $\dot \xi$ is a white noise excitation. This can be written as a system of stochastic differential equations as
-\begin{equation}
-    \begin{cases}
-        \mathrm{d} x = -y \;\mathrm{d}t, \\
-        \mathrm{d} y = (-2\zeta_g\omega_g y + \omega_g^2x) \;\mathrm{d} t + \;\mathrm{d}W_t,
-    \end{cases}
-\end{equation}
-where $\{W_t\}_t$ is a standard Wiener process.
 
-The Kanai-Tajimi model can also be written as a system of random ordinary differential equations, taking the form
-\begin{equation}
-    \begin{cases}
-        \dot z_1 = -z_2 + O_t, \\
-        \dot z_2 = -2\zeta_g\omega_g(z_2 + O_t) + \omega_g^2 z_1 + O_t,
-    \end{cases}
-\end{equation}
-where $\{O_t\}_t$ is an Orstein-Uhlenbeck process satisfying
-\begin{equation}
-    \label{OUforKanaiTajimi}
-    \mathrm{d}O_t = - O_t\;\mathrm{d}t + \mathrm{d}W_t,
-\end{equation}
-which can be solved exactly.
+where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershoks, or any other ground motion.
 
-\subsection{Earthquake and other impulse driven models}
+The structure is originally at rest, so we have the conditions
+\[
+    X_0 = 0, \quad V_0 = \dot X_0 = 0.
+\]
 
-Now we consider a simple structural model driven by an earthquake-type random disturbance in the form of a transport process, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models). There are a number of models for earthquake-type forcing, such as the Kanai-Tajima and the Clough-Penzien. We chose the Bogdanoff-Goldberg-Bernard model due to the different type of noise, so we can illustrate the improved convergence in the case of a transport process noise.
+Here, we use $\zeta = 0.6$ and $\omega = 15\,\texttt{rad}/\texttt{s}$.
+
+Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise and have specific spectral signatures, as in the Kanai-Tajimi model, the Clough-Penzen model.
+
+Some specific oscillation frequencies are present, depending on the type of ground motion and the composition of the rock layers. The seismic signal is also modulated, with a decaying amplitude. In this regard, an important model is given by [Bogdanoff, Goldberg \& Bernard (1961)](https://doi.org/10.1785/BSSA0510020293), which has a linear attack rate, an exponential decay, and a specific combination of frequencies as the background noise.
+
+Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, the actual motion can be simulated with a combination of modulated noises at different incidence times.
+
+With this framework in mind, we model the ground motion as a transport process composed of a series of time-translations of a square-power "attack" front, with an exponentially decaying kernel and an oscillating background: $\gamma (t - \delta)^2 e^{-\beta (t - \delta)}\cos(\omega t)$, for $t \geq \delta$. The parameters $\gamma, \beta, \delta,$ and $\omega$ are random parameters.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        64 & 0.0317 & 2.2 \\
+        128 & 0.0157 & 0.932 \\
+        256 & 0.00784 & 0.427 \\
+        512 & 0.00391 & 0.205 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Kanai-Tajimi Earthquake model, with initial condition $X_0 = \mathbf{0}$ and Transport process, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+\end{table}
+
+\begin{figure}[htb]
+    \label{figearthquake}
+    \includegraphics[scale=0.5]{img/convergence_earthquake.png}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+\end{figure}
 
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
@@ -1462,6 +1487,8 @@ Now we consider a simple structural model driven by an earthquake-type random di
     \bibitem{HanKloeden2017} X. Han and P. E. Kloeden, \emph{Random Ordinary Differential Equations and Their Numerical Solution,} Probability Theory and Stochastic Modelling, vol. 85, Springer Singapore, 2017.
 
     \bibitem{HighamKloeden2021} D. J. Higham and P. E. Kloeden, \emph{An Introduction to the Numerical Simulation of Stochastic Differential Equations,} Volume 169 of Other Titles in Applied Mathematics, SIAM, 2021.
+
+    \bibitem{HousnerJenning1964} G. W. Housner and Paul C. Jennings, Generation of artificial Earthquakes, Journal of the Engineering Mechanics Division, 90 (1964), no. 1.
 
     \bibitem{KPP1937} A. N. Kolmogorov, I. G. Petrovskii, N. S. Piskunov, A study of the diffusion equation with increase in the amount of substance, and its application to a biological problem. \emph{Bull. Moscow Univ. Math. Mech.} 1 (1937), 1--26.
 
