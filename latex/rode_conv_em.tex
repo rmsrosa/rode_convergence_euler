@@ -1362,7 +1362,7 @@ The function $f=f(t, x, y)$ is continuously differentiable infinitely many times
 
 Below, we simulate numerically the solutions of the above problem, with $\gamma = 1.0,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma/2 = 0.5.$ The geometric Brownian motion process $\{Z_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=1000$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
 
-Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be of order 1.02, close enough to the theoretical value of strong order 1.
+Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be of order 1.02, close enough to the theoretical value of strong order 1. Finally, Figure \ref{figsamplepopdyn} shows an approximation sequence of a sample path.
 
 \begin{table}
     \label{tabpopdyn}
@@ -1386,6 +1386,12 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
     \label{figpopdyn}
     \includegraphics[scale=0.7]{img/order_popdyn_gBmPoisson.png}
     \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
+\end{figure}
+
+\begin{figure}[htb]
+    \label{figsamplepopdyn}
+    \includegraphics[scale=0.7]{img/sample_popdyn_gBmPoisson.png}
+    \caption{An approximation sequence of a sample path of the solution process of the population dynamics equation \eqref{rodepopulationdynamics}.}
 \end{figure}
 
 \subsection{Kanai-Tajimi Earthquake model}

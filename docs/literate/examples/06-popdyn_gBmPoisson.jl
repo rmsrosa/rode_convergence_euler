@@ -141,11 +141,16 @@ plt = plot(result)
 # We save the plot for the inclusion in the article
 
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
-# nothing # hide
+nothing # hide
 
 # For the sake of illustration, we plot some approximations of a sample target solution:
 
-plot(suite, ns=nsample)
+plt = plot(suite, ns=nsample)
+
+# This time we save this sample path approximation for illustration in the article
+
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.png")) 
+nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 

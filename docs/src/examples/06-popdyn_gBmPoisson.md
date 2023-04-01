@@ -171,14 +171,20 @@ We save the plot for the inclusion in the article
 
 ````@example 06-popdyn_gBmPoisson
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
-````
-
 nothing # hide
+````
 
 For the sake of illustration, we plot some approximations of a sample target solution:
 
 ````@example 06-popdyn_gBmPoisson
-plot(suite, ns=nsample)
+plt = plot(suite, ns=nsample)
+````
+
+This time we save this sample path approximation for illustration in the article
+
+````@example 06-popdyn_gBmPoisson
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.png"))
+nothing # hide
 ````
 
 We can also visualize the noises associated with this sample solution:
