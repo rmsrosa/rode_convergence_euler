@@ -10,19 +10,19 @@ Draft = false
 
 Now we consider a mechanical structure problem under ground-shaking excitations, inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293).
 
-A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\propto -\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
+A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
 
 ```math
-  \ddot X_t + 2\zeta\omega\dot X_t + \omega^2 X_t = - \ddot M_t.
+  \ddot X_t + 2\zeta_0\omega_0\dot X_t + \omega_0^2 X_t = - \ddot M_t.
 ```
-where $\zeta$ and $\omega$ are damping and elastic model parameters depending on the structure.
+where $\zeta_0$ and $\omega_0$ are damping and elastic model parameters depending on the structure.
 
 For the numerical simulations, the second-order equation is written as a system of first-order equations:
 
 ```math
   \begin{cases}
       \dot X_t = V_t, \\
-      \dot V_t = - \omega^2 X_t - 2\zeta\omega X_t - Y_t,
+      \dot V_t = - \omega_0^2 X_t - 2\zeta_0\omega_0 X_t - Y_t,
   \end{cases}
 ```
 
@@ -34,15 +34,15 @@ The structure is originally at rest, so we have the conditions
 X_0 = 0, \quad V_0 = \dot X_0 = 0.
 ```
 
-Here, as in [Neckel & Rupp (2013)](https://doi.org/10.2478/9788376560267), based on [Housner & Jenning (1964)](https://doi.org/10.1061/JMCEA3.0000448), we use $\zeta = 0.6$ and $\omega = 15 \texttt{rad}/\texttt{s}$.
+Here, we use $\zeta_0 = 0.6$ and $\omega_0 = 15 \texttt{rad}/\texttt{s}$.
 
-Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise and have specific spectral signatures, as in the Kanai-Tajimi model, the Clough-Penzen model, and the like.
+Several types of noises have been considered in the literature. A typical one is a white noise. In practice, the noise is actually a colored noise and have specific spectral signatures, as in the Kanai-Tajimi model and the Clough-Penzen model.
 
 Some specific oscillation frequencies depending on the type of ground motion and the composition of the rock layers, and is modulated, with amplitude decaying. In this regard, an important model is given by [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293), which has a linear attack rate, an exponential decay, and a specific combination of frequencies as the background noise.
 
 Moreover, in order to simulate the start of the first shock-wave and the subsequent aftershocks, the actual motion can be simulated with a combination of modulated noises at different incidence times.
 
-With this framework in mind, we model the ground motion as a transport process composed of a series of time-translations of a square-power "attack" front, with an exponentially decaying kernel and an oscillating background: $\gamma (t - \delta)^2 e^{-\beta (t - \delta)}\cos(\omega t)$, for $t \geq \delta$. The parameters $\gamma, \beta, \delta,$ and $\omega$ are random parameters
+With this framework in mind, we model the ground motion as a transport process composed of a series of time-translations of a square-power "attack" front, with an exponentially decaying kernel and an oscillating background: $\gamma (t - \tau)^2 e^{-\delta (t - \tau)}\cos(\omega t)$, for $t \geq \tau$. The parameters $\tau, \gamma, \delta,$ and $\omega$ are random parameters
 
 The aftershocks, however, tend to come in clusters, with the ocurrence of an event increasing the chances for subsequent events. As such, self-exciting intensity processes have been successful in modeling the arrival times of the aftershocks (see e.g. [Pratiwi, Slamet, Saputro & Respatiwulan (2017)](https://doi.org/10.1088/1742-6596/855/1/012033)). The decaying kernel is usually an inverse power law, starting with the celebrated Omori formula [T. Utsu, Y. Ogata & R. S. Matsu'ura, The centenary of the Omori formula for a decay law of aftershock activity, Journal of Physics of the Earth, Volume 43 (1995), no. 1, 1-33](https://doi.org/10.4294/jpe1952.43.1)). Here, we choose to consider an exponentially decaying self-excited Hawkes process, which is easier to implement and suffices for illustrating the rate of convergence. Moreover, the intensity, or rate, of this inhomogenous Poisson point process, for the interarrival times, is not directly related to the magnitude of the aftershocks, but, again, for the sake of simplicity, we use the intensity itself as an envelope for the noise.
 
@@ -70,10 +70,10 @@ We define the evolution law for the displacement $X_t$ driven by a noise $Y_t$. 
 
 ````@example 08-earthquake
 function f!(dx, t, x, y)
-    ζ = 0.6
-    ω = 15
+    ζ₀ = 0.6
+    ω₀ = 15
     dx[1] = x[2]
-    dx[2] = - 2 * ζ * ω * x[2] - ω ^ 2 * x[1] - y
+    dx[2] = - 2 * ζ₀ * ω₀ * x[2] - ω₀ ^ 2 * x[1] - y
     return dx
 end
 ````
@@ -95,27 +95,27 @@ Two types of noise are considered, both with a colored Ornstein-Uhlenbeck (OU) b
 
 As described above, we assume the ground motion is an additive combination of translated exponentially decaying wavefronts of the form
 ```math
-  m_i(t) = \gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)),
+  m_i(t) = \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
 ```
-where $(t - t_i)_+ = \max\{0, t - t_i\}$, i.e. it vanishes for $t \leq t_i$ and is simply $(t - t_i)$ for $t\geq t_i$. The associated noise is a combination of the second derivatives $\ddot m_i(t)$, which has jump discontinuities. Indeed, we have the ground velocities
+where $(t - \tau_i)_+ = \max\{0, t - \tau_i\}$, i.e. it vanishes for $t \leq \tau_i$ and is simply $(t - \tau_i)$ for $t\geq \tau_i$. The associated noise is a combination of the second derivatives $\ddot m_i(t)$, which has jump discontinuities. Indeed, we have the ground velocities
 
 ```math
   \begin{align*}
-  \dot m_i(t) = & 2\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & -\alpha_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & -\omega_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i))
+  \dot m_i(t) = & 2\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & -\delta_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & -\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i))
   \end{align*}
 ```
 and the ground accelerations
 
 ```math
   \begin{align*}
-  \ddot m_i(t) = & 2\gamma_i H(t - t_i) e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & + \alpha_i^2\gamma_i (t - t_i)^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & -\omega_i^2\gamma_i (t - t_i)^2 e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & -2\alpha_i\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\cos(\omega_i (t - t_i)) \\
-      & -2\omega_i\gamma_i (t - t_i)_+ e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i)) \\
-      & +\alpha_i\omega_i\gamma_i (t - t_i)_+^2 e^{-\alpha_i (t - t_i)}\sin(\omega_i (t - t_i))
+  \ddot m_i(t) = & 2\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & + \delta_i^2\gamma_i (t - \tau_i)^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & -\omega_i^2\gamma_i (t - \tau_i)^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & -2\delta_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & -2\omega_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
+      & +\delta_i\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i))
   \end{align*}
 ```
 where $H=H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
@@ -125,27 +125,27 @@ We implement these functions as
 
 ````@example 08-earthquake
 function gm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
-    τ = max(zero(T), t - t0)
-    m = γ * τ ^2 * exp( -α * τ ) * cos( ω * τ )
+    tshift = max(zero(T), t - t0)
+    m = γ * tshift ^2 * exp( -α * tshift ) * cos( ω * tshift )
     return m
 end
 
-function dgm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
-    τ = max(zero(T), t - t0)
-    τ² = τ ^ 2
-    expατ = exp( -α * τ )
-    sinωτ, cosωτ = sincos(ω * τ)
-    ṁ = γ * ( ( 2τ + α * τ² ) * cosωτ - ω * τ²  * sinωτ ) * expατ
+function dgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
+    t₊ = max(zero(T), t - τ)
+    t₊² = t₊ ^ 2
+    expδt₊ = exp( -δ * t₊ )
+    sinωt₊, cosωt₊ = sincos(ω * t₊)
+    ṁ = γ * ( ( 2t₊ + δ * τ² ) * cosωt₊ - ω * t₊²  * sinωt₊ ) * expδt₊
     return ṁ
 end
 
-function ddgm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
-    h = convert(T, t ≥ t0)
-    τ = ( t - t0 ) * h
-    τ² = τ ^ 2
-    expατ = exp( -α * τ )
-    sinωτ, cosωτ = sincos(ω * τ)
-    m̈ = γ * ( ( 2h + ( α^2 - ω^2 ) * τ² - 2α * τ) * cosωτ + ( -2ω * τ + α * ω * τ² ) * sinωτ ) * expατ
+function ddgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
+    h = convert(T, t ≥ τ)
+    t₊ = ( t - τ ) * h
+    t₊² = t₊ ^ 2
+    expδt₊ = exp( -δ * t₊ )
+    sinωt₊, cosωt₊ = sincos(ω * t₊)
+    m̈ = γ * ( ( 2h + ( δ^2 - ω^2 ) * t₊² - 2δ * t₊) * cosωt₊ + ( -2ω * t₊ + δ * ω * t₊² ) * sinωt₊ ) * expδt₊
     return m̈
 end
 ````

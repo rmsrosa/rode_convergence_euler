@@ -1396,7 +1396,7 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
 
 \subsection{Mechanical structural under random Earthquake-like seismic disturbances}
 
-Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} with this and other models).
+Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} and \cite{HousnerJenning1964} with this and other models).
 
 There are a number of models for earthquake-type forcing, such as the ubiquotous Kanai-Tajimi and the Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from \cite{Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
 
@@ -1432,22 +1432,22 @@ the excitation $\ddot M_t$ is made of a composition of oscillating signals with 
 
 In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation, which is connected with a square power attact rate for the displacement itself. Finally, for simulation purposes, we model the displacement $M_t$ instead of modeling directly the excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed signal.
 
-Thus, with this framework in mind, we model the ground displacement as a transport process composed of a series of time-translations of a square-power ``attack" front, with an exponentially decaying kernel and an oscillating background:
+Thus, with this framework in mind, we model the ground displacement as a transport process composed of a series of time-translations of a square-power ``attack" front, with an exponentially decaying tail and an oscillating background wave:
 \begin{equation}
-    M_t = \sum_{i=1}^n \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
+    M_t = \sum_{i=1}^k \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
 \end{equation}
-where $n\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other.
+where $k\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other.
 
 The excitation itself becomes
 \begin{align*}
-    \ddot M(t) = & 2\sum_{i=1}^n\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-        & + \sum_{i=1}^n\gamma_i (\delta_i^2 - \omega_i^2)(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-        & -2\sum_{i=1}^n\gamma_i (\delta_i + \omega_i) (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-        & +\delta_i\sum_{i=1}^n\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)),
+    \ddot M(t) = & 2\sum_{i=1}^k\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & + \sum_{i=1}^k\gamma_i (\delta_i^2 - \omega_i^2)(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & -2\sum_{i=1}^k\gamma_i (\delta_i + \omega_i) (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & +\delta_i\sum_{i=1}^k\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)),
 \end{align*}
 where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 
-More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. The random parameters follow $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Uniform}(0.0, 4.0),$ $\delta_i \sim \textrm{Uniform}(8.0, 12.0),$ and $\omega_i \sim \textrm{Uniform}(8\pi, 32\pi).$
+More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Uni}(8\pi, 32\pi).$
 
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
 
