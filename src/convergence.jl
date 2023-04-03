@@ -202,29 +202,29 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
     eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
 
-    # return results as a `ConvergenceResult`
-    results = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p, eps)
-    return results
+    # return `result` as a `ConvergenceResult`
+    result = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p, eps)
+    return result
 end
 
-# Think about a non-allocating solver for the convergence results/# By adding `trajerrors`, `vandermonde`, `logerrors`, `logdeltas` and `inv(vandermonde' * vandermonde)[2, 2]` as cache arguments to ConvergenceResult
-# Adding an `results = init(suite)` with whatever initialization is necessary
-# Adding a non-allocating solve!(rng, results, suite)
+# Think about a non-allocating solver for the convergence result/# By adding `trajerrors`, `vandermonde`, `logerrors`, `logdeltas` and `inv(vandermonde' * vandermonde)[2, 2]` as cache arguments to ConvergenceResult
+# Adding an `result = init(suite)` with whatever initialization is necessary
+# Adding a non-allocating solve!(rng, result, suite)
 # Then rewrite `solve` to call `init` and then `solve!`.
 
 """
-    generate_error_table(results, info)
+    generate_error_table(result, info)
 
-Generate the markdown table with the data for the strong `results.errors` obtained with time steps `results.deltas` and lengths `results.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
+Generate the markdown table with the data for the strong `result.errors` obtained with time steps `result.deltas` and lengths `result.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
 """
-function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(results.suite.x0law))), noise=string(nameof(typeof(results.suite.noise)))))
-    t0 = results.suite.t0
-    tf = results.suite.tf
-    ns = results.suite.ns
-    m = results.suite.m
-    ntgt = results.suite.ntgt
-    deltas = results.deltas
-    errors = results.errors
+function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(result.suite.x0law))), noise=string(nameof(typeof(result.suite.noise)))))
+    t0 = result.suite.t0
+    tf = result.suite.tf
+    ns = result.suite.ns
+    m = result.suite.m
+    ntgt = result.suite.ntgt
+    deltas = result.deltas
+    errors = result.errors
     table = "    \\begin{tabular}[htb]{|r|l|l|}
         \\hline N & dt & error\\\\
         \\hline \\hline\n"
@@ -235,6 +235,6 @@ function generate_error_table(results::ConvergenceResult, info::NamedTuple=(equa
     \\end{tabular}
     \\bigskip
 
-    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation), with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points.}"
+    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation) for each N, with initial condition $(info.ic) and $(info.noise), on the time interval ($t0, $tf), based on \$m = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=2))\$}"
     return table
 end
