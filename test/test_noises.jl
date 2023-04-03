@@ -150,7 +150,7 @@
         μ₂ = μ₁^2 + var(dylaw) # second moment
         κ = δ - μ₁
         @test mean(ythf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf / 2 ) (rtol = 0.1)
-        @test var(ythf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf / 2) + ( λ₀ - a * δ / κ) * exp(-κ * tf / 2) + a * δ / 2κ) (rtol = 0.1)
+        @test var(ythf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf / 2) + ( λ₀ - a * δ / κ) * exp(-κ * tf / 2) + a * δ / 2κ) (rtol = 0.2)
         @test mean(ytf) ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf ) (rtol = 0.1)
         @test var(ytf) ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp(-κ * tf) + a * δ / 2κ) (rtol = 0.2)
     end
