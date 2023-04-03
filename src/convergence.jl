@@ -1,5 +1,5 @@
 """
-    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, ks, m)
 
 Gather the data needed for computing the convergence error for a given RODE of the form
 ```math
@@ -20,6 +20,7 @@ The data comprises of the following:
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
 * the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
 * the number `m` of sample paths to be computed for estimating the strong error via Monte Carlo method.
+* the range of steps `ks` to be used in case one approximates a Random PDE with an increasing number of spatial discretization points, so for each `n` in `ns`, one uses a range `begin:k:end` for the points in the spatial discretization, which defaults to `k=[1]` in the case of a scalar or of a genuine system of RODEs;
 
 Besides these data obtained from the supplied arguments, a few cache vectors or matrices are created:
 * a vector or matrix `yt` to hold the sample paths of the noise on the finest mesh, with length or row-length being `ntgt` and the shape depending on whether the noise is univariate or multivariate;
@@ -39,16 +40,27 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     ntgt::Int
     ns::Vector{Int}
     m::Int
+    ks::Vector{Int}
     yt::Array{T, N1} # cache
     xt::Array{T, N2} # cache
     xnt::Array{T, N2} # cache
-    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int) where {T, D, P, F, M1, M2}
-        ( ntgt > 0 && all(>(0), ns) ) || error(
-            "`ntgt` and `ns` arguments must be positive integers."
+    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int, ks::Vector{Int}=ones(Int, length(ns))) where {T, D, P, F, M1, M2}
+        ( ntgt > 0 && m > 0 ) || error(
+            "`ntgt` and `m` arguments must be positive integers."
 
+        )
+        ( all(>(0), ns) && all(>(0), ks) ) || error(
+            "all elements in `ns` and `ks` must be positive integers."
+
+        )
+        ( length(ns) == length(ks) ) || error(
+            "`ns` and `ks` must have same length"
         )
         all(mod(ntgt, n) == 0 for n in ns) || error(
             "The length of `ntgt` should be divisible by any of the lengths in `ns`"
+        )
+        all(mod(length(x0law), k) == 0 for k in ks) || error(
+            "The phase space dimension, as determined by the length of `x0law`, should be divisible by all the elements of the vector `ks` of steps"
         )
     
         ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
@@ -65,7 +77,7 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
             N2 = 2
         else
             error(
-                "`xlaw` should be either `UnivariateDistribution` or `MultivariateDistribution`."
+                "`x0law` should be either `UnivariateDistribution` or `MultivariateDistribution`."
             )
         end
         if P <: UnivariateProcess
@@ -80,7 +92,7 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
             )
         end
 
-        return new{T, D, P, F, N1, N2, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, yt, xt, xnt)
+        return new{T, D, P, F, N1, N2, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, ks, yt, xt, xnt)
     end
 end
 
@@ -122,6 +134,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
     ntgt = suite.ntgt
     ns = suite.ns
     m = suite.m
+    ks = suite.ks
     yt = suite.yt
     xt = suite.xt
     xnt = suite.xnt
@@ -149,22 +162,23 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
         for (i, nsi) in enumerate(ns)
 
             nstep = div(ntgt, nsi)
+            kstep = ks[i]
 
             if D <: UnivariateDistribution && P <: UnivariateProcess
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
             elseif D <: UnivariateDistribution
                 solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
             elseif P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve!(view(xnt, 1:nsi, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
             else
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve!(view(xnt, 1:nsi, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
             end
 
             for n in 2:nsi
                 if D <: UnivariateDistribution
                     trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
                 else
-                    for j in eachindex(axes(xnt, 2))
+                    for j in 1:kstep:size(xnt,2)
                         trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j])
                     end
                 end
