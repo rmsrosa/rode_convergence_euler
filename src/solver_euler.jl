@@ -83,14 +83,16 @@ end
 
 function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::RandomEuler{T, Multivariate}) where {T, F}
     # vector solution, vector noise
-    axes(xt, 1) == axes(yt, 1) || throw(
-        DimensionMismatch("The rows of the matrices `xt` and `yt` must match indices")
+    axes(xt, 1) == axes(yt, 1) || error(
+        "The rows of the matrices `xt` and `yt` must match indices"
     )
-    axes(xt, 2) == axes(x0, 1) || throw(
-        ArgumentError(
-            "Columns of `xt` and `x0` must match indices"
-        )
+    axes(xt, 2) == axes(x0, 1) || error(
+        "Columns of `xt` and `x0` must match indices"
     )
+    ( axes(xt, 2) isa Base.OneTo{Int64} && axes(method.cachex, 1) isa Base.OneTo{Int64} && size(method.cachex, 1) ≥ size(xt, 2)) || error(
+        "row-length of the cache vector `method.cachex` should be greater than or equal to the column-size of `xt`"
+    )
+    axes(xt, 2)
     n = size(xt, 1)
     dt = (tf - t0) / (n - 1)
     i1 = firstindex(axes(xt, 1))
@@ -98,7 +100,7 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
         f(method.cachex, ti1, view(xt, i-1, :), view(yt, i-1, :))
-        for j in eachindex(axes(xt, 2), axes(method.cachex, 1))
+        for j in eachindex(axes(xt, 2))
             @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
         end
         i1 = i

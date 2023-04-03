@@ -178,8 +178,9 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
                 if D <: UnivariateDistribution
                     trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
                 else
+                    len = div(size(xnt, 2), kstep)
                     for j in 1:kstep:size(xnt,2)
-                        trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j])
+                        trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
                     end
                 end
             end
