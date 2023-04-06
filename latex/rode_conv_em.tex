@@ -1473,6 +1473,28 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
 \end{figure}
 
+\subsection{A toggle-switch model for gene expression with compound Poisson external activation process}
+
+Here, we consider the toggle-switch model in \cite[Section 7.8 ]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}; see also \cite{StrasserTheisMarr2012}.
+
+Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
+
+We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2016}, of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
+\begin{equation}
+   \begin{cases}
+   \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\ \\ 
+   \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t, \\ \\
+   \left. X_t \right|_{t = 0} = X_0, \\ \\
+   \left. Y_t \right|_{t = 0} = Y_0,
+   \end{cases}
+\end{equation}
+ 
+where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
+
+In the simulations below, we use the same parameters as in \cite[Section 7.8 ]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
+
+We do not have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
+
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
 \cite{KPP1937}
@@ -1527,7 +1549,11 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
     \bibitem{RODEConvEM2023} P. Kloeden and R. Rosa, Numerical examples of strong order of convergence of the Euler method for random ordinary differential equations, \texttt{https://github.com/rmsrosa/rode\_conv\_em}.
 
+    \bibitem{StrasserTheisMarr2012} M. Strasser, F. J. Theis, and C. Marr, Stability and multiattractor dynamics of a toggle switch based on a two-stage model of stochastic gene expression, \emph{Biophysical J.,} 102 (2012), 19--29.
+
     \bibitem{Tajimi1960} H. Tajimi, A statistical method of determining the maximum response of a building during an Earthquake, \emph{Proceedings of the Second World Conference on Earthquake Engineering,} Tokyo and Kyoto, Japan, vol. II, 1960.
+    
+    \bibitem{VerdCrombachJaeger2014}, B. Verd, A. Crombach, and J. Jaeger, Classification of transient behaviours in a time-dependent toggle switch model, \emph{BMC Systems Biology,} 8 (2014), no. 43.
 
     \bibitem{WangCaoHanKloeden2021} P. Wang, Y. Cao, X. Han, and P. Kloeden, Mean-square convergence of numerical methods for random ordinary differential equations, \emph{Numerical Algorithms,} vol. 87 (2021), 299--333.
 
