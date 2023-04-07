@@ -69,7 +69,7 @@ t0, tf = 0.0, 2.0
 
 # The discretization in space is made with `l` mesh points $x_j = (j-1) / (l-1)$, for $j = 1, \ldots, l$, corresponding to `l-1` mesh intervals of length $\Delta x = 1 / (l-1)$. The points $x_1 = 0$ and $x_l = 1$ are the boundary points. We set `l` to
 
-l = 32
+l = 17
 
 # Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
 
@@ -239,7 +239,8 @@ nothing # hide
 
 ntgt = 2^15 * 3^3 * 5
 ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
-ks = [4, 4, 2, 2, 1, 1]
+ks = [2, 2, 2, 2, 2, 2]
+ks = one.(ns)
 nothing # hide
 
 # and make sure they meet all the requirements:
