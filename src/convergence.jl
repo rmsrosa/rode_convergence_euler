@@ -59,9 +59,6 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
         all(mod(ntgt, n) == 0 for n in ns) || error(
             "The length of `ntgt` should be divisible by any of the lengths in `ns`"
         )
-        all(mod(length(x0law), k) == 0 for k in ks) || error(
-            "The phase space dimension, as determined by the length of `x0law`, should be divisible by all the elements of the vector `ks` of steps"
-        )
     
         ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
             "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
