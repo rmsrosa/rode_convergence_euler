@@ -1,8 +1,8 @@
 # # Random Fisher-KPP partial differential equation
 
-# Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of [Salako & Shen (2020)](https://doi.org/10.1007/s10884-020-09847-2) and [Freidlin & Wentzell (1992)](https://doi.org/10.1214/aop/1176989813)). The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in [Fisher (1937)](https://doi.org/10.1111/j.1469-1809.1937.tb02153.x) and [Kolmogorov, Petrovskii & Piscunov (1937)](https://www.bibsonomy.org/bibtex/23cfaf2cd2a49db658463fc5b115b3aa4/peter.ralph)
+# Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of [Salako & Shen (2020)](https://doi.org/10.1007/s10884-020-09847-2) and [Freidlin & Wentzell (1992)](https://doi.org/10.1214/aop/1176989813). The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in [Fisher (1937)](https://doi.org/10.1111/j.1469-1809.1937.tb02153.x) and [Kolmogorov, Petrovskii & Piscunov (1937)](https://www.bibsonomy.org/bibtex/23cfaf2cd2a49db658463fc5b115b3aa4/peter.ralph)
 
-# Here, we consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a nonlinear partial differential equation.
+# We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a nonlinear partial differential equation.
 #
 # We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
 #
@@ -30,9 +30,9 @@
 #
 # The random process $\{Y_t\}_t$ which drives the flux on the left boundary point, is taken to be a colored noise modulated by a exponentially decaying Hawkes process, representing random trains of incoming population.
 #
-# This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $μ= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
+# This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 #
-# The initial condition is taken to be zero, $u\_0(x) = 0$, so all the population originates from the left boundary influx.
+# The initial condition is taken to be zero, $u_0(x) = 0$, so all the population originates from the left boundary influx.
 #
 # The mass within the region $0\leq x \leq 1$ satisfies
 #
@@ -42,7 +42,7 @@
 #
 # Using the boundary conditions, we find that
 # ```math
-#   \frac{\mathrm{d}}{\mathrm{d} t} \int_0^1 u(t, x) \;\mathrm{d}x = μY_t  + \frac{\lambda}{u_m} \int_0^1 u(t, x)\left(u_m - u(t, x)\right)\;\mathrm{d}x,
+#   \frac{\mathrm{d}}{\mathrm{d} t} \int_0^1 u(t, x) \;\mathrm{d}x = \mu Y_t  + \frac{\lambda}{u_m} \int_0^1 u(t, x)\left(u_m - u(t, x)\right)\;\mathrm{d}x,
 # ```
 # which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 #
