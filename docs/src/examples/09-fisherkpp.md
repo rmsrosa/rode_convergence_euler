@@ -277,8 +277,6 @@ Now we set up the mesh parameters. For stability reasons, we can't allow the tim
 ````@example 09-fisherkpp
 ntgt = 2^15 * 3^3 * 5
 ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
-ks = [2, 2, 2, 2, 2, 2]
-ks = one.(ns)
 nothing # hide
 ````
 
@@ -316,7 +314,7 @@ method = RandomEuler(length(u0law))
 With all the parameters set up, we build the convergence suite:
 
 ````@example 09-fisherkpp
-suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m, ks)
+suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors:
