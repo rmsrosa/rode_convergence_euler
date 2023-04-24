@@ -15,7 +15,7 @@
 \setlength{\textwidth}{6in}
 %\addtolength{\headheight}{0.7in}
 
-\theoremstyle{plain}% default
+\theoremstyle{plain} % default style for the following 
 \newtheorem{thm}{Theorem}[section]
 \newtheorem{lem}{Lemma}[section]
 \newtheorem{prop}{Proposition}[section]
@@ -23,7 +23,7 @@
 \newtheorem{defs}{Definition}[section]
 \newtheorem{prob}{Problem}[section]
 \newtheorem{stdhyp}{Hypothesis}[section]
-\theoremstyle{definition}
+\theoremstyle{definition} % definition style for the following 
 \newtheorem{rmk}{Remark}[section]
 \newtheorem{fact}{Fact}[section]
 
@@ -1042,14 +1042,13 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
-    \label{samplepathslinearhomogeneousrode}
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
+    \label{samplepathslinearhomogeneousrode}
 \end{figure}
 
 Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
-    \label{tablinearhomogeneousrode}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
@@ -1069,16 +1068,17 @@ Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained f
     \bigskip
 
     \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval (0.0, 1.0), based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
+    \label{tablinearhomogeneousrode}
 \end{table}
 
 \begin{figure}[htb]
-    \label{figlinearhomogeneousrode}
     \includegraphics[scale=0.5]{img/order_wiener_linearhomogenous.png}
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
     computed with $M = 1000$ sample paths,
     for each $\Delta t = 1/N$,  $N = 16,$ $32,$ $64,$ $128,$ $256,$ $512,$ $1024$.}
+    \label{figlinearhomogeneousrode}
 \end{figure}
 
 %\begin{rmk}
@@ -1116,7 +1116,6 @@ where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ i
 Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
-    \label{taballnoises}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
@@ -1129,12 +1128,13 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
     \bigskip
 
     \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{Y_t\}_t$ with all the implemented noises, on the time interval (0.0, 1.0), based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{taballnoises}
 \end{table}
 
 \begin{figure}[htb]
-    \label{figallnoises}
     \includegraphics[scale=0.5]{img/order_allnoises.png}
     \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
+    \label{figallnoises}
 \end{figure}
 
 \subsection{Fractional Brownian motion noise}
@@ -1289,7 +1289,6 @@ In summary, we have proved the following result.
 As for the numerics, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^19$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a series of Hurst parameters, which is also illustrated in Figure \ref{figorderdepHfBm}.
 
 \begin{table}
-    \label{taborderdepHfBm}
     \begin{tabular}[htb]{|c|c|}
         \hline H & p \\
         \hline \hline
@@ -1305,12 +1304,13 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
     \bigskip
 
     \caption{Hurst parameter $H$ and order $p$ of strong convergence for a number of Hurst values.}
+    \label{taborderdepHfBm}
 \end{table}
 
 \begin{figure}[htb]
-    \label{figorderdepHfBm}
     \includegraphics[scale=0.5]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
+    \label{figorderdepHfBm}
 \end{figure}
 
 \subsection{Population dynamics with harvest}
@@ -1365,7 +1365,6 @@ Below, we simulate numerically the solutions of the above problem, with $\gamma 
 Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be of order 1.02, close enough to the theoretical value of strong order 1. Finally, Figure \ref{figsamplepopdyn} shows an approximation sequence of a sample path.
 
 \begin{table}
-    \label{tabpopdyn}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
@@ -1380,18 +1379,19 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
     \bigskip
 
     \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for population dynamics, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval (0.0, 1.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{tabpopdyn}
 \end{table}
 
 \begin{figure}[htb]
-    \label{figpopdyn}
     \includegraphics[scale=0.5]{img/order_popdyn_gBmPoisson.png}
     \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
+    \label{figpopdyn}
 \end{figure}
 
 \begin{figure}[htb]
-    \label{figsamplepopdyn}
     \includegraphics[scale=0.5]{img/sample_popdyn_gBmPoisson.png}
     \caption{An approximation sequence of a sample path solution of the population dynamics equation \eqref{rodepopulationdynamics}.}
+    \label{figsamplepopdyn}
 \end{figure}
 
 \subsection{Mechanical structural under random Earthquake-like seismic disturbances}
@@ -1452,7 +1452,6 @@ More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\o
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
 
 \begin{table}
-    \label{tableearthquake}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
@@ -1465,12 +1464,13 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \bigskip
 
     \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Kanai-Tajimi Earthquake model, with initial condition $X_0 = \mathbf{0}$ and Transport process, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{tableearthquake}
 \end{table}
 
 \begin{figure}[htb]
-    \label{figearthquake}
     \includegraphics[scale=0.5]{img/convergence_earthquake.png}
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \label{figearthquake}
 \end{figure}
 
 \subsection{A toggle-switch model for gene expression with compound Poisson external activation process}
