@@ -966,7 +966,7 @@ As for the implementation itself, all code is written in the Julia language \cit
 
 Julia has a performant and feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and so on.
 
-Although all the source code for the \texttt{DifferentialEquations.jl} ecosystem is available on the Github platform \cite{github}, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose not to use this ecosystem and, instead, implement our own code, with the minimum methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, would be easier. All the source code for the numerical simulations presented below are in the Github repository \cite{RODEConvEM2023}.
+Although all the source code for the \texttt{DifferentialEquations.jl} ecosystem is available on the Github platform \cite{github}, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose not to use this ecosystem and, instead, implement our own code, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, would be easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
 
 \subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
@@ -980,7 +980,7 @@ We start by considering the Euler approximation of one of the simplest Random OD
       \end{cases}
 \end{equation}
 
-Since the noise is simply a Wiener process, the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact and the Euler-Maruyama method for the SDE is equivalent to the Euler method for the RODE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1. Nevertheless, we illustrate the strong convergence directly for the Euler method for this RODE equation, for the sake of completeness.
+Since the noise is simply a Wiener process, the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. Nevertheless, we illustrate the strong convergence directly for the Euler method for this RODE equation, for the sake of completeness.
 
 Equation \eqref{linearhomogeneousrode} has the explicit solution
 \begin{equation}
@@ -1113,7 +1113,7 @@ where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ i
     \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from a 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
     \label{taballnoises}
@@ -1447,7 +1447,7 @@ The excitation itself becomes
 \end{align*}
 where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 
-More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Uni}(8\pi, 32\pi).$
+More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
 
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
 
