@@ -1488,9 +1488,35 @@ We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2
 \end{equation}
 on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
 
-In the simulations below, we use the same parameters as in \cite[Section 7.8 ]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
+In the simulations below, we use the same parameters as in \cite[Section 7.8 ]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson processes with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
 
-We do not have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
+We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
+
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        16 & 0.267 & 1.91 \\
+        32 & 0.129 & 0.871 \\
+        64 & 0.0635 & 0.42 \\
+        128 & 0.0315 & 0.205 \\
+        256 & 0.0157 & 0.101 \\
+        512 & 0.00783 & 0.0504 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a toggle-switch model of gene regulation for each N, with initial condition $X_0 = 10.0, Y_0 = 10.0$ and compound Poisson process noises, on the time interval (0.0, 4.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.03$}
+    \label{tabletoggleswitch}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.5]{img/order_toggleswitch.png}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \label{figtoggleswitch}
+\end{figure}
 
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
