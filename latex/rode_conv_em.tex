@@ -1492,7 +1492,7 @@ In the simulations below, we use the same parameters as in \cite[Section 7.8 ]{A
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=1000.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -1522,7 +1522,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and \cite{KPP1937}
 
-We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a nonlinear partial differential equation.
+We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation.
 
 We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
 
@@ -1558,6 +1558,34 @@ Using the boundary conditions, we find that
    \frac{\mathrm{d}}{\mathrm{d}t} \int_0^1 u(t, x) \;\mathrm{d}x = \mu Y_t  + \frac{\lambda}{u_m} \int_0^1 u(t, x)\left(u_m - u(t, x)\right)\;\mathrm{d}x,
 \]
 which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
+
+For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two is because, due to the space discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
+
+For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while Figure \ref{figfisherkpp} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        1024 & 0.00196 & 0.243 \\
+        1152 & 0.00174 & 0.214 \\
+        1280 & 0.00156 & 0.194 \\
+        1536 & 0.0013 & 0.165 \\
+        1920 & 0.00104 & 0.131 \\
+        2048 & 0.000977 & 0.122 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Fisher-KPP equation for each N, with initial condition $X_0 = 0$ and Hawkes-modulated colored noise, on the time interval (0.0, 2.0), based on $m = 100$ sample paths for each fixed time step, with the target solution calculated with $4423680$ points. The order of strong convergence is estimated to be $p = 0.98$}
+    \label{tablefisherkpp}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.5]{img/order_fisherkpp.png}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \label{figfisherkpp}
+\end{figure}
 
 \section*{Acknowledgments}
 
