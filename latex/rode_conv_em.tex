@@ -727,7 +727,7 @@ We recall (see e.g. \cite[Chapter 4]{Oksendal2003}) that an It\^o process is a p
 \end{equation}
 Here $Z_t$ can be either a scalar or a vector-valued process. In the scalar case, $\{W_t\}_{t\geq 0}$ is a (scalar) Wiener process, while $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ are real-valued processes adapted to $\{W_t\}_{t\geq 0}$.
 
-In the vector-valued case, $\{A_t\}_{t\in I}$ is a vector-valued process with the same dimension as $Z_t$, while $\{B_t\}_{t\in I}$ is a matrix-valued process with the number of rows matching the dimension of $Z_t$ and with the number of columns anywhere from 1 to the dimension of $Z_t.$ The (multi-dimensional) Wiener process $\{W_t\}_{t\geq 0}$ is a vector-valued process $W_t = (W_t^{(j)})_j$ with the dimension matching the number of columns of $B_t$ and where each coordinate $\{W_t^{(j)}\}_{t\in I}$ is a Wiener process independent of the processes in the other coordinates. Both $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ are assumed to be adapted to each $\{W_t^{(j)}\}_{t\in I}.$ Writing the \emph{columns} of $B_t$ as $B_t^{(j)},$ we can write the stochastic term in \eqref{Itoprocess} as $B_t\;\mathrm{d}W_t = \sum_i B_t^{(j)}\;\mathrm{d}W_t^{(j)}.$ More explicitly, writing in full coordinates $Z_t = (Z_t^{(i)})_i,$ $A_t = (A_t^{(i)})_i,$ and $B_t = (B_t^{(i, j)})_{i, j},$ we have \eqref{Itoprocess} as the system
+In the vector-valued case, $\{A_t\}_{t\in I}$ is a vector-valued process with the same dimension as $Z_t$, while $\{B_t\}_{t\in I}$ is a square-matrix-valued process with the number of rows and of columns matching the dimension of $Z_t.$ The (multi-dimensional) Wiener process $\{W_t\}_{t\geq 0}$ is a vector-valued process $W_t = (W_t^{(j)})_j$ with the dimension matching the number of columns of $B_t$ and where each coordinate $\{W_t^{(j)}\}_{t\in I}$ is a Wiener process independent of the processes in the other coordinates. Both $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}$ are assumed to be adapted to each $\{W_t^{(j)}\}_{t\in I}.$ Writing the \emph{columns} of $B_t$ as $B_t^{(j)},$ we can write the stochastic term in \eqref{Itoprocess} as $B_t\;\mathrm{d}W_t = \sum_i B_t^{(j)}\;\mathrm{d}W_t^{(j)}.$ More explicitly, writing in full coordinates $Z_t = (Z_t^{(i)})_i,$ $A_t = (A_t^{(i)})_i,$ and $B_t = (B_t^{(i, j)})_{i, j},$ we have \eqref{Itoprocess} as the system
 \begin{equation}
     \label{Itoprocesssystem}
     \mathrm{d}Z_t^{(i)} = A_t^{(i)}\;\mathrm{d}t + \sum_j B_t^{(i, j)}\;\mathrm{d}W_t^{(j)}, \quad \forall i.
@@ -809,15 +809,17 @@ Combining the estimate in \cref{lemItostep} with the estimate for the global err
     Since this holds for every $j=0, \ldots, N$, we obtain the desired \cref{thmItosteptrongordernew}.
 \end{proof}
 
-In practice, conditions \eqref{Itoprocess}-\eqref{expectItostepterms} follows from assuming sufficent regularity on $f=f(t, x, y)$ and an It\^o process noise, as given by the following result.
+In practice, conditions \eqref{Itoprocess}-\eqref{expectItostepterms} follows from assuming sufficent regularity on $f=f(t, x, y)$ and an It\^o process noise. We assume the noise satisfies
+\begin{equation}
+    \label{YtItonoise}
+    \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t.
+\end{equation}
+In the scalar case $k=1,$ both $a=a(t, y)$ and $b=b(t, y)$ are scalars, while in the multi-dimensional case $k > 1,$ the coefficient $a=a(t, y) = (a_i(t, y))_i$ is a vector with the same dimension $k$ as $y=(y_i)_i$ and $b=b(t, y) = (b_{ij}(t, y))_{ij}$ is a $k\times k$ square matrix.
+
+Then, we have following result.
 \begin{thm}
     \label{thmItonoise}
-    Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o process,
-    \begin{equation}
-        \label{YtItonoise}
-        \mathrm{d}Y_t = a(t, Y_t)\;\mathrm{d}t + b(t, Y_t)\;\mathrm{d}W_t,
-    \end{equation}
-    with $a=a(t, y)$ and $b=b(t, y)$ continuous and satisfying
+    Let $f=f(t, x, y)$ be twice continuously differentiable with uniformly bounded derivatives. Suppose that the noise $\{Y_t\}_{t\in I}$ is an It\^o process, satisfying \eqref{YtItonoise}, with $a=a(t, y)$ and $b=b(t, y)$ continuous and such that
     \begin{equation}
         \label{Itonoiseterms}
         \|a(t, y)\| \leq A_M + A_Y \|y\|, \qquad \|b(t, y)\| \leq B_M + B_Y\|y\|,
@@ -838,7 +840,7 @@ In practice, conditions \eqref{Itoprocess}-\eqref{expectItostepterms} follows fr
 \begin{proof}
     Let us start by showing that the \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
 
-    Using the It\^o formula with \eqref{YtItonoise} in mind (see \cite[Theorem 4.1.2]{Oksendal2003} for the scalar case of the It\^o formula, with $g(t, y) = y^2,$ and \cite[Theorem 4.2.1]{Oksendal2003} for the multi-dimensional case, with $g(t, y) = \|y\|^2$), we have
+    Using the It\^o formula with \eqref{YtItonoise} in mind (see \cite[Theorem 4.1.2]{Oksendal2003} or \cite[Section 7.4]{Kuo2006} for the scalar case of the It\^o formula, with $g(t, y) = y^2,$ and \cite[Theorem 4.2.1]{Oksendal2003} or \cite[Section 7.5]{Kuo2006} for the multi-dimensional case, with $g(t, y) = \|y\|^2$), we have
     \[
         \mathrm{d}\|Y_t\|^2 = \left(2a(t, Y_t) \cdot Y_t  + b(t, Y_t)^2 \right) \;\mathrm{d}t + 2b(t, Y_t) Y_t\;\mathrm{d}W_t.
     \]
@@ -885,11 +887,11 @@ In practice, conditions \eqref{Itoprocess}-\eqref{expectItostepterms} follows fr
     \]
     Therefore, we are under the condition of \cref{standinghypotheses1}.
 
-    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o process \eqref{Itoprocess}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o process follows from the It\^o formula and the smoothness of $f=f(t, x, y)$. Indeed, since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields
+    Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o process \eqref{Itoprocess}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o process follows from the It\^o formula and the smoothness of $f=f(t, x, y)$. We first consider the case of a scalar noise, for the sake of clarity. Since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields, in the case of a scalar noise,
     \begin{multline}
         \label{itoformula}
-            \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
-        \end{multline}
+        \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t) \right) \;\mathrm{d}t \\ + b(t, Y_t) \partial_y f(t, x, Y_t)\;\mathrm{d}W_t,
+    \end{multline}
     for every fixed $x\in \mathbb{R}$. This means \eqref{Itoprocess} holds with
     \[
         A_t = \partial_t f(t, x, Y_t) + a(t, Y_t) \partial_y f(t, x, Y_t)  + \frac{b(t, Y_t)^2}{2}\partial_{yy}f(t, x, Y_t)
@@ -907,6 +909,14 @@ In practice, conditions \eqref{Itoprocess}-\eqref{expectItostepterms} follows fr
         \|B_t\| \leq L_Y (B_M + B_Y \|Y_t\|),
     \]
     for a suitable constants $L_{YY}\geq 0$. Now, thanks to \eqref{unifboundYtIto}, we see that \eqref{expectItostepterms} is satisfied.
+
+    In the case of a multi-dimensional noise, we have $a(t, y) = (a_i(t, y))_i$, $b(t, y) = (b_{ij}(t, y)),$ and \eqref{itoformula} becomes
+    \begin{multline}
+        \label{itoformulamulti}
+        \mathrm{d}f(t, x, Y_t) = \left(\partial_t f(t, x, Y_t) + \sum_i \partial_{y_i} f(t, x, Y_t) a_i(t, Y_t) \right. \\
+        \left. + \frac{1}{2}\sum_i \partial_{y_i}^2 f(t, x, Y_t)b_{ii}(t, Y_t)^2 \right) \;\mathrm{d}t \\ + \sum_{i,j}\partial_{y_i} f(t, x, Y_t) b_{ij}(t, Y_t) \;\mathrm{d}W_t^{(j)},
+    \end{multline}
+    so that \eqref{Itoprocess}/\eqref{Itoprocesssystem} and \eqref{expectItostepterms} follow similarly.
 
     Therefore, all the conditions of \cref{thmItostep} are met and we deduce the strong order 1 convergence of the Euler method.
 \end{proof}
@@ -1653,6 +1663,8 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
     \bibitem{Kanai1957} K. Kanai, Semi-empirical formula for the seismic characteristics of the ground, \emph{Bull. Earthq. Res. Inst.,} Vol. 35 (1957), University of Tokyo.
 
     \bibitem{KPP1937} A. N. Kolmogorov, I. G. Petrovskii, N. S. Piskunov, A study of the diffusion equation with increase in the amount of substance, and its application to a biological problem. \emph{Bull. Moscow Univ. Math. Mech.} 1 (1937), 1--26.
+
+    \bibitem{Kuo2006} H.-H. Kuo, Introduction to Stochastic Integration, Springer, 2006.
 
     \bibitem{MandelbrotVanNess1968} B. B. Mandelbrot and J. W. Van Ness, Fractional Brownian Motions, Fractional Noises and Applications, \emph{Siam Review,} Vol. 10 (1968), no. 4, 422--437.
 
