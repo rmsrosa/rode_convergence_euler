@@ -106,21 +106,19 @@ The first main idea of the proof is to not estimate the local error and, instead
     \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
         X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s  \\ 
-        & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
+        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+        & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
 \end{equation}
 for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$ (see \eqref{tauNt}).
 
 The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globally Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
-\begin{equation}
+\begin{multline}
     \label{Etjbasicboundintro}
-    \begin{aligned}
-        \|X_{t_j} - X_{t_j}^N\| & \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
-        & \qquad \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{L_X t_j}.
-    \end{aligned}
-\end{equation}
+        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
+        \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{L_X t_j}.
+\end{multline}
 
 The only problematic, noise-sensitive term is the last one. The classical analysis is to use an assumed $\theta$-H\"older regularity of the noise sample paths and estimate the local error as
 \[
@@ -142,8 +140,8 @@ either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The
 \end{align*}
 Then, we find that
 \begin{multline*}
-    \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right|\right].
+    \mathbb{E}\left[\left\| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right] \\
+    \leq \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right\|\right].
 \end{multline*}
 
 In the case of an It\^o process noise, we assume
@@ -152,19 +150,19 @@ In the case of an It\^o process noise, we assume
 \]
 with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, which may actually depend on $\{Y_t\}_t$, so that multiplicative noise is allowed. Then, in this case, we bound the right hand side using the Lyapunov inequality and the It\^o isometry:
 \begin{align*}
-    \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right|\right] & \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \mathbb{E}[|A_\xi|] \;\mathrm{d}\xi \\ 
-    & \quad + \left( \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[B_\xi^2]\;\mathrm{d} \xi\right)^{1/2} \\ 
-    & \leq \Delta t_N\left(\int_0^{t_j} \mathbb{E}[|A_\xi|]\;\mathrm{d} \xi + \left( \int_0^{t_j} \mathbb{E}[B_\xi^2] \;\mathrm{d}\xi \right)^{1/2} \right).
+    \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right\|\right] & \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \mathbb{E}[\|A_\xi\|] \;\mathrm{d}\xi \\ 
+    & \quad + \left( \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[\|B_\xi\|^2]\;\mathrm{d} \xi\right)^{1/2} \\ 
+    & \leq \Delta t_N\left(\int_0^{t_j} \mathbb{E}[\|A_\xi\|]\;\mathrm{d} \xi + \left( \int_0^{t_j} \mathbb{E}[\|B_\xi\|^2] \;\mathrm{d}\xi \right)^{1/2} \right).
 \end{align*}
 which yields the strong order 1 convergence, provided the integrals are finite.
 
 In the case of noises with bounded variation, we may actually relax the above condition and assume the steps are bounded by a process $\{\bar F_t\}_{t\in I}$ with monotonic non-decreasing sample paths,
 \[
-    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
+    \left\|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \leq \bar F_s - \bar F_{\tau^N(s)}.
 \]
 Using the monotonicity, this implies
 \[
-    \mathbb{E}\left[\left| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} \bar F_\xi \right|\right] \leq \Delta t_N \left(\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0]\right),
+    \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} \bar F_\xi \right\|\right] \leq \Delta t_N \left(\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0]\right),
 \]
 yielding, again, strong order 1 convergence.
 
@@ -268,8 +266,8 @@ In this section, we derive the following integral formula for the global error:
         \label{globalerrorintegralformula}
         \begin{aligned}
             X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s  \\ 
-            & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
+            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+            & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
             & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
         \end{aligned}
     \end{equation}
@@ -398,7 +396,7 @@ We are now ready to start proving our basic estimate for the global pathwise err
     $$
     for $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     $$
-        \left\|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right\| \leq L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s.
+        \left\|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right\| \leq L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s.
     $$
     
     For the second term, we use again \eqref{Lxassumptionbasic}, so that
@@ -407,7 +405,7 @@ We are now ready to start proving our basic estimate for the global pathwise err
     $$
     for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
-        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right\| \leq L_X \int_0^{t_j} \|X_{\tau^N(s)}^N - X_{\tau^N(s)}^N\| \;\mathrm{d}s \\
+        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right\| \leq L_X \int_0^{t_j} \|X_{\tau^N(s)} - X_{\tau^N(s)}^N\| \;\mathrm{d}s \\
         \leq L_X\sum_{i=0}^{j-1} \|X_{t_i} - X_{t_i}^N\|\Delta t_N.
     \end{multline*}
     
@@ -760,7 +758,7 @@ With that in mind, we first have the following result.
         \int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s  \\
         = \int_0^t \left(\int_{\tau^N(s)}^s A_\xi \;\mathrm{d}\xi + \int_{\tau^N(s)}^s B_\xi \;\mathrm{d}W_\xi\right)\;\mathrm{d}s.
     \end{multline*}
-    Exchanging the order of integration, according to Fubini's theorem, yields
+    Exchanging the order of integration, according to Fubini's theorem (see e.g. \cite[Section IV.6]{Protter2005} for a suitable stochastic version of the Fubini Theorem), yields
     \begin{align*}
         \int_0^t & \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s \\
         & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
@@ -1208,7 +1206,7 @@ where $\Gamma(\cdot)$ is the well-known Gamma function. For the step, \eqref{BHt
     B^H_s - B^H_{\tau^N(s)} = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^{\tau^N(s)} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}W_\xi \right. \\
     \left. + \int_{\tau^N(s)}^s (s - \xi)^{H-1/2} \;\mathrm{d}W_\xi\right).
 \end{multline}
-Then, using Fubini's Theorem to exchange the order of integration,
+Then, using Fubini's Theorem to exchange the order of integration (see, again, \cite[Section IV.6]{Protter2005}),
 \begin{equation}
     \label{integralofstepfBm}
     \begin{aligned}
@@ -1672,7 +1670,9 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
 
     \bibitem{NeckelRupp2013} T. Neckel and F. Rupp, \emph{Random Differential Equations in Scientific Computing,} Versita, London, 2013.
 
-    \bibitem{Oksendal2003} B. {\O}ksendal, \emph{Stochastic Differential Equations - An Introduction with Applications,} Universitext, Springer-Verlag Berlin Heidelberg 2003.
+    \bibitem{Oksendal2003} B. {\O}ksendal, \emph{Stochastic Differential Equations - An Introduction with Applications,} Universitext, Springer-Verlag Berlin Heidelberg, 2003.
+
+    \bibitem{Protter2005} P. E. Protter, \emph{Stochastic Integration and Differential Equations,} 2nd Edition, Springer-Verlag, Berlin Heidelberg New York, 2005.
 
     \bibitem{RackauckasNie2017} C. Rackauckas and Q. Nie, DifferentialEquations.jl - A Performant and Feature-Rich Ecosystem for Solving Differential Equations in Julia, \emph{The Journal of Open Research Software}, 5 (2017), no. 1, 1--15.
 
