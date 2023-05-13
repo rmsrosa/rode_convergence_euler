@@ -716,7 +716,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
 \section{The case of an It\^o process noise}
 \label{secItonoise}
 
-Here, as explained in the Introduction, we assume the process given by $F_t = f(s, X_{\tau^N(s), Y_s})$ is an It\^o process, which, in applications, follows from assuming that $f=f(t, x, y)$ is sufficiently regular and that the noise $\{Y_t\}_{t\in I}$ is itself an It\^o process.
+Here, as explained in the Introduction, we assume the process given by $F_t = f(s, X_{\tau^N(s)}, Y_s)$ is an It\^o process, which, in applications, follows from assuming that $f=f(t, x, y)$ is sufficiently regular and that the noise $\{Y_t\}_{t\in I}$ is itself an It\^o process.
 
 We recall (see e.g. \cite[Chapter 4]{Oksendal2003}) that an It\^o process is a process $\{Z_t\}_{t\in I}$ of the form
 \begin{equation}
@@ -948,7 +948,7 @@ Of course, it is possible to mix the two cases and have the following result com
     \end{equation}
 \end{thm}
 
-We ommit the proof since it is just a combination of \cref{lemmonotonicbound} and \cref{lemItostep}. As a consequence, we also have the following more explicit result, which is a combination of \cref{thmdiffmonotonicbound} and \cref{thmItonoise}.
+We omit the proof since it is just a combination of \cref{lemmonotonicbound} and \cref{lemItostep}. As a consequence, we also have the following more explicit result, which is a combination of \cref{thmdiffmonotonicbound} and \cref{thmItonoise}.
 
 \begin{thm}
     \label{thmmixedcasepractical}
