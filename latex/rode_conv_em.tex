@@ -965,7 +965,7 @@ In this section, we illustrate the strong order 1 convergence with a few example
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for samples $\omega_1, \ldots, \omega_M$, and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
-    \epsilon^N = \max_{j=0, \ldots, n} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^N(\omega_m)\right|.
+    \epsilon^N = \max_{j=0, \ldots, N} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^N(\omega_m)\right|.
 \end{equation}
 
 Here are the main parameters for the error estimate:
@@ -1020,47 +1020,33 @@ Equation \eqref{linearhomogeneousrode} has the explicit solution
     X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
 \end{equation}
 
-When we compute an approximate solution via Euler's method, however, we only draw the realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path, on the mesh points. We cannot compute the exact integral $\int_0^{t_j} W_s\;\mathrm{d}s$ just from these values, and, in fact, an exact solutions is not uniquely defined from them. We can, however, find its exact distribution and use that to draw feasible exact solutions and use them to estimate the error.
+When we compute an approximate solution via Euler's method, however, we only draw the realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path, on the mesh points. We cannot compute the exact integral $\int_0^{t_j} W_s\;\mathrm{d}s$ just from these values, and, in fact, an exact solutions is not uniquely defined from them. We can, however, find its exact distribution and use that to draw feasible exact solutions and use them to estimate the error.
 
-First we break down the sum into parts:
+The exact distribution of $\int_0^\tau W_s\;\mathrm{d}s$ given the step $\Delta W = W_\tau - W_0 = W_\tau$ is computed in \cite[Section 14.2]{HanKloeden2017} as
 \begin{equation}
-    \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s.
+    \int_0^{\tau} W_s\;\mathrm{d}s \sim \frac{\tau}{2}\Delta W + \sqrt{\frac{\tau^3}{12}}\mathcal{N}(0, 1) = \frac{\tau}{2}\Delta W + \mathcal{N}\left(0, \frac{\tau^3}{12}\right).
 \end{equation}
-On each mesh interval $[t_i, t_{i+1}]$, we consider the process
-\begin{equation}
-    B_t^i = W_t - W_{t_i} - \frac{t - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})
-\end{equation}
-which is a Brownian bridge on that mesh interval, vanishing at the extremes, and  independent of $W_{t_i}$ and $W_{t_{i+1}}$. Then,
+As for the distribution of the integral over a mesh interval $[t_i, t_{i+1}]$ when given the endpoints $W_{t_i}$ and $W_{t_{i+1}},$ we have, similarly,
 \begin{align*}
-    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s + \int_{t_i}^{t_{i+1}} \left( W_{t_i} + \frac{s - t_i}{t_{i+1}-t_i}(W_{t_{i+1}} - W_{t_i})\right)\;\mathrm{d}s \\
-    & = \frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i,
+    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i} + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
+    & = W_{t_i}(t_{i+1} - t_i) + \int_{0}^{t_{i+1} - t_i} (W_{t_i+s} - W_{t_i})\;\mathrm{d}s \\
+    & = W_{t_i}(t_{i+1} - t_i) + \frac{(t_{i+1} - t_i)}{2}(W_{t_{i+1}}-W_{t_{i}}) + Z_i \\
+    & = \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i,
 \end{align*}
 where
-\begin{equation}
-    Z_i = \int_{t_i}^{t_{i+1}} B_s^i\;\mathrm{d}s.
-\end{equation}
-Notice the first term is the trapezoidal rule while the second term is a Gaussian with zero mean. We need to compute the variance of $Z_i$ to completely characterize it. By translation, it suffices to consider a Brownian bridge $\{B_t\}_{t\in [0, \tau]}$ on an interval $[0, \tau]$, with $\tau = \Delta t_N$. This is obtained from $B_t = W_t - (t/\tau)W_\tau$. We have, since $\mathbb{E}[W_tW_s] = \min\{t, s\}$, that
-\[
-    \mathbb{E}[B_tB_s] = \min\{t, s\} - \frac{ts}{\tau}.
-\]
-Notice $\mathbb{E}[B_tB_s]$ is symmetric in $ts$, so we can write
-\begin{align*}
-    \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] & = \mathbb{E}\left[\int_0^{\tau} \int_0^\tau B_sB_t\;\mathrm{d}s\;\mathrm{d}\right] \\
-    & = \int_0^\tau \int_0^\tau \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = 2\int_0^\tau \int_0^t \mathbb{E}[B_sB_t] \;\mathrm{d}s\;\mathrm{d}t \\
-    & = 2\int_0^\tau \int_0^t \left(s - \frac{ts}{\tau}\right)\;\mathrm{d}s\;\mathrm{d}t \\
-    & = \frac{2}{\tau}\int_0^\tau \int_0^t (\tau - t)s\;\mathrm{d}s\;\mathrm{d}t.
-\end{align*}
-Hence,
-\begin{equation*}
-    \mathbb{E}\left[\left(\int_0^{\tau} B_s\;\mathrm{d}s\right)^2\right] = \frac{2}{\tau}\int_0^\tau (\tau - t)\frac{t^2}{2}\;\mathrm{d}t = \frac{2}{\tau}\left.\left(\tau\frac{t^3}{6} - \frac{t^4}{8}\right)\right|_{t = 0}^\tau = \frac{\tau^3}{12}.
-\end{equation*}
-
-Back to $Z_i$, this means that
 \begin{equation}
     \label{linearhomogeneousZidistribution}
     Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
 \end{equation}
+
+Thus, breaking down the sum over the mesh intervals:
+\begin{equation}
+    \label{exactintW}
+    \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
+\end{equation}
+where $Z_0, \ldots, Z_{N-1}$ are independent random variables with distribution \eqref{linearhomogeneousZidistribution}.
+
+Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a higher-order correction term.
 
 For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
 \begin{equation}
@@ -1068,7 +1054,7 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 \end{equation}
 This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
 
-Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact solution given by
+Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path of the noise, we consider an exact solution given by
 \begin{equation}
     \label{Xtlinearhomogeneousrode}
     X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
