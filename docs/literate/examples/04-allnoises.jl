@@ -1,5 +1,9 @@
 # # Non-homogenous linear system of RODEs with all implemented noises
 #
+# ```@meta
+# Draft = false
+# ```
+#
 # This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
 
 # ## The equation
@@ -146,7 +150,10 @@ plot(plts..., legend=false)
 
 # We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
-plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "Ornstein-Uhlenbeck" "gBm" "Compound Poisson" "Step Poisson" "Hawkes" "Transport" "fBm"])
+plt = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "Ornstein-Uhlenbeck" "gBm" "Compound Poisson" "Step Poisson" "Hawkes" "Transport" "fBm"])
+
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
+nothing # hide
 
 # and combined, with their sum squared, as it enters the homogenous term,
 

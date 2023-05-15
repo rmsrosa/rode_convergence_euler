@@ -1122,6 +1122,7 @@ Now we consider a system of linear equations with a series of different types of
 
 The system of equation takes the form
 \begin{equation}
+    \label{allnoisesRODEsystem}
     \begin{cases}
         \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
         \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
@@ -1161,6 +1162,14 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
     \includegraphics[scale=0.5]{img/order_allnoises.png}
     \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
     \label{figallnoises}
+\end{figure}
+
+Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.5]{img/noisepath_allnoises.png}
+    \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
+    \label{figsamplepathsallnoises}
 \end{figure}
 
 \subsection{Fractional Brownian motion noise}
