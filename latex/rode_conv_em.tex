@@ -1212,7 +1212,7 @@ Then, using Fubini's Theorem to exchange the order of integration (see, again, \
     \end{aligned}
 \end{equation}
 
-For the first term, notice $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable in $\sigma > \xi$, so that
+For the first term, notice $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable on the interval $\sigma > \xi$, so that
 \[
     (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} = - (H-1/2)\int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
 \]
@@ -1245,9 +1245,9 @@ Therefore,
     \frac{1}{\Gamma(H + 1/2)}\Delta t_N \mathbb{E}\left[\left|\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \right|\right] \\
     \leq C_H^{(1)}\Delta t_N,
 \end{multline}
-for a suitable constant $C_H^{(1)}$. We see this term is order 1.
+for a suitable constant $C_H^{(1)}$. We see this term is of order 1 in $\Delta t_N.$
 
-The second term is similar.
+The second term is similar,
 \begin{align*}
     \int_{\tau^N(\xi)+\Delta t_N}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
     & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s \\
@@ -1312,7 +1312,7 @@ In summary, we have proved the following result.
     for suitable constants $C_1, C_2 \geq 0$.
 \end{thm}
 
-As for the numerics, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{19}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a series of Hurst parameters, which is also illustrated in Figure \ref{figorderdepHfBm}.
+As for the numerics, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{19}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a series of Hurst parameters, which is illustrated in Figure \ref{figorderdepHfBm}.
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|}
@@ -1340,6 +1340,7 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
 \end{figure}
 
 \subsection{Population dynamics with harvest}
+\label{secpopdyn}
 
 Here, we consider a population dynamics modelled by a logistic equation with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest:
 \begin{equation}
@@ -1350,7 +1351,7 @@ Here, $r > 0$ is constant, $\{G_t\}_{t \geq 0}$ is a stochastic process playing 
 \[
     G_t = \gamma (1 + \varepsilon \sin(Z_t)),
 \]
-where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{Z_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. A Wiener process is a more natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
+where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{Z_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
 
 The harvest term $\{H_t\}_{t\geq 0}$ is a ``Poisson step'' process of the form
 \[
@@ -1434,7 +1435,7 @@ A single-storey building is considered, with its ground floor centered at positi
     \label{mechanicalstructuremodel}
     \ddot X_t + 2\zeta_0\omega_0\dot X_t + \omega_0^2 X_t = - \ddot M_t.
 \end{equation}
-where $\zeta_0$ and $\omega_0$ are damping and elastic model parameters depending on the structure.
+where $\zeta_0$ and $\omega_0$ are damping and elastic model parameters depending on the structure of the building.
 
 For the numerical simulations, the second-order equation is written as a system of first-order equations,
 \[
@@ -1443,7 +1444,7 @@ For the numerical simulations, the second-order equation is written as a system 
         \dot V_t = - \omega_0^2 X_t - 2\zeta_0\omega_0 X_t - Y_t,
     \end{cases}
 \]
-where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershoks, or any other ground motion.
+where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershocks, or any other ground motion.
 
 The structure is originally at rest, so we have the conditions
 \[
@@ -1489,7 +1490,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Kanai-Tajimi Earthquake model, with initial condition $X_0 = \mathbf{0}$ and Transport process, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for the mechanical structure model under ground-shaking random excitations, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
     \label{tableearthquake}
 \end{table}
 
@@ -1514,7 +1515,7 @@ We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2
 \end{equation}
 on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
 
-In the simulations below, we use the same parameters as in \cite[Section 7.8 ]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson processes with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
+In the simulations below, we use the same parameters as in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson processes with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
@@ -1546,13 +1547,13 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
-Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and \cite{KPP1937}
+Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions.
 
-We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation.
+The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation. We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
 
-We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
+The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and \cite{KPP1937}. It is a nonlinear parabolic equation of reaction-diffusion type, modeling inhomogeneous population growth displaying wave propagation, and many other phenomena such as combustion front wave propagation, physiollogy and crystallography pattern formation, and so on.
 
-The equation is a nonlinear parabolic equation of reaction-diffusion type, modeling inhomogeneous population growth displaying wave propagation, and many other phenomena such as combustion front wave propagation, physiollogy and crystallography pattern formation, and so on. We force the system with a random incoming population on one of the boundaries of the spatial domain.
+We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point.
 
 The equation takes the form
 \[
@@ -1584,6 +1585,8 @@ Using the boundary conditions, we find that
    \frac{\mathrm{d}}{\mathrm{d}t} \int_0^1 u(t, x) \;\mathrm{d}x = \mu Y_t  + \frac{\lambda}{u_m} \int_0^1 u(t, x)\left(u_m - u(t, x)\right)\;\mathrm{d}x,
 \]
 which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
+
+The equation involves a nonlinear term which is not globally Lipschitz continuous, but similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to be satisfy the required uniform global estimates without affecting the dynamics within this region. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
 
 The spatial discretization is done with finite differences on a grid with 17 mesh points. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two in this particular case is that, due to the spatial discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
 

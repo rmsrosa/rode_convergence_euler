@@ -196,8 +196,8 @@ We add some information about the simulation:
 
 ````@example 08-earthquake
 info = (
-    equation = "mechanical structure model under ground-shacking random excitations",
-    noise = "transport process",
+    equation = "mechanical structure model under ground-shaking random excitations",
+    noise = "transport process noise",
     ic = "\$X_0 = \\mathbf{0}\$"
 )
 ````
