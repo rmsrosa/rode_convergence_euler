@@ -1098,7 +1098,7 @@ Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained f
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
+    \includegraphics[scale=0.4]{img/order_wiener_linearhomogenous.png}
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
@@ -1159,7 +1159,7 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_allnoises.png}
+    \includegraphics[scale=0.4]{img/order_allnoises.png}
     \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
     \label{figallnoises}
 \end{figure}
@@ -1167,7 +1167,7 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
 Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/noisepath_allnoises.png}
+    \includegraphics[scale=0.4]{img/noisepath_allnoises.png}
     \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
     \label{figsamplepathsallnoises}
 \end{figure}
@@ -1343,7 +1343,7 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_dep_on_H_fBm.png}
+    \includegraphics[scale=0.4]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
     \label{figorderdepHfBm}
 \end{figure}
@@ -1419,18 +1419,18 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_popdyn_gBmPoisson.png}
+    \includegraphics[scale=0.4]{img/order_popdyn_gBmPoisson.png}
     \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
     \label{figpopdyn}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/sample_popdyn_gBmPoisson.png}
+    \includegraphics[scale=0.4]{img/sample_popdyn_gBmPoisson.png}
     \caption{An approximation sequence of a sample path solution of the population dynamics equation \eqref{rodepopulationdynamics}.}
     \label{figsamplepopdyn}
 \end{figure}
 
-\subsection{Mechanical structural under random Earthquake-like seismic disturbances}
+\subsection{Mechanical structure under random Earthquake-like seismic disturbances}
 
 Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} and \cite{HousnerJenning1964} with this and other models).
 
@@ -1504,7 +1504,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/convergence_earthquake.png}
+    \includegraphics[scale=0.4]{img/convergence_earthquake.png}
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
     \label{figearthquake}
 \end{figure}
@@ -1549,7 +1549,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_toggleswitch.png}
+    \includegraphics[scale=0.4]{img/order_toggleswitch.png}
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
     \label{figtoggleswitch}
 \end{figure}
@@ -1565,13 +1565,15 @@ The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and 
 We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point.
 
 The equation takes the form
-\[
-   \frac{\partial u}{\displaystyle \partial t} = \mu\frac{\partial^2 u}{\partial x^2} + \lambda u\left(1 - \frac{u}{u_m}\right), \quad (t, x) \in (0, \infty) \times (0, 1),
-\]
+\begin{equation}
+    \label{fisherkpprode}
+    \frac{\partial u}{\displaystyle \partial t} = \mu\frac{\partial^2 u}{\partial x^2} + \lambda u\left(1 - \frac{u}{u_m}\right), \quad (t, x) \in (0, \infty) \times (0, 1),
+\end{equation}
 endowed with the boundary conditions
-\[
-   \frac{\partial u}{\partial x}(t, 0) = - Y_t, \quad \frac{\partial u}{\partial x}(t, 1) = 0,
-\]
+\begin{equation}
+    \label{fisherkppbc}
+    \frac{\partial u}{\partial x}(t, 0) = - Y_t, \quad \frac{\partial u}{\partial x}(t, 1) = 0,
+\end{equation}
 and a given a initial condition
 \[
    u(0, x) = u_0(x).
@@ -1620,8 +1622,8 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_fisherkpp.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \includegraphics[scale=0.4]{img/order_fisherkpp.png}
+    \caption{Order of convergence of the strong error of the Euler method for the Fisher-KPP model \eqref{fisherkpprode}-\eqref{fisherkppbc}.}
     \label{figfisherkpp}
 \end{figure}
 
