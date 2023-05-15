@@ -63,7 +63,9 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o noise, point-process noise, fractional Brownian motion noise}.
 
 \begin{abstract}
-It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies to additive or multiplicative It\^o  process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which even have jump-type discontinuities); and to transport-type processes with sample paths of bounded variation. The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry. We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the examples above, but still higher than the order $H$ of convergence expected from previous works.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies for instance to additive or multiplicative It\^o  process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which even have jump-type discontinuities); and to transport-type processes with sample paths of bounded variation.
+% The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry.
+We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the examples above, but still higher than the order $H$ of convergence expected from previous works.
 \end{abstract}
 
 \maketitle
@@ -74,7 +76,7 @@ Consider the following initial value problem for a \textbf{random ordinary diffe
 \begin{equation}
   \label{rodeeq}
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), \qquad 0 \leq t \leq T, \\
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), & 0 \leq t \leq T, \\
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
@@ -83,12 +85,10 @@ on a time interval $I=[0, T]$, with $T > 0$, and where the noise $\{Y_t\}_{t\in 
 The Euler method for solving this initial value problem consists in approximating the solution on a uniform time mesh $t_j = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N}$. In such a mesh, the Euler scheme takes the form
 \begin{equation}
   \label{emscheme}
-  X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), \qquad j = 1, \ldots, N,
-\end{equation}
-with the initial condition
-\begin{equation}
-  \label{iccondition}
-  X_0^N = X_0.
+  \begin{cases}
+    X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}), & j = 1, \ldots, N, \\
+    X_0^N = X_0.
+  \end{cases}
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
@@ -109,8 +109,7 @@ The first main idea of the proof is to not estimate the local error and, instead
 \begin{equation}
     \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
-        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-        & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
         & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
@@ -137,11 +136,10 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
 either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o process noise. In any case, we bound the global error term using the Fubini Theorem,
-\begin{align*}
-    \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
-    & = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi \\
-    & = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
-\end{align*}
+\begin{multline*}
+    \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
+    = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
+\end{multline*}
 Then, we find that
 \begin{multline*}
     \mathbb{E}\left[\left\| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right] \\
@@ -172,7 +170,7 @@ yielding, again, strong order 1 convergence.
 
 These two cases are treated in \cref{secmonotonicbound} and \cref{secItonoise}. The case of bounded variation is treated in \cref{secmonotonicbound}, while the It\^o process noise case is treated in \cref{secItonoise}.
 
-The core results in these sections are \cref{lemmonotonicbound} and \cref{thmmonotonicbound}, for the bounded variation case, and \cref{lemItostep} and \cref{thmItostep}, for the It\^o process noise case. The conditions in such results, however, are not readily verifiable. With that in mind, \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of these two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o process noise.
+The core results in these sections are \cref{lemmonotonicbound} and \cref{thmmonotonicbound}, for the bounded variation case, and \cref{lemItostep} and \cref{thmItostep}, for the It\^o process noise case. The conditions in such results, however, are not readily verifiable. With that in mind, \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of these two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions, while the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o process noise.
 
 These two types of noises can also appear at same time, in a given equation or system of equations, as treated in \cref{secmixed}. This can be regarded as a vector-valued noise, where the components of the noise may either be of bounded variation or of It\^o type. See \cref{thmmixedcase} and \cref{thmmixedcasepractical}.
 
@@ -252,9 +250,9 @@ For the strong convergence of the Euler approximation, we also need to control t
     Thanks to \eqref{XtboundLXMt}, the result is straightfoward
 \end{proof}
 
-\begin{rmk}
-    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
-\end{rmk}
+%\begin{rmk}
+%    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+%\end{rmk}
 
 \begin{rmk}
     In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. But we leave these cases to be handled in the applications.
@@ -269,8 +267,7 @@ In this section, we derive the following integral formula for the global error:
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
-            X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-            & \qquad + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
+            X_{t_j} - X_{t_j}^N & = X_0 - X_0^N + \int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s  \\ 
             & \qquad + \int_{0}^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \\
             & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
         \end{aligned}
@@ -326,8 +323,7 @@ In this section, we derive the following integral formula for the global error:
 
     Now we iterate the time steps \eqref{singlestep} to find that
     \begin{align*}
-        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
-        & \qquad + \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
+        X_{t_j} - X_{t_j}^N & = X_0 - X_0^N + \sum_{i=1}^{j} \left(\int_{t_{i-1}}^{t_i} \left( f(s, X_s, Y_s) - f(s, X_{t_{i}}, Y_s) \right)\;\mathrm{d}s \right. \\ 
         & \qquad + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}, Y_s) - f(s, X_{t_{i-1}}^N, Y_s) \right)\;\mathrm{d}s \\
         & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
     \end{align*}
@@ -357,27 +353,28 @@ Here we derive an estimate that is the basis for the specific estimates for each
     \end{equation}
 \end{lem}
 
-\begin{proof}
-    This follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$. For the sake of completeness, we give a direct proof for this particular case.
+This follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
+%\begin{proof}
+    %This follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$. For the sake of completeness, we give a direct proof for this particular case.
     
-    The result is trivially true for $j=0$. Suppose, by induction, that the result is true up to $j-1$. Then, using \eqref{integralgronwall} for $j$ and the induction hypothesis, we find
-    \[
-        e_j \leq a \sum_{i=0}^{j-1} be^{ai} + b = b \left(a \sum_{i=0}^{j-1} e^{ai} + 1\right).
-    \]
-    Using that $1 + a \leq e^a$, we have $a \leq e^a - 1$, hence
-    \[
-        e_j \leq b\left((e^a - 1)\sum_{i=0}^{j-1} e^{ia} + 1\right).
-    \]
-    Using that $\sum_{i=0}^{j-1} \alpha^i = (\alpha^j - 1)(\alpha - 1)$, with $\alpha = e^a$, we see that
-    \[
-        (e^a - 1)\sum_{i=0}^{j-1} e^{ia} \leq e^{ja} - 1,
-    \]
-    so that
-    \[
-        e_j \leq be^{ja},
-    \]
-    which completes the induction.
-\end{proof}
+    %The result is trivially true for $j=0$. Suppose, by induction, that the result is true up to $j-1$. Then, using \eqref{integralgronwall} for $j$ and the induction hypothesis, we find
+    %\[
+    %    e_j \leq a \sum_{i=0}^{j-1} be^{ai} + b = b \left(a \sum_{i=0}^{j-1} e^{ai} + 1\right).
+    %\]
+    %Using that $1 + a \leq e^a$, we have $a \leq e^a - 1$, hence
+    %\[
+    %    e_j \leq b\left((e^a - 1)\sum_{i=0}^{j-1} e^{ia} + 1\right).
+    %\]
+    %Using that $\sum_{i=0}^{j-1} \alpha^i = (\alpha^j - 1)(\alpha - 1)$, with $\alpha = e^a$, we see that
+    %\[
+    %    (e^a - 1)\sum_{i=0}^{j-1} e^{ia} \leq e^{ja} - 1,
+    %\]
+    %so that
+    %\[
+    %    e_j \leq be^{ja},
+    %\]
+    %which completes the induction.
+%\end{proof}
 
 We are now ready to start proving our basic estimate for the global pathwise error.
 
@@ -571,7 +568,7 @@ With \cref{lemmonotonicbound} at hand, combined with the results in the previous
 \begin{thm}
     \label{thmmonotonicbound}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e.
     \begin{equation}
       \label{thmmonotonicboundstrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -787,7 +784,7 @@ Combining the estimate in \cref{lemItostep} with the estimate for the global err
 \begin{thm}
     \label{thmItostep}
     Under \cref{standinghypotheses1}, suppose also that
-    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itoprocess}, and \eqref{expectItostepterms} hold. Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e.
+    \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itoprocess}, and \eqref{expectItostepterms} hold. Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e.
     \begin{equation}
       \label{thmItosteptrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -947,7 +944,7 @@ Of course, it is possible to mix the two cases and have the following result com
       \label{expectstepHmonotonic}
       \mathbb{E}[\bar H_t] \textrm{ uniformly bounded on } t\in I.
     \end{equation}
-    Then, the Euler scheme \eqref{emscheme}-\eqref{iccondition} is of strong order 1, i.e. there exists a constant $C\geq 0$ such that
+    Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e. there exists a constant $C\geq 0$ such that
     \begin{equation}
       \label{thmmixedtrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N}.
