@@ -1,10 +1,11 @@
 # Main idea
 
-The improvement in the convergence estimates relies on a novel approach with **three main parts:**
+The improvement in the convergence estimates relies on a novel approach with **four main points:**
 
-1. Estimating the global error as an iterated integral over both the large and the small mesh scales, instead of estimating directly the local (small scale) error;
-2. Using Fubini Theorem to switch the order of integration to move the critical regularity from the small to the large scale.
-3. Assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry.
+1. Estimate the accumulated global error instead of the local error;
+2. Write the global error as an iterated integral over the large and the small mesh scales;
+3. Use Fubini Theorem to switch the order of integration, moving the critical regularity from the small to the large scale;
+4. Assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or use the Itô isometry (when the noise is an It\^o process, such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion processes) in order to bound the large scale.
 
 Let us go over them with more details.
 
@@ -35,13 +36,18 @@ The first term vanishes due to the initial condition $X_0^N = X_0$. The second t
     \mathbb{E}\left[\left|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right|\right] \leq C\Delta t^{\theta}.
 ```
 
-Instead, we look at the whole global error and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable way. In order to give the main idea, let us assume for the moment that the sample paths of $\{F_t\}_{t\in I}$ satisfy
-```math
-    F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
-```
-either in the sense of a Riemann-Stieltjes integral or of an Itô integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an Itô noise. This is **the second main idea.**
+Instead, we estimate the global error.
 
-Now comes the **third main idea.** We use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the scale of the time-step (on $[\tau^N(s), s]$). In this way, We bound the global error term as
+The **second main idea** is to consider the whole global error and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable way, in the form of an integral of some sort:
+```math
+    F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
+```
+This can be either in the sense of a Riemann-Stieltjes integral or of an Itô integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an Itô noise. In this way, we write the global error as an iterated integral:
+```math
+    \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s.
+```
+
+The **third main idea** is to use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the small scale of the time-step (on $[\tau^N(s), s]$). In this way, we obtain
 ```math
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
@@ -50,22 +56,29 @@ Now comes the **third main idea.** We use Fubini's Theorem to switch the order o
 \end{align*}
 ```
 
-Then, we find that
+The final, **fourth idea** is to assume some global estimate to bound
 ```math
-    \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right],
+    \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq C \Delta t_N,
 ```
-which yields the strong order 1 convergence provided the remaining expectation is finite.
+which yields the strong order 1 convergence provided the remaining expectation is finite. The way this is done depends on the noise.
 
-In the case of an Itô integral, this is exactly what we assume, because the Itô integral is not order preserving, and the bound on the remaining expectation is obtained via Itô isometry.
-
-In the case of bounded variation, however, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
+In the case of an Itô noise, we have something like
 ```math
-    |f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})| \leq \bar F_s - \bar F_{\tau^N(s)}.
+\;\mathrm{d} F_\xi\ = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
 ```
-Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check.
+for suitable processes $\{A_t\}_t$ and $\{B_t\}_t$, and then we use the *Itô isometry* and suitable global assumptions on $f=f(t, x,, y)$ in order to bound
+```math
+\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq \int_0^T\mathbb{E}\left[\|A_t\|\right] \;\mathrm{d}t + \left( \int_0^T\mathbb{E}\left[\|B_t\|^2\right] \;\mathrm{d}t\right)^{1/2} < \infty.
+```
 
-The conditions above are not readily verifiable, but more explicit conditions for each of the two cases are given. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions and the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an Itô noise.
+In the case of noises with sample paths of bounded variation, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
+```math
+    \|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\| \leq \bar F_s - \bar F_{\tau^N(s)}.
+```
+Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check, and so that
+```math
+\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq \mathbb{E}\left[V(F_\xi; 0, T)\right]\infty.
+```
 
 The case of fractional Brownian motion is more delicate, but follows a similar idea, except the sample paths satisfy
 ```math
