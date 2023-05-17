@@ -63,9 +63,7 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o noise, point-process noise, fractional Brownian motion noise}.
 
 \begin{abstract}
-It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies for instance to additive or multiplicative It\^o  process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which even have jump-type discontinuities); and to transport-type processes with sample paths of bounded variation. The result is based on a novel approach, estimating the global error as an iterated integral over both the large and the small mesh scales, and switching the order of integration to move the critical regularity to the large scale.
-% The order 1 convergence is based on a novel approach, resting on three main ideas: First, we do not estimate directly the local error and, instead, add up the local steps and work directly with an accumulated global error, leading to formula with an iterated integral, the outer one spanning the whole interval and the inner one spanning a time step. Secondly, we use Fubini theorem to switch the order of the iterated integral, moving the critical regularity to the large scale time, easing the regularity requirement on the small scale of the time step. Finally, we assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry.
-We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the examples above, but still higher than the order $H$ of convergence expected from previous works.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. Here, we show that it is possible to exploit further conditions on the noise and prove that, in many typical cases, the strong convergence is actually of order 1, regardless of the H\"older regularity of the sample paths. This applies for instance to additive or multiplicative It\^o  process noises (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion process); to point-process noises (such as Poisson point processes and Hawkes self-exciting processes, which even have jump-type discontinuities); and to transport-type processes with sample paths of bounded variation. The result is based on a novel approach, estimating the global error as an iterated integral over both the large and the small mesh scales, and switching the order of integration to move the critical regularity to the large scale. We complement the work with examples with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the examples above, but still higher than the order $H$ of convergence expected from previous works.
 \end{abstract}
 
 \maketitle
@@ -337,7 +335,7 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimate for the global pathwise error}
 
-Here we derive an estimate that is the basis for the specific estimates for each type of noise. For that, we use a discrete version of the Grownwall Lemma. Here we state a particular case of the Discrete Grownwall Lemma that can be found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}).
+Here we derive an estimate that is the basis for the specific estimates for each type of noise. For that, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}).
 
 \begin{lem}[Discrete Gronwall Lemma]
     \label{lemdiscretegronwall}
@@ -1002,120 +1000,11 @@ As for the implementation itself, all code is written in the Julia language \cit
 
 Julia has a performant and feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations, and so on. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and domain specific applications.
 
-Although all the source code for the \texttt{DifferentialEquations.jl} ecosystem is available on the Github platform \cite{github}, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose not to use this ecosystem and, instead, implement our own code, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
-
-\subsection{Homogeneous linear equation with Wiener noise}
-\label{seclinearhomogeneousrode}
-
-We start by considering the Euler approximation of one of the simplest Random ODEs, that of a linear homogenous equation with a Wiener process as the coefficient:
-\begin{equation}
-    \label{linearhomogeneousrode}
-    \begin{cases}
-        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
-        \left. X_t \right|_{t = 0} = X_0.
-      \end{cases}
-\end{equation}
-
-Since the noise is simply a Wiener process, the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. Nevertheless, we illustrate the strong convergence directly for the Euler method for this RODE equation, for the sake of completeness.
-
-Equation \eqref{linearhomogeneousrode} has the explicit solution
-\begin{equation}
-    X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
-\end{equation}
-
-When we compute an approximate solution via Euler's method, however, we only draw the realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path, on the mesh points. We cannot compute the exact integral $\int_0^{t_j} W_s\;\mathrm{d}s$ just from these values, and, in fact, an exact solution is not uniquely defined from them. We can, however, find its exact distribution and use that to draw feasible exact solutions and use them to estimate the error.
-
-The exact distribution of $\int_0^\tau W_s\;\mathrm{d}s$ given the step $\Delta W = W_\tau - W_0 = W_\tau$ is computed in \cite[Section 14.2]{HanKloeden2017} as
-\begin{equation}
-    \label{exactintWt}
-    \int_0^{\tau} W_s\;\mathrm{d}s \sim \frac{\tau}{2}\Delta W + \sqrt{\frac{\tau^3}{12}}\mathcal{N}(0, 1) = \frac{\tau}{2}\Delta W + \mathcal{N}\left(0, \frac{\tau^3}{12}\right).
-\end{equation}
-As for the distribution of the integral over a mesh interval $[t_i, t_{i+1}]$ when given the endpoints $W_{t_i}$ and $W_{t_{i+1}},$ we use that $s \mapsto W_{t_i+s} - W_{t_i}$ is a standard Wiener process to find, from \eqref{exactintWt}, that
-\begin{align*}
-    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i} + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
-    & = W_{t_i}(t_{i+1} - t_i) + \int_{0}^{t_{i+1} - t_i} (W_{t_i+s} - W_{t_i})\;\mathrm{d}s \\
-    & = W_{t_i}(t_{i+1} - t_i) + \frac{(t_{i+1} - t_i)}{2}(W_{t_{i+1}}-W_{t_{i}}) + Z_i \\
-    & = \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i,
-\end{align*}
-where
-\begin{equation}
-    \label{linearhomogeneousZidistribution}
-    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
-\end{equation}
-
-Thus, breaking down the sum over the mesh intervals:
-\begin{equation}
-    \label{exactintW}
-    \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
-\end{equation}
-where $Z_0, \ldots, Z_{N-1}$ are independent random variables with distribution \eqref{linearhomogeneousZidistribution}.
-
-Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a higher-order correction term.
-
-For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
-\begin{equation}
-    \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
-\end{equation}
-This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
-
-Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path of the noise, we consider an exact solution given by
-\begin{equation}
-    \label{Xtlinearhomogeneousrode}
-    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
-\end{equation}
-for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
-\begin{figure}
-    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
-    \label{samplepathslinearhomogeneousrode}
-\end{figure}
-
-Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
-
-\begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
-        \hline \hline
-        16 & 0.0667 & 0.0194 \\
-        32 & 0.0323 & 0.0108 \\
-        64 & 0.0159 & 0.00546 \\
-        128 & 0.00787 & 0.00278 \\
-        256 & 0.00392 & 0.00139 \\
-        512 & 0.00196 & 0.000687 \\
-        1024 & 0.000978 & 0.000345 \\
-        2048 & 0.000489 & 0.000172 \\
-        4096 & 0.000244 & 8.62e-5 \\
-        8192 & 0.000122 & 4.66e-5 \\
-        16384 & 6.1e-5 & 2.45e-5 \\
-        \hline
-    \end{tabular}
-    \bigskip
-
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval (0.0, 1.0), based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
-    \label{tablinearhomogeneousrode}
-\end{table}
-
-\begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/order_wiener_linearhomogenous.png}
-    \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
-    $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
-    and a standard Wiener process noise $\{W_t\}_t$,
-    computed with $M = 1000$ sample paths,
-    for each $\Delta t = 1/N$,  $N = 16,$ $32,$ $64,$ $128,$ $256,$ $512,$ $1024$.}
-    \label{figlinearhomogeneousrode}
-\end{figure}
-
-%\begin{rmk}
-%The extra multiplicative exponential term involving $\sum_i Z_i$ is estimated to be, since these random variables are independent, of order 
-%\begin{multline*}
-%    \mathbb{E}\left[\left|e^{\sum_i Z_i} - 1\right|\right] \sim \mathbb{E}\left[\left|\sum_i Z_i\right|\right] \leq \left(\mathbb{E}\left[\left(\sum_i Z_i\right)^2\right]\right)^{1/2} \\
-%    = \left(\sum_i \mathbb{E}\left[Z_i^2\right]\right)^{1/2} \sim \left(\sum_i \Delta t_N^3 \right)^{1/2} = \left(t_j \Delta t_N^2\right)^{1/2} \sim \Delta t_N
-%\end{multline*}
-%hence of strong order 1 in $\Delta t_N$. Therefore, this %term does not affect the order of convergence of the Euler %method, but it is of crucial importance when analysing %higher order methods.
-%\end{rmk}
+Although all the source code for \texttt{DifferentialEquations.jl} is available on the Github platform \cite{github}, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose not to use this ecosystem and, instead, implement our own code, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
 
 \subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
-Now we consider a system of linear equations with a series of different types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
+We start with system of linear equations with a several types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
 
 The system of equation takes the form
 \begin{equation}
@@ -1137,7 +1026,7 @@ where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ i
     \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
