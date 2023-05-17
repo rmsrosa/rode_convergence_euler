@@ -9,7 +9,9 @@ The improvement in the convergence estimates relies on a novel approach with **f
 
 Let us go over them with more details.
 
-**The first main idea** of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely
+## The first main idea: consider a global error
+
+The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely
 ```math
 \begin{align*}
     X_{t_j} - X_{t_j}^N & = X_0 - X_0^N \\
@@ -38,7 +40,9 @@ The first term vanishes due to the initial condition $X_0^N = X_0$. The second t
 
 Instead, we estimate the global error.
 
-The **second main idea** is to consider the whole global error and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable way, in the form of an integral of some sort:
+## Second main idea: global error in the form of an iterated integral
+
+The second main idea is to consider the whole global error and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable way, in the form of an integral of some sort:
 ```math
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 ```
@@ -47,7 +51,9 @@ This can be either in the sense of a Riemann-Stieltjes integral or of an Itô in
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s.
 ```
 
-The **third main idea** is to use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the small scale of the time-step (on $[\tau^N(s), s]$). In this way, we obtain
+## Third main idea: use Fubini to change the critical regularity to the large scale
+
+The third main idea is to use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the small scale of the time-step (on $[\tau^N(s), s]$). In this way, we obtain
 ```math
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
@@ -56,7 +62,9 @@ The **third main idea** is to use Fubini's Theorem to switch the order of integr
 \end{align*}
 ```
 
-The final, **fourth idea** is to assume some global estimate to bound
+## Fourth idea: exploit the noise to estimate the error in the global scale
+
+The final, fourth idea is to assume some global estimate to bound
 ```math
     \mathbb{E}\left[\left| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \leq \Delta t_N \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq C \Delta t_N,
 ```
