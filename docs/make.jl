@@ -26,6 +26,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
         "Theory" => [
             "theory/results.md",
             "theory/idea.md",
+            "theory/extras.md"
         ],
         "Examples" => [
             "Linear RODEs" => [
