@@ -1323,6 +1323,7 @@ Toogle switches in gene expression consist of genes that mutually repress each o
 
 We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2016}, of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
 \begin{equation}
+    \label{toogleswitchsystem}
    \begin{cases}
    \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\
    \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t,
@@ -1356,7 +1357,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \begin{figure}[htb]
     \includegraphics[scale=0.4]{img/order_toggleswitch.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \caption{Order of convergence of the strong error of the Euler method for the toggle-switch model for gene expression \eqref{toogleswitchsystem}.}
     \label{figtoggleswitch}
 \end{figure}
 
