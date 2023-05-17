@@ -79,7 +79,26 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 ```
 This is the contribution of this random variable to the mean of the exact solution. But in the implementation we actually draw from $Z_i$, not from $e^{Z_i}$.
 
-Thus, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
+Another way is to use the result in Section 14.2 of [Han & Kloeden 2017](https://link.springer.com/book/10.1007/978-981-10-6265-0), which says that the the exact distribution of $\int_0^\tau W_s\;\mathrm{d}s$ given the step $\Delta W = W_\tau - W_0 = W_\tau$, is
+```math
+\int_0^{\tau} W_s\;\mathrm{d}s \sim \frac{\tau}{2}\Delta W + \sqrt{\frac{\tau^3}{12}}\mathcal{N}(0, 1) = \frac{\tau}{2}\Delta W + \mathcal{N}\left(0, \frac{\tau^3}{12}\right).
+```
+
+Then, for the distribution of the integral over a mesh interval $[t_i, t_{i+1}]$ when given the endpoints $W_{t_i}$ and $W_{t_{i+1}},$ we use that $s \mapsto W_{t_i+s} - W_{t_i}$ is a standard Wiener process to find that
+```math
+\begin{align*}
+\int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i} + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
+& = W_{t_i}(t_{i+1} - t_i) + \int_{0}^{t_{i+1} - t_i} (W_{t_i+s} - W_{t_i})\;\mathrm{d}s \\
+& = W_{t_i}(t_{i+1} - t_i) + \frac{(t_{i+1} - t_i)}{2}(W_{t_{i+1}}-W_{t_{i}}) + Z_i \\
+& = \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i,
+\end{align*}
+```
+where $Z_i$ is as above. Thus, breaking down the sum over the mesh intervals:
+```math
+\int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
+```
+
+In any case, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
 ```math
     X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 ```
