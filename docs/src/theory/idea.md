@@ -1,6 +1,12 @@
 # Main idea
 
-The improvent in the convergence estimates relies on **three main ideas.**
+The improvement in the convergence estimates relies on a novel approach with **three main parts:**
+
+1. Estimating the global error as an iterated integral over both the large and the small mesh scales, instead of estimating directly the local (small scale) error;
+2. Using Fubini Theorem to switch the order of integration to move the critical regularity from the small to the large scale.
+3. Assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or that the noise is an It\^o process (such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion) in order to bound the large scale term via It\^o isometry.
+
+Let us go over them with more details.
 
 **The first main idea** of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error, namely
 ```math
