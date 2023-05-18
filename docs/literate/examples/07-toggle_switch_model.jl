@@ -1,5 +1,9 @@
 # # A toggle-switch model for gene expression with compound Poisson external activation process
 #
+# ```@meta
+# Draft = false
+# ```
+#
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://doi.org/10.1186/1752-0509-8-43). See also [Strasser, Theis & Marr (2012)](https://doi.org/10.1016/j.bpj.2011.11.4000).
 
 # Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
@@ -46,7 +50,9 @@ function f!(dx, t, x, y)
     a⁴ = c⁴ = 0.25 ^ 4
     b⁴ = d⁴ = 0.4 ^ 4
     μ = ν = 1.25
-    α, β = y
+    μ = ν = 0.75
+    α = y[1] + y[2]
+    β = y[3] + y[4]
     x₁⁴ = x[1]^4
     x₂⁴ = x[2]^4
     dx[1] = ( α + x₁⁴ / (a⁴  + x₁⁴) ) * ( b⁴ / ( b⁴ + x₂⁴)) - μ * x[1]
@@ -56,19 +62,27 @@ end
 
 # The time interval
 
-t0, tf = 0.0, 4.0
+t0, tf = 0.0, 5.0
 
 # The law for the initial condition
 
-x0 = 10.0
-y0 = 10.0
+x0 = 4.0
+y0 = 4.0
 x0law = product_distribution(Dirac(x0), Dirac(y0))
 
-# The compound Poisson processes for the source terms
+# The compound Poisson and the geometric Brownian motion processes, for the noisy source terms.
 
-λ = 5.0
-ylaw = Uniform(0.0, 0.5)
-noise = ProductProcess(CompoundPoissonProcess(t0, tf, λ, ylaw), CompoundPoissonProcess(t0, tf, λ, ylaw))
+cPM = 0.5
+cPλ = 3.0
+cPylaw = Uniform(0.0, cPM)
+gBmμ = 0.2
+gBmσ = 0.2
+gBmy0 = 0.5
+noise = ProductProcess(
+    CompoundPoissonProcess(t0, tf, cPλ, cPylaw),GeometricBrownianMotionProcess(t0, tf, gBmy0, gBmμ, gBmσ),
+    CompoundPoissonProcess(t0, tf, cPλ, cPylaw),
+    GeometricBrownianMotionProcess(t0, tf, gBmy0, gBmμ, gBmσ)
+)
 
 # The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
 
@@ -81,7 +95,7 @@ m = 1_000
 
 info = (
     equation = "a toggle-switch model of gene regulation",
-    noise = "compound Poisson process noises",
+    noise = "superposed gBm and compound Poisson process noises",
     ic = "\$X_0 = $x0, Y_0 = $y0\$"
 )
 
@@ -120,11 +134,11 @@ nothing # hide
 # 
 # We plot the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plt = plot(result)
+plt_result = plot(result)
 
 # And we save the convergence plot for inclusion in the article.
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
 nothing # hide
 
 # For the sake of illustration of the behavior of the system, we rebuild the problem with a longer time step and do a single run with it, for a single sample solution.
@@ -138,24 +152,32 @@ nothing # hide
 
 # We visualize the pair of solutions
 
-plt = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
-plot!(plt, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="concentration")
+plt_sols = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
+plot!(plt_sols, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="\$\\textrm{concentration}\$")
 
 # and save it for display in the article
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png"))
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png"))
 nothing # hide
 
 # We also illustrate the convergence to say the expression of the X gene:
 
-plt = plot(suite)
+plt_suite = plot(suite)
 
 # and save it:
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png"))
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png"))
 nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ cP" "\$A_t\$ gBm" "\$B_t\$ cP" "\$B_t\$ gBm"], linecolor=[1 2 3 4])
 
+# We finally combine all plots into a single one, for the article:
+
+plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], titlefont=10)
+
+# and save it:
+
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.png"))
+nothing # hide
