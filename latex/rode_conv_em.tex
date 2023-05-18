@@ -1199,10 +1199,7 @@ The structure is originally at rest, so we have the conditions
 \]
 
 In the Bogdanoff-Goldberg-Bernard model \cite{BogdanoffGoldbergBernard1961}, 
-the excitation $\ddot M_t$ is made of a composition of oscillating signals with random frequencies, modulated by a linear attack rate followed by an exponential decay. This can be written, more precisely, as
-\[
-    \sum_{j=1}^n a_j t e^{-\delta_j t}\cos(\omega_j t + \theta_j).
-\]
+the excitation $\ddot M_t$ is made of a composition of oscillating signals $a_j t e^{-\delta_j t}\cos(\omega_j t + \theta_j)$ with random frequencies $\omega_j$, modulated by a linear attack rate $a_j t$ followed by an exponential decay $e^{-\delta_j t}$.
 
 In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation, which is connected with a square power attact rate for the displacement itself. Finally, for simulation purposes, we model directly the displacement $M_t$ and compute the associated excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed type of signal.
 
