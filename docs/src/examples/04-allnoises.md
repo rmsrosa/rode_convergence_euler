@@ -166,13 +166,13 @@ nothing # hide
 We illustrate the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 04-allnoises
-plt = plot(result)
+plt_result = plot(result)
 ````
 
 and we save the plot for inclusion in the article
 
 ````@example 04-allnoises
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
 nothing # hide
 ````
 
@@ -187,9 +187,9 @@ plot(plts..., legend=false)
 We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 ````@example 04-allnoises
-plt = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "Ornstein-Uhlenbeck" "gBm" "Compound Poisson" "Step Poisson" "Hawkes" "Transport" "fBm"])
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "cP" "sP" "Hawkes" "Transport" "fBm"])
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
 nothing # hide
 ````
 
@@ -197,6 +197,19 @@ and combined, with their sum squared, as it enters the homogenous term,
 
 ````@example 04-allnoises
 plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\mathbf{Y}_t\\right\\|\\right\\|^2\$")
+````
+
+We finally combine all the convergence plot and the noises into a single plot, for the article:
+
+````@example 04-allnoises
+plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
+````
+
+and save it:
+
+````@example 04-allnoises
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.png"))
+nothing # hide
 ````
 
 ---

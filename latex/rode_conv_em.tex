@@ -44,7 +44,7 @@
 
 % Article info
 
-\title[Strong convergence order of Euler for Random ODEs]{Improved error estimate for the order of strong convergence of the Euler method for random ordinary differential equations}
+\title[Strong convergence of the Euler method for Random ODEs]{Improved error estimate for the order of strong convergence of the Euler method for random ordinary differential equations}
 
 \author[P. E. Kloeden]{Peter E. Kloeden}
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
@@ -951,16 +951,16 @@ The system of equation takes the form
 where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the following simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
 \begin{enumerate}
     \item A standard Wiener process;
-    \item An Ornstein-Uhlenbeck process with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
-    \item A geometric Brownian motion process with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
-    \item A compound Poisson process with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
-    \item A Poisson step process with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
+    \item An Ornstein-Uhlenbeck process (OU) with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A geometric Brownian motion process (gBm) with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A compound Poisson process (cP) with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
+    \item A Poisson step process (sP) with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
     \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
     \item A transport process of the form $t \mapsto \sum_{i=1}^{6} \sin^{1/3}(\omega_i t)$, where the frequencies $\omega_i$ are independent random variables following a Gamma distribution with shape parameter $\alpha = 7.5$ and scale $\theta = 2.0;$
-    \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
+    \item A fractional Brownian motion (fBm) process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -979,18 +979,13 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/order_allnoises.png}
-    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
+    \includegraphics[scale=0.5]{img/allnoises_combined.png}
+    \caption{(a) Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$; (b) Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
     \label{figallnoises}
 \end{figure}
 
-Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
-
-\begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/noisepath_allnoises.png}
-    \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
-    \label{figsamplepathsallnoises}
-\end{figure}
+\cref{figallnoises} illustrates the order of convergence and 
+sample paths of all the noises used in this system.
 
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
