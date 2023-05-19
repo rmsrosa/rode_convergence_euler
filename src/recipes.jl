@@ -51,7 +51,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
         @series begin
             linestyle --> :auto
             linecolor --> 2
-            linewidth --> 1
+            linewidth --> 2
             linealpha --> noisealpha
             noiselabel = (yshow isa Function || noise isa UnivariateProcess ) ?
                 "noise" :
