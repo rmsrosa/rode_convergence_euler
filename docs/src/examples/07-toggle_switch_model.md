@@ -24,10 +24,9 @@ We consider the following simple model as discussed in [Asai (2016)](https://pub
   \end{cases}
 ```
 
-where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
+where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activation $A_t$ is a compound Poisson processes (cP), while $B_t$ is a geometric Brownian motion process (gBm).
 
-In the simulations below, we use the same parameters as in [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146): We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
-
+In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a geometric Brownian motion process with drift $\mu = 0.6,$ diffustion $\sigma = 0.3,$ and initial condition $A_0 = 0.2.$
 
 We don't have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
@@ -58,10 +57,9 @@ The evolution law
 function f!(dx, t, x, y)
     a⁴ = c⁴ = 0.25 ^ 4
     b⁴ = d⁴ = 0.4 ^ 4
-    μ = ν = 1.25
     μ = ν = 0.75
-    α = y[1] + y[2]
-    β = y[3] + y[4]
+    α = y[1]
+    β = y[2]
     x₁⁴ = x[1]^4
     x₂⁴ = x[2]^4
     dx[1] = ( α + x₁⁴ / (a⁴  + x₁⁴) ) * ( b⁴ / ( b⁴ + x₂⁴)) - μ * x[1]
@@ -88,13 +86,12 @@ The compound Poisson and the geometric Brownian motion processes, for the noisy 
 
 ````@example 07-toggle_switch_model
 cPM = 0.5
-cPλ = 3.0
+cPλ = 5.0
 cPylaw = Uniform(0.0, cPM)
-gBmμ = 0.2
-gBmσ = 0.2
-gBmy0 = 0.5
+gBmμ = 0.6
+gBmσ = 0.3
+gBmy0 = 0.2
 noise = ProductProcess(
-    CompoundPoissonProcess(t0, tf, cPλ, cPylaw),GeometricBrownianMotionProcess(t0, tf, gBmy0, gBmμ, gBmσ),
     CompoundPoissonProcess(t0, tf, cPλ, cPylaw),
     GeometricBrownianMotionProcess(t0, tf, gBmy0, gBmμ, gBmσ)
 )
@@ -114,7 +111,7 @@ And add some information about the simulation:
 ````@example 07-toggle_switch_model
 info = (
     equation = "a toggle-switch model of gene regulation",
-    noise = "superposed gBm and compound Poisson process noises",
+    noise = "coupled compound Poisson process and geometric Brownian motion noises",
     ic = "\$X_0 = $x0, Y_0 = $y0\$"
 )
 ````
@@ -213,7 +210,7 @@ nothing # hide
 We can also visualize the noises associated with this sample solution:
 
 ````@example 07-toggle_switch_model
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ cP" "\$A_t\$ gBm" "\$B_t\$ cP" "\$B_t\$ gBm"], linecolor=[1 2 3 4])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ cP" "\$B_t\$ gBm"], linecolor=[1 2])
 ````
 
 We finally combine all plots into a single one, for the article:

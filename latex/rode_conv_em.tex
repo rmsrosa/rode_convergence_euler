@@ -960,8 +960,6 @@ where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ i
     \item A fractional Brownian motion (fBm) process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$.
-
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
@@ -984,8 +982,7 @@ Table \ref{taballnoises} shows the estimated strong error obtained from 200 samp
     \label{figallnoises}
 \end{figure}
 
-\cref{figallnoises} illustrates the order of convergence and 
-sample paths of all the noises used in this system.
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
 
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
@@ -1253,9 +1250,9 @@ We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2
    \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t,
    \end{cases}
 \end{equation}
-on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent process composed with a superposition of a compound Poisson process and a geometric Brownian motion process.
+on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ is taken to be a compound Poisson process, while $B_t$ is a geometric Brownian motion process.
 
-In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activations are superpositions of a compound Poisson process with Poisson rate $\lambda = 3.0$ and jumps uniformly distributed on $[0.0, 0.5]$ and a geometric Brownian motion process with initial value $0.5$, drift $0.2$ and diffusion $0.2$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
+In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed within $[0.0, 0.5]$, while $\{B_t\}_t$ is a geometric Brownian motion process with initial value $0.2$, drift $0.6$ and diffusion $0.3$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
@@ -1265,17 +1262,18 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
-        16 & 0.333 & 1.47 \\
-        32 & 0.161 & 0.761 \\
-        64 & 0.0794 & 0.391 \\
-        128 & 0.0394 & 0.196 \\
-        256 & 0.0196 & 0.0949 \\
-        512 & 0.00978 & 0.0478 \\
+        16 & 0.333 & 1.2 \\
+        32 & 0.161 & 0.573 \\
+        64 & 0.0794 & 0.277 \\
+        128 & 0.0394 & 0.137 \\
+        256 & 0.0196 & 0.0701 \\
+        512 & 0.00978 & 0.0355 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a toggle-switch model of gene regulation for each N, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and superposed gBm and compound Poisson process noises, on the time interval $(0.0, 5.0)$, based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 0.98$}
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $(0.0, 5.0)$, based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.0$}
+
 
     \label{tabletoggleswitch}
 \end{table}
