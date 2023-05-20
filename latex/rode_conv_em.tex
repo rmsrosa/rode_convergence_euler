@@ -316,17 +316,21 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimate for the global pathwise error}
 
-Here we derive an estimate that is the basis for the specific estimates for each type of noise. For that, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}): Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers satisfying
-\begin{equation}
-    \label{integralgronwall}
+Here we derive an estimate that is the basis for the specific estimates for each type of noise. For that, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}). Its proof follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
+
+\begin{lem}[Discrete Gronwall Lemma]
+    \label{lemdiscretegronwall}
+    Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers satisfying
+    \begin{equation}
+        \label{integralgronwall}
         e_j \leq a \sum_{i=0}^{j-1} e_i + b,
-\end{equation}
-for every $j$, with $e_0 = 0$, and where $a, b > 0$. Then,
-\begin{equation}
-    \label{estimateintegralgronwall}
-    e_j \leq b e^{aj}, \qquad \forall j.
-\end{equation}
-This follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
+    \end{equation}
+    for every $j$, with $e_0 = 0$, and where $a, b > 0$. Then,
+    \begin{equation}
+        \label{estimateintegralgronwall}
+        e_j \leq b e^{aj}, \qquad \forall j.
+    \end{equation}
+\end{lem}
 
 We are now ready to start proving our basic estimate for the global pathwise error.
 \begin{lem}
@@ -368,7 +372,7 @@ We are now ready to start proving our basic estimate for the global pathwise err
         & \qquad + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s + L_X\sum_{i=0}^{j-1} \|X_{t_i} - X_{t_i}^N\|\Delta t_N \\
         & \qquad + \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|.
     \end{align*}
-    This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete version of the Gronwall Lemma, we obtain \eqref{estimateintegralgronwall}, which reads as \eqref{Etjbasicbound}.
+    This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete version \cref{lemdiscretegronwall} of the Gronwall Lemma, we obtain \eqref{Etjbasicbound}.
 \end{proof}
 
 The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to order $\Delta t_N$, which is useful for lower order approximations or for the discretization of (random) partial differential equations.
