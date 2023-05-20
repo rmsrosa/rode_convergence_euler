@@ -1,9 +1,5 @@
 # # Non-homogenous linear system of RODEs with all implemented noises
 #
-# ```@meta
-# Draft = false
-# ```
-#
 # This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
 
 # ## The equation
