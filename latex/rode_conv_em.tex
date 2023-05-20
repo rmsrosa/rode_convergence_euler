@@ -57,7 +57,7 @@
 
 \date{\today}
 
-\thanks{The second author was partly supported by  Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ)}
+\thanks{The second author was partly supported by the Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ)}
 
 \subjclass[2000]{76D05, 76D06, 35Q30, 37L99}
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o noise, point-process noise, fractional Brownian motion noise}.
@@ -1039,20 +1039,11 @@ Then, using Fubini's Theorem to exchange the order of integration (see, again, \
     \end{aligned}
 \end{equation}
 
-For the first term, notice $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable on the interval $\sigma > \xi$, so that
-\[
-    (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} = - (H-1/2)\int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
-\]
-Thus,
-\[
-    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s = (H-1/2)\int_{0}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s.
-\]
-Exchanging the order of integration yields
-\begin{align*}
-    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} \right. & \left. - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s \\
-    & = (H-1/2)\int_{0}^{t_j} \int_{\sigma}^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
-    & = (H-1/2)\int_{0}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
-\end{align*}
+Each term involves an inner deterministic integral which can be readily computed. For the first term, using that $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable on the interval $\sigma > \xi$, using the Fundamental Theorem of Calculus and exchanging the order of integration, we find
+\begin{multline*}
+    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s \\
+     = (H-1/2)\int_{0}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{multline*}
 Hence,
 \begin{multline*}
     \left|\int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s\right| \\
@@ -1074,13 +1065,11 @@ Therefore,
 \end{multline}
 for a suitable constant $C_H^{(1)}$. We see this term is of order 1 in $\Delta t_N.$
 
-The second term is similar,
-\begin{align*}
-    \int_{\tau^N(\xi)+\Delta t_N}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
-    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s \\
-    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_\sigma^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
-    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
-\end{align*}
+The second term is similar and yields
+\begin{multline*}
+    \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
+    = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{multline*}
 Thus,
 \begin{multline*}
     \left| \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right| \\
@@ -1095,7 +1084,7 @@ Hence,
 Therefore,
 \begin{multline}
     \label{secondtermfBm}
-    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     \leq C_H^{(2)}\Delta t_N,
 \end{multline}
 for a possibly different constant $C_H^{(2)}$. This term is also of order 1.
