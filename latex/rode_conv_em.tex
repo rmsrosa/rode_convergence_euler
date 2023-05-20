@@ -897,7 +897,9 @@ We omit the proof since it is just a combination of \cref{lemmonotonicbound} and
 
 In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We also illustrate the $H + 1/2$ order of convergence in the case of a fractional Brownian motion (fBm) noise with Hurst parameter $0 < H < 1/2$.
 
-First we simulate a linear equation with several types of noises, emcompassing noises with sample paths with bounded variation and It\^o process noises. Next we simulate a linear equation with fBm noise. Then we implement a couple nonlinear problems. Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest; and a Fisher-KPP partial differential equation \cite{Fisher1937} and \cite{KPP1937} with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992}.
+First we simulate a linear equation with several types of noises, emcompassing noises with sample paths with bounded variation and It\^o process noises. Next we simulate a linear equation with fBm noise. Then we implement a couple nonlinear problems.
+
+Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra random term representing harvest; a mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien models); and a Fisher-KPP partial differential equation \cite{Fisher1937} and \cite{KPP1937} with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992}.
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for samples $\omega_m,$ with $m = 1, \ldots, M$, and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
@@ -1158,81 +1160,6 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
     \includegraphics[scale=0.4]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
     \label{figorderdepHfBm}
-\end{figure}
-
-\subsection{Mechanical structure under random Earthquake-like seismic disturbances}
-
-Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} and \cite{HousnerJenning1964} with this and other models).
-
-There are a number of models for earthquake-type forcing, such as the ubiquotous Kanai-Tajimi and the Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from \cite{Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
-
-We follow, however, the Bogdanoff-Goldberg-Bernard model, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples. This model is described in more details shortly. Let us introduce first the model for the vibrations of the mechanical structure.
-
-A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the following form.
-\begin{equation}
-    \label{mechanicalstructuremodel}
-    \ddot X_t + 2\zeta_0\omega_0\dot X_t + \omega_0^2 X_t = - \ddot M_t.
-\end{equation}
-where $\zeta_0$ and $\omega_0$ are damping and elastic model parameters depending on the structure of the building.
-
-For the numerical simulations, the second-order equation is written as a system of first-order equations,
-\[
-    \begin{cases}
-        \dot X_t = V_t, \\
-        \dot V_t = - \omega_0^2 X_t - 2\zeta_0\omega_0 X_t - Y_t,
-    \end{cases}
-\]
-where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershocks, or any other ground motion.
-
-The structure is originally at rest, so we have the conditions
-\[
-    X_0 = 0, \quad V_0 = \dot X_0 = 0.
-\]
-
-In the Bogdanoff-Goldberg-Bernard model \cite{BogdanoffGoldbergBernard1961}, 
-the excitation $\ddot M_t$ is made of a composition of oscillating signals $a_j t e^{-\delta_j t}\cos(\omega_j t + \theta_j)$ with random frequencies $\omega_j$, modulated by a linear attack rate $a_j t$ followed by an exponential decay $e^{-\delta_j t}$.
-
-In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation, which is connected with a square power attact rate for the displacement itself. Finally, for simulation purposes, we model directly the displacement $M_t$ and compute the associated excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed type of signal.
-
-Thus, with this framework in mind, we model the ground displacement as a transport process composed of a series of time-translations of a square-power ``attack" front, with an exponentially decaying tail and an oscillating background wave:
-\begin{equation}
-    M_t = \sum_{i=1}^k \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
-\end{equation}
-where $k\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other.
-
-%The excitation itself becomes
-%\begin{align*}
-%    \ddot M(t) = & 2\sum_{i=1}^k\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-%        & + \sum_{i=1}^k\gamma_i (\delta_i^2 - \omega_i^2)(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-%        & -2\sum_{i=1}^k\gamma_i (\delta_i + \omega_i) (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-%        & +\delta_i\sum_{i=1}^k\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)),
-%\end{align*}
-%where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
-
-More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
-
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
-
-\begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
-        \hline \hline
-        64 & 0.0317 & 2.2 \\
-        128 & 0.0157 & 0.932 \\
-        256 & 0.00784 & 0.427 \\
-        512 & 0.00391 & 0.205 \\
-        \hline
-    \end{tabular}
-    \bigskip
-
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for the mechanical structure model under ground-shaking random excitations, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
-    \label{tableearthquake}
-\end{table}
-
-\begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/convergence_earthquake.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
-    \label{figearthquake}
 \end{figure}
 
 \subsection{A toggle-switch model for gene expression}
