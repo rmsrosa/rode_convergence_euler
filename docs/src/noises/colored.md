@@ -1,15 +1,19 @@
 # Ornstein-Uhlenbeck colored noise approximation of white noise
 
+```@meta
+Draft = false
+```
+
 White noise, as modeled by the "derivative" of the Wiener process, in a suitable distributional sense, is an ubiquotous noise in modelling stochastic behavior in evolutionary systems.
 
 In many situations, however, the actual noise is a colored noise, sometimes with a characteristic amplitude decay, giving a certain hue to the noise, or some other amplitude form.
 
-Here, we explore the approximation of a white noise by an Orstein-Uhlenbeck (OU) process ``\{O_t\}_t``. This is achieved by controlling a *time-scale* ``\tau`` for the process. More precisely, we assume ``\{O_t\}_t`` satisfies the stochastic differential equation (SDE)
+Here, we explore the approximation of a white noise by an Ornstein-Uhlenbeck (OU) process ``\{O_t\}_t``. This is achieved by controlling a *time-scale* ``\tau`` for the process. More precisely, we assume ``\{O_t\}_t`` satisfies the stochastic differential equation (SDE)
 
 ```math
     \tau \mathrm{d}O_t = - \mathrm{d}t + \varsigma \mathrm{d}W_t,
 ```
-where ``\{W_t\}_t`` is a standard Wiener process. This leads to an Orsntein-Uhlenbeck process with drift ``\nu = 1/\tau`` and diffusion ``\sigma = \varsigma/\tau``. This process has mean, variance, and covariance given by
+where ``\{W_t\}_t`` is a standard Wiener process. This leads to an Ornstein-Uhlenbeck process with drift ``\nu = 1/\tau`` and diffusion ``\sigma = \varsigma/\tau``. This process has mean, variance, and covariance given by
 
 ```math
    \mathbb{E}[O_t] = O_0 e^{-\frac{\displaystyle t}{\displaystyle\tau}}, \quad \mathrm{Var}(O_t) = \frac{\varsigma^2}{2\tau}, \quad \mathrm{Cov}(O_t,O_s) = \frac{\varsigma^2}{2\tau} e^{-\frac{\displaystyle |t - s|}{\displaystyle \tau}}.
