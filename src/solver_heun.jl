@@ -23,7 +23,7 @@ RandomHeun(T::DataType) = RandomHeun(T, 0)
 RandomHeun(n::Int) = RandomHeun(Float64, n)
 RandomHeun() = RandomHeun(Float64, 0)
 
-function solve!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, ::RandomHeun{T, Univariate}) where {T, F}
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, ::RandomHeun{T, Univariate}) where {T, F}
     # scalar solution, scalar noise
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("vectors `xt` and `yt` must match indices")
