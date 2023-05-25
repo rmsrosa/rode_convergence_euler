@@ -324,12 +324,12 @@ Here we derive an estimate that is the basis for the specific estimates for each
 
 \begin{lem}[Discrete Gronwall Lemma]
     \label{lemdiscretegronwall}
-    Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers satisfying
+    Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers starting at $j=0$ and satisfying
     \begin{equation}
         \label{integralgronwall}
         e_j \leq a \sum_{i=0}^{j-1} e_i + b,
     \end{equation}
-    for every $j$, with $e_0 = 0$, and where $a, b > 0$. Then,
+    for every $j$, with $e_0 = 0$, and where $a, b \geq 0$. Then,
     \begin{equation}
         \label{estimateintegralgronwall}
         e_j \leq b e^{aj}, \qquad \forall j.

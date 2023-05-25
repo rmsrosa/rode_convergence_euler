@@ -4,11 +4,11 @@
 
 For the estimate of the global error, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}).
 
-**Discrete Gronwall Lemma:** Let $(e_j)_{j=0, \ldots, N}$ be a (finite or infinite, $N\leq \infty$) sequence of positive numbers satisfying
+**Discrete Gronwall Lemma:** Let $(e_j)_{j}$ be a (finite or infinite) sequence of positive numbers starting at $j=0$ and satisfying
 ```math
     e_j \leq a \sum_{i=0}^{j-1} e_i + b,
 ```
-for every $j=1, \ldots,$ with $e_0 = 0$, and where $a, b > 0$. Then,
+for every $j$ with $e_0 = 0$, and where $a, b \geq 0$. Then,
 ```math
     e_j \leq b e^{aj}, \qquad \forall j.
 ```
