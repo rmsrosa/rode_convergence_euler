@@ -942,6 +942,106 @@ Julia has a feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages
 
 Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
 
+\subsection{Homogeneous linear equation with Wiener noise}
+\label{seclinearhomogeneousrode}
+
+We start by considering the Euler approximation of one of the simplest Random ODEs, that of a linear homogenous equation with a Wiener process as the coefficient:
+\begin{equation}
+    \label{linearhomogeneousrode}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
+        \left. X_t \right|_{t = 0} = X_0.
+      \end{cases}
+\end{equation}
+
+Since the noise is simply a Wiener process, the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. Nevertheless, we illustrate the strong convergence directly for the Euler method for this RODE equation, for the sake of completeness.
+
+Equation \eqref{linearhomogeneousrode} has the explicit solution
+\begin{equation}
+    X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
+\end{equation}
+
+When we compute an approximate solution via Euler's method, however, we only draw the realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path, on the mesh points. We cannot compute the exact integral $\int_0^{t_j} W_s\;\mathrm{d}s$ just from these values, and, in fact, an exact solution is not uniquely defined from them. We can, however, find its exact distribution and use that to draw feasible exact solutions and use them to estimate the error.
+
+The exact distribution of $\int_0^\tau W_s\;\mathrm{d}s$ given the step $\Delta W = W_\tau - W_0 = W_\tau$ is computed in \cite[Section 14.2]{HanKloeden2017} as
+\begin{equation}
+    \label{exactintWt}
+    \int_0^{\tau} W_s\;\mathrm{d}s \sim \frac{\tau}{2}\Delta W + \sqrt{\frac{\tau^3}{12}}\mathcal{N}(0, 1) = \frac{\tau}{2}\Delta W + \mathcal{N}\left(0, \frac{\tau^3}{12}\right).
+\end{equation}
+As for the distribution of the integral over a mesh interval $[t_i, t_{i+1}]$ when given the endpoints $W_{t_i}$ and $W_{t_{i+1}},$ we use that $s \mapsto W_{t_i+s} - W_{t_i}$ is a standard Wiener process to find, from \eqref{exactintWt}, that
+\begin{align*}
+    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i} + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
+    & = W_{t_i}(t_{i+1} - t_i) + \int_{0}^{t_{i+1} - t_i} (W_{t_i+s} - W_{t_i})\;\mathrm{d}s \\
+    & = W_{t_i}(t_{i+1} - t_i) + \frac{(t_{i+1} - t_i)}{2}(W_{t_{i+1}}-W_{t_{i}}) + Z_i \\
+    & = \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i,
+\end{align*}
+where
+\begin{equation}
+    \label{linearhomogeneousZidistribution}
+    Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
+\end{equation}
+
+Thus, breaking down the sum over the mesh intervals:
+\begin{equation}
+    \label{exactintW}
+    \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
+\end{equation}
+where $Z_0, \ldots, Z_{N-1}$ are independent random variables with distribution \eqref{linearhomogeneousZidistribution}.
+
+Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a higher-order correction term.
+
+For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
+\begin{equation}
+    \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
+\end{equation}
+This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
+
+Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed, along with realizations $\{W_{t_i}\}_{i=0}^N$ of a sample path of the noise, we consider an exact solution given by
+\begin{equation}
+    \label{Xtlinearhomogeneousrode}
+    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
+\end{equation}
+for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
+\begin{figure}
+    \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
+    \label{samplepathslinearhomogeneousrode}
+\end{figure}
+
+Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        16 & 0.0667 & 0.0194 \\
+        32 & 0.0323 & 0.0108 \\
+        64 & 0.0159 & 0.00546 \\
+        128 & 0.00787 & 0.00278 \\
+        256 & 0.00392 & 0.00139 \\
+        512 & 0.00196 & 0.000687 \\
+        1024 & 0.000978 & 0.000345 \\
+        2048 & 0.000489 & 0.000172 \\
+        4096 & 0.000244 & 8.62e-5 \\
+        8192 & 0.000122 & 4.66e-5 \\
+        16384 & 6.1e-5 & 2.45e-5 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval (0.0, 1.0), based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
+    \label{tablinearhomogeneousrode}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/order_wiener_linearhomogenous.png}
+    \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
+    $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
+    and a standard Wiener process noise $\{W_t\}_t$,
+    computed with $M = 1000$ sample paths,
+    for each $\Delta t = 1/N$,  $N = 16,$ $32,$ $64,$ $128,$ $256,$ $512,$ $1024$.}
+    \label{figlinearhomogeneousrode}
+\end{figure}
+
 \subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
 We start with system of linear equations with a several types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
@@ -1003,13 +1103,15 @@ Here, we consider again a linear equation, of the form
         \left. X_t \right|_{t = 0} = X_0,
       \end{cases}
 \end{equation}
-except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. We show that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence.
+except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. It turns out that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence.
 
 Although the above linear equation has the explicit solution
 \begin{equation}
     X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
 \end{equation}
-computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by solving the equation with the Euler method itself, but on a much finer mesh. Nevertheless, the proof is done rigorously below, with the framework developed in the first sections.
+computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by solving the equation with the Euler method itself, but on a much finer mesh.
+
+Nevertheless, the proof is done rigorously below, with the framework developed in the first sections.
 
 Indeed, we need to estimate the last term of \eqref{expectedestimateglobalerrorintegral}, in \eqref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
 \begin{equation}
@@ -1041,11 +1143,20 @@ Then, using Fubini's Theorem to exchange the order of integration (see, again, \
     \end{aligned}
 \end{equation}
 
-Each term involves an inner deterministic integral which can be readily computed. For the first term, using that $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable on the interval $\sigma > \xi$, using the Fundamental Theorem of Calculus and exchanging the order of integration, we find
-\begin{multline*}
-    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s \\
-     = (H-1/2)\int_{0}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
-\end{multline*}
+For the first term, notice $\sigma \mapsto 1/(\sigma - \xi)^{H-1/2}$ is continuously differentiable on the interval $\sigma > \xi$, so that
+\[
+    (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} = - (H-1/2)\int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\]
+Thus,
+\[
+    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s = (H-1/2)\int_{0}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s.
+\]
+Exchanging the order of integration yields
+\begin{align*}
+    \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} \right. & \left. - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s \\
+    & = (H-1/2)\int_{0}^{t_j} \int_{\sigma}^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
+    & = (H-1/2)\int_{0}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{align*}
 Hence,
 \begin{multline*}
     \left|\int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2} \right) \;\mathrm{d}s\right| \\
@@ -1067,11 +1178,13 @@ Therefore,
 \end{multline}
 for a suitable constant $C_H^{(1)}$. We see this term is of order 1 in $\Delta t_N.$
 
-The second term is similar and yields
-\begin{multline*}
-    \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
-    = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
-\end{multline*}
+The second term is similar,
+\begin{align*}
+    \int_{\tau^N(\xi)+\Delta t_N}^{t_j} & \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \\ 
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_{\tau^N(s)}^s (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma \;\mathrm{d}s \\
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \int_\sigma^{\tau^N(\sigma) + \Delta t_N} (\sigma - \xi)^{H - 3/2} \;\mathrm{d}s \;\mathrm{d}\sigma \\
+    & = (H-1/2)\int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left(\tau^N(\sigma) + \Delta t_N - \sigma\right) (\sigma - \xi)^{H - 3/2} \;\mathrm{d}\sigma.
+\end{align*}
 Thus,
 \begin{multline*}
     \left| \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \right| \\
@@ -1086,7 +1199,7 @@ Hence,
 Therefore,
 \begin{multline}
     \label{secondtermfBm}
-    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
+    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
     \leq C_H^{(2)}\Delta t_N,
 \end{multline}
 for a possibly different constant $C_H^{(2)}$. This term is also of order 1.
@@ -1157,52 +1270,339 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
     \label{figorderdepHfBm}
 \end{figure}
 
-\subsection{A toggle-switch model for gene expression}
+\subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
-Here, we consider the toggle-switch model in \cite[Section 7.8 ]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}; see also \cite{StrasserTheisMarr2012}.
+Now we consider a system of linear equations with a series of different types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
 
-Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
-
-We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2016}, of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
+The system of equation takes the form
 \begin{equation}
-    \label{toogleswitchsystem}
-   \begin{cases}
-   \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\
-   \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t,
-   \end{cases}
+    \label{allnoisesRODEsystem}
+    \begin{cases}
+        \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
+        \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
+    \end{cases}
 \end{equation}
-on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ is taken to be a compound Poisson process, while $B_t$ is a geometric Brownian motion process.
+where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the following simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
+\begin{enumerate}
+    \item A standard Wiener process;
+    \item An Ornstein-Uhlenbeck process with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A geometric Brownian motion process with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
+    \item A compound Poisson process with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
+    \item A Poisson step process with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
+    \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
+    \item A transport process of the form $t \mapsto \sum_{i=1}^{6} \sin^{1/3}(\omega_i t)$, where the frequencies $\omega_i$ are independent random variables following a Gamma distribution with shape parameter $\alpha = 7.5$ and scale $\theta = 2.0;$
+    \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
+\end{enumerate}
 
-In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed within $[0.0, 0.5]$, while $\{B_t\}_t$ is a geometric Brownian motion process with initial value $0.2$, drift $0.6$ and diffusion $0.3$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
-
-We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
-
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=1000.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence, a sample solution, the Euler approximations of a sample solution, and sample noises.
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
         \hline N & dt & error\\
         \hline \hline
-        16 & 0.333 & 1.2 \\
-        32 & 0.161 & 0.573 \\
-        64 & 0.0794 & 0.277 \\
-        128 & 0.0394 & 0.137 \\
-        256 & 0.0196 & 0.0701 \\
-        512 & 0.00978 & 0.0355 \\
+        64 & 0.0159 & 0.22 \\
+        128 & 0.00787 & 0.106 \\
+        256 & 0.00392 & 0.0525 \\
+        512 & 0.00196 & 0.0262 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $(0.0, 5.0)$, based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.0$}
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{Y_t\}_t$ with all the implemented noises, on the time interval (0.0, 1.0), based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{taballnoises}
+\end{table}
 
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/order_allnoises.png}
+    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
+    \label{figallnoises}
+\end{figure}
 
+Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/noisepath_allnoises.png}
+    \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
+    \label{figsamplepathsallnoises}
+\end{figure}
+
+\subsection{Population dynamics with harvest}
+\label{secpopdyn}
+
+Here, we consider a population dynamics modelled by a logistic equation with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest:
+\begin{equation}
+    \label{rodepopulationdynamics}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = G_t X_t (r - X_t) - H_t.
+\end{equation}
+Here, $r > 0$ is constant, $\{G_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative process playing the role of the harvest term. More specifically, $\{G_t\}_{t \geq 0}$ is given by
+\[
+    G_t = \gamma (1 + \varepsilon \sin(Z_t)),
+\]
+where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{Z_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
+
+The harvest term $\{H_t\}_{t\geq 0}$ is a ``Poisson step'' process of the form
+\[
+    H_t = S_{N_t}
+\]
+where $\{N_t\}_{t\geq 0}$ is a Poisson point-process with rate $\lambda$, $S_0 = 0$, and the $S_i$, for $i=1, 2, \ldots$, are independent and identically distributed random variables with nonnegative values, independent also of the Poisson process $\{N_t\}_{t\geq 0}$.
+
+We suppose the initial condition is nonnegative and bounded almost surely:
+\[
+    0 \leq X_0 \leq R,
+\]
+for some $R > r$.
+
+The noise process $\{G_t\}_{t \geq 0}$ itself satisfies
+\[
+    0 < \lambda - \varepsilon \leq G_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
+\]
+
+Define $f:\mathbb{R} \times \mathbb{R} \times \mathbb{R}^2 \rightarrow \mathbb{R}$ by
+\[
+    f(t, x, y) = \begin{cases}
+        \gamma (1 + \varepsilon \sin(y_1)) x(r - x) - y_2, \quad x > 0,
+        0, \quad x \leq 0.
+    \end{cases}
+\]
+The equation \eqref{rodepopulationdynamics} becomes
+\[
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = f(t, X_t, Y_t),
+\]
+where $\{Y_t\}_{t\geq 0}$ is the vector-valued process given in coordinates by $Y_t = (Z_t, H_t)$.
+
+Notice that $f(t, x, y) = 0$, for $x < 0$ and for arbitrary $y=(y_1, y_2)$, while $f(t, x, y) < 0$, for $x \geq r$, $y_2 \geq 0$, and for arbitrary $y_1$. Since the noise $y_2 = H_t$ is always nonnegative, we see that the interval $0 \leq x \leq R$ is positively invariant and attracts the orbits with a nonnegative initial condition. Thus, the pathwise solutions of the initial-value problem under consideration are almost surely bounded as well.
+
+The function $f=f(t, x, y)$ is continuously differentiable infinitely many times and with bounded derivatives within the positively invariant interval. Hence, within the region of interest, all the conditions of \cref{thmmixedcasepractical} hold and the Euler method is of strong order 1.
+
+Below, we simulate numerically the solutions of the above problem, with $\gamma = 1.0,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma/2 = 0.5.$ The geometric Brownian motion process $\{Z_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=1000$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
+
+Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be of order 1.02, close enough to the theoretical value of strong order 1. Finally, Figure \ref{figsamplepopdyn} shows an approximation sequence of a sample path.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        16 & 0.0667 & 0.0118 \\
+        32 & 0.0323 & 0.00553 \\
+        64 & 0.0159 & 0.00269 \\
+        128 & 0.00787 & 0.00133 \\
+        256 & 0.00392 & 0.000657 \\
+        512 & 0.00196 & 0.000325 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for population dynamics, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval (0.0, 1.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{tabpopdyn}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/order_popdyn_gBmPoisson.png}
+    \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
+    \label{figpopdyn}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/sample_popdyn_gBmPoisson.png}
+    \caption{An approximation sequence of a sample path solution of the population dynamics equation \eqref{rodepopulationdynamics}.}
+    \label{figsamplepopdyn}
+\end{figure}
+
+\subsection{Mechanical structure under random Earthquake-like seismic disturbances}
+
+Now we consider a simple mechanical structure model driven by a random disturbance in the form of a transport process, simulating seismic ground-motion excitations, inspired by the model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013} and \cite{HousnerJenning1964} with this and other models).
+
+There are a number of models for earthquake-type forcing, such as the ubiquotous Kanai-Tajimi and the Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from \cite{Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
+
+We follow, however, the Bogdanoff-Goldberg-Bernard model, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples. This model is described in more details shortly. Let us introduce first the model for the vibrations of the mechanical structure.
+
+A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
+
+\begin{equation}
+    \label{mechanicalstructuremodel}
+    \ddot X_t + 2\zeta_0\omega_0\dot X_t + \omega_0^2 X_t = - \ddot M_t.
+\end{equation}
+where $\zeta_0$ and $\omega_0$ are damping and elastic model parameters depending on the structure of the building.
+
+For the numerical simulations, the second-order equation is written as a system of first-order equations,
+\[
+    \begin{cases}
+        \dot X_t = V_t, \\
+        \dot V_t = - \omega_0^2 X_t - 2\zeta_0\omega_0 X_t - Y_t,
+    \end{cases}
+\]
+where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershocks, or any other ground motion.
+
+The structure is originally at rest, so we have the conditions
+\[
+    X_0 = 0, \quad V_0 = \dot X_0 = 0.
+\]
+
+In the Bogdanoff-Goldberg-Bernard model \cite{BogdanoffGoldbergBernard1961}, 
+the excitation $\ddot M_t$ is made of a composition of oscillating signals with random frequencies, modulated by a linear attack rate followed by an exponential decay. This can be written, more precisely, as
+\[
+    \sum_{j=1}^n a_j t e^{-\delta_j t}\cos(\omega_j t + \theta_j).
+\]
+
+In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation, which is connected with a square power attact rate for the displacement itself. Finally, for simulation purposes, we model the displacement $M_t$ instead of modeling directly the excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed signal.
+
+Thus, with this framework in mind, we model the ground displacement as a transport process composed of a series of time-translations of a square-power ``attack" front, with an exponentially decaying tail and an oscillating background wave:
+\begin{equation}
+    M_t = \sum_{i=1}^k \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
+\end{equation}
+where $k\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other.
+
+The excitation itself becomes
+\begin{align*}
+    \ddot M(t) = & 2\sum_{i=1}^k\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & + \sum_{i=1}^k\gamma_i (\delta_i^2 - \omega_i^2)(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & -2\sum_{i=1}^k\gamma_i (\delta_i + \omega_i) (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+        & +\delta_i\sum_{i=1}^k\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)),
+\end{align*}
+where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
+
+More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
+
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        64 & 0.0317 & 2.2 \\
+        128 & 0.0157 & 0.932 \\
+        256 & 0.00784 & 0.427 \\
+        512 & 0.00391 & 0.205 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for the mechanical structure model under ground-shaking random excitations, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \label{tableearthquake}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/convergence_earthquake.png}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \label{figearthquake}
+\end{figure}
+
+\subsection{A toggle-switch model for gene expression with compound Poisson external activation process}
+
+Here, we consider the toggle-switch model in \cite[Section 7.8 ]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}; see also \cite{StrasserTheisMarr2012}.
+
+Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
+
+We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2016}, of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
+\begin{equation}
+   \begin{cases}
+   \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\
+   \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t,
+   \end{cases}
+\end{equation}
+on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
+
+In the simulations below, we use the same parameters as in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson processes with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
+
+We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
+
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=1000.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        16 & 0.267 & 1.91 \\
+        32 & 0.129 & 0.871 \\
+        64 & 0.0635 & 0.42 \\
+        128 & 0.0315 & 0.205 \\
+        256 & 0.0157 & 0.101 \\
+        512 & 0.00783 & 0.0504 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a toggle-switch model of gene regulation for each N, with initial condition $X_0 = 10.0, Y_0 = 10.0$ and compound Poisson process noises, on the time interval (0.0, 4.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.03$}
     \label{tabletoggleswitch}
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.5]{img/toggleswitch_combined.png}
-    \caption{(a) Order of convergence of the strong error of the Euler method for the toggle-switch model for gene expression \eqref{toogleswitchsystem}; (b) A sample solution $\{(X_t, Y_t)\}_t$; (c) Euler approximation of the component $X_t$ of a solution sample;  (d) Sample Compound Poisson (cP) and geometric Brownian motion (gBm) noise parts of $A_t$ and $B_t$.}
+    \includegraphics[scale=0.4]{img/order_toggleswitch.png}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
     \label{figtoggleswitch}
+\end{figure}
+
+\subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
+
+Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions.
+
+The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation. We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
+
+The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and \cite{KPP1937}. It is a nonlinear parabolic equation of reaction-diffusion type, modeling inhomogeneous population growth displaying wave propagation, and many other phenomena such as combustion front wave propagation, physiollogy and crystallography pattern formation, and so on.
+
+We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point.
+
+The equation takes the form
+\begin{equation}
+    \label{fisherkpprode}
+    \frac{\partial u}{\displaystyle \partial t} = \mu\frac{\partial^2 u}{\partial x^2} + \lambda u\left(1 - \frac{u}{u_m}\right), \quad (t, x) \in (0, \infty) \times (0, 1),
+\end{equation}
+endowed with the boundary conditions
+\begin{equation}
+    \label{fisherkppbc}
+    \frac{\partial u}{\partial x}(t, 0) = - Y_t, \quad \frac{\partial u}{\partial x}(t, 1) = 0,
+\end{equation}
+and a given a initial condition
+\[
+   u(0, x) = u_0(x).
+\]
+
+The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
+
+The random process $\{Y_t\}_t$ which drives the flux on the left boundary point, is taken to be a colored noise modulated by a exponentially decaying Hawkes process, representing random trains of incoming population.
+
+This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
+
+The initial condition is taken to be zero, $u_0(x) = 0$, so all the population originates from the left boundary influx.
+
+The mass within the region $0\leq x \leq 1$ satisfies
+\[
+   \frac{\mathrm{d}}{\mathrm{d} t} \int_0^1 u(t, x) \;\mathrm{d}x = \mu\int_0^1 u_{xx}(t, x) \;\mathrm{d}x + \lambda \int_0^1 u(t, x)\left(1 - \frac{u(t, x)}{u_m}\right)\;\mathrm{d}x.
+\]
+Using the boundary conditions, we find that
+\[
+   \frac{\mathrm{d}}{\mathrm{d}t} \int_0^1 u(t, x) \;\mathrm{d}x = \mu Y_t  + \frac{\lambda}{u_m} \int_0^1 u(t, x)\left(u_m - u(t, x)\right)\;\mathrm{d}x,
+\]
+which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
+
+The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost certainly. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
+
+The spatial discretization is done with finite differences on a grid with 17 mesh points. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two in this particular case is that, due to the spatial discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
+
+For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while Figure \ref{figfisherkpp} illustrates the order of convergence.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        1024 & 0.00196 & 0.243 \\
+        1152 & 0.00174 & 0.214 \\
+        1280 & 0.00156 & 0.194 \\
+        1536 & 0.0013 & 0.165 \\
+        1920 & 0.00104 & 0.131 \\
+        2048 & 0.000977 & 0.122 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Fisher-KPP equation for each N, with initial condition $X_0 = 0$ and Hawkes-modulated colored noise, on the time interval (0.0, 2.0), based on $m = 100$ sample paths for each fixed time step, with the target solution calculated with $4423680$ points. The order of strong convergence is estimated to be $p = 0.98$}
+    \label{tablefisherkpp}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/order_fisherkpp.png}
+    \caption{Order of convergence of the strong error of the Euler method for the Fisher-KPP model \eqref{fisherkpprode}-\eqref{fisherkppbc}.}
+    \label{figfisherkpp}
 \end{figure}
 
 \begin{thebibliography}{25}
