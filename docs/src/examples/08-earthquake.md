@@ -192,7 +192,12 @@ Visualization
 plt1 = plot(tt, mt, label="ground motion")
 plt2 = plot(tt, yt, label="ground acceleration")
 plt3 = plot(tt, et, label="envelope of acceleration")
-plot(plt1, plt2, plt3, layout = (3, 1))
+plt = plot(plt1, plt2, plt3, layout = (3, 1))
+````
+
+````@example 08-earthquake
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.png")) # hide
+nothing # hide
 ````
 
 Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
@@ -255,8 +260,6 @@ We create plots with the rate of convergence with the help of a plot recipe for 
 ````@example 08-earthquake
 plt = plot(result)
 ````
-
-and we save them for the article:
 
 ````@example 08-earthquake
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.png")) # hide

@@ -1403,7 +1403,7 @@ where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s
 
 More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -1425,6 +1425,12 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \includegraphics[scale=0.4]{img/convergence_earthquake.png}
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
     \label{figearthquake}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/noise_earthquake.png}
+    \caption{Sample ground motion and the corresponding excitation (ground acceleration) and envelope of excitation (just the exponential decay, without the oscillations) for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \label{figearthquakenoise}
 \end{figure}
 
 \subsection{A toggle-switch model for gene expression}

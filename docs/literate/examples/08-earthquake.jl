@@ -171,7 +171,12 @@ nothing # hide
 plt1 = plot(tt, mt, label="ground motion")
 plt2 = plot(tt, yt, label="ground acceleration")
 plt3 = plot(tt, et, label="envelope of acceleration")
-plot(plt1, plt2, plt3, layout = (3, 1))
+plt = plot(plt1, plt2, plt3, layout = (3, 1))
+
+#
+
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.png")) # hide
+nothing # hide
 
 # Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
 
@@ -221,7 +226,7 @@ println("Order of convergence `C Δtᵖ` with the transport-modulated noise with
 
 plt = plot(result)
 
-# and we save them for the article:
+#
 
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.png")) # hide
 nothing # hide
