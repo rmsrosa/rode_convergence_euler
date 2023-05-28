@@ -186,7 +186,7 @@ In this case, disregarding the higher order term,
 \end{align*}
 which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
-Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra random term representing harvest; a toogle-switch model of gene expression driven by a combination of a compound Poisson process and a geometric Brownian motion process, illustrating, again, the two main types of noises considered here, namely a point-process with bounded variation and a multiplicative It\^o process noise; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}).
+Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra random term representing harvest; a toogle-switch model of gene expression driven by a combination of a compound Poisson process and a geometric Brownian motion process, illustrating, again, the two main types of noises considered here, namely a point-process with bounded variation and a multiplicative It\^o process noise; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a decaying self-exciting Hawkes point process.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
@@ -934,7 +934,7 @@ Although all the source code for \texttt{DifferentialEquations.jl} is publicly a
 \subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
 
-We start by considering the Euler approximation of one of the simplest Random ODEs, that of a linear homogenous equation with a Wiener process as the coefficient:
+We start with one of the simplest Random ODEs, that of a linear homogenous equation with a Wiener process as the coefficient:
 \begin{equation}
     \label{linearhomogeneousrode}
     \begin{cases}
@@ -1093,7 +1093,7 @@ The strong order 1 convergence is not a suprise in the case of the Wiener and Or
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
 
-Here, we consider again a linear equation, of the form
+Now, we consider again a linear equation, of the form
 \begin{equation}
     \label{linearnonhomogeneousfbm}
     \begin{cases}
@@ -1101,7 +1101,7 @@ Here, we consider again a linear equation, of the form
         \left. X_t \right|_{t = 0} = X_0,
       \end{cases}
 \end{equation}
-except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. It turns out that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence. For this linear equation, the proof of convergence is done rigorously below, with the framework developed in the first sections.
+except this time the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. It turns out that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence. For this linear equation, the proof of convergence is done rigorously below, with the framework developed in the first sections.
 
 We need to estimate the last term in \eqref{expectedestimateglobalerrorintegral} of \cref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
 \begin{equation}
@@ -1269,12 +1269,12 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
 \subsection{Population dynamics with harvest}
 \label{secpopdyn}
 
-Here, we consider a population dynamics modelled by a logistic equation with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest:
+Here, we consider a population dynamics problem modeled by a logistic equation with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest:
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = G_t X_t (r - X_t) - H_t.
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = G_t X_t (r - X_t) - H_t,
 \end{equation}
-Here, $r > 0$ is constant, $\{G_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter, and $\{H_t\}_{t\geq 0}$ is a nonnegative process playing the role of the harvest term. More specifically, $\{G_t\}_{t \geq 0}$ is given by
+where $r > 0$ is constant; $\{G_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter; and $\{H_t\}_{t\geq 0}$ is a nonnegative process playing the role of the harvest term. More specifically, $\{G_t\}_{t \geq 0}$ is given by
 \[
     G_t = \gamma (1 + \varepsilon \sin(Z_t)),
 \]
@@ -1316,7 +1316,7 @@ The function $f=f(t, x, y)$ is continuously differentiable infinitely many times
 
 Below, we simulate numerically the solutions of the above problem, with $\gamma = 1.0,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma/2 = 0.5.$ The geometric Brownian motion process $\{Z_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=1000$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
 
-Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be of order 1.02, close enough to the theoretical value of strong order 1. Finally, Figure \ref{figsamplepopdyn} shows an approximation sequence of a sample path.
+Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while Figure \ref{figpopdyn} illustrates the order of convergence, estimated to be close enough to the theoretical value of strong order 1. Finally, Figure \ref{figsamplepopdyn} shows an approximation sequence of a sample path.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -1354,7 +1354,7 @@ Now we consider a simple mechanical structure model driven by a random disturban
 
 There are a number of models for earthquake-type forcing, such as the ubiquotous Kanai-Tajimi and the Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from \cite{Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
 
-We follow, however, the Bogdanoff-Goldberg-Bernard model, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples. This model is described in more details shortly. Let us introduce first the model for the vibrations of the mechanical structure.
+We follow, however, the Bogdanoff-Goldberg-Bernard model, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples. The noise is described in more details shortly. Let us first introduce the model for the vibrations of the mechanical structure.
 
 A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
 
@@ -1401,7 +1401,7 @@ The excitation itself becomes
 \end{align*}
 where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 
-More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
+More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
 
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while Figure \ref{figearthquake} illustrates the order of convergence.
 
@@ -1499,7 +1499,7 @@ and a given a initial condition
 
 The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
 
-The random process $\{Y_t\}_t$ which drives the flux on the left boundary point, is taken to be a colored noise modulated by a exponentially decaying Hawkes process, representing random trains of incoming population.
+The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random trains of incoming population.
 
 This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 
