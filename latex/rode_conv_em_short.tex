@@ -525,7 +525,7 @@ With \cref{lemmonotonicbound} at hand, combined with the results in the previous
     Under \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e.
     \begin{equation}
-      \label{thmmonotonicboundstrongordernew}
+      \label{monotonicboundstrongordernew}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
     for a constant $C$ given by
@@ -545,7 +545,7 @@ With \cref{lemmonotonicbound} at hand, combined with the results in the previous
         \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N L_X \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}\right. \\
         \left. + (\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0])\Delta t_N\right) e^{L_X t_j}.
     \end{multline*}
-    Since this holds for every $j=0, \ldots, N$, we obtain the desired estimate \eqref{thmmonotonicboundstrongordernew}.
+    Since this holds for every $j=0, \ldots, N$, we obtain the desired estimate \eqref{monotonicboundstrongordernew}.
 \end{proof}
 
 The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{expectstepmonotonic}, are not readily verifiable, but the following result gives more explicit conditions.
