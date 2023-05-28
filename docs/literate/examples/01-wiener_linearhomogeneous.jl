@@ -225,7 +225,9 @@ savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhom
 
 # For the sake of illustration, we plot the approximations of a sample target solution:
 
-plot(suite, ns=nsample)
+plt = plot(suite, ns=nsample)
+
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.png")) # hide
 
 # We can also visualize the noise associated with this sample solution:
 
