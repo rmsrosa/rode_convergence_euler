@@ -206,7 +206,10 @@ nothing # hide
 We can also visualize the noises associated with this sample solution:
 
 ````@example 07-toggle_switch_model
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ cP" "\$B_t\$ gBm"], linecolor=[1 2])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ (cP)" "\$B_t\$ (gBm)"], linecolor=[1 2])
+
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.png")) # hide
+nothing # hide
 ````
 
 We finally combine all plots into a single one, for the article:

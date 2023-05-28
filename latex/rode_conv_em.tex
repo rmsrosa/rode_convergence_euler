@@ -186,7 +186,7 @@ In this case, disregarding the higher order term,
 \end{align*}
 which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
-Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra random term representing harvest; a toogle-switch model of gene expression driven by a combination of a compound Poisson process and a geometric Brownian motion process, illustrating, again, the two main types of noises considered here, namely a point-process with bounded variation and a multiplicative It\^o process noise; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a decaying self-exciting Hawkes point process.
+Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra random term representing harvest; a toggle-switch model of gene expression driven by a combination of a compound Poisson process and a geometric Brownian motion process, illustrating, again, the two main types of noises considered here, namely a point-process with bounded variation and a multiplicative It\^o process noise; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a decaying self-exciting Hawkes point process.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
@@ -1427,26 +1427,27 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \label{figearthquake}
 \end{figure}
 
-\subsection{A toggle-switch model for gene expression with compound Poisson external activation process}
+\subsection{A toggle-switch model for gene expression}
 
 Here, we consider the toggle-switch model in \cite[Section 7.8 ]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}; see also \cite{StrasserTheisMarr2012}.
 
-Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
+Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
 
 We consider the following simple model as discussed in \cite[Section 7.8 ]{Asai2016}, of two interacting genes, $X$ and $Y$, with the concentration of their corresponding protein products at each time $t$ denoted by $X_t$ and $Y_t$. These are stochastic processes defined by the system of equations
 \begin{equation}
+    \label{toggleswitchsystem}
    \begin{cases}
    \frac{\displaystyle \mathrm{d}X_t}{\displaystyle \mathrm{d} t} = \left( A_t + \frac{\displaystyle X_t^4}{\displaystyle a^4 + X_t^4}\right)\left(\frac{\displaystyle b^4}{\displaystyle b^4 + Y_t^4}\right) - \mu X_t, \\
    \frac{\displaystyle \mathrm{d}Y_t}{\displaystyle \mathrm{d} t} = \left( B_t + \frac{\displaystyle Y_t^4}{\displaystyle c^4 + Y_t^4}\right)\left(\frac{\displaystyle d^4}{\displaystyle d^4 + X_t^4}\right) - \nu Y_t,
    \end{cases}
 \end{equation}
-on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ and $B_t$ are taken to be two independent compound Poisson processes.
+on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ is taken to be a compound Poisson process, while $B_t$ is a geometric Brownian motion process.
 
-In the simulations below, we use the same parameters as in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 1.25$. The initial conditions are set to $X_0 = Y_0 = 10.0$. The external activations are compound Poisson processes with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$.
+In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed within $[0.0, 0.5]$, while $\{B_t\}_t$ is a geometric Brownian motion process with initial value $0.2$, drift $0.6$ and diffusion $0.3$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=1000.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=1000.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while Figure \ref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -1468,8 +1469,20 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \begin{figure}[htb]
     \includegraphics[scale=0.4]{img/order_toggleswitch.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \caption{Order of convergence of the strong error of the Euler method for the toggle-switch model \eqref{toggleswitchsystem}.}
     \label{figtoggleswitch}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/evolution_toggleswitch.png}
+    \caption{Evolution of a sample solution of the toggle-switch model \eqref{toggleswitchsystem}.}
+    \label{figtoggleswitchevolution}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/noises_toggleswitch.png}
+    \caption{Noise sample paths for the toggle-switch model \eqref{toggleswitchsystem}.}
+    \label{figtoggleswitchnoise}
 \end{figure}
 
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
