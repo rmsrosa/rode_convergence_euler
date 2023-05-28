@@ -929,7 +929,7 @@ As for the implementation itself, all code is written in the Julia language \cit
 
 Julia has a feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations, and so on. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and domain specific applications.
 
-Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented below, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, in such a way that checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
+Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented here, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, so that checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
 
 \subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
@@ -992,6 +992,7 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
+    \includegraphics[scale=0.4]{img/approximation_linearhomogenous.png}
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
     \label{samplepathslinearhomogeneousrode}
 \end{figure}
@@ -1017,7 +1018,7 @@ Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained f
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval (0.0, 1.0), based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I=[0.0, 1.0]$, based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
     \label{tablinearhomogeneousrode}
 \end{table}
 
@@ -1033,9 +1034,9 @@ Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained f
 
 \subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
-We start with system of linear equations with a several types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
+Next we consider a system of linear equations with a number of different types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
 
-The system of equation takes the form
+The system of equations takes the form
 \begin{equation}
     \label{allnoisesRODEsystem}
     \begin{cases}
@@ -1043,17 +1044,19 @@ The system of equation takes the form
         \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
     \end{cases}
 \end{equation}
-where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the following simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
+where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
 \begin{enumerate}
     \item A standard Wiener process;
     \item An Ornstein-Uhlenbeck process (OU) with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
     \item A geometric Brownian motion process (gBm) with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
     \item A compound Poisson process (cP) with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
-    \item A Poisson step process (sP) with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
+    \item A Poisson step process (sP) with rate $\lambda = 5.0$ and step law following a uniform distribution within the unit interval;
     \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
     \item A transport process of the form $t \mapsto \sum_{i=1}^{6} \sin^{1/3}(\omega_i t)$, where the frequencies $\omega_i$ are independent random variables following a Gamma distribution with shape parameter $\alpha = 7.5$ and scale $\theta = 2.0;$
     \item A fractional Brownian motion (fBm) process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
 \end{enumerate}
+
+Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figallnoises} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|}
@@ -1072,14 +1075,18 @@ where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ i
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.5]{img/allnoises_combined.png}
-    \caption{(a) Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$; (b) Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
+    \includegraphics[scale=0.4]{img/order_allnoises.png}
+    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
+Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
 
-The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here. 
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/noisepath_allnoises.png}
+    \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
+    \label{figsamplepathsallnoises}
+\end{figure}
 
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
@@ -1257,62 +1264,6 @@ As for the numerics, the Euler approximation is implemented for \eqref{linearnon
     \includegraphics[scale=0.4]{img/order_dep_on_H_fBm.png}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
     \label{figorderdepHfBm}
-\end{figure}
-
-\subsection{Non-homogeneous linear system of RODEs with different types of noises}
-
-Now we consider a system of linear equations with a series of different types of noise. For most of these noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement at once, for all such noises.
-
-The system of equation takes the form
-\begin{equation}
-    \label{allnoisesRODEsystem}
-    \begin{cases}
-        \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
-        \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
-    \end{cases}
-\end{equation}
-where $\{\mathbf{X}_t\}_t$ is a vector-valued process and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the following simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
-\begin{enumerate}
-    \item A standard Wiener process;
-    \item An Ornstein-Uhlenbeck process with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
-    \item A geometric Brownian motion process with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
-    \item A compound Poisson process with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
-    \item A Poisson step process with rate $\lambda = 5.0$ and step law following a Uniform distribution within the unit interval;
-    \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
-    \item A transport process of the form $t \mapsto \sum_{i=1}^{6} \sin^{1/3}(\omega_i t)$, where the frequencies $\omega_i$ are independent random variables following a Gamma distribution with shape parameter $\alpha = 7.5$ and scale $\theta = 2.0;$
-    \item A fractional Brownian motion process with Hurst parameter $H=0.6$ and initial condition $y_0 = 0.2$.
-\end{enumerate}
-
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. Figure \ref{figlinearhomogeneousrode} illustrates the order of convergence.
-
-\begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
-        \hline \hline
-        64 & 0.0159 & 0.22 \\
-        128 & 0.00787 & 0.106 \\
-        256 & 0.00392 & 0.0525 \\
-        512 & 0.00196 & 0.0262 \\
-        \hline
-    \end{tabular}
-    \bigskip
-
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{Y_t\}_t$ with all the implemented noises, on the time interval (0.0, 1.0), based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
-    \label{taballnoises}
-\end{table}
-
-\begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/order_allnoises.png}
-    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
-    \label{figallnoises}
-\end{figure}
-
-Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
-
-\begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/noisepath_allnoises.png}
-    \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
-    \label{figsamplepathsallnoises}
 \end{figure}
 
 \subsection{Population dynamics with harvest}
@@ -1523,7 +1474,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
-Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions.
+Finally, we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions.
 
 The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation. We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
 
