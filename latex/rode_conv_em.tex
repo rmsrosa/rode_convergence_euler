@@ -1088,6 +1088,8 @@ Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the nois
     \label{figsamplepathsallnoises}
 \end{figure}
 
+The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE. Moreover, it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
+
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
 
@@ -1099,17 +1101,9 @@ Here, we consider again a linear equation, of the form
         \left. X_t \right|_{t = 0} = X_0,
       \end{cases}
 \end{equation}
-except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. It turns out that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence.
+except now the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. It turns out that, for $0 < H < 1/2$, the order of convergence is $H + 1/2$. The same seems to hold for a nonlinear dependency on the fBm, but the proof is more involved, depending on a fractional It\^o formula (see \cite[Theorem 4.2.6]{BHOB2008}, \cite[Theorem 4.1]{Bender2003}and \cite[Theorem 2.7.4]{Mishura2008}), based on the Wick It\^o Skorohod (WIS) integral (see \cite[Chapter 4]{BHOB2008}). A corresponding WIS isometry is also needed (see e.g. \cite[Theorem 4.5.6]{BHOB2008}), involving Malliavin calculus and fractional derivatives. For these reasons, we leave the nonlinear case to a subsequent work and focus on this simple linear example, which suffices to illustrate the peculiarity of the dependence on $H$ of the order of convergence. For this linear equation, the proof of convergence is done rigorously below, with the framework developed in the first sections.
 
-Although the above linear equation has the explicit solution
-\begin{equation}
-    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
-\end{equation}
-computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by solving the equation with the Euler method itself, but on a much finer mesh.
-
-Nevertheless, the proof is done rigorously below, with the framework developed in the first sections.
-
-Indeed, we need to estimate the last term of \eqref{expectedestimateglobalerrorintegral}, in \eqref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
+We need to estimate the last term in \eqref{expectedestimateglobalerrorintegral} of \cref{propbasicestimate}, involving the steps of the term $f(t, x, y) = -x + y$, which in this case reduce to
 \begin{equation}
     \label{stepfBm}
     f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
@@ -1239,7 +1233,13 @@ In summary, we have proved the following result.
     for suitable constants $C_1, C_2 \geq 0$.
 \end{theorem}
 
-As for the numerics, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{19}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a series of Hurst parameters, which is illustrated in Figure \ref{figorderdepHfBm}.
+As for illustrating numerically the order of strong convergence, although the above linear equation has the explicit solution
+\begin{equation}
+    X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
+\end{equation}
+computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
+
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{19}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in Figure \ref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|}
