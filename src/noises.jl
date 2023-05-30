@@ -177,6 +177,58 @@ function Random.rand!(rng::AbstractRNG, noise::GeometricBrownianMotionProcess{T}
 end
 
 """
+    HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_bsquare)
+
+Construct a homogeneous linear Itô process noise ``Y_t`` on the interval `t0` to `tf`, with initial condition `y0`, as defined by the equation
+```math
+\\mathrm{d}Y_t = a(t) Y_t \\;\\mathrm{d}t + b(t) Y_t \\;\\mathrm{d}W_t,
+```
+provided the primitive `primitive_a` of ``a=a(t)`` and the primitive `primitive_bsquare` of ``b^2 = b(t)^2`` are given.
+
+The noise process `noise = HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_bsquare)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
+
+The exact solution has the form
+```math
+Y_t = y_0 e^{\\int_0^t (a(s) - \\frac{b(s)^2}{2}) \\;\\mathrm{d}s + \\int_0^t b(s) \\;\\mathrm{d}W_s}.
+```
+
+A distributionally exact solution is computed on the mesh points in a recursive manner by
+```math
+Y_{t_j} = Y_{t_{j-1}} e^{(p_a(t_j) - p_a(t_{j-1})) - (p_{b^2}(t_j) - p_{b^2}(t_{j-1})/2 + Z_j)}, \\qquad j = 1, \\ldots,
+```
+with ``Y_0 = y_0``, and where ``p_a = p_a(t)`` is the given primitive `primitive_a` of ``a=a(t)``, ``p_{b^2} = p_{b^2}(t)`` is the given primitive `primitive_bsquare` of ``b^2 = b(t)^2``, and ``Z_j \\sim \\mathcal{N}(0, p_{b^2}(t_j) - p_{b^2}(t_{j-1}))``.
+
+Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
+    
+The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.
+"""
+struct HomogeneousLinearItoProcess{T, A, B} <: UnivariateProcess{T}
+    t0::T
+    tf::T
+    y0::T
+    primitive_a::A
+    primitive_bsquare::B
+end
+
+function Random.rand!(rng::AbstractRNG, noise::HomogeneousLinearItoProcess{T}, yt::AbstractVector{T}) where {T}
+    n = length(yt)
+    dt = (noise.tf - noise.t0) / (n - 1)
+    pa = noise.primitive_a
+    pb2 = noise.primitive_bsquare
+    i1 = firstindex(yt)
+    yt[i1] = noise.y0
+    tj = tj1 = noise.t0
+    for i in Iterators.drop(eachindex(yt), 1)
+        tj += dt
+        dpa = pa(tj) - pa(tj1)
+        dpb2 = pb2(tj) - pb2(tj1)
+        yt[i] = yt[i1] * exp(dpa + dpb2/2 + √dpb2 * randn(rng))
+        i1 = i
+        tj1 = tj
+    end
+end
+
+"""
     CompoundPoissonProcess(t0, tf, λ, dylaw)
 
 Construct a Compound Poisson process on the interval `t0` to `tf`, with point Poisson counter with rate parameter `λ` and increments given by the distribution `dylaw`.

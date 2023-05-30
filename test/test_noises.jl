@@ -74,6 +74,33 @@
         @test var(ytf) ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
     end
 
+    @testset "linear homogeneous" begin
+        rng = Xoshiro(123)
+        y0 = 0.4
+        μ = 0.3
+        σ = 0.2
+        #primitive_a = t -> - t^2/2
+        #primitive_b2 = t -> t^3/3
+        primitive_a = t -> μ * t
+        primitive_b2 = t -> σ^2 * t
+        noise = HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_b2)
+        
+        @test eltype(noise) == Float64
+        @test_nowarn rand!(rng, noise, yt)
+        @test (@ballocated $rand!($rng, $noise, $yt)) == 0
+        @test_nowarn (@inferred rand!(rng, noise, yt))
+
+        for mi in 1:m
+            rand!(rng, noise, yt)
+            ythf[mi] = yt[div(n, 2)]
+            ytf[mi] = last(yt)
+        end
+        @test mean(ythf) ≈ y0 * exp(μ * (tf / 2)) (atol = 0.1)
+        @test var(ythf) ≈ y0^2 * exp(2μ * (tf / 2)) * (exp(σ^2 * (tf / 2)) - 1) (atol = 0.1)
+        @test mean(ytf) ≈ y0 * exp(μ * tf) (atol = 0.1)
+        @test var(ytf) ≈ y0^2 * exp(2μ * tf) * (exp(σ^2 * tf) - 1) (atol = 0.1)
+    end
+
     @testset "Compound Poisson" begin
         rng = Xoshiro(123)
         λ = 10.0

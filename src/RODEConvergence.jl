@@ -10,7 +10,7 @@ import Random: rand
 
 # noises
 export AbstractProcess, UnivariateProcess, MultivariateProcess
-export WienerProcess, OrnsteinUhlenbeckProcess, GeometricBrownianMotionProcess
+export WienerProcess, OrnsteinUhlenbeckProcess, GeometricBrownianMotionProcess, HomogeneousLinearItoProcess
 export CompoundPoissonProcess, PoissonStepProcess, ExponentialHawkesProcess
 export TransportProcess
 export FractionalBrownianMotionProcess
