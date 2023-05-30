@@ -192,6 +192,23 @@ The exact solution has the form
 Y_t = y_0 e^{\\int_0^t (a(s) - \\frac{b(s)^2}{2}) \\;\\mathrm{d}s + \\int_0^t b(s) \\;\\mathrm{d}W_s}.
 ```
 
+The basic statistics for this process can be computed by first computing the statistics for its logarithm, which satisfies
+```math
+\\mathbb{E}\\left[ \\ln Y_t \\right] = \\ln y_0 + \\int_0^t (a(s) - \\frac{b(s)^2}{2}) \\;\\mathrm{d}s,
+```
+and
+```math
+\\mathrm{Var}\\left( \\ln Y_t \\right) = \\int_0^t b(s)^2 \\;\\mathrm{d}s.
+```
+Then, since ``\\ln Y_t`` is Gaussian, ``Y_t`` is log-normal with
+```math
+\\mathbb{E}\\left[ Y_t \\right] = y_0 e^{\\int_0^t a(s) \\;\\mathrm{d}s},
+```
+and
+```math
+\\mathrm{Var}\\left( Y_t \\right) = y_0^2 e^{\\int_0^t 2a(s) \\;\\mathrm{d}s}\\left( e^{\\int_0^t b(s)^2 \\;\\mathrm{d}s} - 1 \\right).
+```
+
 A distributionally exact solution is computed on the mesh points in a recursive manner by
 ```math
 Y_{t_j} = Y_{t_{j-1}} e^{(p_a(t_j) - p_a(t_{j-1})) - (p_{b^2}(t_j) - p_{b^2}(t_{j-1})/2 + Z_j)}, \\qquad j = 1, \\ldots,
