@@ -47,6 +47,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "Homogenous Wiener noise" => "sciml/wiener_homogeneous.md",
         ], =#
         "Noises" => [
+            "noises/homlin.md",
             "noises/fBm.md",
             "noises/colored.md"
         ],
