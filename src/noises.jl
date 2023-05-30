@@ -118,7 +118,7 @@ The Ornstein-Uhlenbeck process has mean, variance, and covariance given by
 ```math
     \\mathbb{E}[O_t] = O_0 e^{-\nu t}, \\mathrm{Var}[O_t] = \\frac{\\sigma^2}{2\\nu}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\sigma^2}{2\\nu} e^{-\nu |t - s|}.
 ```
-so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lessim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\sigma^2 / 2\\nu = \\tau\\sigma^2/2 \rightarrow 1``, this approximates a Gaussian white noise.
+so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lesssim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\sigma^2 / 2\\nu = \\tau\\sigma^2/2 \\rightarrow 1``, this approximates a Gaussian white noise.
 """
 struct OrnsteinUhlenbeckProcess{T} <: UnivariateProcess{T}
     t0::T
@@ -183,7 +183,7 @@ Construct a homogeneous linear Itô process noise ``Y_t`` on the interval `t0` t
 ```math
 \\mathrm{d}Y_t = a(t) Y_t \\;\\mathrm{d}t + b(t) Y_t \\;\\mathrm{d}W_t,
 ```
-provided the primitive `primitive_a` of ``a=a(t)`` and the primitive `primitive_bsquare` of ``b^2 = b(t)^2`` are given.
+provided the primitive of ``a=a(t)`` and the primitive of ``b^2 = b(t)^2`` are given, via `primitive_a` and `primitive_bsquare`, respectively.
 
 The noise process `noise = HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_bsquare)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
@@ -196,7 +196,7 @@ A distributionally exact solution is computed on the mesh points in a recursive 
 ```math
 Y_{t_j} = Y_{t_{j-1}} e^{(p_a(t_j) - p_a(t_{j-1})) - (p_{b^2}(t_j) - p_{b^2}(t_{j-1})/2 + Z_j)}, \\qquad j = 1, \\ldots,
 ```
-with ``Y_0 = y_0``, and where ``p_a = p_a(t)`` is the given primitive `primitive_a` of ``a=a(t)``, ``p_{b^2} = p_{b^2}(t)`` is the given primitive `primitive_bsquare` of ``b^2 = b(t)^2``, and ``Z_j \\sim \\mathcal{N}(0, p_{b^2}(t_j) - p_{b^2}(t_{j-1}))``.
+with ``Y_0 = y_0``, and where ``p_a = p_a(t)`` is the given primitive of ``a=a(t)``, ``p_{b^2} = p_{b^2}(t)`` is the given primitive of ``b^2 = b(t)^2``, and ``Z_j \\sim \\mathcal{N}(0, p_{b^2}(t_j) - p_{b^2}(t_{j-1}))``.
 
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     

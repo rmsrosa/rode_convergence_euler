@@ -13,6 +13,10 @@ OrnsteinUhlenbeckProcess
 ```
 
 ```@docs
+RODEConvergence.HomogeneousLinearItoProcess
+```
+
+```@docs
 GeometricBrownianMotionProcess
 ```
 
