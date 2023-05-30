@@ -153,9 +153,11 @@ end
 nothing # hide
 ```
 
-And plot the ensemble of paths just for the sake of it.
+And plot the ensemble of paths just for the sake of illustration, along with the mean and confidence region.
 ```@example homlin
-plt = plot(tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
+plt = plot(tt, t -> y0 * exp( (μ - 2σ) * t ), fillrange = t -> y0 * exp( (μ + 2σ) * t ), alpha=0.5, color=2, label="95% region")
+plot!(plt, tt, t -> y0 * exp( μ * t), label="expectation", color = 2)
+plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
 
 ### Exponential decay with oscilatory random perturbation
@@ -200,7 +202,8 @@ nothing # hide
 
 For the sake of illustration, we plot the computed sample paths, along with the expectation and 95% incidence region.
 ```@example homlin
-plt = plot(tt, t -> y0 * exp(primitive_a(t)), ribbon = t -> 2 * sqrt(y0^2 * exp( 2 * primitive_a(t) ) * ( exp( primitive_b2(t) ) - 1 )), label="expectation", color = 2)
+plt = plot(tt, t -> y0 * exp(primitive_a(t) - 2sqrt(primitive_b2(t))), fillrange = t -> y0 * exp(primitive_a(t) + 2sqrt(primitive_b2(t))), alpha=0.5, color=2, label="95% region")
+plot!(plt, tt, t -> y0 * exp(primitive_a(t)), label="expectation", color = 2)
 plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
 
@@ -247,6 +250,7 @@ nothing # hide
 
 For the sake of illustration, we plot the computed sample paths, along with the expectation and 95% incidence region.
 ```@example homlin
-plt = plot(tt, t -> y0 * exp(primitive_a(t)), ribbon = t -> 2 * sqrt(y0^2 * exp( 2 * primitive_a(t) ) * ( exp( primitive_b2(t) ) - 1 )), label="expectation", color = 2)
+plt = plot(tt, t -> y0 * exp(primitive_a(t) - 2sqrt(primitive_b2(t))), fillrange = t -> y0 * exp(primitive_a(t) + 2sqrt(primitive_b2(t))), alpha=0.5, color=2, label="95% region")
+plot!(plt, tt, t -> y0 * exp(primitive_a(t)), label="expectation", color = 2)
 plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
