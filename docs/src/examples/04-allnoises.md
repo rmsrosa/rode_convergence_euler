@@ -4,7 +4,11 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/04-all
 
 # Non-homogenous linear system of RODEs with all implemented noises
 
-This time we consider a linear *system* of equations with a vector-valued noise made of all the implemented noises.
+```@meta
+Draft = false
+```
+
+This time we consider a linear *system* of equations with a vector-valued noise composed of all the implemented noises.
 
 ## The equation
 
@@ -69,20 +73,31 @@ Now we define all the noise parameters
 
 ````@example 04-allnoises
 y0 = 0.2
-μ = 0.3
-σ = 0.5
+
 ν = 0.3
+σ = 0.5
+
+μ = 0.3
+
+μ1 = 0.5
+μ2 = 0.3
+ω = 3π
+primitive_a = t -> μ1 * t - μ2 * cos(ω * t) / ω
+primitive_b2 = t -> σ^2 * ( t/2 - sin(ω * t) * cos(ω * t) / 2ω )
+
 λ = 5.0
-α = 2.0
-β = 15.0
+dylaw = Exponential(0.5)
+
+steplaw = Uniform(0.0, 1.0)
+
 λ₀ = 3.0
 a = 2.0
 δ = 3.0
-dylaw = Exponential(0.5)
-steplaw = Uniform(0.0, 1.0)
+
 nr = 6
 transport(t, r) = mapreduce(ri -> cbrt(sin(ri * t)), +, r) / length(r)
 ylaw = Gamma(7.5, 2.0)
+
 hurst = 0.6
 ````
 
@@ -93,6 +108,7 @@ noise = ProductProcess(
     WienerProcess(t0, tf, 0.0),
     OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ),
     GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
+    HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_b2),
     CompoundPoissonProcess(t0, tf, λ, dylaw),
     PoissonStepProcess(t0, tf, λ, steplaw),
     ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw),
@@ -101,7 +117,15 @@ noise = ProductProcess(
 )
 ````
 
-Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also expected to be of order 1, just like for the other types of noises in `noise`. Both the Wiener and the Orsntein-Uhlenbeck processes are additive noises so the strong order 1 convergence is expected. All the others would be thought to have a lower order of convergence but our results prove they are still of order 1. Hence, their combination is also expected to be of order 1, as illustrated here.
+Both the Wiener and the Orsntein-Uhlenbeck processes are additive noises so the strong order 1 convergence for them is not a surprise based on previous work.
+
+All the other noises, however, would be thought to have a lower order of convergence but our results prove they are still of order 1. Hence, their combination is also expected to be of order 1, as illustrated here.
+
+Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in `noise`. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
+
+The geometric Brownian motion process, say $\{G_t\}_t,$ is a multiplicative noise, but since its solution is given explicitly in the form $G_t = g(t, W_t)$ for a Wiener process $\{W_t\}_{t}$, then the Euler method for the associated RODE coincides with the Euler method for an associated RODE with additive noise $\{W_t\}_t.$ However, the corresponding nonlinear term does not have global Lipschitz bound, so the strong order 1 does not follow from that. Our results, however, apply without further assumptions.
+
+Finally, the homogeneous linear Itô process is a multiplicative noise whose state at time $t$ cannot be written explicitly as a function of $t$ and $W_t.$ It requires the previous history $W_s$ of the associated Wiener process, for $0\leq s \leq t,$ hence it would genuinely be expected to be of strong order less than 1/2, which is not the case as we show here, proving it to also be of order 1.
 
 Now we set up the initial condition, taking into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
 
@@ -165,8 +189,6 @@ We illustrate the rate of convergence with the help of a plot recipe for `Conver
 plt_result = plot(result)
 ````
 
-and we save the plot for inclusion in the article
-
 ````@example 04-allnoises
 savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
 nothing # hide
@@ -183,7 +205,7 @@ plot(plts..., legend=false)
 We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 ````@example 04-allnoises
-plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "cP" "sP" "Hawkes" "Transport" "fBm"])
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
 
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
 nothing # hide
@@ -201,10 +223,8 @@ We finally combine all the convergence plot and the noises into a single plot, f
 plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
 ````
 
-and save it:
-
 ````@example 04-allnoises
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.png"))
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.png")) # hide
 nothing # hide
 ````
 
