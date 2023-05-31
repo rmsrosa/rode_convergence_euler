@@ -1,4 +1,8 @@
-# # A toggle-switch model for gene expression with compound Poisson external activation process
+# # A toggle-switch model for gene expression
+#
+# ```@meta
+# Draft = false
+# ```
 #
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://doi.org/10.1186/1752-0509-8-43). See also [Strasser, Theis & Marr (2012)](https://doi.org/10.1016/j.bpj.2011.11.4000).
 
@@ -16,9 +20,13 @@
 #   \end{cases}
 # ```
 # 
-# where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activation $A_t$ is a compound Poisson processes (cP), while $B_t$ is a geometric Brownian motion process (gBm).
+# where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activation $A_t$ is a compound Poisson processes (cP), while $B_t$ is a time-dependent version of the geometric Brownian motion process (tgBm).
 #
-# In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a geometric Brownian motion process with drift $\mu = 0.6,$ diffustion $\sigma = 0.3,$ and initial condition $A_0 = 0.2.$
+# In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a non-autonomous version of a geometric Brownian motion process given by
+# ```math
+#   \mathrm{d}B_t = (\mu_1 + \mu_2\sin(\omega t))\;\mathrm{d}t + \sigma\sin(\omega t)\;\mathrm{d}W_t,
+# ```
+# and we choose $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ and $\omega=3\pi,$ with initial condition $A_0 = 0.2.$
 #
 # We don't have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 #
@@ -66,15 +74,19 @@ x0law = product_distribution(Dirac(x0), Dirac(y0))
 
 # The compound Poisson and the geometric Brownian motion processes, for the noisy source terms.
 
-cPM = 0.5
-cPλ = 5.0
-cPylaw = Uniform(0.0, cPM)
-gBmμ = 0.6
-gBmσ = 0.3
-gBmy0 = 0.2
+BM = 0.5
+Bλ = 5.0
+Bylaw = Uniform(0.0, BM)
+Aμ1 = 0.5
+Aμ2 = 0.3
+Aσ = 0.3
+Aω = 3π
+A0 = 0.2
+Aprimitive_a = t -> Aμ1 * t - Aμ2 * cos(Aω * t) / Aω
+Aprimitive_b2 = t -> Aσ^2 * ( t/2 - sin(Aω * t) * cos(Aω * t) / 2Aω )
 noise = ProductProcess(
-    CompoundPoissonProcess(t0, tf, cPλ, cPylaw),
-    GeometricBrownianMotionProcess(t0, tf, gBmy0, gBmμ, gBmσ)
+    CompoundPoissonProcess(t0, tf, Bλ, Bylaw),
+    HomogeneousLinearItoProcess(t0, tf, A0, Aprimitive_a, Aprimitive_b2)
 )
 
 # The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
@@ -82,7 +94,7 @@ noise = ProductProcess(
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 1_000
+m = 600
 
 # And add some information about the simulation:
 
@@ -148,23 +160,23 @@ nothing # hide
 plt_sols = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
 plot!(plt_sols, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="\$\\textrm{concentration}\$")
 
-# and save it for display in the article
+#
 
-savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png"))
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png")) # hide
 nothing # hide
 
 # We also illustrate the convergence to say the expression of the X gene:
 
 plt_suite = plot(suite)
 
-# and save it:
+#
 
-savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png"))
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png")) # hide
 nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ (cP)" "\$B_t\$ (gBm)"], linecolor=[1 2])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ (cP)" "\$B_t\$ (tgBm)"], linecolor=[1 2])
 
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.png")) # hide
 nothing # hide
