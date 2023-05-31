@@ -24,7 +24,7 @@
 #
 # In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a non-autonomous version of a geometric Brownian motion process given by
 # ```math
-#   \mathrm{d}B_t = (\mu_1 + \mu_2\sin(\omega t))\;\mathrm{d}t + \sigma\sin(\omega t)\;\mathrm{d}W_t,
+#   \mathrm{d}B_t = (\mu_1 + \mu_2\sin(\omega t))B_t\;\mathrm{d}t + \sigma\sin(\omega t)B_t\;\mathrm{d}W_t,
 # ```
 # and we choose $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ and $\omega=3\pi,$ with initial condition $A_0 = 0.2.$
 #
