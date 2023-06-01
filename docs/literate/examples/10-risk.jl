@@ -8,7 +8,7 @@
 # ```math
 #   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
 # ```
-# where $U_0$ is the initial capital, $\gamma$ is a constant premium rate received from the insurees, $C_i$ is a random variable representing the value of the $i$-th claim paid to a given insuree, and $N_t$ is the number of claims up to time $t$. The process $\{N_t\}_t$ is modeled as a Poisson counter, so that the accumulated claims form a compound Poisson process. It is also common to use inhomogeneous Poisson processes and Hawkes self-exciting process, or combinations of such processes, but the classical model uses a compound Poisson process.
+# where $U_0$ is the initial capital, $\gamma$ is a constant premium rate received from the insurees, $C_i$ is a random variable representing the value of the $i$-th claim paid to a given insuree, and $N_t$ is the number of claims up to time $t$. The process $\{N_t\}_t$ is modeled as a Poisson counter, so that the accumulated claims form a compound Poisson process. It is also common to use inhomogeneous Poisson processes and Hawkes self-exciting process, or combinations of such processes for the incidence of the claim, but the classical model uses a homogeneous Poisson counter.
 #
 # The model above, however, does not take into account the variability of the premium rate received by the company, nor the investiment of the accumulated reserves, among other things. Several diffusion type models have been proposed to account for these and other factors. We will consider a simple model, with a randomly perturbed premium and with variable rentability.
 #
@@ -90,17 +90,17 @@ t0, tf = 0.0, 3.0
 
 # The law for the initial condition
 
-x0 = 4.0
+x0 = 1.0
 x0law = Dirac(x0)
 
 # The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term
 
-OU0 = 0.1
+OU0 = 0.0
 OUγ = 1.0
 Ouε = 0.8
 M0 = 0.2
 Mμ = 0.05
-Mσ = 0.4
+Mσ = 0.1
 CM = 0.1
 Cλ = 4.0
 Claw = Uniform(0.0, CM)
