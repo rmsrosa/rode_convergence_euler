@@ -39,23 +39,23 @@
 # ```math
 #   X_t = U_t - C_t - O_t
 # ```
-# where $\{O_t\}_t$ is defined by
+# where $\{O_t\}_t$ is given by
 # ```math
-#   \mathrm{d}O_t = \gamma\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t,
+#   \mathrm{d}O_t = -\nu O_t\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t,
 # ```
-# we find
+# we obtain
 # ```math
-#   \mathrm{d}X_t = M_t U_t\;\mathrm{d}t = M_t (X_t + C_t + O_t)\;\mathrm{d}t.
+#   \mathrm{d}X_t = (\gamma + M_t U_t)\;\mathrm{d}t + \nu O_t\;\mathrm{d}t = (\gamma + M_t (X_t + C_t + O_t))\;\mathrm{d}t + \nu O_t\;\mathrm{d}t.
 # ```
 #
 # This leads us to the linear random ordinary differential equation
 # ```math
-#   \frac{\mathrm{d}X_t}{\mathrm{d}t} = M_t X_t + M_t (C_t + O_t).
+#   \frac{\mathrm{d}X_t}{\mathrm{d}t} = M_t X_t + M_t (C_t + O_t) + \nu O_t + \gamma.
 # ```
 #
 # This equation has the explicit solution
 # ```math
-#   X_t = X_0 e^{\int_0^t M_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t M_\tau\;\mathrm{d}\tau}M_s (C_s + O_s)\;\mathrm{d}s.
+#   X_t = X_0 e^{\int_0^t M_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t M_\tau\;\mathrm{d}\tau} (M_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s.
 # ```
 #
 # ## Numerical simulations
@@ -80,7 +80,9 @@ function f(t, x, y)
     o = y[1]
     m = y[2]
     c = y[3]
-    dx = m * (x + c + o)
+    ν = 5.0
+    γ = 1.0
+    dx = m * (x + c + o) + ν * o + γ
     return dx
 end
 
@@ -96,16 +98,16 @@ x0law = Dirac(x0)
 # The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term
 
 OU0 = 0.0
-OUγ = 1.0
+OUν = 5.0
 Ouε = 0.8
 M0 = 0.2
-Mμ = 0.05
-Mσ = 0.1
-CM = 0.1
-Cλ = 4.0
+Mμ = 0.02
+Mσ = 0.4
+CM = 0.2
+Cλ = 8.0
 Claw = Uniform(0.0, CM)
 noise = ProductProcess(
-    OrnsteinUhlenbeckProcess(t0, tf, OU0, OUγ, Ouε),
+    OrnsteinUhlenbeckProcess(t0, tf, OU0, OUν, Ouε),
     GeometricBrownianMotionProcess(t0, tf, M0, Mμ, Mσ),
     CompoundPoissonProcess(t0, tf, Cλ, Claw)
 )
@@ -169,7 +171,7 @@ nothing # hide
 
 # For the sake of illustration of the behavior of the system, we visualize a sample solution
 
-plt_sols = plot(suite, ns=nothing, label="X_t", linecolor=1)
+plt_sols = plot(suite, ns=nothing, label="\$X_t\$", linecolor=1)
 
 #
 
@@ -187,7 +189,7 @@ nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$M_t\$" "\$C_t\$"], linecolor=[1 2])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$M_t\$" "\$C_t\$"], linecolor=[1 2 3])
 
 #
 
@@ -196,5 +198,5 @@ nothing # hide
 
 # The actual surplus is $U_t = X_t - O_t - C_t$, so we may visualize a sample solution of the surplus by subtracting these two noises from the solution of the above RODE.
 
-plt_surplus = plot(range(t0, tf, length=ntgt), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], ns=nothing, label="surplus", linecolor=1)
+plt_surplus = plot(range(t0, tf, length=ntgt), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
 
