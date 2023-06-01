@@ -39,7 +39,8 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "examples/06-popdyn.md",
             "examples/07-toggle_switch.md",
             "examples/08-earthquake.md",
-            "examples/09-fisherkpp.md"
+            "examples/09-fisherkpp.md",
+            "examples/10-risk.md"
         ],
         # "Examples" => generated_examples,
         #= "DifferentialEquations.jl" => [
