@@ -1500,6 +1500,117 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \label{figtoggleswitchnoise}
 \end{figure}
 
+\subsection{An actuarial risk model}
+
+A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cram\'er-Lundberg model (see e.g. \cite{GerberShiu1998}) given by
+\[
+  U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i,
+\]
+where $U_0$ is the initial capital, $\gamma$ is a constant premium rate received from the insurees, $C_i$ is a random variable representing the value of the $i$-th claim paid to a given insuree, and $N_t$ is the number of claims up to time $t$. The process $\{N_t\}_t$ is modeled as a Poisson counter, so that the accumulated claims form a compound Poisson process. It is also common to use inhomogeneous Poisson processes and Hawkes self-exciting process, or combinations of such processes for the incidence of the claim, but the classical model uses a homogeneous Poisson counter.
+
+The model above, however, does not take into account the variability of the premium rate received by the company, nor the investiment of the accumulated reserves, among other things. Several diffusion type models have been proposed to account for these and other factors. We will consider a simple model, with a randomly perturbed premium and with variable rentability.
+
+More precisely, we start by rewriting the above expression as the following jump (or impulse) differential equation
+\[
+  \mathrm{d}U_t = \gamma\;\mathrm{d}t - \mathrm{d}C_t,
+\]
+where
+\[
+  C_t = \sum_{i=1}^{N_t} C_i.
+\]
+
+The addition of an interest rate $r$ leads to
+\[
+  \mathrm{d}U_t = r U_t \mathrm{d}t + \gamma\;\mathrm{d}t - \mathrm{d}C_t.
+\]
+
+Assuming a premium rate perturbed by a white noise and assuming the interest rate as a process $\{R_t\}_t$, we find
+\[
+  \mathrm{d}U_t = R_t U_t\;\mathrm{d}t + \gamma\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t,
+\]
+so the equation becomes
+\[
+  \mathrm{d}U_t = (\gamma + R_t U_t)\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t.
+\]
+
+Since we can compute exactly the accumulated claims $C_t$, we subtract it from $U_t$ to get rid of the jump term. We also subtract an Ornstein-Uhlenbeck process, in the classical way to transform an SDE into a RODE. So, defining
+\[
+  X_t = U_t - C_t - O_t,
+\]
+where $\{O_t\}_t$ is given by
+\[
+  \mathrm{d}O_t = -\nu O_t\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t,
+\]
+we obtain
+\[
+  \mathrm{d}X_t = (\gamma + R_t U_t)\;\mathrm{d}t + \nu O_t\;\mathrm{d}t = (\gamma + R_t (X_t + C_t + O_t))\;\mathrm{d}t + \nu O_t\;\mathrm{d}t.
+\]
+
+This leads us to the linear random ordinary differential equation
+\begin{equation}
+    \label{riskmodel}
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = R_t X_t + R_t (C_t + O_t) + \nu O_t + \gamma.
+\end{equation}
+
+This equation has the explicit solution
+\[
+  X_t = X_0 e^{\int_0^t R_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t R_\tau\;\mathrm{d}\tau} (R_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s.
+\]
+
+As for the interest rate process $\{R_t\}_t$, there is a vast literature with models for it, see e.g. \cite[Chapter 3]{BrigoMercurio2006} in particular Table 3.1. Here, we consider the Dothan model (\cite[Section 3.2.2]{BrigoMercurio2006} of the aforementioned reference), which consists simply of a geometric Brownian motion process
+\[
+  \mathrm{d}R_t = \mu R_t \;\mathrm{d}t + \sigma R_t\;\mathrm{d}t,
+\]
+with $R_t = r_0$, where $\mu, \sigma, r_0$ are positive constants. This has an explicit solution
+\[
+  R_t = r_0 e^{(\mu - \sigma^2/2)t + \sigma W_t},
+\]
+so that the equation \eqref{riskmodel} for $\{X_t\}_t$ is a genuine random ODE.
+
+Once the solution of $\{X_t\}_t$ is obtained, we find an explicit formula for the surplus $U_t = X_t + C_t + O_t$, namely
+\[
+  U_t = C_t + O_t + X_0 e^{\int_0^t R_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t R_\tau\;\mathrm{d}\tau} (R_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s,
+\]
+with $\{R_t\}_t$ as above.
+
+For the numerical simulations, we use $O_0 = 0$, $\nu = 5$ and $\varepsilon = 0.8$, for the Ornstein-Uhlenbeck process $\{O_t\}_t$; $\lambda = 8.0$ and $C_i \sim \mathrm{Uniform}(0, 0.2)$, for the compound Poisson process $\{C_t\}$; $R_0 = 0.2$, $\mu = 0.02$ and $\sigma = 0.4$, for the interest rate process $\{R_t\}_t$ and we take $X_0 = 1.0$, so that $U_t = X_0 + O_0 + R_0 = 1.2$. We set $T = 3.0,$ as the final time.
+
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m = 400.$ Table \ref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
+
+\begin{table}
+    \begin{tabular}[htb]{|r|l|l|}
+        \hline N & dt & error\\
+        \hline \hline
+        64 & 0.0476 & 0.175 \\
+        128 & 0.0236 & 0.0818 \\
+        256 & 0.0118 & 0.043 \\
+        512 & 0.00587 & 0.0212 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a risk model for each mesh resolution $N$, with initial condition $X_0 = 1.0$ and coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes, on the time interval $I = [0.0, 3.0]$, based on $M = 400$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.0$}
+    \label{tableriskmodel}
+\end{table}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/convergence_riskmodel.png}
+    \caption{Order of convergence of the strong error of the Euler method for the actuarial risk model \eqref{riskmodel}.}
+    \label{figriskmodel}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/riskmodel_noises.png}
+    \caption{Sample noises for the risk model \eqref{riskmodel}.}
+    \label{figriskmodelnoise}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[scale=0.4]{img/riskmodel_surplus.png}
+    \caption{Sample surplus solution for the risk model \eqref{riskmodel}.}
+    \label{figriskmodelsurplus}
+\end{figure}
+
 \subsection{A random Fisher-KPP nonlinear PDE driven by boundary noise}
 
 Finally, we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020}  and \cite{FreidlinWentzell1992}. The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions.
@@ -1585,6 +1696,8 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
 
     \bibitem{BogdanoffGoldbergBernard1961} J. L. Bogdanoff, J. E. Goldberg, and M. C. Bernard, Response of a simple structure to a random earthquake-type disturbance, \emph{Bulletin of the Seismological Society of America,} 51 (1961), no. 2, 293--310.
 
+    \bibitem{BrigoMercurio2006}, D. Brigo, F. Mercurio, \emph{Interest Rate Models - Theory and Practice,} Springer-Verlag, Berlin, Heidelberg, 2006.
+
     \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington and N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
@@ -1594,6 +1707,9 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
     \bibitem{Fisher1937} R. A. Fisher, The wave of advance of advantageous genes, \emph{Annals of Eugenics,} 7 (1937), no. 4, 355--369.
 
     \bibitem{FreidlinWentzell1992} M. I. Freidlin and A. D. Wentzell, Reaction-diffusion equations with randomly perturbed boundary conditions, \emph{Ann. Probab.} 20 (1992), no. 2, 963--986.
+
+    \bibitem{GerberShiu1998} H. U. Gerber, E. S. W. Shiu, On the time value of ruin, North American Actuarial J. 
+    vol. 2 (1998), no. 1, 48--72
 
     \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, and T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
