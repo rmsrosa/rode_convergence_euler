@@ -188,7 +188,7 @@ In this case, disregarding the higher order term,
 \end{align*}
 which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
-Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}, driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
+Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}, driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
@@ -1068,6 +1068,8 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
 
     \bibitem{BogdanoffGoldbergBernard1961} J. L. Bogdanoff, J. E. Goldberg, and M. C. Bernard, Response of a simple structure to a random earthquake-type disturbance, \emph{Bulletin of the Seismological Society of America,} 51 (1961), no. 2, 293--310.
 
+    \bibitem{BrigoMercurio2006}, D. Brigo, F. Mercurio, \emph{Interest Rate Models - Theory and Practice,} Springer-Verlag, Berlin, Heidelberg, 2006.
+
     \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
 
     \bibitem{CoddingtonLevinson1985} E. A. Coddington and N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
@@ -1077,6 +1079,9 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
     \bibitem{Fisher1937} R. A. Fisher, The wave of advance of advantageous genes, \emph{Annals of Eugenics,} 7 (1937), no. 4, 355--369.
 
     \bibitem{FreidlinWentzell1992} M. I. Freidlin and A. D. Wentzell, Reaction-diffusion equations with randomly perturbed boundary conditions, \emph{Ann. Probab.} 20 (1992), no. 2, 963--986.
+
+    \bibitem{GerberShiu1998} H. U. Gerber, E. S. W. Shiu, On the time value of ruin, North American Actuarial J. 
+    vol. 2 (1998), no. 1, 48--72.
 
     \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, and T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
 
