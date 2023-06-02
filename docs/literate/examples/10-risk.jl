@@ -95,11 +95,11 @@ rng = Xoshiro(123)
 
 function f(t, x, y)
     o = y[1]
-    m = y[2]
+    r = y[2]
     c = y[3]
     ν = 5.0
     γ = 1.0
-    dx = m * (x + c + o) + ν * o + γ
+    dx = r * (x + c + o) + ν * o + γ
     return dx
 end
 
