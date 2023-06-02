@@ -83,11 +83,6 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 
 plot(result)
 
-# 
-
-# savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-# nothing # hide
-
 # For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 plot(suite, ns=nsample)

@@ -238,6 +238,7 @@ Then we are ready to compute the errors:
 
 ````@example 08-earthquake
 @time result = solve(rng, suite)
+nothing # hide
 ````
 
 The computed strong error for each resolution in `ns` is stored in field `errors`, and raw LaTeX tables can be displayed for inclusion in the article:

@@ -149,7 +149,7 @@ nothing # hide
 
 # Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
-m = 1_000
+m = 200
 
 # and add some information about the simulation:
 

@@ -219,6 +219,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     vandermonde = [one.(deltas) log.(deltas)]
     logerrors = log.(errors)
     lc, p =  vandermonde \ logerrors
+    # lc, p, _, pmin, _, pmax = vandermonde \ [log.(errors) log.(errors .+ 2stderrs) log.(errors .- 2stderrs)]
 
     # uncertainty in `p`: 95% confidence interval (p - eps, p + eps) where
 

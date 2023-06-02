@@ -289,7 +289,7 @@ all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
 ````@example 09-fisherkpp
-m = 100
+m = 200
 ````
 
 We then add some information about the simulation:

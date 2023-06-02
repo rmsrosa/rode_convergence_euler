@@ -56,7 +56,7 @@ noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 1_000
+m = 200
 
 # We add some information about the simulation:
 

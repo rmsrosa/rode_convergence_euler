@@ -122,7 +122,7 @@ The strong errors are computed for each approximation with length in the vector 
 
 The strong errors are computed via Monte Carlo method, with the number of realizations defined by the argument `M`.
 
-What this function do is actually to call [`prepare_variables`](@ref) to pre-allocate the necessary variables and next to call [`calculate_errors!`](@ref) to mutate the pre-allocated vectors.
+What this function do is call [`prepare_variables`](@ref) to pre-allocate the necessary variables and next call [`calculate_errors!`](@ref) to mutate the pre-allocated vectors.
 """
 function calculate_errors(rng::AbstractRNG, t0::T, tf::T, x0law::ContinuousDistribution{N0}, f::F, noise::AbstractProcess{NY}, target!::G, ntgt::Int, ns::Vector{Int}, m::Int) where {T, N0, NY, F, G}
     nx = N0 == Multivariate ? length(x0law) : 0
@@ -133,7 +133,7 @@ function calculate_errors(rng::AbstractRNG, t0::T, tf::T, x0law::ContinuousDistr
 
     errors = maximum(trajerrors, dims=1)[1, :]
 
-    lc, p = [one.(deltas) log.(deltas)] \ log.(errors)
+    lc, p, _, pmin, _, pmax = [one.(deltas) log.(deltas)] \ [log.(errors) log.(errors .+ 2stderrs) log.(errors .- 2stderrs)]
 
-    return deltas, errors, trajerrors, lc, p
+    return deltas, errors, trajerrors, lc, p, pmin, pmax
 end

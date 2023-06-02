@@ -100,9 +100,6 @@ We create a plot with the rate of convergence with the help of a plot recipe for
 plot(result)
 ````
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", info.filename)) # hide
-nothing # hide
-
 For the sake of illustration, we plot a sample of an approximation of a target solution:
 
 ````@example 05-fBm_linear

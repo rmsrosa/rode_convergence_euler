@@ -173,7 +173,7 @@ plot_convergence(results::ConvergenceResult) = plot(results)
     @series begin
         seriestype --> :scatter
         label --> "strong errors"
-        yerror --> stderrs
+        yerror --> 2stderrs
         deltas, errors
     end
 end
