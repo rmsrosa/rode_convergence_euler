@@ -156,6 +156,7 @@ plot_convergence(results::ConvergenceResult) = plot(results)
     lc = results.lc
     p = results.p
     errors = results.errors
+    stderrs = results.stderrs
     fit = exp(lc) * deltas .^ p
 
     xlabel := "\$\\Delta t\$"
@@ -172,6 +173,7 @@ plot_convergence(results::ConvergenceResult) = plot(results)
     @series begin
         seriestype --> :scatter
         label --> "strong errors"
+        yerror --> stderrs
         deltas, errors
     end
 end

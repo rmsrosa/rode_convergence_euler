@@ -60,6 +60,7 @@ end
     ns = 2 .^ (2:3)
     m = 100
     trajerrors = zeros(last(ns), length(ns))
+    trajstderrs = zeros(last(ns), length(ns))
 
     @testset "Scalar/Scalar Euler" begin
 
@@ -72,7 +73,7 @@ end
         method = RandomEuler()
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
     @testset "Scalar/Vector Euler" begin
@@ -89,7 +90,7 @@ end
         method = RandomEuler()
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
     @testset "Vector/scalar Euler" begin
@@ -108,7 +109,7 @@ end
         method = RandomEuler(length(x0law))
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
     @testset "Vector/Vector Euler" begin
@@ -130,6 +131,6 @@ end
         method = RandomEuler(length(x0law))
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 end

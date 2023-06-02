@@ -109,7 +109,9 @@ struct ConvergenceResult{T, S}
     suite::S
     deltas::Vector{T}
     trajerrors::Matrix{T}
+    trajstderrs::Matrix{T}
     errors::Vector{T}
+    stderrs::Vector{T}
     lc::T
     p::T
     eps::T
@@ -120,7 +122,7 @@ end
 
 Calculate the strong error at each time step along the trajectory.
 """
-function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
+function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
     t0 = suite.t0
     tf = suite.tf
     x0law = suite.x0law
@@ -174,18 +176,25 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, suite::ConvergenceSui
             for n in 2:nsi
                 if D <: UnivariateDistribution
                     trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
+                    trajstderrs[n, i] += abs2(xnt[n] - xt[1 + (n-1) * nstep])
                 else
                     len = div(size(xnt, 2), kstep)
                     for j in 1:kstep:size(xnt,2)
                         trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
+                        trajstderrs[n, i] += abs2(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
                     end
                 end
             end
         end
     end
 
-    # normalize trajectory errors
-    trajerrors ./= m
+    # compute mean and standard error from first and second moments
+    # in theory, argument should be non-negative, but use `abs`
+    # for the sake of numerical errors
+    for i in eachindex(trajerrors, trajstderrs)
+        trajstderrs[i] = sqrt( abs( trajstderrs[i] - trajerrors[i] ^ 2 / m ) / (m - 1) / m )
+        trajerrors[i] /= m
+    end
 
     return nothing
 end
@@ -198,10 +207,12 @@ Compute the strong errors and the order of convergence.
 function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
     trajerrors = zeros(T, last(suite.ns), length(suite.ns))
+    trajstderrs = zeros(T, last(suite.ns), length(suite.ns))
 
-    calculate_trajerrors!(rng, trajerrors, suite)
+    calculate_trajerrors!(rng, trajerrors, trajstderrs, suite)
     
     errors = maximum(trajerrors, dims=1)[1, :]
+    stderrs = maximum(trajstderrs, dims=1)[1, :]
     deltas = (suite.tf - suite.t0) ./ (suite.ns .- 1)
 
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
@@ -215,7 +226,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
 
     # return `result` as a `ConvergenceResult`
-    result = ConvergenceResult(suite, deltas, trajerrors, errors, lc, p, eps)
+    result = ConvergenceResult(suite, deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, eps)
     return result
 end
 
@@ -237,11 +248,17 @@ function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equat
     ntgt = result.suite.ntgt
     deltas = result.deltas
     errors = result.errors
+    stderrs = result.stderrs
     table = "    \\begin{tabular}[htb]{|r|l|l|}
-        \\hline N & dt & error\\\\
+        \\hline N & dt & error & std error \\\\
         \\hline \\hline\n"
-    for (n, dt, error) in zip(ns, round.(deltas, sigdigits=3), round.(errors, sigdigits=3))
-        table *= "        $n & $dt & $error \\\\\n"
+    for (n, dt, error, stderr) in zip(
+        ns,
+        round.(deltas, sigdigits=3),
+        round.(errors, sigdigits=3),
+        round.(stderrs, sigdigits=3)
+    )
+        table *= "        $n & $dt & $error & $stderr \\\\\n"
     end
     table *= "        \\hline
     \\end{tabular}
