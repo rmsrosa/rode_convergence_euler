@@ -4,7 +4,7 @@
 # Draft = false
 # ```
 #
-# A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see [Delbaen & Haezendonck](https://doi.org/10.1016/0167-6687(87)90019-9)) given by
+# A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (2013)](https://doi.org/10.1080/10920277.1998.10595671)) given by
 # ```math
 #   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
 # ```
@@ -23,16 +23,17 @@
 #
 # The addition of an interest rate leads to
 # ```math
-#   \mathrm{d}U_t = \mu U_t \mathrm{d}t + \gamma\;\mathrm{d}t - \mathrm{d}C_t,
+#   \mathrm{d}U_t = r U_t \mathrm{d}t + \gamma\;\mathrm{d}t - \mathrm{d}C_t,
 # ```
+# where $r$ is the interest rate.
 #
-# Assuming a premium rate perturbed by a white noise and assuming the interest rate as a process $\{M_t\}_t$, we find
+# Assuming a premium rate perturbed by a white noise and assuming the interest rate as a process $\{R_t\}_t$, we find
 # ```math
-#   \mathrm{d}U_t = M_t U_t\;\mathrm{d}t + \gamma\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t,
+#   \mathrm{d}U_t = R_t U_t\;\mathrm{d}t + \gamma\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t,
 # ```
 # so the equation becomes
 # ```math
-#   \mathrm{d}U_t = (\gamma + M_t U_t)\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t.
+#   \mathrm{d}U_t = (\gamma + R_t U_t)\;\mathrm{d}t + \varepsilon\;\mathrm{d}W_t - \mathrm{d}C_t.
 # ```
 #
 # Since we can compute exactly the accumulated claims $C_t$, we subtract it from $U_t$ to get rid of the jump term. We also subtract an Ornstein-Uhlenbeck process, in the classical way to transform an SDE into a RODE. So, defining
@@ -45,19 +46,36 @@
 # ```
 # we obtain
 # ```math
-#   \mathrm{d}X_t = (\gamma + M_t U_t)\;\mathrm{d}t + \nu O_t\;\mathrm{d}t = (\gamma + M_t (X_t + C_t + O_t))\;\mathrm{d}t + \nu O_t\;\mathrm{d}t.
+#   \mathrm{d}X_t = (\gamma + R_t U_t)\;\mathrm{d}t + \nu O_t\;\mathrm{d}t = (\gamma + R_t (X_t + C_t + O_t))\;\mathrm{d}t + \nu O_t\;\mathrm{d}t.
 # ```
 #
 # This leads us to the linear random ordinary differential equation
 # ```math
-#   \frac{\mathrm{d}X_t}{\mathrm{d}t} = M_t X_t + M_t (C_t + O_t) + \nu O_t + \gamma.
+#   \frac{\mathrm{d}X_t}{\mathrm{d}t} = R_t X_t + R_t (C_t + O_t) + \nu O_t + \gamma.
 # ```
 #
 # This equation has the explicit solution
 # ```math
-#   X_t = X_0 e^{\int_0^t M_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t M_\tau\;\mathrm{d}\tau} (M_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s.
+#   X_t = X_0 e^{\int_0^t R_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t R_\tau\;\mathrm{d}\tau} (R_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s.
 # ```
 #
+# As for the interest rate process $\{R_t\}_t$, there is a vast literature with models for it, see e.g. Chapter 3 of [Brigo & Mercurio (2006)](https://doi.org/10.1007/978-3-540-34604-3), in particular Table 3.1. Here, we consider the Dothan model (Section 3.2.2 of the aforementioned reference), which consists simply of a geometric Brownian motion process
+#
+# ```math
+#   \mathrm{d}R_t = \mu R_t \;\mathrm{d}t + \sigma R_t\;\mathrm{d}t,
+# ```
+# with $R_t = r_0$, where $\mu, \sigma, r_0$ are positive constants. This has an explicit solution
+# ```math
+#   R_t = r_0 e^{(\mu - \sigma^2/2)t + \sigma W_t},
+# ```
+# so that the above equation for $\{X_t\}_t$ is a genuine random ODE.
+#
+# Once the solution of $\{X_t\}_t$ is obtained, we find an explicit formula for the surplus $X_t = U_t - C_t - O_t$, namely
+# ```math
+#   U_t = C_t + O_t + X_0 e^{\int_0^t R_s\;\mathrm{d}s} + \int_0^t e^{\int_s^t R_\tau\;\mathrm{d}\tau} (R_s (C_s + O_s) + \nu O_s + \gamma)\;\mathrm{d}s,
+# ```
+# with $\{R_t\}_t$ as above.
+# 
 # ## Numerical simulations
 # 
 # ### Setting up the problem
@@ -97,18 +115,18 @@ x0law = Dirac(x0)
 
 # The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term
 
-OU0 = 0.0
-OUν = 5.0
-Ouε = 0.8
-M0 = 0.2
-Mμ = 0.02
-Mσ = 0.4
-CM = 0.2
+O0 = 0.0
+Oν = 5.0
+Oε = 0.8
+R0 = 0.2
+Rμ = 0.02
+Rσ = 0.4
+Cmax = 0.2
 Cλ = 8.0
-Claw = Uniform(0.0, CM)
+Claw = Uniform(0.0, Cmax)
 noise = ProductProcess(
-    OrnsteinUhlenbeckProcess(t0, tf, OU0, OUν, Ouε),
-    GeometricBrownianMotionProcess(t0, tf, M0, Mμ, Mσ),
+    OrnsteinUhlenbeckProcess(t0, tf, O0, Oν, Oε),
+    GeometricBrownianMotionProcess(t0, tf, R0, Rμ, Rσ),
     CompoundPoissonProcess(t0, tf, Cλ, Claw)
 )
 
@@ -164,9 +182,9 @@ nothing # hide
 
 plt_result = plot(result)
 
-# And we save the convergence plot for inclusion in the article.
+#
 
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "risk.png"))
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "risk.png")) # hide
 nothing # hide
 
 # For the sake of illustration of the behavior of the system, we visualize a sample solution
@@ -189,7 +207,7 @@ nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$M_t\$" "\$C_t\$"], linecolor=[1 2 3])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$R_t\$" "\$C_t\$"], linecolor=[1 2 3])
 
 #
 
