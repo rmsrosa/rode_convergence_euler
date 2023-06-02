@@ -8,7 +8,7 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/10-ris
 Draft = false
 ```
 
-A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (2013)](https://doi.org/10.1080/10920277.1998.10595671)) given by
+A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (1998)](https://doi.org/10.1080/10920277.1998.10595671)) given by
 ```math
   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
 ```
@@ -16,7 +16,7 @@ where $U_0$ is the initial capital, $\gamma$ is a constant premium rate received
 
 The model above, however, does not take into account the variability of the premium rate received by the company, nor the investiment of the accumulated reserves, among other things. Several diffusion type models have been proposed to account for these and other factors. We will consider a simple model, with a randomly perturbed premium and with variable rentability.
 
-More precisely, we start by rewriting the above expression as the following jump differential equation
+More precisely, we start by rewriting the above expression as the following jump (or impulse) differential equation
 ```math
   \mathrm{d}U_t = \gamma\;\mathrm{d}t - \mathrm{d}C_t,
 ```
@@ -25,11 +25,10 @@ where
   C_t = \sum_{i=1}^{N_t} C_i.
 ```
 
-The addition of an interest rate leads to
+The addition of an interest rate $r$ leads to
 ```math
-  \mathrm{d}U_t = r U_t \mathrm{d}t + \gamma\;\mathrm{d}t - \mathrm{d}C_t,
+  \mathrm{d}U_t = r U_t \mathrm{d}t + \gamma\;\mathrm{d}t - \mathrm{d}C_t.
 ```
-where $r$ is the interest rate.
 
 Assuming a premium rate perturbed by a white noise and assuming the interest rate as a process $\{R_t\}_t$, we find
 ```math
@@ -152,7 +151,7 @@ The resolutions for the target and approximating solutions, as well as the numbe
 ntgt = 2^18
 ns = 2 .^ (6:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 600
+m = 400
 ````
 
 And add some information about the simulation:
@@ -212,7 +211,7 @@ plt_result = plot(result)
 ````
 
 ````@example 10-risk
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "risk.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_riskmodel.png")) # hide
 nothing # hide
 ````
 
@@ -223,7 +222,7 @@ plt_sols = plot(suite, ns=nothing, label="\$X_t\$", linecolor=1)
 ````
 
 ````@example 10-risk
-savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_risk.png")) # hide
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_riskmodel.png")) # hide
 nothing # hide
 ````
 
@@ -234,7 +233,7 @@ plt_suite = plot(suite)
 ````
 
 ````@example 10-risk
-savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_risk.png")) # hide
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_riskmodel.png")) # hide
 nothing # hide
 ````
 
@@ -245,7 +244,7 @@ plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$R_t\$" "\$
 ````
 
 ````@example 10-risk
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_risk.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_noises.png")) # hide
 nothing # hide
 ````
 
@@ -253,6 +252,11 @@ The actual surplus is $U_t = X_t - O_t - C_t$, so we may visualize a sample solu
 
 ````@example 10-risk
 plt_surplus = plot(range(t0, tf, length=ntgt), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
+````
+
+````@example 10-risk
+savefig(plt_surplus, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_surplus.png")) # hide
+nothing # hide
 ````
 
 ---
