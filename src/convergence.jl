@@ -94,16 +94,18 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
 end
 
 """
-    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, errors::Vector{T}, lc::T, p::T,eps::T) where {T, S}
+    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, errors::Vector{T}, stderrs::Vector{T}, lc::T, p::T,pmin::T, pmax::T) where {T, S}
 
 Stores the result of `solve(rng, suite)` with fields
 * `suite`: the `ConvergenceSuite` which is to be solved for;
 * `deltas`: the time steps associated with the number of mesh points in the vector `suite.ns`;
 * `trajerrors`: a matrix where each column corresponds to the strong error, along the trajectory, at each mesh resolution determined by `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
+* `trajstderrs`: a matrix with the corresponding standard error for each entry in `trajerrors`;
 * `errors`: the maximum, along the trajectory, of the `trajerrors`;
+* `stderrs`: the corresponding standard error;
 * `lc`: the logarithm ``\\log(C)`` of the multiplicative constant in the fitted error `CΔtᵖ`;
-* `p`: the order of the strong convergence;
-* `eps`: an estimate of the half-width of the 95% confidence interval for `p` in the least square fit as a maximum likelyhood estimate.
+* `p`: the estimated order of the strong convergence;
+* `pmin` and `pmax`: the 95% confidence interval for `p`;
 """
 struct ConvergenceResult{T, S}
     suite::S
@@ -114,7 +116,8 @@ struct ConvergenceResult{T, S}
     stderrs::Vector{T}
     lc::T
     p::T
-    eps::T
+    pmin::T
+    pmax::T
 end
 
 """
@@ -157,7 +160,6 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
         end
 
         # solve approximate solutions at selected time steps and update strong errors
-        #for (i, (nstep, nsi)) in enumerate(zip(nsteps, ns))
         for (i, nsi) in enumerate(ns)
 
             nstep = div(ntgt, nsi)
@@ -190,7 +192,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
 
     # compute mean and standard error from first and second moments
     # in theory, argument should be non-negative, but use `abs`
-    # for the sake of numerical errors
+    # because of round-off errors
     for i in eachindex(trajerrors, trajstderrs)
         trajstderrs[i] = sqrt( abs( trajstderrs[i] - trajerrors[i] ^ 2 / m ) / (m - 1) / m )
         trajerrors[i] /= m
@@ -218,16 +220,17 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
     vandermonde = [one.(deltas) log.(deltas)]
     logerrors = log.(errors)
-    lc, p =  vandermonde \ logerrors
-    # lc, p, _, pmin, _, pmax = vandermonde \ [log.(errors) log.(errors .+ 2stderrs) log.(errors .- 2stderrs)]
+    # lc, p =  vandermonde \ logerrors
+    # I am not sure pmin and pmax should be computed this way, but let's start with this
+    lc, p, _, pmin, _, pmax = vandermonde \ [log.(errors) log.(errors .+ 2stderrs) log.(errors .- 2stderrs)]
 
     # uncertainty in `p`: 95% confidence interval (p - eps, p + eps) where
 
-    standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
-    eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
+    #standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
+    #eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
 
     # return `result` as a `ConvergenceResult`
-    result = ConvergenceResult(suite, deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, eps)
+    result = ConvergenceResult(suite, deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, pmin, pmax)
     return result
 end
 
@@ -251,7 +254,7 @@ function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equat
     errors = result.errors
     stderrs = result.stderrs
     table = "    \\begin{tabular}[htb]{|r|l|l|}
-        \\hline N & dt & error & std error \\\\
+        \\hline N & dt & error & std err \\\\
         \\hline \\hline\n"
     for (n, dt, error, stderr) in zip(
         ns,
@@ -265,6 +268,6 @@ function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equat
     \\end{tabular}
     \\bigskip
 
-    \\caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $(info.equation) for each mesh resolution \$N\$, with initial condition $(info.ic) and $(info.noise), on the time interval \$I = [$t0, $tf]\$, based on \$M = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=2))\$}"
+    \\caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $(info.equation) for each mesh resolution \$N\$, with initial condition $(info.ic) and $(info.noise), on the time interval \$I = [$t0, $tf]\$, based on \$M = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=3))\$, with 95% confidence interval \$($(round(result.pmin, digits=4)), $(round(result.pmax, digits=4)))\$}"
     return table
 end

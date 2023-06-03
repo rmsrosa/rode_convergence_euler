@@ -116,6 +116,8 @@ We save the order of convergence obtained
 
 ````@example 05-fBm_linear
 ps = [result.p]
+pmins = [result.pmin]
+pmaxs = [result.pmax]
 ````
 
 Now we vary the Hurst parameter and record the corresponding order of convergence.
@@ -127,22 +129,24 @@ for h in Iterators.drop(hursts, 1)
     loc_noise = FractionalBrownianMotionProcess(t0, tf, y0, h, ntgt)
     loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, target, method, ntgt, ns, m)
     @time loc_result = solve(rng, loc_suite)
-    @info "h = $h => p = $(loc_result.p)"
+    @info "h = $h => p = $(loc_result.p) ($(loc_result.pmin), $(loc_result.pmax))"
     push!(ps, loc_result.p)
+    push!(pmins, loc_result.pmin)
+    push!(pmaxs, loc_result.pmax)
 end
 ````
 
 We print them out for inclusing in the paper:
 
 ````@example 05-fBm_linear
-[collect(hursts) ps]
+[collect(hursts) ps pmins pmaxs]
 ````
 
 The following plot helps visualizing the result.
 
 ````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
-scatter!(plt, collect(hursts), ps, label="computed")
+scatter!(plt, collect(hursts), ps, yerror=[pmins pmaxs], label="computed")
 plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
 ````
 
