@@ -149,7 +149,7 @@ The following plot helps visualizing the result.
 
 ````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.1), xaxis="H", yaxis="p", guidefont=10)
-scatter!(plt, collect(hursts), ps, yerror=[pmins pmaxs], label="computed")
+scatter!(plt, collect(hursts), ps, yerror=(ps .- pmins, pmaxs .- ps), label="computed")
 plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
 ````
 
