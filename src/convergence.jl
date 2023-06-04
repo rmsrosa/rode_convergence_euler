@@ -220,13 +220,16 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
     vandermonde = [one.(deltas) log.(deltas)]
     logerrors = log.(errors)
-    # lc, p =  vandermonde \ logerrors
-    # I am not sure pmin and pmax should be computed this way, but let's start with this
-    lc, p, _, pmin, _, pmax = vandermonde \ [log.(errors) log.(errors .+ 2stderrs) log.(errors .- 2stderrs)]
+    lc, p =  vandermonde \ logerrors
+
+    # uncertainty in `p`: 95% confidence interval based on 
+    # standard errors of Monte Carlo approximation of the errors
+    lcsandps = vandermonde \ reduce(hcat, [log(f(e, 2s)) for (f, e, s) in zip(c, errors, stderrs)] for c in Iterators.ProductIterator(Tuple(Iterators.repeated((-,+), length(errors)))))
+
+    pmin, pmax = extrema(lcsandps[2, :])
 
     # uncertainty in `p`: 95% confidence interval (p - eps, p + eps) where
-
-    #standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
+    # standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
     #eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
 
     # return `result` as a `ConvergenceResult`
