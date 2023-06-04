@@ -218,7 +218,8 @@ nothing # hide
 # 
 # The calculated order of convergence is given by field `p`:
 
-println("Order of convergence `C Δtᵖ` with the transport-modulated noise with p = $(round(result.p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
+nothing # hide
 
 # 
 # ### Plots

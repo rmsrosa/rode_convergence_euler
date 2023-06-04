@@ -37,6 +37,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
         info = (equation = "dx/dt = yx", ic = "Normal()", noise="Wiener process noise")
@@ -53,6 +54,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
     end
@@ -85,6 +87,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
 
@@ -96,6 +99,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
     end
@@ -130,6 +134,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
 
@@ -140,6 +145,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
     end
@@ -178,6 +184,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
 
@@ -188,6 +195,7 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
         @test all(n -> occursin(string(n), str), ns)
     end
@@ -222,5 +230,6 @@ end
         results = @test_nowarn solve(rng, suite)
         @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
         @test results.p ≈ 1.0 (atol = 0.1)
+        @test results.pmin ≤ results.p ≤ results.pmax
     end
 end

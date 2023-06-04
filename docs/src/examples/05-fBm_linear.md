@@ -89,7 +89,8 @@ nothing # hide
 The calculated order of convergence is given by `result.p`:
 
 ````@example 05-fBm_linear
-println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2))")
+println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
+nothing # hide
 ````
 
 ### Plots
@@ -119,6 +120,8 @@ ps = [result.p]
 pmins = [result.pmin]
 pmaxs = [result.pmax]
 ````
+
+nothing
 
 Now we vary the Hurst parameter and record the corresponding order of convergence.
 
