@@ -4,6 +4,10 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-fBm
 
 # Linear RODE with fractional Brownian motion
 
+```@meta
+Draft = false
+```
+
 ## The equation
 
 ## Numerical approximation
