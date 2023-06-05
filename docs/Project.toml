@@ -1,6 +1,5 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
-Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 DiffEqDevTools = "f3b72e0c-5b89-59e1-b016-84e28bfd966d"
 DiffEqNoiseProcess = "77a26b50-5914-5dd7-bc55-306e6241c503"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
