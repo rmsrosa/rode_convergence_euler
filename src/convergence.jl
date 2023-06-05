@@ -215,6 +215,10 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     
     errors = maximum(trajerrors, dims=1)[1, :]
     stderrs = maximum(trajstderrs, dims=1)[1, :]
+    errorsminmax = Dict(
+        :min => maximum(trajerrors .- trajstderrs, dims=1)[1,:],
+        :max => maximum(trajerrors .+ trajstderrs, dims=1)[1,:]
+    )
     deltas = (suite.tf - suite.t0) ./ (suite.ns .- 1)
 
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
@@ -224,13 +228,9 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
     # uncertainty in `p`: 95% confidence interval based on 
     # standard errors of Monte Carlo approximation of the errors
-    lcsandps = vandermonde \ reduce(hcat, [log(f(e, 2s)) for (f, e, s) in zip(c, errors, stderrs)] for c in Iterators.ProductIterator(Tuple(Iterators.repeated((-,+), length(errors)))))
+    lcsandps = vandermonde \ reduce(hcat, [log(errorsminmax[ci][i]) for (i, ci) in enumerate(c)] for c in Iterators.ProductIterator(Tuple(Iterators.repeated((:min,:max), length(errors)))))
 
     pmin, pmax = extrema(lcsandps[2, :])
-
-    # uncertainty in `p`: 95% confidence interval (p - eps, p + eps) where
-    # standard_error = √(sum(abs2, logerrors .- ( lc .+ p .* log.(deltas))) / (length(deltas) - 2))
-    #eps = 2 * standard_error * inv(vandermonde' * vandermonde)[2, 2]
 
     # return `result` as a `ConvergenceResult`
     result = ConvergenceResult(suite, deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, pmin, pmax)
