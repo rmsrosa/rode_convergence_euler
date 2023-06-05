@@ -898,6 +898,7 @@ For estimating the order of convergence, we use the Monte Carlo method, computin
 \begin{equation}
     \epsilon^N = \max_{j=0, \ldots, N} \frac{1}{M}\sum_{m=1}^M \left|X_{t_j}(\omega_m) - X_{t_j}^N(\omega_m)\right|.
 \end{equation}
+Then we fit the errors $\epsilon^N$ to the power law $C\Delta_N^p$, in order to find $p$, along with the 95\% confidence interval.
 
 Here are the main parameters for the error estimate:
 \begin{enumerate}
@@ -911,7 +912,7 @@ Here are the main parameters for the error estimate:
 And here is the method:
 \begin{enumerate}
     \item For each sample $m=1, \ldots, M$, we first generate a discretization $\{Y_{t_j}\}_{j=0, N_{\mathrm{tgt}}}$ of a sample path of the noise on the finest grid $\{t_j^{N_{\mathrm{tgt}}}\}$, with $N_{\mathrm{tgt}}$ points, using either an exact distribution for the noise or an approximation in a much finer mesh.
-    \item Next, we use the values of the noise at the target time mesh to generate the target solution $\{X_{t_j}\}_{j=0, N_{\mathrm{tgt}}}$, still on the fine mesh. This is constructed either using the Euler approximation itself, keeping in mind that the mesh is sufficiently fine, or by an exact distributions of the solution, when available.
+    \item Next, we use the values of the noise at the target time mesh to generate the target solution $\{X_{t_j}\}_{j=0, N_{\mathrm{tgt}}}$, still on the fine mesh. This is constructed either using the Euler approximation itself, keeping in mind that the mesh is sufficiently fine, or an exact distributions of the solution, when available.
     \item Then, for each time step $N_i$ in the selected range, we compute the Euler approximation using the computed noise values at the corresponding coarser mesh.
     \item We then compare each approximation $\{X_{t_j}^{N_i}\}_{j=0, \ldots, N_i}$ to the values of the target path on that coarse mesh and update the strong error
     \[
@@ -920,9 +921,22 @@ And here is the method:
     at each mesh point.
     \item At the end of all the simulations, we take the maximum in time, on each corresponding coarse mesh, to obtain the error for each mesh,
     \[
-        \epsilon^{N_i} = \max_{j=0, \ldots, N_i} \epsilon_{t_j}^{N_i}
+        \epsilon^{N_i} = \max_{j=0, \ldots, N_i} \epsilon_{t_j}^{N_i}.
     \]
-    \item Finally, we fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, via linear least-square regression in log scale, for suitable $C$ and $p$, with $p$ giving the order of convergence.
+    \item We fit $(\Delta_i, \epsilon^{N_i})$ to the power law $C\Delta_i^p$, via linear least-square regression in log scale, for suitable $C$ and $p$, with $p$ giving the order of convergence, which amounts to solving the normal equation $(A^tA)\mathbf{v} = A^t\ln(\boldsymbol{\epsilon})$, where $\mathbf{v}$ is the vector $\mathbf{v} = (\ln(C), p)$, $A$ is the Vandermonde matrix associated with the mesh steps $(\Delta_{N_i})_i$, and $\ln(\boldsymbol{\epsilon})$ is the vector $\ln(\boldsymbol{\epsilon}) = (\ln(\epsilon^{N_i}))_i$.
+    \item We also compute the standard error of the Monte-Carlo sample at each time step,
+    \[
+        s_{t_j}^{N_i} = \frac{\sigma_{t_j}^{N_i}}{\sqrt{N_i}},
+    \]
+    where $\sigma_{t_j}^{N_i}$ is the sample standard deviation given by
+    \[
+        {\sigma_{t_j}^{N_i}} = \sqrt{\frac{1}{M-1}\sum_{m=1}^M \left(\left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m) \right|- \epsilon_{t_j}^{N_i}\right)^2},
+    \]
+    and take its maximum over the mesh points,
+    \[
+        s^{N_i} = \max_{j=0, \ldots, N_i} s_{t_j}^{N_i}.
+    \]
+    \item Finally, from the normal equations above, we compute the 95\% confidence interval $(p_{\min}, p_{\max})$ by computing the minimum and maximum values of $p$ in the image, by the linear map $\mathbf{e} \mapsto (\ln(C), p) = (A^tA)^{-1}A^t\ln(\mathbf{e})$, of the polytope formed by all combinations of $(\epsilon^{N_i} \pm 2s^{N_i})_i$, which is the image of the set of 95\% confidence intervals for the errors obtained with the Monte-Carlo approximation of the strong error.
 \end{enumerate}
 
 As for the implementation itself, all code is written in the Julia language \cite{Julia2017}. Julia is a high-performance programming language, suitable for scientific computing and computationally-demanding applications.
