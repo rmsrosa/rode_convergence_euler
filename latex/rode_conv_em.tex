@@ -602,8 +602,8 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         K_X = \sup_{t\in I}\mathbb{E}[\|X_t\|^2] < \infty.
     \]
 
-    Now, in order to apply \cref{thmmonotonicbound}, it remains to verify \eqref{stepbound}-\eqref{expectstepmonotonic}. 
- 
+    Now, in order to apply \cref{thmmonotonicbound}, it remains to verify \eqref{stepbound}-\eqref{expectstepmonotonic}.
+
     Since the noise is of bounded variation and $f=f(t, x, y)$ is continuously differentiable in $(t, y)$, we have $s\mapsto f(s, X_\tau, Y_s)$ of bounded variation, for each fixed $\tau,$ with
     \[
         f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau) = \int_\tau^s \partial_t f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d} Y_\xi.
@@ -932,7 +932,7 @@ And here is the method:
     \[
         \sigma_{t_j}^{N_i} = \sqrt{\frac{1}{M-1}\sum_{m=1}^M \left(\left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m) \right|- \epsilon_{t_j}^{N_i}\right)^2},
     \]
-    and compute de 95\% confidence interval for the strong error as
+    and compute de 95\% confidence interval $(\epsilon_{\min}, \epsilon_{\max})$ for the strong error with
     \[
         \epsilon_{\min}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} - 2\sigma_{t_j}^{N_i}), \quad \epsilon_{\max}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} + 2\sigma_{t_j}^{N_i}).
     \]

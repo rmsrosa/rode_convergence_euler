@@ -934,7 +934,7 @@ And here is the method:
     \[
         \sigma_{t_j}^{N_i} = \sqrt{\frac{1}{M-1}\sum_{m=1}^M \left(\left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m) \right|- \epsilon_{t_j}^{N_i}\right)^2},
     \]
-    and compute de 95\% confidence interval for the strong error as
+    and compute de 95\% confidence interval $(\epsilon_{\min}, \epsilon_{\max})$ for the strong error with
     \[
         \epsilon_{\min}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} - 2\sigma_{t_j}^{N_i}), \quad \epsilon_{\max}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} + 2\sigma_{t_j}^{N_i}).
     \]
