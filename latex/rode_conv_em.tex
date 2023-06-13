@@ -696,6 +696,8 @@ With that in mind, we first have the following result.
         & \qquad = \int_0^t \int_\xi^{\tau^N(\xi)+\Delta t_N} A_\xi \;\mathrm{d}s\;\mathrm{d}\xi + \int_0^t \int_\xi^{\tau^N(\xi) + \Delta t_N} B_\xi \;\mathrm{d}s\;\mathrm{d}W_\xi \\
         & \qquad = \int_0^t (\tau^N(\xi)+\Delta t_N - \xi) A_\xi \;\mathrm{d}\xi + \int_0^t (\tau^N(\xi) + \Delta t_N - \xi) B_\xi \;\mathrm{d}W_\xi.
     \end{align*}
+    For exchanging the order of integration in the stochastic integral, an important aspect is that, although the integral in $s$ becomes an integral on the interval $[\xi, \tau^N(\xi) + \Delta t_N]$, which is posterior to $\xi$, the integrand does not depend on $s$ and, hence, does not violate any non-anticipative condition for the validity of the It\^o integral and of the stochastic Fubini Theorem.
+
     Taking the absolute mean and using the It\^o isometry \cite{Oksendal2003} on the second term gives
     \begin{multline*}
         \mathbb{E}\left[\left\|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right\|\right]  \\
