@@ -155,6 +155,8 @@ plot_convergence(results::ConvergenceResult) = plot(results)
     deltas = results.deltas
     lc = results.lc
     p = results.p
+    pmin = results.pmin
+    pmax = results.pmax
     errors = results.errors
     stderrs = results.stderrs
     fit = exp(lc) * deltas .^ p
@@ -166,7 +168,7 @@ plot_convergence(results::ConvergenceResult) = plot(results)
 
     @series begin
         linestyle --> :solid
-        label --> "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2))"
+        label --> "\$C\\Delta t^p\$ fit with p = $(round(p, digits=2)); 95% CI [$(round(pmin, digits=2)), $(round(pmax, digits=2))]"
         deltas, fit
     end
 
