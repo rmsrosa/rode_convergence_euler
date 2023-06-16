@@ -90,12 +90,12 @@ The Euler method for solving this initial value problem consists in approximatin
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-We are interested in the order of \emph{strong} convergence, i.e. convergence in square mean: the approximation $\{X_{t_j}^N\}_j$ is said to converge to $\{X_t\}_t$ with strong order $\theta>0$ when there exists a constant $C \geq 0$ such that
+We are interested in the order of \emph{strong} convergence, i.e. the approximation $\{X_{t_j}^N\}_j$ is said to converge to $\{X_t\}_t$ with \emph{strong order $\theta>0$} when there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate space. There are other important notions of convergence, such as weak convergence, $p$-th mean convergence, and pathwise convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but we focus on strong convergence, here.
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. There are other important notions of convergence, such as weak convergence, $p$-th mean convergence, and pathwise convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but we focus on strong convergence, here.
 
 Under certain regularity conditions on $f$, it is proved in \cite{GruneKloeden2001} that, when the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, the Euler scheme converges to the exact solution in the \emph{pathwise} sense with order $\theta$ with respect to the time step. Under global uniformity conditions on the $f$, the same approach in \cite{GruneKloeden2001} also yields the convergence of order $\theta$ in the \emph{strong} sense \eqref{strongordertheta}.
 
@@ -103,7 +103,7 @@ Our aim is to show that, in many classical examples, it is possible to exploit f
 
 The global condition on $f$ is a natural assumption when looking for strong convergence. Pathwise convergence, on the other hand, usually requires less stringent conditions (see e.g. \cite{JentzenKloedenNeuenkirch2009, JentzenKloeden2011}), but those are not the subject of interest here. The possibility of extending the improved order of strong convergence to pathwise convergence seems feasible for the case of sample paths of bounded variation but not so much for It\^o process noises for which the It\^o isometry is of fundamental importance. These will be investigated in a future oportunity.
 
-The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error (see \cref{lemglobalerrorintegralformula}), namely
+The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error (see \cref{lemglobalerrorintegralformula}), as it is done for approximations of stochastic differential equations, namely
 \begin{equation}
     \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
@@ -112,9 +112,9 @@ The first main idea of the proof is to not estimate the local error and, instead
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
 \end{equation}
-for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$ (see \eqref{tauNt}).
+for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$, defined in \eqref{tauNt}.
 
-The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globally Lipschitz continuity with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{multline}
     \label{Etjbasicboundintro}
         \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
@@ -166,7 +166,7 @@ Using the monotonicity, this implies
 \]
 yielding, again, strong order 1 convergence.
 
-These two cases are treated in \cref{secmonotonicbound} and \cref{secItonoise}. The case of bounded variation is treated in \cref{secmonotonicbound}, while the It\^o process noise case is treated in \cref{secItonoise}.
+These two cases are treated in \cref{secmonotonicbound} and \cref{secItonoise}, with the bounded variation case in \cref{secmonotonicbound}, and the It\^o process noise case in \cref{secItonoise}.
 
 The core results in these sections are \cref{lemmonotonicbound} and \cref{thmmonotonicbound}, for the bounded variation case, and \cref{lemItostep} and \cref{thmItostep}, for the It\^o process noise case. The conditions in such results, however, are not readily verifiable. With that in mind, \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of these two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions, while the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o process noise.
 
@@ -231,7 +231,7 @@ Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
 
 For the strong convergence of the Euler approximation, we also need to control the expectation of the solution, among other things. With that in mind, we have the following useful result.
 \begin{lemma}
-    Under \cref{standinghypotheses1}, suppose further that
+    Under the \cref{standinghypotheses1}, suppose further that
     \begin{equation}
         \label{EX0strongbound}
         \mathbb{E}[\|X_0\|] < \infty
@@ -239,7 +239,7 @@ For the strong convergence of the Euler approximation, we also need to control t
     and
     \begin{equation}
         \label{EMtstrongbound}
-        \int_0^T \mathbb{E}[|M_s|] \;\mathrm{d}s < \infty
+        \int_0^T \mathbb{E}[|M_s|] \;\mathrm{d}s < \infty.
     \end{equation}
     Then,
     \begin{equation}
@@ -249,7 +249,7 @@ For the strong convergence of the Euler approximation, we also need to control t
 \end{lemma}
 
 \begin{proof}
-    Thanks to \eqref{XtboundLXMt}, the result is straightfoward
+    Thanks to \eqref{XtboundLXMt}, the result is straightfoward.
 \end{proof}
 
 %\begin{remark}
