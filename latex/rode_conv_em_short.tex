@@ -188,7 +188,7 @@ In this case, disregarding the higher order term,
 \end{align*}
 which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
-Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}, driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the  ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
+Further examples can be found in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}, driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
@@ -265,7 +265,7 @@ For the strong convergence of the Euler approximation, we also need to control t
 In this section, we derive the following integral formula for the global error:
 \begin{lemma}
     \label{lemglobalerrorintegralformula}
-    Under \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under the \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -282,7 +282,7 @@ In this section, we derive the following integral formula for the global error:
 \end{lemma}
 
 \begin{proof}
-    Under \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
+    Under the \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     The exact pathwise solution satisfies
     $$
@@ -293,7 +293,7 @@ In this section, we derive the following integral formula for the global error:
     X_{t_j} - X_{t_j}^N = X_{t_{j-1}} - X_{t_{j-1}}^N + \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
     $$
 
-    Adding and subtracting appropriate terms yields
+    Adding and subtracting appropriate terms yield
     \begin{equation}
         \label{singlestep}
         \begin{aligned}
@@ -311,11 +311,11 @@ In this section, we derive the following integral formula for the global error:
         & \qquad \left. + \int_{t_{i-1}}^{t_i} \left( f(s, X_{t_{i-1}}^N, Y_s) - f(t_{i-1}, X_{t_{i-1}}^N, Y_{t_{i-1}}) \right)\;\mathrm{d}s \right).
     \end{align*}
 
-    Using the jump function $\tau^N$ defined by \eqref{tauNt}, we rewrite the above expression as \eqref{globalerrorintegralformula}.
+    Using the jump function $\tau^N$ defined by \eqref{tauNt}, the above expression becomes \eqref{globalerrorintegralformula}.
 \end{proof}
 
 \begin{remark}
-    Strictly speaking, we only need condition \eqref{standinghypotheses1Car} from \cref{standinghypotheses1} in order to deduce \eqref{Etjbasicbound}, but since we need \eqref{standinghypotheses1Lx} for the strong convergence anyways, it is simpler to state the result as in \cref{lembasicestimate}.
+    Strictly speaking, we only need condition \eqref{standinghypotheses1Car} from the \cref{standinghypotheses1} in order to deduce \eqref{Etjbasicbound}, but since we need \eqref{standinghypotheses1Lx} for the strong convergence anyways, it is simpler to state the result as in \cref{lembasicestimate}.
 \end{remark}
 
 \section{Basic estimate for the global pathwise error}
@@ -339,14 +339,12 @@ Here we derive an estimate that is the basis for the specific estimates for each
 We are now ready to start proving our basic estimate for the global pathwise error.
 \begin{lemma}
     \label{lembasicestimate}
-    Under \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
-    \begin{equation}
+    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
+    \begin{multline}
         \label{Etjbasicbound}
-        \begin{aligned}
-            \|X_{t_j} - X_{t_j}^N\| & \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
-            & \qquad \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{L_X t_j}.
-        \end{aligned}
-    \end{equation}
+            \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
+            \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{L_X t_j},
+    \end{multline}
     for $j=1, \ldots, N$, where $\tau^N$ is given by \eqref{tauNt}.
 \end{lemma}
 
@@ -376,7 +374,7 @@ We are now ready to start proving our basic estimate for the global pathwise err
         & \qquad + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s + L_X\sum_{i=0}^{j-1} \|X_{t_i} - X_{t_i}^N\|\Delta t_N \\
         & \qquad + \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|.
     \end{align*}
-    This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete version \cref{lemdiscretegronwall} of the Gronwall Lemma, we obtain \eqref{Etjbasicbound}.
+    This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete Gronwall \cref{lemdiscretegronwall}, we obtain \eqref{Etjbasicbound}.
 \end{proof}
 
 The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to order $\Delta t_N$, which is useful for lower order approximations or for the discretization of (random) partial differential equations.
@@ -387,7 +385,7 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
-    Under \cref{standinghypotheses1}, it follows that
+    Under the \cref{standinghypotheses1}, it follows that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (M_s + L_X\|X_s\|) \;\mathrm{d}s.
@@ -412,7 +410,7 @@ Combining the two previous results we obtain the following:
 
 \begin{proposition}
     \label{propbasicestimate}
-    Under \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
     \begin{equation}
         \label{EX0X0N}
         \mathbb{E}[\|X_0 - X_0^N\|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
@@ -428,7 +426,7 @@ Combining the two previous results we obtain the following:
 \begin{proof}
     Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by taking the expectation of \eqref{Etjbasicbound} in \cref{lembasicestimate} and properly estimating the first two terms on the right hand side. The first term is handled with the assumption \eqref{EX0X0N}. We just need to take care of the second term.
     
-    Under \cref{standinghypotheses1}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
+    Under the \cref{standinghypotheses1}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
     Using \eqref{EX0strongbound} and \eqref{EMtstrongbound}, that inequality yields
     \[
         \int_0^{t_j} \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
@@ -446,7 +444,7 @@ Combining the two previous results we obtain the following:
         \int_0^{t_j} \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
     \end{equation}
 
-    Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} gives
+    Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound},
     \begin{multline*}
         \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + L_X \int_0^{t_j} \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
         \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{L_X t_j}.
@@ -522,7 +520,7 @@ More precisely, we have the following result.
 With \cref{lemmonotonicbound} at hand, combined with the results in the previous sections, we prove our first main result.
 \begin{theorem}
     \label{thmmonotonicbound}
-    Under \cref{standinghypotheses1}, suppose also that
+    Under the \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{stepbound}, and \eqref{expectstepmonotonic} hold. Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e.
     \begin{equation}
       \label{monotonicboundstrongordernew}
@@ -536,7 +534,7 @@ With \cref{lemmonotonicbound} at hand, combined with the results in the previous
 \end{theorem}
 
 \begin{proof}
-    Under \cref{standinghypotheses1}, \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds.
+    Under the \cref{standinghypotheses1}, \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds.
     
     Thanks to \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{EX0X0N}, the \cref{propbasicestimate} applies and the global error is bounded according to \eqref{expectedestimateglobalerrorintegral}.
     
@@ -595,7 +593,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         M_t = C_1 + C_4 + (C_3 + C_6)\|Y_t\|.
     \]
-    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under \cref{standinghypotheses1}. Moreover, we have that
+    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}. Moreover, we have that
     \[
         \mathbb{E}[\|Y_t\|] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}[\|Y_t - Y_0\|] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}[V(\{Y_t\}_{t\in I}; I)].
     \]
@@ -716,7 +714,7 @@ With that in mind, we first have the following result.
 Combining the estimate in \cref{lemItostep} with the estimate for the global error we obtain the following main result.
 \begin{theorem}
     \label{thmItostep}
-    Under \cref{standinghypotheses1}, suppose also that
+    Under the \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{EX0X0N}, \eqref{Itoprocess}, and \eqref{expectItostepterms} hold. Then, the Euler scheme \eqref{emscheme} is of strong order 1, i.e.
     \begin{equation}
       \label{Itosteptrongordernew}
@@ -731,7 +729,7 @@ Combining the estimate in \cref{lemItostep} with the estimate for the global err
 \end{theorem}
 
 \begin{proof}
-    Under \cref{standinghypotheses1}, the \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Thanks to \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{EX0X0N}, the \cref{propbasicestimate} applies and the global error is bounded according to \eqref{expectedestimateglobalerrorintegral}.
+    Under the \cref{standinghypotheses1}, the \cref{lembasicestimate} applies and the global error estimate \eqref{Etjbasicbound} holds. Thanks to \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{EX0X0N}, the \cref{propbasicestimate} applies and the global error is bounded according to \eqref{expectedestimateglobalerrorintegral}.
     
     With assumptions \eqref{Itoprocess} and \eqref{expectItostepterms}, the \cref{lemItostep} applies and the last term in \eqref{expectedestimateglobalerrorintegral} is bounded according to \eqref{expectintfboundbyIto}. Using \eqref{expectintfboundbyIto} in \eqref{expectedestimateglobalerrorintegral} yields
     \begin{multline*}
@@ -864,7 +862,7 @@ Of course, it is possible to mix the two cases and have the following result com
 
 \begin{theorem}
     \label{thmmixedcase}
-    Under \cref{standinghypotheses1}, suppose also that
+    Under the \cref{standinghypotheses1}, suppose also that
     \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{EX0X0N} hold. Suppose, moreover, that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ can be split into a sum $F_t^N = G_t^N + H_t^N$ where $\{G_t^N\}_{t\in I}$ satisfies \eqref{Itoprocess} and \eqref{expectItostepterms} and where the steps of $\{H_t^N\}_{t\in I}$ are bounded by a real stochastic process $\{\bar H_t\}$ with monotonic non-decreasing sample paths, i.e.
     \begin{equation}
         \label{stepHbound}
