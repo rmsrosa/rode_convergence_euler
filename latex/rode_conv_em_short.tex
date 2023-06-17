@@ -460,7 +460,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o process 
 More precisely, we have the following result.
 \begin{lemma}
     \label{lemmonotonicbound}
-    Besides \cref{standinghypotheses1}, suppose that, for all $0 \leq s \leq T$,
+    Besides the \cref{standinghypotheses1}, suppose that, for all $0 \leq s \leq T$,
     \begin{equation}
         \label{stepbound}
           \left\|f(s, X_{\tau^N(s)}^N, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \leq \bar F_s - \bar F_{\tau^N(s)},
@@ -490,7 +490,7 @@ More precisely, we have the following result.
         & \qquad \leq \int_0^t \mathbb{E}\left[\left\|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \right]\;\mathrm{d}s \\
         & \qquad \leq \int_0^t \left(\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}]\right)\;\mathrm{d}s.
     \end{align*}
-    Now we need to bound the right hand side above. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
+    We need to bound the right hand side above. When $0 \leq t\leq t_1 = \Delta t_N$, we have $\tau^N(s) = 0$ for all $0 \leq s < t_1$, so that,
     \begin{align*}
       \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{\tau^N(s)}])\;\mathrm{d}s & = \int_0^t (\mathbb{E}[\bar F_s] - \mathbb{E}[\bar F_{0}]) \;\mathrm{d}s.
     \end{align*}
@@ -666,7 +666,7 @@ In the vector-valued case, $\{A_t\}_{t\in I}$ is a vector-valued process with th
 With that in mind, we first have the following result.
 \begin{lemma}
     \label{lemItostep}
-    Besides \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o process, i.e. satisfying \eqref{Itoprocess} with $Z_t = F_t^N$ and suitable processes $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}.$ Assume, moreover, that
+    Besides the \cref{standinghypotheses1}, suppose that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o process, i.e. satisfying \eqref{Itoprocess} with $Z_t = F_t^N$ and suitable processes $\{A_t\}_{t\in I}$ and $\{B_t\}_{t\in I}.$ Assume, moreover, that
     \begin{equation}
         \label{expectItostepterms}
         \int_0^T \mathbb{E}[\|A_t\|] \;\mathrm{d}t < \infty, \quad \int_0^T \mathbb{E}[\|B_t\|^2] \;\mathrm{d}t < \infty.
@@ -768,7 +768,7 @@ Then, we have following result.
 \end{theorem}
 
 \begin{proof}
-    Let us start by showing that the \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the noise has continuous sample paths. Thus, the remaining condition in \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
+    Let us start by showing that the \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the noise has continuous sample paths. Thus, the remaining condition in the \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
 
     Using the It\^o formula with \eqref{YtItonoise} in mind (see \cite[Theorem 4.1.2]{Oksendal2003} or \cite[Section 7.4]{Kuo2006} for the scalar case of the It\^o formula, with $g(t, y) = y^2,$ and \cite[Theorem 4.2.1]{Oksendal2003} or, more generally, \cite[Section 7.5]{Kuo2006} for the multi-dimensional case, with $g(t, y) = \|y\|^2$), we have
     \[
@@ -815,7 +815,7 @@ Then, we have following result.
     \[
         \int_0^T M_t\;\mathrm{d}t < \infty.
     \]
-    Therefore, we are under the conditions of \cref{standinghypotheses1}.
+    Therefore, we are under the conditions of the \cref{standinghypotheses1}.
 
     Now, in view of \cref{thmItostep}, it remains to prove that $F_t^N = f(t, X_{\tau^N(t)}^N, Y_t)$ is an It\^o process \eqref{Itoprocess}, with the bounds \eqref{expectItostepterms}. The fact that it is an It\^o process follows from the It\^o formula and the smoothness of $f=f(t, x, y)$, as we shall see now. We first consider the case of a scalar noise, for the sake of clarity. Since $(t, y) \mapsto f(t, x, y)$ is twice continuously differentiable, for each fixed $x$, the It\^o formula is applicable and yields, in the case of a scalar noise,
     \begin{multline}
