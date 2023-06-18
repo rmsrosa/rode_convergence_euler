@@ -166,7 +166,7 @@ nothing # hide
 Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
 ````@example 01-wiener_linearhomogeneous
-m = 200
+m = 500
 ````
 
 and add some information about the simulation:
