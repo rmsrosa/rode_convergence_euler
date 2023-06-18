@@ -1101,9 +1101,7 @@ Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the nois
     \label{figsamplepathsallnoises}
 \end{figure}
 
-The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}.
-
-For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
+The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
 Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in $\{\mathbf{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
 
@@ -1129,7 +1127,7 @@ We need to estimate the last term in \eqref{expectedestimateglobalerrorintegral}
     \label{stepfBm}
     f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = B^H_s - B^H_{\tau^N(s)},
 \end{equation}
-for $0 \leq s \leq T$. There are several ways to represent an fBm (see e.g. \cite{BHOB2008, Mishura2008}). We will use the formula \cite[eq. (2.1)]{MandelbrotVanNess1968}, \cite[eq. (1.1)]{BHOB2008}
+for $0 \leq s \leq T$. There are several ways to represent an fBm (see e.g. \cite{BHOB2008, Mishura2008}). We use the formula \cite[eq. (2.1)]{MandelbrotVanNess1968}, \cite[eq. (1.1)]{BHOB2008}
 \begin{multline}
     \label{BHtintegralformula}
     B^H_t = \frac{1}{\Gamma(H + 1/2)}\left(\int_{-\infty}^0 \left( (t-s)^{H-1/2} - (-s)^{H-1/2}\right) \;\mathrm{d}W_s \right. \\
