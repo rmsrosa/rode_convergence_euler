@@ -1065,7 +1065,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \item A standard Wiener process;
     \item An Ornstein-Uhlenbeck process (OU) with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
     \item A geometric Brownian motion process (gBm) with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
-    \item A non-autonomous homogeneous linear It\^o process (hlp) $\{H_t\}_t$ given by $\mathrm{d}H_t = (\mu_1 + \mu_2\sin(\omega t))H_t\;\mathrm{d}t + \sigma\sin(\omega t)H_t\;\mathrm{d}W_t$ with $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.5,$ $\omega=3\pi,$ and initial condition $H_0 = 0.2;$
+    \item A non-autonomous homogeneous linear It\^o process (hlp) $\{H_t\}_t$ given by $\mathrm{d}H_t = (\mu_1 + \mu_2\sin(\vartheta t))H_t\;\mathrm{d}t + \sigma\sin(\vartheta t)H_t\;\mathrm{d}W_t$ with $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.5,$ $\vartheta=3\pi,$ and initial condition $H_0 = 0.2;$
     \item A compound Poisson process (cP) with rate $\lambda = 5.0$ and jump law following an exponential distribution with scale $\theta = 0.5;$
     \item A Poisson step process (sP) with rate $\lambda = 5.0$ and step law following a uniform distribution within the unit interval;
     \item An exponentially decaying Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 2.0$, exponential decay rate $\delta = 3.0$, and jump law following an exponential distribution with scale $\theta = 0.5;$
@@ -1074,28 +1074,28 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
 \end{enumerate}
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0159 & 0.22 \\
-        128 & 0.00787 & 0.106 \\
-        256 & 0.00392 & 0.0525 \\
-        512 & 0.00196 & 0.0262 \\
+        64 & 0.0159 & 0.245 & 0.0158 \\
+        128 & 0.00787 & 0.118 & 0.0076 \\
+        256 & 0.00392 & 0.0587 & 0.00378 \\
+        512 & 0.00196 & 0.0291 & 0.00187 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{Y_t\}_t$ with all the implemented noises, on the time interval (0.0, 1.0), based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.016$, with the 95\% confidence interval $(0.9418, 1.0897)$}
     \label{taballnoises}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_allnoises.png}
-    \caption{Order of convergence $p = 1.02$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ on $[0, T] = [0.0, 1.0]$, with $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, and a vector-valued noise with different types of noise processes, computed with $M = 200$ sample paths, for each $\Delta t = 1/N$, with $N = 64,$ $128,$ $256,$ and $512.$}
+    \caption{Order of convergence $p = 1.016$ (95\% CI[0.9418, 1.0897]) of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}.}
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from 200 sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
+Table \ref{taballnoises} shows the estimated strong error obtained from $M=200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
 
 Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
 
