@@ -933,11 +933,11 @@ And here is the method:
     \[
         \sigma_{t_j}^{N_i} = \sqrt{\frac{1}{M-1}\sum_{m=1}^M \left(\left|X_{t_j}(\omega_m) - X_{t_j}^{N_i}(\omega_m) \right|- \epsilon_{t_j}^{N_i}\right)^2},
     \]
-    and compute the 95\% confidence interval $(\epsilon_{\min}, \epsilon_{\max})$ for the strong error with
+    and compute the 95\% confidence interval $[\epsilon_{\min}, \epsilon_{\max}]$ for the strong error with
     \[
         \epsilon_{\min}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} - 2\sigma_{t_j}^{N_i}), \quad \epsilon_{\max}^{N_i} = \max_{j=0, \ldots, N_i} (\epsilon_{t_j}^{N_i} + 2\sigma_{t_j}^{N_i}).
     \]
-    \item Finally, from the normal equations above, we compute the 95\% confidence interval $(p_{\min}, p_{\max})$ by computing the minimum and maximum values of $p$ in the image, by the linear map $\mathbf{e} \mapsto (\ln(C), p) = (A^tA)^{-1}A^t\ln(\mathbf{e})$, of the polytope formed by all combinations of the indices in $(\epsilon_{\min}^{N_i})_i$ and $(\epsilon_{\max}^{N_i})_i$, which is the image of the set of 95\% confidence intervals for the errors obtained with the Monte-Carlo approximation of the strong error.
+    \item Finally, from the normal equations above, we compute the 95\% confidence interval $[p_{\min}, p_{\max}]$ by computing the minimum and maximum values of $p$ in the image, by the linear map $\mathbf{e} \mapsto (\ln(C), p) = (A^tA)^{-1}A^t\ln(\mathbf{e})$, of the polytope formed by all combinations of the indices in $(\epsilon_{\min}^{N_i})_i$ and $(\epsilon_{\max}^{N_i})_i$, which is the image of the set of 95\% confidence intervals for the errors obtained with the Monte-Carlo approximation of the strong error.
 \end{enumerate}
 
 As for the implementation itself, all code is written in the Julia language \cite{Julia2017}. Julia is a high-performance programming language, suitable for scientific computing and computationally-demanding applications.
@@ -1025,7 +1025,7 @@ This is the contribution of this random variable to the mean of the exact soluti
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ for each mesh resolution $N$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I = [0.0, 1.0]$, based on $M = 500$ sample paths for each fixed time step, with the target solution calculated with $65536$ points. The order of strong convergence is estimated to be $p = 0.974$, with the 95\% confidence interval $(0.9406, 1.0079)$}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ for each mesh resolution $N$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I = [0.0, 1.0]$, based on $M = 500$ sample paths for each fixed time step, with the target solution calculated with $65536$ points. The order of strong convergence is estimated to be $p = 0.974$, with the 95\% confidence interval $[0.9406, 1.0079]$}
     \label{tablinearhomogeneousrode}
 \end{table}
 
@@ -1038,11 +1038,7 @@ for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearh
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
-    \caption{Order of convergence $p = 0.974$ of the strong error of the Euler method for
-    $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
-    and a standard Wiener process noise $\{W_t\}_t$,
-    computed with $M = 500$ sample paths,
-    for each $\Delta t = 1/N$,  $N = 2^n$, $n=4, \ldots, 14.$, with $N_{\textrm{tgt}} = 2^{16}$.}
+    \caption{Order of convergence $p = 0.974$ of the strong error of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, based on \cref{tablinearhomogeneousrode}.}
     \label{figlinearhomogeneousrode}
 \end{figure}
 
@@ -1085,13 +1081,13 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.016$, with the 95\% confidence interval $(0.9418, 1.0897)$}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.016$, with the 95\% confidence interval $[0.9418, 1.0897]$}
     \label{taballnoises}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_allnoises.png}
-    \caption{Order of convergence $p = 1.016$ (95\% CI[0.9418, 1.0897]) of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}.}
+    \caption{Order of convergence $p = 1.016$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}.}
     \label{figallnoises}
 \end{figure}
 
