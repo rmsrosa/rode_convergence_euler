@@ -1007,7 +1007,7 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
 \begin{figure}
-    \includegraphics[scale=0.4]{img/approximation_linearhomogenous.png}
+    \includegraphics[scale=0.6]{img/approximation_linearhomogenous.png}
     \caption{Euler approximation of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 = 1.0$, on $[0, T]$, and a few sample paths of exact solutions compatible with the given realizations of the noise on the mesh points.}
     \label{samplepathslinearhomogeneousrode}
 \end{figure}
@@ -1015,30 +1015,30 @@ for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearh
 Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. \cref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.0667 & 0.0194 \\
-        32 & 0.0323 & 0.0108 \\
-        64 & 0.0159 & 0.00546 \\
-        128 & 0.00787 & 0.00278 \\
-        256 & 0.00392 & 0.00139 \\
-        512 & 0.00196 & 0.000687 \\
-        1024 & 0.000978 & 0.000345 \\
-        2048 & 0.000489 & 0.000172 \\
-        4096 & 0.000244 & 8.62e-5 \\
-        8192 & 0.000122 & 4.66e-5 \\
-        16384 & 6.1e-5 & 2.45e-5 \\
+        16 & 0.0667 & 0.0203 & 0.00237 \\
+        32 & 0.0323 & 0.0107 & 0.00143 \\
+        64 & 0.0159 & 0.00587 & 0.000891 \\
+        128 & 0.00787 & 0.00282 & 0.000471 \\
+        256 & 0.00392 & 0.0014 & 0.000205 \\
+        512 & 0.00196 & 0.000766 & 0.000128 \\
+        1024 & 0.000978 & 0.000375 & 5.42e-5 \\
+        2048 & 0.000489 & 0.000181 & 3.08e-5 \\
+        4096 & 0.000244 & 8.45e-5 & 1.35e-5 \\
+        8192 & 0.000122 & 4.71e-5 & 9.83e-6 \\
+        16384 & 6.1e-5 & 2.5e-5 & 4.4e-6 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I=[0.0, 1.0]$, based on $M = 1000$ sample paths for each fixed time step, with the target solution calculated with $65536$ points.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ for each mesh resolution $N$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $65536$ points. The order of strong convergence is estimated to be $p = 0.973$, with the 95\% confidence interval $(0.9126, 1.036)$}
     \label{tablinearhomogeneousrode}
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.4]{img/order_wiener_linearhomogenous.png}
+    \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
     \caption{Order of convergence $p = 0.98$ of the strong error of the Euler method for
     $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, on $[0, T] = [0.0, 1.0]$, with $X_0 \sim \mathcal{N}(0, 1)$,
     and a standard Wiener process noise $\{W_t\}_t$,
