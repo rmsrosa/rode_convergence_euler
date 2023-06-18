@@ -271,6 +271,6 @@ function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equat
     \\end{tabular}
     \\bigskip
 
-    \\caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $(info.equation) for each mesh resolution \$N\$, with initial condition $(info.ic) and $(info.noise), on the time interval \$I = [$t0, $tf]\$, based on \$M = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=3))\$, with the 95\\% confidence interval \$($(round(result.pmin, digits=4)), $(round(result.pmax, digits=4)))\$}"
+    \\caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $(info.equation) for each mesh resolution \$N\$, with initial condition $(info.ic) and $(info.noise), on the time interval \$I = [$t0, $tf]\$, based on \$M = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=3))\$, with the 95\\% confidence interval \$[$(round(result.pmin, digits=4)), $(round(result.pmax, digits=4))]\$}"
     return table
 end
