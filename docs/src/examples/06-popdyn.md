@@ -11,7 +11,7 @@ This time we consider a population dynamics model with two types of noise, a geo
 More precisely, we consider the RODE
 ```math
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \Lambda_t X_t (r - X_t) - \alpha H_t, \qquad 0 \leq t \leq T, \\
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = \Lambda_t X_t (r - X_t) - \alpha H_t\frac{2X_t}{r + X_t}, \qquad 0 \leq t \leq T, \\
   \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 ```
@@ -58,11 +58,11 @@ The right hand side of the evolution equation
 
 ````@example 06-popdyn
 function f(t, x, y)
-    γ = 1.0
+    γ = 0.8
     ϵ = 0.3
     r = 1.0
-    α = γ / 2
-    dx = x > zero(x) ? γ * (1 + ϵ * sin(y[1])) * x * (r - x) - α * y[2] : zero(x)
+    α = γ * r^2
+    dx = x > zero(x) ? γ * (1 + ϵ * sin(y[1])) * x * (1 - x / r) - α * y[2] * x / (r + x) : zero(x)
     return dx
 end
 ````
@@ -164,8 +164,6 @@ We illustrate the rate of convergence with the help of a plot recipe for `Conver
 plt = plot(result)
 ````
 
-We save the plot for the inclusion in the article
-
 ````@example 06-popdyn
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
 nothing # hide
@@ -177,10 +175,8 @@ For the sake of illustration, we plot some approximations of a sample target sol
 plt = plot(suite, ns=nsample)
 ````
 
-This time we save this sample path approximation for illustration in the article
-
 ````@example 06-popdyn
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.png"))
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.png")) # hide
 nothing # hide
 ````
 
@@ -193,7 +189,7 @@ plot(suite, xshow=false, yshow=true, label=["Z_t" "H_t"], linecolor=:auto)
 The gBm noises enters the equation via $G_t = \gamma(1 + \epsilon\sin(Z_t))$. Using the chosen parameters, this noise can be visualized below
 
 ````@example 06-popdyn
-plot(suite, xshow=false, yshow= y -> 1.0 + 0.3sin(y[1]), label="\$G_t\$")
+plot(suite, xshow=false, yshow= y -> 0.8 + 0.3sin(y[1]), label="\$G_t\$")
 ````
 
 ---

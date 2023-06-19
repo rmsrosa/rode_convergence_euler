@@ -1291,19 +1291,21 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
 Here, we consider a population dynamics problem modeled by a logistic equation with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, with an extra term representing harvest:
 \begin{equation}
     \label{rodepopulationdynamics}
-    \frac{\mathrm{d}X_t}{\mathrm{d}t} = G_t X_t (r - X_t) - H_t,
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \Lambda_t X_t (1 - \frac{X_t}{r}) - \alpha H_t \frac{X_t}{r + X_t},
 \end{equation}
-where $r > 0$ is constant; $\{G_t\}_{t \geq 0}$ is a stochastic process playing the role of a random growth parameter; and $\{H_t\}_{t\geq 0}$ is a nonnegative process playing the role of the harvest term. More specifically, $\{G_t\}_{t \geq 0}$ is given by
+where $r, \alpha > 0$ are constants and $\{\Lambda_t\}_{t \geq 0}$ and $\{H_t\}_{t \geq 0}$ are stochastic processes. The first term is a logistic growth, with carrying capacity $r$ and random specific growth $\Lambda_t$. The second term is the harvest term, with $\alpha$ being an overall modulation factor; the term $X_t / (r + X_t)$ accounting for the scarcity of the population, when $X_t \ll r$; and $0 \leq H_t \leq 1$ is a random harvest factor accounting. 
+
+More specifically, $\{\Lambda_t\}_{t \geq 0}$ is given by
 \[
-    G_t = \gamma (1 + \varepsilon \sin(Z_t)),
+    \Lambda_t = \gamma (1 + \varepsilon \sin(G_t)),
 \]
-where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{Z_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
+where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process, hence of the form \eqref{YtItonoise}-\eqref{Itonoiseterms}. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
 
 The harvest term $\{H_t\}_{t\geq 0}$ is a ``Poisson step'' process of the form
 \[
-    H_t = S_{N_t}
+    H_t = S_{N_t},
 \]
-where $\{N_t\}_{t\geq 0}$ is a Poisson point-process with rate $\lambda$, $S_0 = 0$, and the $S_i$, for $i=1, 2, \ldots$, are independent and identically distributed random variables with nonnegative values, independent also of the Poisson process $\{N_t\}_{t\geq 0}$.
+where $\{N_t\}_{t\geq 0}$ is a Poisson point-process with rate $\lambda$, $S_0 = 0$, and the $S_i$, for $i=1, 2, \ldots$, are independent and identically distributed random variables with nonnegative values within the interval $[0, 1]$, independent also of the Poisson counter $\{N_t\}_{t\geq 0}$.
 
 We suppose the initial condition is nonnegative and bounded almost surely:
 \[
@@ -1311,53 +1313,59 @@ We suppose the initial condition is nonnegative and bounded almost surely:
 \]
 for some $R > r$.
 
-The noise process $\{G_t\}_{t \geq 0}$ itself satisfies
+The noise process $\{\Lambda_t\}_{t \geq 0}$ itself satisfies
 \[
-    0 < \lambda - \varepsilon \leq G_t \leq \lambda + \varepsilon < 2\lambda, \qquad \forall t \geq 0.
+    0 < \gamma - \varepsilon \leq \Lambda_t \leq \gamma + \varepsilon < 2\gamma, \qquad \forall t \geq 0.
 \]
 
 Define $f:\mathbb{R} \times \mathbb{R} \times \mathbb{R}^2 \rightarrow \mathbb{R}$ by
 \[
     f(t, x, y) = \begin{cases}
-        \gamma (1 + \varepsilon \sin(y_1)) x(r - x) - y_2, \quad x > 0,
-        0, \quad x \leq 0.
+        \displaystyle \gamma (1 + \varepsilon \sin(y_1)) x(r - x) - \alpha \frac{xy_2}{r + x}, & x \geq 0, \\
+        0, & x < 0.
     \end{cases}
 \]
 The equation \eqref{rodepopulationdynamics} becomes
 \[
     \frac{\mathrm{d}X_t}{\mathrm{d}t} = f(t, X_t, Y_t),
 \]
-where $\{Y_t\}_{t\geq 0}$ is the vector-valued process given in coordinates by $Y_t = (Z_t, H_t)$.
+where $\{Y_t\}_{t\geq 0}$ is the vector-valued process given in coordinates by $Y_t = (G_t, H_t)$.
 
-Notice that $f(t, x, y) = 0$, for $x < 0$ and for arbitrary $y=(y_1, y_2)$, while $f(t, x, y) < 0$, for $x \geq r$, $y_2 \geq 0$, and for arbitrary $y_1$. Since the noise $y_2 = H_t$ is always nonnegative, we see that the interval $0 \leq x \leq R$ is positively invariant and attracts the orbits with a nonnegative initial condition. Thus, the pathwise solutions of the initial-value problem under consideration are almost surely bounded as well.
+Notice that $f(t, x, y) = 0$, for $x < 0$, for arbitrary $y=(y_1, y_2)$, while $f(t, x, y) < 0$, for $x \geq r$, $y_2 \geq 0$, and for arbitrary $y_1$. Since the noise $y_2 = H_t$ is always nonnegative, we see that the interval $0 \leq x \leq R$ is positively invariant and attracts the orbits with a nonnegative initial condition. Thus, the pathwise solutions of the initial-value problem under consideration are almost surely bounded as well.
 
-The function $f=f(t, x, y)$ is continuously differentiable infinitely many times and with bounded derivatives within the positively invariant interval. Hence, within the region of interest, all the conditions of \cref{thmmixedcasepractical} hold and the Euler method is of strong order 1.
+The function $f=f(t, x, y)$ is continuously differentiable infinitely many times and with bounded derivatives within the positively invariant region. Hence, within the region of interest, all the conditions of \cref{thmmixedcasepractical} hold and the Euler method is of strong order 1.
 
-Below, we simulate numerically the solutions of the above problem, with $\gamma = 1.0,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma/2 = 0.5.$ The geometric Brownian motion process $\{Z_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=1000$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
+Below, we simulate numerically the solutions of the above problem, with $\gamma = 0.8,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma r = 0.64$ The geometric Brownian motion process $\{G_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=200$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
+
+Notice that we can write
+\[
+    \frac{\mathrm{d}X_t}{\mathrm{d}t} = \frac{X_t}{r + X_t} \left(r\Lambda_t - \alpha H_t - \frac{\Lambda_t}{r} X_t^2\right).
+\]
+Hence, when $\alpha H_t \geq r\Lambda_t$, the population decays for arbitrary $X_t > 0$, leading to an extinction of the population. The parameters chosen above keep the population from extinction but may often get close to the critical values.
 
 Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while \cref{figpopdyn} illustrates the order of convergence, estimated to be close enough to the theoretical value of strong order 1. Finally, \cref{figsamplepopdyn} shows an approximation sequence of a sample path.
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.0667 & 0.0118 \\
-        32 & 0.0323 & 0.00553 \\
-        64 & 0.0159 & 0.00269 \\
-        128 & 0.00787 & 0.00133 \\
-        256 & 0.00392 & 0.000657 \\
-        512 & 0.00196 & 0.000325 \\
+        16 & 0.0667 & 0.00994 & 0.000325 \\
+        32 & 0.0323 & 0.00475 & 0.000164 \\
+        64 & 0.0159 & 0.00219 & 8.44e-5 \\
+        128 & 0.00787 & 0.00114 & 4.27e-5 \\
+        256 & 0.00392 & 0.000553 & 2.08e-5 \\
+        512 & 0.00196 & 0.000279 & 1.06e-5 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for population dynamics, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval (0.0, 1.0), based on $m = 1000$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for population dynamics for each mesh resolution $N$, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.012$, with the 95\% confidence interval $[0.9874, 1.0381]$}.
     \label{tabpopdyn}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_popdyn_gBmPoisson.png}
-    \caption{Order of convergence of the strong error of the Euler method for equation \eqref{rodepopulationdynamics}.}
+    \caption{Order of convergence of the strong error of the Euler method for the population dynamics equation \eqref{rodepopulationdynamics}, based on \cref{tabpopdyn}.}
     \label{figpopdyn}
 \end{figure}
 
