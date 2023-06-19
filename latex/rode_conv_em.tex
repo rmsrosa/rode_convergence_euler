@@ -1383,7 +1383,7 @@ There are a number of models for earthquake-type forcing, such as the ubiquotous
 
 We follow, however, the Bogdanoff-Goldberg-Bernard model, which takes the form of a transport process noise. We chose the later so we can illustrate the improved convergence for such type of noise, complementing the other examples. The noise is described in more details shortly. Let us first introduce the model for the vibrations of the mechanical structure.
 
-A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single storey building takes the form
+A single-storey building is considered, with its ground floor centered at position $M_t$ and its ceiling at position $M_t + X_t$. The random process $X_t$ refers to the motion relative to the ground. The ground motion $M_t$ affects the motion of the relative displacement $X_t$ as an excitation force proportional to the ground acceleration $\ddot M_t$. The damping and elastic forces are in effect within the structure. In this framework, the equation of motion for the relative displacement $X_t$ of the ceiling of the single-storey building takes the form
 
 \begin{equation}
     \label{mechanicalstructuremodel}
@@ -1411,7 +1411,7 @@ the excitation $\ddot M_t$ is made of a composition of oscillating signals with 
     \sum_{j=1}^n a_j t e^{-\delta_j t}\cos(\omega_j t + \theta_j).
 \]
 
-In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation, which is connected with a square power attact rate for the displacement itself. Finally, for simulation purposes, we model the displacement $M_t$ instead of modeling directly the excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed signal.
+In order to simulate the start of the first shock-wave and the subsequent aftershocks, we modify this model sligthly to be a combination of such terms but at different incidence times. We also remove the attack rate from the excitation to obtain a rougher instantaneous, discontinuous excitation. This jump-like excitation is connected with a square power attack rate for the displacement itself. Finally, for simulation purposes, we model the displacement $M_t$ instead of modeling directly the excitation $\ddot M_t$, but in such a way that the ground-motion excitation follows essentially the proposed signal.
 
 Thus, with this framework in mind, we model the ground displacement as a transport process composed of a series of time-translations of a square-power ``attack" front, with an exponentially decaying tail and an oscillating background wave:
 \begin{equation}
@@ -1433,24 +1433,24 @@ More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\o
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while \cref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0317 & 2.2 \\
-        128 & 0.0157 & 0.932 \\
-        256 & 0.00784 & 0.427 \\
-        512 & 0.00391 & 0.205 \\
+        64 & 0.0317 & 2.2 & 0.0802 \\
+        128 & 0.0157 & 0.932 & 0.0334 \\
+        256 & 0.00784 & 0.427 & 0.0154 \\
+        512 & 0.00391 & 0.205 & 0.00736 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for the mechanical structure model under ground-shaking random excitations, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval (0.0, 2.0), based on $m = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for mechanical structure model under ground-shaking random excitations for each mesh resolution $N$, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval $I = [0.0, 2.0]$, based on $M = 500$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.131$, with the 95\% confidence interval $[1.0915, 1.1707]$}.
     \label{tableearthquake}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/convergence_earthquake.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}.}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}, based on the \cref{tableearthquake}.}
     \label{figearthquake}
 \end{figure}
 
