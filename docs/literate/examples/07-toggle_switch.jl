@@ -172,7 +172,9 @@ nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$ (cP)" "\$B_t\$ (tgBm)"], linecolor=[1 2])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], linecolor=[1 2])
+
+#
 
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.png")) # hide
 nothing # hide
@@ -181,7 +183,7 @@ nothing # hide
 
 plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], titlefont=10)
 
-# and save it:
+#
 
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.png"))
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.png")) # hide
 nothing # hide
