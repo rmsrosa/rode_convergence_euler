@@ -210,20 +210,20 @@ We start with a fundamental set of conditions that imply the existence and uniqu
         \item \label{standinghypotheses1Car} The mapping $(t, x) \mapsto f(t, x, Y_t)$ satisfies the Carath\'eodory conditions:
             \begin{enumerate}
                 \item The mapping $x \mapsto f(t, x, Y_t(\omega))$ is continuous in $\mathbb{R}^d$, for almost every $(t, \omega)\in I\times \Omega$;
-                \item The mapping $t \mapsto f(t, x, Y_t(\omega))$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}^d$ and each sample path $t \mapsto Y_t(\omega)$;
+                \item The mapping $t \mapsto f(t, x, Y_t(\omega))$ is Lebesgue measurable in $t\in I$, for each $x\in \mathbb{R}^d$ and almost every sample path $t \mapsto Y_t(\omega)$;
                 \item \label{standinghypotheses1Carboundonf} The bound $\|f(t, x, Y_t)\| \leq M_t + L_X\|x\|$ holds for all $t\in I$ and all $x\in\mathbb{R}^d$, where $\{M_t\}_{t\in I}$ is a real stochastic process with Lebesgue integrable sample paths $t\mapsto M_t(\omega)$ on $t\in I$.
             \end{enumerate}
     \end{enumerate}
 \end{stdhyp}
 
-Under these assumptions, for each sample value in $\Omega$, the integral equation
+Under these assumptions, for almost every sample value in $\Omega$, the integral equation
 \begin{equation}
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
 has a unique solution, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$, of the initial condition, and $t\mapsto Y_t(\omega)$, of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
-Each sample path solution $t \mapsto X_t(\omega)$ is bounded by
+Almost every sample path solution $t \mapsto X_t(\omega)$ is bounded by
 \begin{equation}
     \label{XtboundLXMt}
     \|X_t\| \leq \left(\|X_0\| + \int_0^t M_s\;\mathrm{d}s\right) e^{L_X t}, \quad \forall t\in I.
@@ -253,7 +253,7 @@ For the strong convergence of the Euler approximation, we also need to control t
 \end{proof}
 
 %\begin{remark}
-%    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are continuous, then the integrand in \eqref{integralrodeform} is continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+%    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are almost surely continuous, then the integrand in \eqref{integralrodeform} is almost surely continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
 %\end{remark}
 
 \begin{remark}
@@ -265,7 +265,7 @@ For the strong convergence of the Euler approximation, we also need to control t
 In this section, we derive the following integral formula for the global error:
 \begin{lemma}
     \label{lemglobalerrorintegralformula}
-    Under the \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for any pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies the global error formula
+    Under the \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely the global error formula
     \begin{equation}
         \label{globalerrorintegralformula}
         \begin{aligned}
@@ -393,7 +393,7 @@ As for the second term, which only concerns the solution itself, not the approxi
 \end{lemma}
 
 \begin{proof}
-    By assumption, we have $\|f(t, X_t, Y_t)\| \leq M_t + L_X\|X_t\|,$ for all $t\in I$ and all sample paths. Thus,
+    By assumption, we have $\|f(t, X_t, Y_t)\| \leq M_t + L_X\|X_t\|,$ for all $t\in I$ and almost all sample paths. Thus,
     \[
       \left\|X_s - X_{\tau^N(s)}\right\| = \left\|\int_{\tau^N(s)}^s f(\xi, X_\xi, Y_\xi)\;\mathrm{d}\xi\right\| \leq \int_{\tau^N(s)}^s (M_\xi + L_X\|X_\xi\|)\;\mathrm{d}\xi.
     \]
@@ -455,7 +455,7 @@ Combining the two previous results we obtain the following:
 \section{The case of noise with sample paths of bounded variation}
 \label{secmonotonicbound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o process noise, but, instead, that the steps can be controlled by a monotonic nondecreasing process with finite expected growth. This fits well the typical case of point processes, such as renewal-reward processes, Hawkes process, and the like.
+Here, the noise $\{Y_t\}_{t\in I}$ is \emph{not} assumed to be an It\^o process noise, but, instead, that the steps can be controlled almost surely by a monotonic nondecreasing process with finite expected growth. This fits well the typical case of point processes, such as renewal-reward processes, Hawkes process, and the like.
 
 More precisely, we have the following result.
 \begin{lemma}
@@ -465,7 +465,7 @@ More precisely, we have the following result.
         \label{stepbound}
           \left\|f(s, X_{\tau^N(s)}^N, Y_s) - f({\tau^N(s)}, X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \leq \bar F_s - \bar F_{\tau^N(s)},
       \end{equation}
-      where $\{\bar F_t\}$ is a real-valued stochastic process with monotonic nondecreasing sample paths and with
+      almost surely, where $\{\bar F_t\}$ is a real-valued stochastic process with monotonic nondecreasing sample paths and with
       \begin{equation}
         \label{expectstepmonotonic}
         \mathbb{E}[\bar F_t] \textrm{ uniformly bounded on } t\in I.
@@ -556,7 +556,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         \left\|\partial_t f(t, x, y)\right\| \leq C_1 + C_2 \|x\| + C_3\|y\|, \quad \left\|\partial_y f(t, x, y)\right\| \leq C_4 + C_5\|x\| + C_6\|y\|,
     \end{equation}
     in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $C_1, C_2, C_3, C_4 \geq 0$.
-    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
+    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
     \begin{equation}
         \label{EYtboundedsquarevariation2}
         \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
@@ -593,7 +593,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         M_t = C_1 + C_4 + (C_3 + C_6)\|Y_t\|.
     \]
-    Since the sample paths of $\{Y_t\}_{t\in I}$ are of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}. Moreover, we have that
+    Since the sample paths of $\{Y_t\}_{t\in I}$ are almost surely of bounded variation, the process $\{M_t\}_{t\in I}$ has integrable sample paths. This means that we are under the \cref{standinghypotheses1}. Moreover, we have that
     \[
         \mathbb{E}[\|Y_t\|] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}[\|Y_t - Y_0\|] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}[V(\{Y_t\}_{t\in I}; I)].
     \]
@@ -622,7 +622,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
     \[
         \bar F_t = (C_1 + C_2 \|X_{\tau^N(t)}^N\|)t + (C_3 + C_4 \|X_{\tau^N(t)}^N\|) V(\{Y_t\}_{t\in I}; 0, t).
     \]
-    It is clear that all the sample paths of $\{\bar F_t\}_{t\in I}$ are non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
+    It is clear that the sample paths of $\{\bar F_t\}_{t\in I}$ are almost surely non-decreasing in $t\in I$, with $\bar F_0 = 0$. Moreover, thanks to \eqref{EYtboundedsquarevariation2}, and using the Cauchy-Schwarz inequality in the last term, we have
     \[
         \mathbb{E}[\bar F_T] \leq (C_1 + C_2 K_1)T + (C_3 + C_4K_1)\mathbb{E}[V(\{Y_t\}_{t\in I}; 0, T)^2] < \infty.
     \]
@@ -639,9 +639,10 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         \bar F_t = (C_1 + C_2 \|X_{\tau^N(t)}^N\|)t + (C_3 + C_4 |X_{\tau^N(t)}^N|^{p-1}) V(\{Y_t\}_{t\in I}; 0, t).
     \]
     Applying the H\"older inequality yields
-    \[
-        \bar F_t \leq (C_1 + C_2 \|X_{\tau^N(t)}^N\|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) + C_4 \frac{p-1}{p}\|X_{\tau^N(t)}^N\|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
-    \]
+    \begin{multline*}
+        \bar F_t \leq (C_1 + C_2 \|X_{\tau^N(t)}^N\|)t + C_3 V(\{Y_t\}_{t\in I}; 0, t) \\
+        + C_4 \frac{p-1}{p}\|X_{\tau^N(t)}^N\|^p  + \frac{C_4}{p} V(\{Y_t\}_{t\in I}; 0, t)^p.
+    \end{multline*}
     With that, the required conditions on $\{\bar F_t\}_{t\in I}$ are met and we are allowed to apply \cref{thmmonotonicbound} and deduce the strong order 1 convergence of the Euler method.
 \end{remark}
 
@@ -698,7 +699,7 @@ With that in mind, we first prove the following result.
     \end{align*}
     For exchanging the order of integration in the stochastic integral, an important aspect is that, although the integral in $s$ becomes an integral on the interval $[\xi, \tau^N(\xi) + \Delta t_N]$, which is posterior to $\xi$, the integrand does not depend on $s$ and, hence, does not violate any non-anticipative condition for the validity of the It\^o integral and of the stochastic Fubini Theorem.
 
-    Taking the absolute mean and using the It\^o isometry \cite{Oksendal2003} on the second term gives
+    Taking the absolute mean and using the It\^o isometry \cite{Oksendal2003} on the second term give
     \begin{multline*}
         \mathbb{E}\left[\left\|\int_0^t \left(f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right)\;\mathrm{d}s\right\|\right]  \\
         \leq \int_0^t |\tau^N(\xi)+\Delta t_N - \xi| \mathbb{E}[\|A_\xi\|] \;\mathrm{d}\xi + \left(\int_0^t (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[\|B_\xi\|^2] \;\mathrm{d}\xi \right)^{1/2}.
@@ -768,7 +769,7 @@ Then, we have following result.
 \end{theorem}
 
 \begin{proof}
-    Let us start by showing that the \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the noise has continuous sample paths. Thus, the remaining condition in the \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
+    Let us start by showing that the \cref{standinghypotheses1} is valid. Since $f=f(t, x, y)$ is (twice) continuously differentiable with, in particular, bounded derivative in $x$, then it is uniformly globally Lipschitz in $x$. Since $a=a(t, y)$ and $b=b(t, y)$ are continuous, the noise has continuous sample paths, almost surely. Thus, the remaining condition in the \cref{standinghypotheses1} to be verified is \eqref{standinghypotheses1Carboundonf}.
 
     Using the It\^o formula with \eqref{YtItonoise} in mind (see \cite[Theorem 4.1.2]{Oksendal2003} or \cite[Section 7.4]{Kuo2006} for the scalar case of the It\^o formula, with $g(t, y) = y^2,$ and \cite[Theorem 4.2.1]{Oksendal2003} or, more generally, \cite[Section 7.5]{Kuo2006} for the multi-dimensional case, with $g(t, y) = \|y\|^2$), we have
     \[
@@ -783,7 +784,6 @@ Then, we have following result.
         \mathbb{E}[\|Y_t\|^2] = \mathbb{E}[\|Y_0\|^2] + \int_0^t \mathbb{E}\left[\left(2a(s, Y_s) \cdot Y_s  + b(t, Y_s)^2 \right)\right] \;\mathrm{d}s.
     \]
 
-    
     Using \eqref{Itonoiseterms}, this yields
     \begin{align*}
         \mathbb{E}[\|Y_t\|^2] & \leq \mathbb{E}[\|Y_0\|^2] + \int_0^t \left(2\mathbb{E}[(A_M + A_Y \|Y_s\|) \|Y_s\|]  + \mathbb{E}[(B_M + B_Y\|Y_s\|)^2] \right) \;\mathrm{d}s \\
@@ -884,7 +884,7 @@ We omit the proof since it is just a combination of \cref{lemmonotonicbound} and
 
 \begin{theorem}
     \label{thmmixedcasepractical}
-    Suppose that $f=f(t, x, y)$ is twice continuously differentiable with uniformly bounded derivatives. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are made of two independent components, one of bounded variation with finite quadratic mean, as in \eqref{EYtboundedsquarevariation2}, and another an It\^o process noise satisfying \eqref{YtItonoise} and \eqref{YtItonoiseinitialcondition}. Assume, moreover, that \eqref{EX0square2} holds. Then, the Euler scheme is of strong order 1, i.e.
+    Suppose that $f=f(t, x, y)$ is twice continuously differentiable with uniformly bounded derivatives. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are made of two independent components, one almost surely of bounded variation with finite quadratic mean, as in \eqref{EYtboundedsquarevariation2}, and another an It\^o process noise satisfying \eqref{YtItonoise} and \eqref{YtItonoiseinitialcondition}. Assume, moreover, that \eqref{EX0square2} holds. Then, the Euler scheme is of strong order 1, i.e.
     \begin{equation}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
