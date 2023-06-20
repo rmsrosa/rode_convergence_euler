@@ -1450,7 +1450,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/convergence_earthquake.png}
-    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}, based on the \cref{tableearthquake}.}
+    \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}, based on \cref{tableearthquake}.}
     \label{figearthquake}
 \end{figure}
 
@@ -1502,7 +1502,7 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_toggleswitch.png}
-    \caption{Order of convergence of the strong error of the Euler method for the toggle-switch model \eqref{toggleswitchsystem}, based on the \cref{tabletoggleswitch}.}
+    \caption{Order of convergence of the strong error of the Euler method for the toggle-switch model \eqref{toggleswitchsystem}, based on \cref{tabletoggleswitch}.}
     \label{figtoggleswitch}
 \end{figure}
 
@@ -1526,7 +1526,7 @@ A classical model for the surplus $U_t$ at time $t$ of an insurance company is t
 \]
 where $U_0$ is the initial capital, $\gamma$ is a constant premium rate received from the insurees, $C_i$ is a random variable representing the value of the $i$-th claim paid to a given insuree, and $N_t$ is the number of claims up to time $t$. The process $\{N_t\}_t$ is modeled as a Poisson counter, so that the accumulated claims form a compound Poisson process. It is also common to use inhomogeneous Poisson processes and Hawkes self-exciting process, or combinations of such processes for the incidence of the claim, but the classical model uses a homogeneous Poisson counter.
 
-The model above, however, does not take into account the variability of the premium rate received by the company, nor the investiment of the accumulated reserves, among other things. Several diffusion type models have been proposed to account for these and other factors. We will consider a simple model, with a randomly perturbed premium and with variable rentability.
+The model above, however, does not take into account the variability of the premium rate received by the company, nor the investiment of the accumulated reserves, among other things. Several diffusion type models have been proposed to account for these and other factors. We consider here a simple model, with a randomly perturbed premium and with variable rentability.
 
 More precisely, we start by rewriting the above expression as the following jump (or impulse) differential equation
 \[
@@ -1591,29 +1591,29 @@ Once the solution of $\{X_t\}_t$ is obtained, we find an explicit formula for th
 \]
 with $\{R_t\}_t$ as above.
 
-For the numerical simulations, we use $O_0 = 0$, $\nu = 5$ and $\varepsilon = 0.8$, for the Ornstein-Uhlenbeck process $\{O_t\}_t$; $\lambda = 8.0$ and $C_i \sim \mathrm{Uniform}(0, 0.2)$, for the compound Poisson process $\{C_t\}$; $R_0 = 0.2$, $\mu = 0.02$ and $\sigma = 0.4$, for the interest rate process $\{R_t\}_t$ and we take $X_0 = 1.0$, so that $U_t = X_0 + O_0 + R_0 = 1.2$. We set $T = 3.0,$ as the final time.
+For the numerical simulations, we use $O_0 = 0$, $\nu = 5$ and $\varepsilon = 0.8$, for the Ornstein-Uhlenbeck process $\{O_t\}_t$; $\lambda = 8.0$ and $C_i \sim \mathrm{Uniform}(0, 0.2)$, for the compound Poisson process $\{C_t\}$; $R_0 = 0.2$, $\mu = 0.02$ and $\sigma = 0.4$, for the interest rate process $\{R_t\}_t$; and we take $X_0 = 1.0$, so that $U_0 = X_0 + O_0 + R_0 = 1.2$. We set $T = 3.0,$ as the final time.
 
 For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m = 400.$ Table \ref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0476 & 0.175 \\
-        128 & 0.0236 & 0.0818 \\
-        256 & 0.0118 & 0.043 \\
-        512 & 0.00587 & 0.0212 \\
+        64 & 0.0476 & 0.175 & 0.0109 \\
+        128 & 0.0236 & 0.0818 & 0.0054 \\
+        256 & 0.0118 & 0.043 & 0.00236 \\
+        512 & 0.00587 & 0.0212 & 0.00135 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for a risk model for each mesh resolution $N$, with initial condition $X_0 = 1.0$ and coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes, on the time interval $I = [0.0, 3.0]$, based on $M = 400$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.0$}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a risk model for each mesh resolution $N$, with initial condition $X_0 = 1.0$ and coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes, on the time interval $I = [0.0, 3.0]$, based on $M = 400$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 0.999$, with the 95\% confidence interval $[0.9273, 1.0707]$}.
     \label{tableriskmodel}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/convergence_riskmodel.png}
-    \caption{Order of convergence of the strong error of the Euler method for the actuarial risk model \eqref{riskmodel}.}
+    \caption{Order of convergence of the strong error of the Euler method for the actuarial risk model \eqref{riskmodel}, based on \cref{tableriskmodel}.}
     \label{figriskmodel}
 \end{figure}
 
@@ -1698,7 +1698,7 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_fisherkpp.png}
-    \caption{Order of convergence of the strong error of the Euler method for the Fisher-KPP model \eqref{fisherkpprode}-\eqref{fisherkppbc}.}
+    \caption{Order of convergence of the strong error of the Euler method for the Fisher-KPP model \eqref{fisherkpprode}-\eqref{fisherkppbc}, based on \cref{tablefisherkpp}.}
     \label{figfisherkpp}
 \end{figure}
 
