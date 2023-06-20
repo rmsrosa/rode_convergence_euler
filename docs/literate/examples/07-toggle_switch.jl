@@ -1,5 +1,9 @@
 # # A toggle-switch model for gene expression
 #
+# ```@meta
+# Draft = false
+# ```
+#
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://doi.org/10.1186/1752-0509-8-43). See also [Strasser, Theis & Marr (2012)](https://doi.org/10.1016/j.bpj.2011.11.4000).
 
 # Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
@@ -73,7 +77,7 @@ x0law = product_distribution(Dirac(x0), Dirac(y0))
 BM = 0.5
 Bλ = 5.0
 Bylaw = Uniform(0.0, BM)
-Aμ1 = 0.5
+Aμ1 = 0.7
 Aμ2 = 0.3
 Aσ = 0.3
 Aω = 3π
@@ -90,7 +94,7 @@ noise = ProductProcess(
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 600
+m = 200
 
 # And add some information about the simulation:
 

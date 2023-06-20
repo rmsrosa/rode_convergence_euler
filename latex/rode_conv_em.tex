@@ -1476,27 +1476,27 @@ We consider the following simple model as discussed in \cite[Section 7.8]{Asai20
 \end{equation}
 on $t \geq 0$, with initial conditions $X_0$ and $Y_0$, where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activations $A_t$ is taken to be a compound Poisson process, while $B_t$ is non-autonomous homogeneous linear It\^o process of the form $\mathrm{d}B_t = (\mu_1 + \mu_2\sin(\vartheta t))B_t\;\mathrm{d}t + \sigma\sin(\vartheta t)B_t\;\mathrm{d}W_t$.
 
-In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed within $[0.0, 0.5]$, while $\{B_t\}_t$ is taken with $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ $\vartheta=3\pi,$ and initial condition $B_0 = 0.2;$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
+In the simulations below, we use parameters similar to those in \cite[Section 7.8]{Asai2016}. We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed within $[0.0, 0.5]$, while $\{B_t\}_t$ is taken with $\mu_1 = 0.7,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ $\vartheta=3\pi,$ and initial condition $B_0 = 0.2;$. The convergence estimate is done over the interval $[0, 5.0]$, while some illustrative solutions are over a longer interval $[0, 10.0]$.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=600.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=200.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.333 & 1.1 & 0.0271 \\
-        32 & 0.161 & 0.51 & 0.0132 \\
-        64 & 0.0794 & 0.24 & 0.00624 \\
-        128 & 0.0394 & 0.115 & 0.00299 \\
-        256 & 0.0196 & 0.0566 & 0.00147 \\
-        512 & 0.00978 & 0.0283 & 0.000728 \\
+        16 & 0.333 & 1.22 & 0.0485 \\
+        32 & 0.161 & 0.563 & 0.0237 \\
+        64 & 0.0794 & 0.27 & 0.0112 \\
+        128 & 0.0394 & 0.133 & 0.00537 \\
+        256 & 0.0196 & 0.0677 & 0.00448 \\
+        512 & 0.00978 & 0.0331 & 0.00191 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $I = [0.0, 5.0]$, based on $M = 600$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.039$, with the 95\% confidence interval $[1.0265, 1.0504]$}.
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $I = [0.0, 5.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.018$, with the 95\% confidence interval $[0.9874, 1.0493]$}.
     \label{tabletoggleswitch}
 \end{table}
 
