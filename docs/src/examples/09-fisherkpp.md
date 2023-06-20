@@ -4,6 +4,10 @@ EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/09-fis
 
 # Random Fisher-KPP partial differential equation
 
+```@meta
+Draft = false
+```
+
 Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of [Salako & Shen (2020)](https://doi.org/10.1007/s10884-020-09847-2) and [Freidlin & Wentzell (1992)](https://doi.org/10.1214/aop/1176989813). The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in [Fisher (1937)](https://doi.org/10.1111/j.1469-1809.1937.tb02153.x) and [Kolmogorov, Petrovskii & Piscunov (1937)](https://www.bibsonomy.org/bibtex/23cfaf2cd2a49db658463fc5b115b3aa4/peter.ralph)
 
 We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a nonlinear partial differential equation.

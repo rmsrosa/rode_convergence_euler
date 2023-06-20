@@ -1635,7 +1635,7 @@ Finally, we simulate a Fisher-KPP equation with random boundary conditions, as i
 
 The intent here is to illustrate the strong order 1 convergence rate on a discretization of a nonlinear partial differential equation. We use the method of lines (MOL), with finite differences in space, to approximate the random partial differential equation (PDE) by a system of random ODEs.
 
-The deterministic Fisher-KPP equations has its origins in \cite{Fisher1937} and \cite{KPP1937}. It is a nonlinear parabolic equation of reaction-diffusion type, modeling inhomogeneous population growth displaying wave propagation, and many other phenomena such as combustion front wave propagation, physiollogy and crystallography pattern formation, and so on.
+The deterministic Fisher-KPP equation is a nonlinear parabolic equation of reaction-diffusion type, with origins in \cite{Fisher1937} and \cite{KPP1937}. It models inhomogeneous population growth and many other phenomena displaying wave propagation, such as combustion front wave propagation, physiollogy, crystallography pattern formation, and so on.
 
 We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point.
 
@@ -1656,7 +1656,7 @@ and a given a initial condition
 
 The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
 
-The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random trains of incoming population.
+The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random wave trains of incoming population. More precisely, $Y_t = H_t O_t$, where $\{H_t\}_t$ is a Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 0.3$, exponential decay rate $\delta = 5.0$, and jump law following an exponential distribution with scale $\theta = 1/1.8;$ and $\{O_t\}_t$ is an Orstein-Uhlenbeck process with $O_0 = 0.0,$ time-scale $\tau = 0.005$, drift $\nu = 1/\tau$ and diffusion $\sigma = \tilde \sigma/\tau,$ where $\tilde\sigma = 0.1.$
 
 This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 
@@ -1672,27 +1672,29 @@ Using the boundary conditions, we find that
 \]
 which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
-The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost certainly. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
+The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost surely. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
 
-The spatial discretization is done with finite differences on a grid with 17 mesh points. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two in this particular case is that, due to the spatial discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
+The spatial discretization is done with finite differences on a grid with 17 mesh points. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two in this particular case is that, due to the spatial discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high on the number of mesh points and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
 
-For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
+
+
+For the Monte-Carlo estimate of the strong error, we choose $m=200.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
 
 \begin{table}
-    \begin{tabular}[htb]{|r|l|l|}
-        \hline N & dt & error\\
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
         \hline \hline
-        1024 & 0.00196 & 0.243 \\
-        1152 & 0.00174 & 0.214 \\
-        1280 & 0.00156 & 0.194 \\
-        1536 & 0.0013 & 0.165 \\
-        1920 & 0.00104 & 0.131 \\
-        2048 & 0.000977 & 0.122 \\
+        1024 & 0.00196 & 0.244 & 0.0155 \\
+        1152 & 0.00174 & 0.215 & 0.0136 \\
+        1280 & 0.00156 & 0.195 & 0.0124 \\
+        1536 & 0.0013 & 0.163 & 0.0103 \\
+        1920 & 0.00104 & 0.131 & 0.00829 \\
+        2048 & 0.000977 & 0.124 & 0.00782 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), and strong error (error) of the Euler method for Fisher-KPP equation for each N, with initial condition $X_0 = 0$ and Hawkes-modulated colored noise, on the time interval (0.0, 2.0), based on $m = 100$ sample paths for each fixed time step, with the target solution calculated with $4423680$ points. The order of strong convergence is estimated to be $p = 0.98$}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for Fisher-KPP equation for each mesh resolution $N$, with initial condition $X_0 = 0$ and Hawkes-modulated colored noise, on the time interval $I = [0.0, 2.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $4423680$ points. The order of strong convergence is estimated to be $p = 0.981$, with the 95\% confidence interval $[0.7565, 1.2047]$}.
     \label{tablefisherkpp}
 \end{table}
 
