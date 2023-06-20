@@ -73,7 +73,7 @@ t0, tf = 0.0, 2.0
 
 # The discretization in space is made with `l` mesh points $x_j = (j-1) / (l-1)$, for $j = 1, \ldots, l$, corresponding to `l-1` mesh intervals of length $\Delta x = 1 / (l-1)$. The points $x_1 = 0$ and $x_l = 1$ are the boundary points. We set `l` to
 
-l = 17
+l = 33
 
 # Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
 
@@ -243,6 +243,9 @@ nothing # hide
 
 ntgt = 2^15 * 3^3 * 5
 ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
+ks = [4, 4, 2, 2, 1, 1]
+ns = [2^10, 2^8 * 5, 2^9 * 3, 2^11]
+ks = [8, 4, 2, 1]
 nothing # hide
 
 # and make sure they meet all the requirements:
@@ -270,7 +273,7 @@ method = RandomEuler(length(u0law))
 
 # With all the parameters set up, we build the convergence suite:     
 
-suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m, ks)
 
 # Then we are ready to compute the errors:
 
