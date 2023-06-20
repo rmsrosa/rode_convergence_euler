@@ -1,5 +1,9 @@
 # # Homogenous linear RODE with a Wiener process noise coefficient
 #
+# ```@meta
+# Draft = false
+# ```
+#
 # We start by considering a homogeneous linear equation in which the coefficient is a Wiener process. In this case, it is already know, by other means, that the Euler method converges strongly of order 1, because it can be regarded as system of stochastic differential equations with additive noise. Nevertheless, we use it here for illustrative purposes.
 
 # ## The equation
