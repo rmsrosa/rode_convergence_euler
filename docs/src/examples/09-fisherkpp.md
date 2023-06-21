@@ -276,15 +276,14 @@ We also make sure drawing a noise sample path does not allocate
 nothing # hide
 ````
 
-Now we set up the mesh parameters. For stability reasons, we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
+Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$ we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
 
 ````@example 09-fisherkpp
-ntgt = 2^15 * 3^3 * 5
-ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
-ks = [4, 4, 2, 2, 1, 1]
+l = 513 # 2^9 + 1
+u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
-ks = [4, 2, 1]
+ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 nothing # hide
 ````
 
@@ -297,15 +296,15 @@ all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
 ````@example 09-fisherkpp
-m = 200
+m = 100
 ````
 
 We then add some information about the simulation:
 
 ````@example 09-fisherkpp
 info = (
-    equation = "Fisher-KPP equation",
-    noise = "Hawkes-modulated colored noise",
+    equation = "the Fisher-KPP equation",
+    noise = "Hawkes-modulated Ornstein-Uhlenbeck colored noise",
     ic = "\$X_0 = 0\$"
 )
 ````
