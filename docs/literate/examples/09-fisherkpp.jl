@@ -239,27 +239,13 @@ plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$
 @btime rand!($rng, $noise, $yt)
 nothing # hide
 
-# Now we set up the mesh parameters. For stability reasons, we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
+# Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$ we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
 
-ntgt = 2^15 * 3^3 * 5
-ns = [2^10, 2^7 * 3^2, 2^8 * 5, 2^9 * 3, 2^7 * 3 * 5, 2^11]
-ks = [4, 4, 2, 2, 1, 1]
+l = 513 # 2^9 + 1
+u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
-ks = [4, 2, 1]
-
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-ntgt = 2^16 # l-1 = 2^8 = 256
-ns = [2^4, 2^6, 2^8]
-ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = [2^3 2^4 2^5] = [8 16 32]
-nothing # hide
-
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-ntgt = 2^18 # l-1 = 2^8 = 256
-ns = [2^5, 2^7, 2^9]
-ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = [2^3 2^4 2^5] = [8 16 32]
+ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 nothing # hide
 
 # and make sure they meet all the requirements:

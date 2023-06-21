@@ -1673,9 +1673,9 @@ which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
 The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost surely. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
 
-The spatial discretization is done with finite differences on a grid with the number of mesh points varing from 17 to 65 mesh points, depending on the time mesh. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9$. The spatial mesh has 17 points when $N_i=2^5$, 33 when $N_i=2^7$ and 65 when $N_i=2^9$ and for $N_{\textrm{tgt}} = 2^18$.
+For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9$. The spatial discretization is done with finite differences with the number of mesh points depending on the time mesh, for stability reasons. Thus, for each $N_i$, we take $2^3+1=9, 2^4+1=17,$ and $2^5+1=33$ spatial points, respectively, while for $N_{\textrm{tgt}}$, we use $2^9+1 = 513$ spatial points.
 
-For the Monte-Carlo estimate of the strong error, we choose $m=200.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
+For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
