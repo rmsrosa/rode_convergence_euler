@@ -1673,9 +1673,7 @@ which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
 The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost surely. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
 
-The spatial discretization is done with finite differences on a grid with 17 mesh points. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{15} \times 3^3 \times 5 = 4,423,680$ and $N_i = 2^{10}, 2^7 \times 3^2, 2^8 \times 5, 2^9 \times 3, 2^7 \times 3 \times 5, 2^{11}$. The reason for not using powers of two in this particular case is that, due to the spatial discretization, we cannot use too coarse a time mesh, for stability reasons, limiting the range of time-mesh parameters. Instead of going too high on the number of mesh points and have too slow computations, we populate the range of $N_i$'s with values which are not power of two.
-
-
+The spatial discretization is done with finite differences on a grid with the number of mesh points varing from 17 to 65 mesh points, depending on the time mesh. For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9$. The spatial mesh has 17 points when $N_i=2^5$, 33 when $N_i=2^7$ and 65 when $N_i=2^9$ and for $N_{\textrm{tgt}} = 2^18$.
 
 For the Monte-Carlo estimate of the strong error, we choose $m=200.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
 
