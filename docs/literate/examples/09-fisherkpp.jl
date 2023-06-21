@@ -259,8 +259,8 @@ m = 100
 # We then add some information about the simulation:
 
 info = (
-    equation = "Fisher-KPP equation",
-    noise = "Hawkes-modulated colored noise",
+    equation = "the Fisher-KPP equation",
+    noise = "Hawkes-modulated Ornstein-Uhlenbeck colored noise",
     ic = "\$X_0 = 0\$"
 )
 
