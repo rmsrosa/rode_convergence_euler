@@ -258,7 +258,7 @@ nothing # hide
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18 # l-1 = 2^8 = 256
-ns = [2^4, 2^6, 2^8]
+ns = [2^5, 2^7, 2^9]
 ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = [2^3 2^4 2^5] = [8 16 32]
 nothing # hide
 
@@ -268,7 +268,6 @@ all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 
 # The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
-m = 200
 m = 100
 
 # We then add some information about the simulation:
