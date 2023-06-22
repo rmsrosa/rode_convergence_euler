@@ -108,18 +108,16 @@ u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 #
 # This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE.
 
-function f!(du, t, u, y; μ=μ, λ=λ, cₘ=cₘ)
+function f!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    μ = 0.05
-    λ = 1.8
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
 
     ## interior points
     for j in 2:l-1
-        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / cₘ)
+        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
     end
 
     ## ghost points
@@ -127,8 +125,8 @@ function f!(du, t, u, y; μ=μ, λ=λ, cₘ=cₘ)
     ghl1 = u[l-1]
 
     ## boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / cₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
+    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
+    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
     return nothing
 end
 
@@ -139,12 +137,8 @@ end
 # ```
 #
 
-function f_alt!(du, t, u, y)
+function f_alt!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
-
-    μ = 0.05
-    λ = 1.8
-    cₘ = 1.0
 
     l = length(u)
     dx = 1.0 / (l - 1)
@@ -152,7 +146,7 @@ function f_alt!(du, t, u, y)
 
     ## interior points
     for j in 2:l-1
-        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / cₘ)
+        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
     end
 
     ## ghost points
@@ -160,8 +154,8 @@ function f_alt!(du, t, u, y)
     ghl1 = ( 4 * u[l] - u[l-1] ) / 3
 
     ## boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / cₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
+    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
+    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
     return nothing
 end
 
@@ -169,7 +163,7 @@ end
 
 μ = 0.05
 λ = 1.8
-cₘ = 1.0
+uₘ = 1.0
 
 # Now we make sure this is non-allocating. We use a finer spatial mesh for testing.
 
@@ -247,7 +241,7 @@ nothing # hide
 
 μ = 0.05
 λ = 1.8
-cₘ = 1.0
+uₘ = 1.0
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^20
@@ -257,7 +251,7 @@ nothing # hide
 
 μ = 0.05
 λ = 1.25
-cₘ = 1.0
+uₘ = 1.0
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18
