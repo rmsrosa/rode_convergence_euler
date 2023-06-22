@@ -133,4 +133,42 @@ end
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
         @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
+
+    @testset "kw params I" begin
+
+        x0law = Normal()
+        y0 = 0.0
+        p = 1.0
+        λ = 2.0
+        noise = WienerProcess(t0, tf, y0)
+        f = (t, x, y; p=p, λ=λ) -> (λ/2) * y^p * x
+
+        target = CustomUnivariateMethod(target_exact1!, rng)
+        method = RandomEuler()
+
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+    end
+
+    @testset "kw params II" begin
+        # two independent normals
+        # but careful not to use `MvNormal(I(2))` because that uses a FillArray Zeros(2) for the means
+        # which allocates due to a bug with broadcasting
+        # see https://github.com/JuliaArrays/FillArrays.jl/issues/208
+        x0law = MvNormal(zeros(2), I(2))
+        # alternative implementation:
+        # X0law = product_distribution(Normal(), Normal())
+        y0 = 0.0
+        noise = ProductProcess(
+            WienerProcess(t0, tf, y0),
+            WienerProcess(t0, tf, y0)
+        )
+        f! = (dx, t, x, y; θ=1/4) -> (dx .= (θ * y[1] + (1 - θ) * y[2]) .* x)
+
+        target = CustomMultivariateMethod(target_exact4!, rng)
+        method = RandomEuler(length(x0law))
+
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+    end
 end
