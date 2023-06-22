@@ -124,13 +124,11 @@ These points are plugged into the second-order approximation of the second deriv
 This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE.
 
 ````@example 09-fisherkpp
-function f!(du, t, u, y)
+function f!(du, t, u, y; μ=μ, λ=λ, cₘ=cₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    μ = 0.009
-    λ = 10.0
-    cₘ = 1.0
-
+    μ = 0.05
+    λ = 1.8
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
@@ -161,8 +159,8 @@ Alternatively, we may use a second-order forward difference scheme for the first
 function f_alt!(du, t, u, y)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    μ = 0.009
-    λ = 10.0
+    μ = 0.05
+    λ = 1.8
     cₘ = 1.0
 
     l = length(u)
@@ -183,6 +181,14 @@ function f_alt!(du, t, u, y)
     du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
     return nothing
 end
+````
+
+We set the parameters for the equation
+
+````@example 09-fisherkpp
+μ = 0.05
+λ = 1.8
+cₘ = 1.0
 ````
 
 Now we make sure this is non-allocating. We use a finer spatial mesh for testing.
@@ -279,6 +285,19 @@ nothing # hide
 Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$ we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
 
 ````@example 09-fisherkpp
+μ = 0.05
+λ = 1.8
+cₘ = 1.0
+l = 513 # 2^9 + 1
+u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+ntgt = 2^20
+ns = [2^6, 2^8, 2^10]
+ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
+nothing # hide
+
+μ = 0.05
+λ = 1.25
+cₘ = 1.0
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18
@@ -291,6 +310,26 @@ and make sure they meet all the requirements:
 
 ````@example 09-fisherkpp
 all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
+````
+
+We also check the numerical conditions for the stability of the methods
+
+````@example 09-fisherkpp
+function g(nt, nx; μ=μ, λ=λ, uₘ=uₘ, T=tf, L=1.0)
+    dt = T/nt
+    dx = L/nx
+    return λ * uₘ * dt / dx, 2 * μ * dt / dx^2
+end
+
+@info "Speed: $(2√(λ * μ))"
+@info "Ni's: $((l-1) ./ ks)"
+for (n, k) in zip(ns, ks)
+    a, b = g(n, (l-1)/k + 1)
+    @info a, b, a ≤ 1, b ≤ 1
+end
+a, b = g(ntgt, l)
+@info a, b, a ≤ 1, b ≤ 1
+nothing
 ````
 
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
