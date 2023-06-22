@@ -246,39 +246,48 @@ l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^20
 ns = [2^6, 2^8, 2^10]
-ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
+ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^4 2^5 2^6] = [16 32 64]
 nothing # hide
 
-μ = 0.05
-λ = 1.25
-uₘ = 1.0
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-ntgt = 2^18
-ns = [2^5, 2^7, 2^9]
-ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
-nothing # hide
+#μ = 0.02
+#λ = 2.0
+#uₘ = 1.0
+#l = 257 # 2^8 + 1
+#u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+#ntgt = 2^18
+#ns = [2^5, 2^7, 2^9]
+#ks = [2^4, 2^3, 2^2]
+#@info  (l-1) ./ ks # 2^8 ./ ks = [2^4 2^3 2^2] = [16 32 64]
+#nothing # hide
 
 # and make sure they meet all the requirements:
 
 all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 
-# We also check the numerical conditions for the stability of the methods
-
-function g(nt, nx; μ=μ, λ=λ, uₘ=uₘ, T=tf, L=1.0)
+# Stability analysis (Von Neumann, checking for discrete solution of the error $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$, where $\tau = \Delta t$, $h = \Delta x$, requires that
+# ```math
+#  0 \leq \left(\frac{4\mu}{h^2} - \lambda\right) \tau \leq 2,
+# ```
+# hence
+#
+# ```math
+#  h^2 \leq \frac{4\mu}{\lambda}, \qquad \tau \leq \frac{2h^2}{4\mu - \lambda h^2}.
+# ```
+#
+function stability(nt, nx; μ=μ, λ=λ, T=tf, L=1.0)
     dt = T/nt
     dx = L/nx
-    return λ * uₘ * dt / dx, 2 * μ * dt / dx^2
+    return (4 * μ / dx^2 - λ ) * dt
 end
 
 @info "Speed: $(2√(λ * μ))"
 @info "Ni's: $((l-1) ./ ks)"
 for (n, k) in zip(ns, ks)
-    a, b = g(n, (l-1)/k + 1)
-    @info a, b, a ≤ 1, b ≤ 1
+    s = stability(n, (l-1)/k + 1)
+    @info s, 0 ≤ s ≤ 2
 end
-a, b = g(ntgt, l)
-@info a, b, a ≤ 1, b ≤ 1
+s = stability(ntgt, l)
+@info s, 0 ≤ s ≤ 2
 nothing
 
 # The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
