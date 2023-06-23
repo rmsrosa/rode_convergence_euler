@@ -1681,14 +1681,14 @@ For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        32 & 0.0645 & 112.0 & 11.2 \\
-        128 & 0.0157 & 27.4 & 2.75 \\
-        512 & 0.00391 & 5.61 & 0.562 \\
+        32 & 0.0645 & 120.0 & 12.0 \\
+        128 & 0.0157 & 27.9 & 2.8 \\
+        512 & 0.00391 & 5.35 & 0.536 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for the Fisher-KPP equation for each mesh resolution $N$, with initial condition $X_0 = 0$ and Hawkes-modulated Ornstein-Uhlenbeck colored noise, on the time interval $I = [0.0, 2.0]$, based on $M = 100$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.069$, with the 95\% confidence interval $[0.9969, 1.1407]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for the Fisher-KPP equation for each mesh resolution $N$, with initial condition $X_0 = 0$ and Hawkes-modulated Ornstein-Uhlenbeck colored noise, on the time interval $I = [0.0, 2.0]$, based on $M = 100$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.109$, with the 95\% confidence interval $[1.0376, 1.1814]$.}
     \label{tablefisherkpp}
 \end{table}
 

@@ -150,7 +150,7 @@ function f_alt!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     end
 
     ## ghost points
-    gh0 = ( 4 * u[1] - u[2]  + 2dx * max(0.0, y[1] * y[2]) ) / 3
+    gh0 = ( 4 * u[1] - u[2]  - 2dx * max(0.0, y[1] * y[2]) ) / 3
     ghl1 = ( 4 * u[l] - u[l-1] ) / 3
 
     ## boundary points
@@ -249,15 +249,15 @@ ns = [2^6, 2^8, 2^10]
 ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^4 2^5 2^6] = [16 32 64]
 nothing # hide
 
-#μ = 0.02
-#λ = 2.0
-#uₘ = 1.0
-#l = 257 # 2^8 + 1
-#u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-#ntgt = 2^18
-#ns = [2^5, 2^7, 2^9]
-#ks = [2^4, 2^3, 2^2]
-#@info  (l-1) ./ ks # 2^8 ./ ks = [2^4 2^3 2^2] = [16 32 64]
+μ = 0.009
+λ = 10.0
+uₘ = 1.0
+l = 513 # 2^9 + 1
+u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+ntgt = 2^18
+ns = [2^5, 2^7, 2^9]
+ks = [2^6, 2^5, 2^4]
+@info  (l-1) ./ ks # 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 #nothing # hide
 
 # and make sure they meet all the requirements:
