@@ -150,7 +150,7 @@ function f_alt!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     end
 
     ## ghost points
-    gh0 = ( 4 * u[1] - u[2]  - 2dx * max(0.0, y[1] * y[2]) ) / 3
+    gh0 = ( 4 * u[1] - u[2] + 2dx * max(0.0, y[1] * y[2]) ) / 3
     ghl1 = ( 4 * u[l] - u[l-1] ) / 3
 
     ## boundary points
