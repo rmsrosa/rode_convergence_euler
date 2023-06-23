@@ -904,11 +904,11 @@ Then we fit the errors $\epsilon^N$ to the power law $C\Delta_N^p$, in order to 
 
 Here are the main parameters for the error estimate:
 \begin{enumerate}
-    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error, typically in the range $M=100$ to $M=1,000$.
-    \item The time interval $[0, T]$ for the initial-value problem, typically with $T=1.0$.
-    \item The initial condition $X_0$, which is typically $X_0 \sim \mathcal{N}(0, 1)$.
-    \item A series of time steps $\Delta_i = T/(N_i-1)$, usually with $N_i=2^{n_i}$, most often with $n_i=4, \ldots, 10$, hence $N_i=32, 64, \ldots, 1024$.
-    \item A number $N_{\mathrm{tgt}}$ of mesh points for a finer discretization to compute a target solution path, typically $N_{\mathrm{tgt}} = \max_i\{N_i^2\}$, e.g. $N=2^{20} = 1,048,576$, unless an exact pathwise solution is available, in which case a coarser mesh of the order of $\max_i\{N_i\}$ can be used.
+    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error.
+    \item The time interval $[0, T]$ for the initial-value problem.
+    \item The initial condition $X_0$.
+    \item A series of time steps $\Delta_i = T/(N_i-1)$, usually with $N_i=2^{n_i}$.
+    \item A number $N_{\mathrm{tgt}}$ of mesh points for a finer discretization to compute a target solution path, typically $N_{\mathrm{tgt}} = \max_i\{N_i^2\}$, unless an exact pathwise solution is available, in which case a coarser mesh of the order of $\max_i\{N_i\}$ can be used.
 \end{enumerate}
 
 And here is the method:
@@ -994,7 +994,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from $M=200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
+Table \ref{taballnoises} shows the estimated strong error obtained from $M = 200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
 
 The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
@@ -1041,7 +1041,7 @@ As for illustrating numerically the order of strong convergence, although the ab
 \end{equation}
 computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
 
-More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|c|c|}

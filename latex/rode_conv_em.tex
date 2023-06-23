@@ -902,11 +902,11 @@ Then we fit the errors $\epsilon^N$ to the power law $C\Delta_N^p$, in order to 
 
 Here are the main parameters for the error estimate:
 \begin{enumerate}
-    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error, typically in the range $M=100$ to $M=1,000$.
-    \item The time interval $[0, T]$ for the initial-value problem, typically with $T=1.0$.
-    \item The initial condition $X_0$, which is typically $X_0 \sim \mathcal{N}(0, 1)$.
-    \item A series of time steps $\Delta_i = T/(N_i-1)$, usually with $N_i=2^{n_i}$, most often with $n_i=4, \ldots, 10$, hence $N_i=32, 64, \ldots, 1024$.
-    \item A number $N_{\mathrm{tgt}}$ of mesh points for a finer discretization to compute a target solution path, typically $N_{\mathrm{tgt}} = \max_i\{N_i^2\}$, e.g. $N=2^{20} = 1,048,576$, unless an exact pathwise solution is available, in which case a coarser mesh of the order of $\max_i\{N_i\}$ can be used.
+    \item $M\in\mathbb{N}$ is the number of samples for the Monte Carlo estimate of the strong error.
+    \item The time interval $[0, T]$ for the initial-value problem.
+    \item The initial condition $X_0$.
+    \item A series of time steps $\Delta_i = T/(N_i-1)$, usually with $N_i=2^{n_i}$.
+    \item A number $N_{\mathrm{tgt}}$ of mesh points for a finer discretization to compute a target solution path, typically $N_{\mathrm{tgt}} = \max_i\{N_i^2\}$, unless an exact pathwise solution is available, in which case a coarser mesh of the order of $\max_i\{N_i\}$ can be used.
 \end{enumerate}
 
 And here is the method:
@@ -1090,7 +1090,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from $M=200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
+Table \ref{taballnoises} shows the estimated strong error obtained from $M = 200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
 
 Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
 
@@ -1257,7 +1257,7 @@ As for illustrating numerically the order of strong convergence, although the ab
 \end{equation}
 computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
 
-More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M=200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|c|c|}
@@ -1334,7 +1334,7 @@ Notice that $f(t, x, y) = 0$, for $x < 0$, for arbitrary $y=(y_1, y_2)$, while $
 
 The function $f=f(t, x, y)$ is continuously differentiable infinitely many times and with bounded derivatives within the positively invariant region. Hence, within the region of interest, all the conditions of \cref{thmmixedcasepractical} hold and the Euler method is of strong order 1.
 
-Below, we simulate numerically the solutions of the above problem, with $\gamma = 0.8,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma r = 0.64$ The geometric Brownian motion process $\{G_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M=200$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
+Below, we simulate numerically the solutions of the above problem, with $\gamma = 0.8,$ $\varepsilon = 0.3,$ $r = 1.0,$ and $\alpha = \gamma r = 0.64$ The geometric Brownian motion process $\{G_t\}_{t\geq 0}$ is taken with drift coefficient $\mu = 1.0,$ diffusion coefficient $\sigma = 0.8,$ and initial condition $y_0 = 1.0.$ The Poisson process $\{N_t\}_{t \geq 0}$ is taken with rate $\lambda = 15.0$. And the step process $\{H_t\}_{t \geq 0}$ is taken with steps following a Beta distribution with shape parameters $\alpha = 5.0$ and $\beta = 7.0$. The initial condition $X_0$ is taken to be a Beta distribution with shape parameters $\alpha = 7.0$ and $\beta = 5.0$, hence we can take $R = 1$. We take $M = 200$ samples for the Monte-Carlo estimate of the strong error of convergence. For the target solution, we solve the equation with a time mesh with $N_{\mathrm{tgt}} = 2^{18}$ points, while for the approximations we take $N = 2^i$, for $i=4, \ldots, 9$.
 
 Notice that we can write
 \[
@@ -1429,7 +1429,7 @@ where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s
 
 More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m= 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while \cref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while \cref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1479,7 +1479,7 @@ In the simulations below, we use parameters similar to those in \cite[Section 7.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m=200.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 200.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1592,7 +1592,7 @@ with $\{R_t\}_t$ as above.
 
 For the numerical simulations, we use $O_0 = 0$, $\nu = 5$ and $\varepsilon = 0.8$, for the Ornstein-Uhlenbeck process $\{O_t\}_t$; $\lambda = 8.0$ and $C_i \sim \mathrm{Uniform}(0, 0.2)$, for the compound Poisson process $\{C_t\}$; $R_0 = 0.2$, $\mu = 0.02$ and $\sigma = 0.4$, for the interest rate process $\{R_t\}_t$; and we take $X_0 = 1.0$, so that $U_0 = X_0 + O_0 + R_0 = 1.2$. We set $T = 3.0,$ as the final time.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $m = 400.$ Table \ref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 400.$ Table \ref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1673,9 +1673,9 @@ which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
 The equation involves a nonlinear term which is not globally Lipschitz continuous, but, similiarly to the population dynamics model considered in \cref{secpopdyn}, the region $0 \leq u(t, x) \leq u_m$ is invariant, so that the nonlinear term can be modified outside this region in order to satisfy the required uniform global estimates without affecting the dynamics within this region. The initial condition is chosen to be within this region almost surely. The procedure is the same as that done in \cref{secpopdyn}, so the details are omited.
 
-For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9$. The spatial discretization is done with finite differences with the number of mesh points depending on the time mesh, for stability and convergence reasons. The Courant-Friedrichs-Lewy condition on the advection term requires that $\lambda u_m \Delta t / \Delta x \leq 1$, while for the dissipative term it is required that $2\mu\Delta t / \Delta_x^2 \leq 1.$ With that in mind, for each $N_i = 2^5, 2^7, 2^9$, we take $2^3 + 1 = 9, 2^4 + 1 = 17,$ and $2^5 + 1 = 33$ spatial points, respectively, while for $N_{\textrm{tgt}}$, we use $2^9 + 1 = 513$ spatial points.
+For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9$. The spatial discretization is done with finite differences with the number of mesh points depending on the time mesh, for stability and convergence reasons. The Courant-Friedrichs-Lewy condition on the advection term requires that $\lambda u_m \Delta t / \Delta x \leq 1$, while for the dissipative term it is required that $2\mu\Delta t / \Delta_x^2 \leq 1.$ With that in mind, for each $N_i = 2^5, 2^7, 2^9$, we take $2^3 + 1 = 9, 2^4 + 1 = 17,$ and $2^5 + 1 = 33$ spatial points, respectively, while for the target solution, we use $2^9 + 1 = 513$ spatial points.
 
-For the Monte-Carlo estimate of the strong error, we choose $m=100.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
+For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
