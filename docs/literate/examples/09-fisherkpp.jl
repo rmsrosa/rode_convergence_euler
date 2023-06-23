@@ -292,7 +292,7 @@ nothing
 
 # The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
-m = 100
+m = 40
 
 # We then add some information about the simulation:
 
