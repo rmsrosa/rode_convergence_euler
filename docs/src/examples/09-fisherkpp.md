@@ -124,18 +124,16 @@ These points are plugged into the second-order approximation of the second deriv
 This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE.
 
 ````@example 09-fisherkpp
-function f!(du, t, u, y; μ=μ, λ=λ, cₘ=cₘ)
+function f!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    μ = 0.05
-    λ = 1.8
     l = length(u)
     dx = 1.0 / (l - 1)
     dx² = dx ^ 2
 
     # interior points
     for j in 2:l-1
-        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / cₘ)
+        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
     end
 
     # ghost points
@@ -143,8 +141,8 @@ function f!(du, t, u, y; μ=μ, λ=λ, cₘ=cₘ)
     ghl1 = u[l-1]
 
     # boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / cₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
+    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
+    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
     return nothing
 end
 ````
@@ -156,12 +154,8 @@ Alternatively, we may use a second-order forward difference scheme for the first
 ```
 
 ````@example 09-fisherkpp
-function f_alt!(du, t, u, y)
+function f_alt!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
-
-    μ = 0.05
-    λ = 1.8
-    cₘ = 1.0
 
     l = length(u)
     dx = 1.0 / (l - 1)
@@ -169,7 +163,7 @@ function f_alt!(du, t, u, y)
 
     # interior points
     for j in 2:l-1
-        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / cₘ)
+        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
     end
 
     # ghost points
@@ -177,8 +171,8 @@ function f_alt!(du, t, u, y)
     ghl1 = ( 4 * u[l] - u[l-1] ) / 3
 
     # boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / cₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / cₘ )
+    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
+    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
     return nothing
 end
 ````
@@ -188,7 +182,7 @@ We set the parameters for the equation
 ````@example 09-fisherkpp
 μ = 0.05
 λ = 1.8
-cₘ = 1.0
+uₘ = 1.0
 ````
 
 Now we make sure this is non-allocating. We use a finer spatial mesh for testing.
@@ -287,23 +281,24 @@ Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim 
 ````@example 09-fisherkpp
 μ = 0.05
 λ = 1.8
-cₘ = 1.0
+uₘ = 1.0
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^20
 ns = [2^6, 2^8, 2^10]
-ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
+ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^4 2^5 2^6] = [16 32 64]
 nothing # hide
 
-μ = 0.05
-λ = 1.25
-cₘ = 1.0
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-ntgt = 2^18
-ns = [2^5, 2^7, 2^9]
-ks = [2^6, 2^5, 2^4] # (l-1) ./ ks = 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
-nothing # hide
+#μ = 0.02
+#λ = 2.0
+#uₘ = 1.0
+#l = 257 # 2^8 + 1
+#u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+#ntgt = 2^18
+#ns = [2^5, 2^7, 2^9]
+#ks = [2^4, 2^3, 2^2]
+#@info  (l-1) ./ ks # 2^8 ./ ks = [2^4 2^3 2^2] = [16 32 64]
+#nothing # hide
 ````
 
 and make sure they meet all the requirements:
@@ -312,23 +307,31 @@ and make sure they meet all the requirements:
 all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 ````
 
-We also check the numerical conditions for the stability of the methods
+Stability analysis (Von Neumann, checking for discrete solution of the error $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$, where $\tau = \Delta t$, $h = \Delta x$, requires that
+```math
+ 0 \leq \left(\frac{4\mu}{h^2} - \lambda\right) \tau \leq 2,
+```
+hence
+
+```math
+ h^2 \leq \frac{4\mu}{\lambda}, \qquad \tau \leq \frac{2h^2}{4\mu - \lambda h^2}.
+```
 
 ````@example 09-fisherkpp
-function g(nt, nx; μ=μ, λ=λ, uₘ=uₘ, T=tf, L=1.0)
+function stability(nt, nx; μ=μ, λ=λ, T=tf, L=1.0)
     dt = T/nt
     dx = L/nx
-    return λ * uₘ * dt / dx, 2 * μ * dt / dx^2
+    return (4 * μ / dx^2 - λ ) * dt
 end
 
 @info "Speed: $(2√(λ * μ))"
 @info "Ni's: $((l-1) ./ ks)"
 for (n, k) in zip(ns, ks)
-    a, b = g(n, (l-1)/k + 1)
-    @info a, b, a ≤ 1, b ≤ 1
+    s = stability(n, (l-1)/k + 1)
+    @info s, 0 ≤ s ≤ 2
 end
-a, b = g(ntgt, l)
-@info a, b, a ≤ 1, b ≤ 1
+s = stability(ntgt, l)
+@info s, 0 ≤ s ≤ 2
 nothing
 ````
 
