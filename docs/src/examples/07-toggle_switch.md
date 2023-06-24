@@ -105,9 +105,9 @@ The resolutions for the target and approximating solutions, as well as the numbe
 
 ````@example 07-toggle_switch
 ntgt = 2^18
-ns = 2 .^ (4:9)
+ns = 2 .^ (5:9)
 nsample = ns[[1, 2, 3, 4]]
-m = 200
+m = 100
 ````
 
 And add some information about the simulation:
