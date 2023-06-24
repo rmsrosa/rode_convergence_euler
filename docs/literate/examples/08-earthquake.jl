@@ -182,7 +182,7 @@ nothing # hide
 
 ntgt = 2^18
 ns = 2 .^ (6:9)
-m = 500 # 1_000
+m = 100 # 1_000
 nothing # hide
 
 # We add some information about the simulation:
