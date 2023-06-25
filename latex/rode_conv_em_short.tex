@@ -974,25 +974,25 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0159 & 0.245 & 0.0158 \\
-        128 & 0.00787 & 0.118 & 0.0076 \\
-        256 & 0.00392 & 0.0587 & 0.00378 \\
-        512 & 0.00196 & 0.0291 & 0.00187 \\
+        64 & 0.0159 & 0.252 & 0.0258 \\
+        128 & 0.00787 & 0.121 & 0.0124 \\
+        256 & 0.00392 & 0.0607 & 0.00621 \\
+        512 & 0.00196 & 0.0301 & 0.00308 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.016$, with the 95\% confidence interval $[0.9418, 1.0897]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 80$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.012$, with the 95\% confidence interval $[0.8945, 1.13]$.}
     \label{taballnoises}
 \end{table}
 
 \begin{figure}[htb]
     \includegraphics[scale=0.5]{img/allnoises_combined.png}
-    \caption{(a) Order of convergence $p = 1.016$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}; (b) Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
+    \caption{(a) Order of convergence $p = 1.012$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}; (b) Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from $M = 200$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
+Table \ref{taballnoises} shows the estimated strong error obtained from $M = 80$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
 
 The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
