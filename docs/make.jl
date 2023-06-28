@@ -60,7 +60,10 @@ include(joinpath(@__DIR__(), "literate.jl"))
     modules = [RODEConvergence],
 )
 
-deploydocs(
-    repo      = "https://github.com/rmsrosa/rode_conv_em",
-    devbranch = "main",
-)
+if get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
+    deploydocs(
+        repo = "github.com/rmsrosa/rode_conv_em.git",
+        devbranch = "main",
+        forcepush = true,
+    )
+end
