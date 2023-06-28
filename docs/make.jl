@@ -60,7 +60,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
     modules = [RODEConvergence],
 )
 
-#= deploydocs(
+deploydocs(
     repo      = "https://github.com/rmsrosa/rode_conv_em",
     devbranch = "main",
-) =#
+)
