@@ -67,7 +67,7 @@ rng = Xoshiro(123)
 
 t0, tf = 0.0, 2.0
 
-# The discretization in space is made with `l` mesh points $x_j = (j-1) / (l-1)$, for $j = 1, \ldots, l$, corresponding to `l-1` mesh intervals of length $\Delta x = 1 / (l-1)$. The points $x_1 = 0$ and $x_l = 1$ are the boundary points. We set `l` to
+# The discretization in space is made with `l` mesh points $x_j = (j-1) / (l-1)$, for $j = 1, \ldots, l$, corresponding to `l-1` mesh intervals of length $\Delta x = 1 / (l-1)$. The points $x_1 = 0$ and $x_l = 1$ are the boundary points. For illustration purposes, we start by setting `l` to
 
 l = 65
 
@@ -126,39 +126,10 @@ function f!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
     return nothing
 end
 
-# Alternatively, we may use a second-order forward difference scheme for the first derivative at the left end point and a backward one at the right end point:
-#
-# ```math
-#   \frac{\partial u}{\partial x}(t, x_j) \approx \frac{-u(t, x_{j+2}) + 4u(t, x_{j+1}) - 3u(t, x_{j})}{2\Delta x}, \quad \frac{\partial u}{\partial x}(t, x_j) \approx \frac{3u(t, x_{j}) - 4u(t, x_{j-1}) + u(t, x_{j-2})}{2\Delta x}.
-# ```
-#
-
-function f_alt!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
-    axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
-
-    l = length(u)
-    dx = 1.0 / (l - 1)
-    dx² = dx ^ 2
-
-    ## interior points
-    for j in 2:l-1
-        du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
-    end
-
-    ## ghost points
-    gh0 = ( 4 * u[1] - u[2] + 2dx * max(0.0, y[1] * y[2]) ) / 3
-    ghl1 = ( 4 * u[l] - u[l-1] ) / 3
-
-    ## boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
-    return nothing
-end
-
 # We set the parameters for the equation
 
-μ = 0.05
-λ = 1.8
+μ = 0.009
+λ = 10.0
 uₘ = 1.0
 
 # Now we make sure this is non-allocating. We use a finer spatial mesh for testing.
@@ -166,30 +137,22 @@ uₘ = 1.0
 xx = 0.0:0.01:1.0
 u = sin.(π * xx) .^ 2
 du = similar(u)
-du_alt = similar(u)
 y = [0.0, 0.0]
 t = 0.0
 f!(du, t, u, y)
-f_alt!(du_alt, t, u, y)
 nothing # hide
 
 # Visualize the results
 
 plot(xx, u, label="u")
 plot!(xx, du, label="du/dt")
-plot!(xx, du_alt, label="du/dt alt")
 
 # and check performace
 
 @btime f!($du, $t, $u, $y)
 nothing # hide
 
-#
-
-@btime f_alt!($du, $t, $u, $y)
-nothing # hide
-
-# The noise is a colored Ornstein-Uhlenbeck noise truncated to non-negative values and modulated by a Hawkes process, which is implemented as two separate noises, which are combined within `f!`.
+# The noise is a colored Ornstein-Uhlenbeck noise truncated to non-negative values and modulated by a Hawkes process, which is implemented as two separate noises, which are combined in `f!`.
 
 # The Ornstein-Uhlenbeck is defined as follows
 
@@ -215,35 +178,26 @@ hawkes_envelope_noise = ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
 
 noise = ProductProcess(colored_noise, hawkes_envelope_noise)
 
-# Here is a sample path of the two noises
+# Here is a sample path of the two noises:
 
 tt = range(t0, tf, length=2^9)
 yt = Matrix{Float64}(undef, 2^9, 2)
 rand!(rng, noise, yt)
+
 #
 
 plot(tt, yt, label=["OU" "Hawkes"], xlabel="\$t\$", ylabel="\$y\$")
 
-# and the modulated and truncated colored noise
+# and the modulated and truncated colored noise:
 
 plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
 
-# We also make sure drawing a noise sample path does not allocate
+# We also make sure drawing a noise sample path does not allocate:
 
 @btime rand!($rng, $noise, $yt)
 nothing # hide
 
-# Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$ we can't allow the time mesh to be too coarse, so we pack the mesh resolutions `ns` within a narrow region:
-
-μ = 0.05
-λ = 1.8
-uₘ = 1.0
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
-ntgt = 2^20
-ns = [2^6, 2^8, 2^10]
-ks = [2^5, 2^4, 2^3] # (l-1) ./ ks = 2^9 ./ ks = [2^4 2^5 2^6] = [16 32 64]
-nothing # hide
+# Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$:
 
 μ = 0.009
 λ = 10.0
