@@ -54,7 +54,7 @@ which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
 ### Setting up the problem
 
-First we load the necessary packages
+First we load the necessary packages:
 
 ````@example 09-fisherkpp
 using Plots
@@ -65,13 +65,13 @@ using RODEConvergence
 using BenchmarkTools
 ````
 
-Then we set up some variables as usual, starting with the random seed.
+Then we set up some variables as usual, starting with the random seed:
 
 ````@example 09-fisherkpp
 rng = Xoshiro(123)
 ````
 
-The time interval
+The time interval:
 
 ````@example 09-fisherkpp
 t0, tf = 0.0, 2.0
@@ -85,7 +85,7 @@ l = 65
 
 Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
 
-The initial mass is zero
+The initial mass is zero:
 
 ````@example 09-fisherkpp
 u₀(x) = 0.0
@@ -392,8 +392,6 @@ We create a plot with the rate of convergence with the help of a plot recipe for
 ````@example 09-fisherkpp
 plt = plot(result)
 ````
-
-and save it for inclusion in the article.
 
 ````@example 09-fisherkpp
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.png")) # hide

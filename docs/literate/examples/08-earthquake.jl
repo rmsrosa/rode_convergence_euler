@@ -58,7 +58,7 @@
 # 
 # ### Setting up the problem
 # 
-# First we load the necessary packages
+# First we load the necessary packages:
 
 using Plots
 using Random
@@ -66,7 +66,7 @@ using LinearAlgebra
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables, starting with the random seed, for reproducibility of the pseudo-random number sequence generator
+# Then we set up some variables, starting with the random seed, for reproducibility of the pseudo-random number sequence generator:
 
 rng = Xoshiro(123)
 
@@ -80,7 +80,7 @@ function f!(dx, t, x, y)
     return dx
 end
 
-# The time interval is defined by the following end points 
+# The time interval is defined by the following end points:
 
 t0, tf = 0.0, 2.0
 

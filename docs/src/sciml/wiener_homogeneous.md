@@ -1,5 +1,9 @@
 # Homogenous linear RODE with a Wiener process as coefficient
 
+```@meta
+Draft = false
+```
+
 Now we consider a homogeneous linear equation in which the coefficient is a Wiener process.
 
 ## The equation

@@ -103,7 +103,7 @@ using Random
 using Distributions
 using RODEConvergence
 
-# Then we set up the relevant variables, as in the first example
+# Then we set up the relevant variables, as in the first example:
 
 rng = Xoshiro(123)
 
@@ -190,9 +190,10 @@ nothing # hide
 
 plt = plot(result)
 
-# and save it for use in the article:
+#
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png"))
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png")) # hide
+nothing # hide
 
 # For the sake of illustration, we plot an approximation of a sample target solution:
 

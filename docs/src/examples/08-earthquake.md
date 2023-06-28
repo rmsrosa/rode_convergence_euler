@@ -62,7 +62,7 @@ More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\o
 
 ### Setting up the problem
 
-First we load the necessary packages
+First we load the necessary packages:
 
 ````@example 08-earthquake
 using Plots
@@ -72,7 +72,7 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables, starting with the random seed, for reproducibility of the pseudo-random number sequence generator
+Then we set up some variables, starting with the random seed, for reproducibility of the pseudo-random number sequence generator:
 
 ````@example 08-earthquake
 rng = Xoshiro(123)
@@ -90,7 +90,7 @@ function f!(dx, t, x, y)
 end
 ````
 
-The time interval is defined by the following end points
+The time interval is defined by the following end points:
 
 ````@example 08-earthquake
 t0, tf = 0.0, 2.0

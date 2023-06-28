@@ -14,7 +14,7 @@ using LinearAlgebra
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables
+# Then we set up some variables:
 
 rng = Xoshiro(123)
 

@@ -79,7 +79,7 @@ with $\{R_t\}_t$ as above.
 
 ### Setting up the problem
 
-First we load the necessary packages
+First we load the necessary packages:
 
 ````@example 10-risk
 using Plots
@@ -89,13 +89,13 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we define the random seed
+Then we define the random seed:
 
 ````@example 10-risk
 rng = Xoshiro(123)
 ````
 
-The evolution law
+The evolution law:
 
 ````@example 10-risk
 function f(t, x, y)
@@ -109,20 +109,20 @@ function f(t, x, y)
 end
 ````
 
-The time interval
+The time interval:
 
 ````@example 10-risk
 t0, tf = 0.0, 3.0
 ````
 
-The law for the initial condition
+The law for the initial condition:
 
 ````@example 10-risk
 x0 = 1.0
 x0law = Dirac(x0)
 ````
 
-The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term
+The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term:
 
 ````@example 10-risk
 O0 = 0.0
@@ -141,7 +141,7 @@ noise = ProductProcess(
 )
 ````
 
-The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
+The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
 ````@example 10-risk
 ntgt = 2^18

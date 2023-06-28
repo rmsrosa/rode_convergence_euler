@@ -95,7 +95,7 @@
 # ```
 # where $Z_i$ is as above. Thus, breaking down the sum over the mesh intervals:
 # ```math
-# \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
+# \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right).
 # ```
 #
 # In any case, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
@@ -223,15 +223,17 @@ nothing # hide
 
 plt = plot(result)
 
-# And save it for use in the article:
+#
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png"))
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png")) # hide
+nothing # hide
 
 # For the sake of illustration, we plot the approximations of a sample target solution:
 
 plt = plot(suite, ns=nsample)
 
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.png")) # hide
+nothing # hide
 
 # We can also visualize the noise associated with this sample solution:
 

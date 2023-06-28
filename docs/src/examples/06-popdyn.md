@@ -48,13 +48,13 @@ using RODEConvergence
 
 Then we set up the problem parameters.
 
-We set the seed
+We set the seed:
 
 ````@example 06-popdyn
 rng = Xoshiro(123)
 ````
 
-The right hand side of the evolution equation
+The right hand side of the evolution equation:
 
 ````@example 06-popdyn
 function f(t, x, y)
@@ -67,19 +67,19 @@ function f(t, x, y)
 end
 ````
 
-The time interval
+The time interval:
 
 ````@example 06-popdyn
 t0, tf = 0.0, 1.0
 ````
 
-The law for the initial condition
+The law for the initial condition:
 
 ````@example 06-popdyn
 x0law = Beta(7.0, 5.0)
 ````
 
-The noise parameters
+The noise parameters:
 
 ````@example 06-popdyn
 μ = 1.0
@@ -94,7 +94,7 @@ noise2 = PoissonStepProcess(t0, tf, λ, steplaw)
 noise = ProductProcess(noise1, noise2)
 ````
 
-The mesh resolution
+The mesh resolution:
 
 ````@example 06-popdyn
 ntgt = 2^18
@@ -102,7 +102,7 @@ ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
 ````
 
-The number of samples for the Monte-Carlo estimate
+The number of samples for the Monte-Carlo estimate:
 
 ````@example 06-popdyn
 m = 200

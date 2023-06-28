@@ -2,7 +2,7 @@
 EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/04-allnoises.jl"
 ```
 
-# Non-homogenous linear system of RODEs with all implemented noises
+# Linear system with all implemented noises
 
 This time we consider a linear *system* of equations with a vector-valued noise composed of all the implemented noises.
 
@@ -33,7 +33,7 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables, as in the first example. First, the RNG
+Then we set up some variables, as in the first example. First, the RNG:
 
 ````@example 04-allnoises
 rng = Xoshiro(123)
@@ -202,7 +202,9 @@ We can also visualize the noises associated with this sample solution, both indi
 
 ````@example 04-allnoises
 plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
+````
 
+````@example 04-allnoises
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
 nothing # hide
 ````

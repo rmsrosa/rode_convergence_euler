@@ -20,7 +20,7 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up some variables
+Then we set up some variables:
 
 ````@example 05-fBm_linear
 rng = Xoshiro(123)

@@ -125,10 +125,9 @@ We illustrate the rate of convergence with the help of a plot recipe for `Conver
 plt = plot(result)
 ````
 
-We save the resulting plot for use in the article:
-
 ````@example 03-sin_gBm_linearhomogeneous
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.png"))
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.png")) # hide
+nothing # hide
 ````
 
 For the sake of illustration, we plot some approximations of a sample target solution:

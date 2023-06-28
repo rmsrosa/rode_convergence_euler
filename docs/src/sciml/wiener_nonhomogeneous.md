@@ -1,5 +1,9 @@
 # Linear RODE with non-homogenous Wiener noise
 
+```@meta
+Draft = false
+```
+
 We start by considering the Euler approximation of one of the simplest linear random ordinary differential equation, in which the noise is just a Wiener process, as the  nonhomogeneous term.
 
 ## The equation

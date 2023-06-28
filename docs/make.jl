@@ -29,12 +29,12 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "theory/extras.md"
         ],
         "Examples" => [
-            "Linear RODEs" => [
+            "Basic Linear RODEs" => [
                 "examples/01-wiener_linearhomogeneous.md",
                 "examples/02-wiener_linearnonhomogeneous.md",
                 "examples/03-sin_gBm_linearhomogeneous.md",
-                "examples/04-allnoises.md"
             ],
+            "examples/04-allnoises.md",
             "examples/05-fBm_linear.md",
             "examples/06-popdyn.md",
             "examples/07-toggle_switch.md",
@@ -42,12 +42,12 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "examples/09-fisherkpp.md",
             "examples/10-risk.md"
         ],
-        # "Examples" => generated_examples,
-        #= "DifferentialEquations.jl" => [
+        "DifferentialEquations.jl" => [
             "Nonhomogenous Wiener noise" => "sciml/wiener_nonhomogeneous.md",
             "Homogenous Wiener noise" => "sciml/wiener_homogeneous.md",
-        ], =#
+        ],
         "Noises" => [
+            "noises/noiseintro.md",
             "noises/homlin.md",
             "noises/fBm.md",
             "noises/colored.md"

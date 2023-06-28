@@ -109,7 +109,7 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we set up the relevant variables, as in the first example
+Then we set up the relevant variables, as in the first example:
 
 ````@example 02-wiener_linearnonhomogeneous
 rng = Xoshiro(123)
@@ -211,10 +211,9 @@ We draw a plot of the rate of convergence with the help of a plot recipe for [`C
 plt = plot(result)
 ````
 
-and save it for use in the article:
-
 ````@example 02-wiener_linearnonhomogeneous
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png"))
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png")) # hide
+nothing # hide
 ````
 
 For the sake of illustration, we plot an approximation of a sample target solution:

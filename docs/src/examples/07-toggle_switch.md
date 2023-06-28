@@ -35,7 +35,7 @@ We don't have an explicit solution for the equation so we just use as target for
 
 ### Setting up the problem
 
-First we load the necessary packages
+First we load the necessary packages:
 
 ````@example 07-toggle_switch
 using Plots
@@ -45,13 +45,13 @@ using Distributions
 using RODEConvergence
 ````
 
-Then we define the random seed
+Then we define the random seed:
 
 ````@example 07-toggle_switch
 rng = Xoshiro(123)
 ````
 
-The evolution law
+The evolution law:
 
 ````@example 07-toggle_switch
 function f!(dx, t, x, y)
@@ -68,13 +68,13 @@ function f!(dx, t, x, y)
 end
 ````
 
-The time interval
+The time interval:
 
 ````@example 07-toggle_switch
 t0, tf = 0.0, 5.0
 ````
 
-The law for the initial condition
+The law for the initial condition:
 
 ````@example 07-toggle_switch
 x0 = 4.0
@@ -82,7 +82,7 @@ y0 = 4.0
 x0law = product_distribution(Dirac(x0), Dirac(y0))
 ````
 
-The compound Poisson and the geometric Brownian motion processes, for the noisy source terms.
+The compound Poisson and the geometric Brownian motion processes, for the noisy source terms:
 
 ````@example 07-toggle_switch
 BM = 0.5
@@ -101,7 +101,7 @@ noise = ProductProcess(
 )
 ````
 
-The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
+The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
 ````@example 07-toggle_switch
 ntgt = 2^18
@@ -166,10 +166,8 @@ We plot the rate of convergence with the help of a plot recipe for `ConvergenceR
 plt_result = plot(result)
 ````
 
-And we save the convergence plot for inclusion in the article.
-
 ````@example 07-toggle_switch
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png")) # hide
 nothing # hide
 ````
 

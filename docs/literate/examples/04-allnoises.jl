@@ -1,4 +1,4 @@
-# # Non-homogenous linear system of RODEs with all implemented noises
+# # Linear system with all implemented noises
 #
 # This time we consider a linear *system* of equations with a vector-valued noise composed of all the implemented noises.
 
@@ -27,7 +27,7 @@ using Random
 using Distributions
 using RODEConvergence
 
-# Then we set up some variables, as in the first example. First, the RNG
+# Then we set up some variables, as in the first example. First, the RNG:
 
 rng = Xoshiro(123)
 
@@ -166,6 +166,8 @@ plot(plts..., legend=false)
 # We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
+
+#
 
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
 nothing # hide

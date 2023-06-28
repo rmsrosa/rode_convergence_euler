@@ -75,7 +75,7 @@
 # 
 # ### Setting up the problem
 # 
-# First we load the necessary packages
+# First we load the necessary packages:
 
 using Plots
 using Random
@@ -83,11 +83,11 @@ using LinearAlgebra
 using Distributions
 using RODEConvergence
 
-# Then we define the random seed
+# Then we define the random seed:
 
 rng = Xoshiro(123)
 
-# The evolution law
+# The evolution law:
 
 function f(t, x, y)
     o = y[1]
@@ -99,16 +99,16 @@ function f(t, x, y)
     return dx
 end
 
-# The time interval
+# The time interval:
 
 t0, tf = 0.0, 3.0
 
-# The law for the initial condition
+# The law for the initial condition:
 
 x0 = 1.0
 x0law = Dirac(x0)
 
-# The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term
+# The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term:
 
 O0 = 0.0
 Oν = 5.0
@@ -125,7 +125,7 @@ noise = ProductProcess(
     CompoundPoissonProcess(t0, tf, Cλ, Claw)
 )
 
-# The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
+# The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
 ntgt = 2^18
 ns = 2 .^ (6:9)

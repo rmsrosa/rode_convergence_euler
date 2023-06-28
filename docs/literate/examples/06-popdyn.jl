@@ -42,11 +42,11 @@ using RODEConvergence
 
 # Then we set up the problem parameters.
 #
-# We set the seed
+# We set the seed:
 
 rng = Xoshiro(123)
 
-# The right hand side of the evolution equation
+# The right hand side of the evolution equation:
 
 function f(t, x, y)
     γ = 0.8
@@ -57,15 +57,15 @@ function f(t, x, y)
     return dx
 end
 
-# The time interval
+# The time interval:
 
 t0, tf = 0.0, 1.0
 
-# The law for the initial condition
+# The law for the initial condition:
 
 x0law = Beta(7.0, 5.0)
 
-# The noise parameters
+# The noise parameters:
 
 μ = 1.0
 σ = 0.8
@@ -78,13 +78,13 @@ noise2 = PoissonStepProcess(t0, tf, λ, steplaw)
 
 noise = ProductProcess(noise1, noise2)
 
-# The mesh resolution
+# The mesh resolution:
 
 ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
 
-# The number of samples for the Monte-Carlo estimate
+# The number of samples for the Monte-Carlo estimate:
 
 m = 200
 

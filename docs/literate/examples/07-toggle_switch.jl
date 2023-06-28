@@ -31,7 +31,7 @@
 # 
 # ### Setting up the problem
 # 
-# First we load the necessary packages
+# First we load the necessary packages:
 
 using Plots
 using Random
@@ -39,11 +39,11 @@ using LinearAlgebra
 using Distributions
 using RODEConvergence
 
-# Then we define the random seed
+# Then we define the random seed:
 
 rng = Xoshiro(123)
 
-# The evolution law
+# The evolution law:
 
 function f!(dx, t, x, y)
     a⁴ = c⁴ = 0.25 ^ 4
@@ -58,17 +58,17 @@ function f!(dx, t, x, y)
     return dx
 end
 
-# The time interval
+# The time interval:
 
 t0, tf = 0.0, 5.0
 
-# The law for the initial condition
+# The law for the initial condition:
 
 x0 = 4.0
 y0 = 4.0
 x0law = product_distribution(Dirac(x0), Dirac(y0))
 
-# The compound Poisson and the geometric Brownian motion processes, for the noisy source terms.
+# The compound Poisson and the geometric Brownian motion processes, for the noisy source terms:
 
 BM = 0.5
 Bλ = 5.0
@@ -85,7 +85,7 @@ noise = ProductProcess(
     HomogeneousLinearItoProcess(t0, tf, A0, Aprimitive_a, Aprimitive_b2)
 )
 
-# The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
+# The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
 ntgt = 2^18
 ns = 2 .^ (5:9)
@@ -137,9 +137,9 @@ nothing # hide
 
 plt_result = plot(result)
 
-# And we save the convergence plot for inclusion in the article.
+#
 
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png"))
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png")) # hide
 nothing # hide
 
 # For the sake of illustration of the behavior of the system, we rebuild the problem with a longer time step and do a single run with it, for a single sample solution.
