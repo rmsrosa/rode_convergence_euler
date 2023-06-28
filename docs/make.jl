@@ -42,10 +42,6 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "examples/09-fisherkpp.md",
             "examples/10-risk.md"
         ],
-        "DifferentialEquations.jl" => [
-            "Nonhomogenous Wiener noise" => "sciml/wiener_nonhomogeneous.md",
-            "Homogenous Wiener noise" => "sciml/wiener_homogeneous.md",
-        ],
         "Noises" => [
             "noises/noiseintro.md",
             "noises/homlin.md",
