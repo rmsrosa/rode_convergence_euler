@@ -17,7 +17,7 @@ The equation is a nonlinear parabolic equation of reaction-diffusion type, model
 The equation takes the form
 
 ```math
-  \frac{\partial u}{\displaystyle \partial t} = \mu\frac{\partial^2 u}{\partial x^2} + \lambda u(1 - \frac{u}{u_m}), \quad (t, x) \in (0, \infty) \times (0, 1),
+  \frac{\partial u}{\displaystyle \partial t} = \mu\frac{\partial^2 u}{\partial x^2} + \lambda u\left(1 - \frac{u}{u_m}\right), \quad (t, x) \in (0, \infty) \times (0, 1),
 ```
 endowed with the boundary conditions
 
@@ -32,7 +32,7 @@ and a given a initial condition
 
 The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
 
-The random process $\{Y_t\}_t$ which drives the flux on the left boundary point, is taken to be a colored noise modulated by a exponentially decaying Hawkes process, representing random trains of incoming population.
+The random process $\{Y_t\}_t,$ which drives the flux on the left boundary point, is taken to be a colored noise modulated by a exponentially decaying Hawkes process, representing random trains of incoming population.
 
 This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 
@@ -120,8 +120,12 @@ These points are plugged into the second-order approximation of the second deriv
 This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE.
 
 ````@example 09-fisherkpp
-function f!(du, t, u, y; μ=μ, λ=λ, uₘ=uₘ)
+function f!(du, t, u, y) # ; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
+
+    μ = 0.009
+    λ = 10.0
+    uₘ = 1.0
 
     l = length(u)
     dx = 1.0 / (l - 1)
@@ -234,12 +238,9 @@ We also make sure drawing a noise sample path does not allocate:
 nothing # hide
 ````
 
-Now we set up the mesh parameters. For stability reasons, we let $\Delta t \sim \Delta x^2$:
+Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$
 
 ````@example 09-fisherkpp
-μ = 0.009
-λ = 10.0
-uₘ = 1.0
 l = 513 # 2^9 + 1
 u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
 ntgt = 2^18
@@ -253,34 +254,6 @@ and make sure they meet all the requirements:
 
 ````@example 09-fisherkpp
 all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
-````
-
-Stability analysis (Von Neumann, checking for discrete solution of the error $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$, where $\tau = \Delta t$, $h = \Delta x$, requires that
-```math
- 0 \leq \left(\frac{4\mu}{h^2} - \lambda\right) \tau \leq 2,
-```
-hence
-
-```math
- h^2 \leq \frac{4\mu}{\lambda}, \qquad \tau \leq \frac{2h^2}{4\mu - \lambda h^2}.
-```
-
-````@example 09-fisherkpp
-function stability(nt, nx; μ=μ, λ=λ, T=tf, L=1.0)
-    dt = T/nt
-    dx = L/nx
-    return (4 * μ / dx^2 - λ ) * dt
-end
-
-@info "Speed: $(2√(λ * μ))"
-@info "Ni's: $((l-1) ./ ks)"
-for (n, k) in zip(ns, ks)
-    s = stability(n, (l-1)/k + 1)
-    @info s, 0 ≤ s ≤ 2
-end
-s = stability(ntgt, l)
-@info s, 0 ≤ s ≤ 2
-nothing
 ````
 
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
