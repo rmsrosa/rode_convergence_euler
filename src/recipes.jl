@@ -1,6 +1,8 @@
 """
     plot(suite::ConvergenceSuite; ns = suite.ns, xshow=true, yshow=false, noisealpha=nothing, resolution=2^9)
 
+Plot the target solution, the noise and a few sample paths.
+
 Plot the target solution in `suite.xt`, the noise in `suite.yt`, and a few sample paths in the interval `t0` to `tf`, with different time steps as defined by the number of mesh points in `suite.ns` or as given by the keyword `ns` as a vector of integers with the desired numbers of mesh points.
 
 The noise, the target solution, and the approximations can be displayed or not, according to the keywords `xshow`, `yshow` and `ns`. If any of them is set to `false` or `nothing`, then the corresponding series is not showed.
@@ -145,9 +147,11 @@ end
 """
     plot(results::ConvergenceResult)
 
-Plot the convergence estimate in a log-log scale (time step vs strong error) based on the values provided in `results`, as computed by [`solve(::ConvergenceSuite)`](@ref).
+Plot the convergence estimate in a log-log scale (time step vs strong error).
 
-A scatter plot for the `results.errors` and a line plot from the fitted `errors ≈ C Δtᵖ`, where `C = exp(lc)`, with `Δt` in `results.deltas`, `lc = results.lc`, and `p = results.p`.
+It is based on the values provided in `results`, as computed by [`solve(::ConvergenceSuite)`](@ref).
+
+The plot consists of a scatter plot for the `results.errors` and a line plot from the fitted `errors ≈ C Δtᵖ`, where `C = exp(lc)`, with `Δt` in `results.deltas`, `lc = results.lc`, and `p = results.p`, with appropriate legends.
 """
 plot_convergence(results::ConvergenceResult) = plot(results)
 

@@ -15,7 +15,7 @@ The data comprises of the following:
 * the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
 * the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
 * the univariate or multivariate process `noise` for the noise term ``Y_t``;
-* the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically `EulerMethod()` with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution `CustomMethod() with an exact distribution of the possible solutions conditioned to the already computed noise points;
+* the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically `EulerMethod()` with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution `CustomMethod()` with an exact distribution of the possible solutions conditioned to the already computed noise points;
 * the `method` to approximate the solution, typically the `EulerMethod()`, also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
 * the vector `ns` with a list of numbers of mesh points to compute the approximate solutions;
@@ -94,7 +94,7 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
 end
 
 """
-    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, errors::Vector{T}, stderrs::Vector{T}, lc::T, p::T,pmin::T, pmax::T) where {T, S}
+    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, errors::Vector{T}, stderrs::Vector{T}, lc::T, p::T, pmin::T, pmax::T) where {T, S}
 
 Stores the result of `solve(rng, suite)` with fields
 * `suite`: the `ConvergenceSuite` which is to be solved for;
@@ -102,7 +102,7 @@ Stores the result of `solve(rng, suite)` with fields
 * `trajerrors`: a matrix where each column corresponds to the strong error, along the trajectory, at each mesh resolution determined by `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
 * `trajstderrs`: a matrix with the corresponding standard error for each entry in `trajerrors`;
 * `errors`: the maximum, along the trajectory, of the `trajerrors`;
-* `stderrs`: the corresponding standard error;
+* `stderrs`: the corresponding standard error for the Monte-Carlo estimate of the strong `errors`;
 * `lc`: the logarithm ``\\log(C)`` of the multiplicative constant in the fitted error `CΔtᵖ`;
 * `p`: the estimated order of the strong convergence;
 * `pmin` and `pmax`: the 95% confidence interval for `p`;
@@ -204,7 +204,9 @@ end
 """
     solve(rng, suite::ConvergenceSuite)
 
-Compute the strong errors and the order of convergence.
+Compute the strong errors and the order of convergence of the given suite.
+
+The result is returned in the form of a [`ConvergenceResult`](@ref).
 """
 function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
@@ -245,7 +247,9 @@ end
 """
     generate_error_table(result, info)
 
-Generate the markdown table with the data for the strong `result.errors` obtained with time steps `result.deltas` and lengths `result.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
+Generate the markdown table with the data for the strong errors. 
+    
+This is obteined from `result.errors`, with time steps `result.deltas` and lengths `result.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
 """
 function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(result.suite.x0law))), noise=string(nameof(typeof(result.suite.noise)))))
     t0 = result.suite.t0
