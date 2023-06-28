@@ -238,7 +238,7 @@ We also make sure drawing a noise sample path does not allocate:
 nothing # hide
 ````
 
-Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$
+Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$ This condition follows from the Von Neumann stability analysis, by checking for discrete solution $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$ of the error, where $\tau = \Delta t$, $h = \Delta x$, and requiring that the amplification factor at each time step is bounded by $1 + \mathcal{O}(\tau).$
 
 ````@example 09-fisherkpp
 l = 513 # 2^9 + 1
