@@ -63,7 +63,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm noises" :
                 reshape([string(nameof(typeof(pr))) for pr in noise.processes], 1, :)
             label --> noiselabel
-            inds = first(axes(yt, 1)):max(1, div(size(yt, 1), resolution)):last(axes(yt, 1))
+            inds = first(axes(yt, 1)):max(1, div(size(yt, 1) - 1, resolution)):last(axes(yt, 1))
             y = yshow isa Function && noise isa UnivariateProcess ?
                 map(yshow, view(yt, inds)) :
                 yshow isa Function ?
@@ -84,16 +84,16 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
             nstep = div(ntgt, nsi)
 
             if x0law isa UnivariateDistribution && noise isa UnivariateProcess
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), method)
             elseif x0law isa UnivariateDistribution
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), method)
             elseif noise isa UnivariateProcess
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi), method)
             else
-                solve!(view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi, :), method)
             end
 
-            inds = first(axes(view(xnt, 1:nsi), 1)):max(1, div(size(view(xnt, 1:nsi), 1), resolution)):last(axes(view(xnt, 1:nsi), 1))
+            inds = first(axes(view(xnt, 1:nsi+1), 1)):max(1, div(size(view(xnt, 1:nsi+1), 1) - 1, resolution)):last(axes(view(xnt, 1:nsi+1), 1))
 
             @series begin
                 linecolor --> i + 2
@@ -111,7 +111,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                     xshow == :norm ?
                     map(norm, eachrow(view(xnt, inds, :))) :
                     view(xnt, inds, xshow)
-                range(t0, tf, length=length(inds)), x
+                range(t0, tf, length=length(inds)), copy(x)
             end
         end
     end
@@ -129,7 +129,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 "l2-norm of target" :
                 reshape(["target $i" for i in 1:length(x0law)], 1, :)
             label --> sollabel
-            inds = first(axes(xt, 1)):max(1, div(size(xt, 1), resolution)):last(axes(xt, 1))
+            inds = first(axes(xt, 1)):max(1, div(size(xt, 1) - 1, resolution)):last(axes(xt, 1))
             x = xshow isa Function && x0law isa         UnivariateDistribution ?
                 map(xshow, view(xt, inds)) :
                 xshow isa Function ?
@@ -139,7 +139,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
                 xshow == :norm ?
                 map(norm, eachrow(view(xt, inds, :))) :
                 view(xt, inds, xshow)
-            range(t0, tf, length=length(inds)), x
+            range(t0, tf, length=length(inds)), copy(x)
         end
     end
 end

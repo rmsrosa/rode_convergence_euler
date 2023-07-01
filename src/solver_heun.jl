@@ -28,8 +28,8 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVe
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("vectors `xt` and `yt` must match indices")
     )
-    n = length(xt)
-    dt = (tf - t0) / (n - 1)
+    N = length(xt) - 1 # mesh intervals
+    dt = (tf - t0) / N
     i1 = firstindex(xt)
     xt[i1] = x0
     ti1 = t0

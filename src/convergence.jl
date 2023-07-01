@@ -64,13 +64,13 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
             "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
         )
         if D <: UnivariateDistribution
-            xt = Vector{T}(undef, ntgt)
-            xnt = Vector{T}(undef, last(ns))
+            xt = Vector{T}(undef, ntgt + 1)
+            xnt = Vector{T}(undef, last(ns) + 1)
             N2 = 1
         elseif D <: MultivariateDistribution
             nx = length(x0law)
-            xt = Matrix{T}(undef, ntgt, nx)
-            xnt = Matrix{T}(undef, last(ns), nx)
+            xt = Matrix{T}(undef, ntgt + 1, nx)
+            xnt = Matrix{T}(undef, last(ns) + 1, nx)
             N2 = 2
         else
             error(
@@ -78,10 +78,10 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
             )
         end
         if P <: UnivariateProcess
-            yt = Vector{T}(undef, ntgt)
+            yt = Vector{T}(undef, ntgt + 1)
             N1 = 1
         elseif P <: MultivariateProcess
-            yt = Matrix{T}(undef, ntgt, length(noise))
+            yt = Matrix{T}(undef, ntgt + 1, length(noise))
             N1 = 2
         else
             error(
@@ -166,21 +166,20 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
             kstep = ks[i]
 
             if D <: UnivariateDistribution && P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), method)
             elseif D <: UnivariateDistribution
-                solve!(view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), method)
             elseif P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*(nsi-1)), method)
+                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi), method)
             else
-                solve!(view(xnt, 1:nsi, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*(nsi-1), :), method)
+                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi, :), method)
             end
 
-            for n in 2:nsi
+            for n in 2:nsi+1
                 if D <: UnivariateDistribution
                     trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
                     trajstderrs[n, i] += abs2(xnt[n] - xt[1 + (n-1) * nstep])
                 else
-                    len = div(size(xnt, 2), kstep)
                     for j in 1:kstep:size(xnt,2)
                         trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
                         trajstderrs[n, i] += abs2(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
@@ -210,8 +209,8 @@ The result is returned in the form of a [`ConvergenceResult`](@ref).
 """
 function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
-    trajerrors = zeros(T, last(suite.ns), length(suite.ns))
-    trajstderrs = zeros(T, last(suite.ns), length(suite.ns))
+    trajerrors = zeros(T, last(suite.ns) + 1, length(suite.ns))
+    trajstderrs = zeros(T, last(suite.ns) + 1, length(suite.ns))
 
     calculate_trajerrors!(rng, trajerrors, trajstderrs, suite)
     
@@ -221,7 +220,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
         :min => maximum(trajerrors .- trajstderrs, dims=1)[1,:],
         :max => maximum(trajerrors .+ trajstderrs, dims=1)[1,:]
     )
-    deltas = (suite.tf - suite.t0) ./ (suite.ns .- 1)
+    deltas = (suite.tf - suite.t0) ./ suite.ns
 
     # fit to errors ∼ C Δtᵖ with lc = ln(C)
     vandermonde = [one.(deltas) log.(deltas)]

@@ -27,8 +27,8 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVe
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
 
-    N = length(xt)
-    dt = (tf - t0) / (N - 1)
+    N = length(xt) - 1 # mesh intervals
+    dt = (tf - t0) / N
     i1 = firstindex(xt)
     xt[i1] = x0
     ti1 = t0
@@ -44,8 +44,8 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMa
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices")
     )
-    n = length(xt)
-    dt = (tf - t0) / (n - 1)
+    N = length(xt) - 1 # mesh intervals
+    dt = (tf - t0) / N
     i1 = firstindex(xt)
     xt[i1] = x0
     ti1 = t0
@@ -66,8 +66,8 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
             "Column of `xt` and `x0` must match indices."
         )
     )
-    n = size(xt, 1)
-    dt = (tf - t0) / (n - 1)
+    N = length(xt) - 1 # mesh intervals
+    dt = (tf - t0) / N
     i1 = firstindex(axes(xt, 1))
     xt[i1, :] .= x0
     ti1 = t0
@@ -92,9 +92,8 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     ( axes(xt, 2) isa Base.OneTo{Int64} && axes(method.cachex, 1) isa Base.OneTo{Int64} && size(method.cachex, 1) ≥ size(xt, 2)) || error(
         "row-length of the cache vector `method.cachex` should be greater than or equal to the column-size of `xt`"
     )
-    axes(xt, 2)
-    n = size(xt, 1)
-    dt = (tf - t0) / (n - 1)
+    N = length(xt) - 1 # mesh intervals
+    dt = (tf - t0) / N
     i1 = firstindex(axes(xt, 1))
     xt[i1, :] .= x0
     ti1 = t0

@@ -33,9 +33,9 @@ function prepare_variables(ntgt::Int, ns::Vector{Int}; nx::Int = 0, ny::Int = 0)
     deltas = Vector{Float64}(undef, length(ns))
     trajerrors = zeros(last(ns), length(ns))
 
-    yt = ny == 0 ? Vector{Float64}(undef, ntgt) : Matrix{Float64}(undef, ntgt, ny)
-    xt = nx == 0 ? Vector{Float64}(undef, ntgt) : Matrix{Float64}(undef, ntgt, nx)
-    xnt = nx == 0 ? Vector{Float64}(undef, last(ns)) : Matrix{Float64}(undef, last(ns), nx)
+    yt = ny == 0 ? Vector{Float64}(undef, ntgt+1) : Matrix{Float64}(undef, ntgt+1, ny)
+    xt = nx == 0 ? Vector{Float64}(undef, ntgt+1) : Matrix{Float64}(undef, ntgt+1, nx)
+    xnt = nx == 0 ? Vector{Float64}(undef, last(ns)+1) : Matrix{Float64}(undef, last(ns)+1, nx)
 
     return nsteps, deltas, trajerrors, yt, xt, xnt
 end
@@ -78,7 +78,7 @@ function calculate_errors!(rng::AbstractRNG, trajerrors::Matrix{T}, yt::VecOrMat
         # solve approximate solutions at selected time steps and update strong errors
         for (i, (nstep, nsi)) in enumerate(zip(nsteps, ns))
 
-            deltas[i] = (tf - t0) / (nsi - 1)
+            deltas[i] = (tf - t0) / nsi
 
             if N0 == Multivariate && NY == Multivariate
                 solve_euler!(rng, view(xnt, 1:nsi, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*(nsi-1), :))
@@ -90,7 +90,7 @@ function calculate_errors!(rng::AbstractRNG, trajerrors::Matrix{T}, yt::VecOrMat
                 solve_euler!(rng, view(xnt, 1:nsi), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*(nsi-1)))
             end
 
-            for n in 2:nsi
+            for n in 2:nsi+1
                 if N0 == Multivariate
                     for j in eachindex(axes(xnt, 2))
                         trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j])

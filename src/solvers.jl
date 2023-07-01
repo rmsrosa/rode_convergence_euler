@@ -48,7 +48,7 @@ More precisely, sove, inplace, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t
 
 The values of `xt` are updated with the computed solution values.
 
-The time step is obtained from the length `n` of the vector `xt` via `dt = (tf - t0) / (n - 1)`.
+The time step is obtained from the length of the vector `xt` via `dt = (tf - t0) / (lenght(xt) - 1)`.
 
 The noise `yt` should be of the same (row) length as `xt`.
 """
