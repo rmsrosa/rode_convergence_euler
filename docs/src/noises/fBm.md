@@ -28,7 +28,7 @@ y0 = 0.0
 t0 = 0.0
 tf = 2.0
 n = 2^9
-tt = range(t0, tf, length=n)
+tt = range(t0, tf, length=n+1)
 nothing # hide
 ```
 
@@ -50,7 +50,7 @@ This `noise` is a `Dict` with the keys being the chosen Hurst parameters and wit
 
 ```@example fBm
 rng = Xoshiro(123)
-yt = Vector{Float64}(undef, n)
+yt = Vector{Float64}(undef, n+1)
 nothing # hide
 ```
 
@@ -109,7 +109,7 @@ nothing # hide
 Now we generate the sets of sample paths for each Hurst parameter.
 
 ```@example fBm
-W = Dict(H => Matrix{Float64}(undef, n, m) for H in Hs)
+W = Dict(H => Matrix{Float64}(undef, n+1, m) for H in Hs)
 for H in Hs
     for i in 1:m
         rand!(rng, noise[H], view(W[H], :, i))

@@ -247,7 +247,7 @@ nothing # hide
 The actual surplus is $U_t = X_t - O_t - C_t$, so we may visualize a sample solution of the surplus by subtracting these two noises from the solution of the above RODE.
 
 ````@example 10-risk
-plt_surplus = plot(range(t0, tf, length=ntgt), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
+plt_surplus = plot(range(t0, tf, length=ntgt+1), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
 ````
 
 ````@example 10-risk

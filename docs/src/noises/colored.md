@@ -53,8 +53,8 @@ y0 = 0.0
 t0 = 0.0
 tf = 2.0
 n = 2^10
-tt = range(t0, tf, length=n)
-dt = (tf - t0) / (n - 1)
+tt = range(t0, tf, length=n+1)
+dt = (tf - t0) / n
 nothing # hide
 ```
 
@@ -72,7 +72,7 @@ ou_noises = (OrnsteinUhlenbeckProcess(t0, tf, y0, 1/τ, √(2/τ)) for τ in τs
 nothing # hide
 ```
 
-This `noises` is a `Tuple` where each element is an OU sampler. With each sampler `noises[i]`, we draw a sample path with `rand!(rng, noises[i], yt)`, with a given random number generator `rng` and a vector of floats `yt` of size `n`, so that this sampling fills up the pre-allocated vector `yt` with a sample path over the interval `t0` to `tf`, with the corresponding resolution `dt = (tf - t0) / (n - 1)`. For that, we set up the `rng`, used for reproducibility.
+This `noises` is a `Tuple` where each element is an OU sampler. With each sampler `noises[i]`, we draw a sample path with `rand!(rng, noises[i], yt)`, with a given random number generator `rng` and a vector of floats `yt` of size `n+1`, so that this sampling fills up the pre-allocated vector `yt` with a sample path over the interval `t0` to `tf`, with the corresponding resolution `dt = (tf - t0) / n`. For that, we set up the `rng`, used for reproducibility.
 
 ```@example colored
 rng = Xoshiro(123)
@@ -81,8 +81,8 @@ rng = Xoshiro(123)
 Let us visualize a sample path of these process. We define the resolution, pre-allocate some vectors, and compute the sample paths.
 
 ```@example colored
-w_t = Vector{Float64}(undef, n) # for the white noise
-ous_t = [Vector{Float64}(undef, n) for τ in τs] # for the OU noises
+w_t = Vector{Float64}(undef, n+1) # for the white noise
+ous_t = [Vector{Float64}(undef, n+1) for τ in τs] # for the OU noises
 nothing # hide
 ```
 

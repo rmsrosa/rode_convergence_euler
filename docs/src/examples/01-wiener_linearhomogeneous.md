@@ -186,7 +186,7 @@ info = (
 The *target* solution as described above is implemented as
 
 ````@example 01-wiener_linearhomogeneous
-function target_solver!(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )

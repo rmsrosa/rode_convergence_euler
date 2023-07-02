@@ -90,8 +90,8 @@ We start by setting the time interval, the mesh parameters, and the number of sa
 t0 = 0.0
 tf = 2.0
 n = 2^10
-tt = range(t0, tf, length=n)
-dt = (tf - t0) / (n - 1)
+tt = range(t0, tf, length=n+1)
+dt = (tf - t0) / n
 m = 200
 nothing # hide
 ```
@@ -118,8 +118,8 @@ For comparison, we generate a bunch of sample paths with both constructors and c
 ```@example homlin
 rng = Xoshiro(123)
 
-gBmt = Matrix{Float64}(undef, n, m)
-Yt = Matrix{Float64}(undef, n, m)
+gBmt = Matrix{Float64}(undef, n+1, m)
+Yt = Matrix{Float64}(undef, n+1, m)
 
 for j in 1:m
     rand!(rng, noise, view(gBmt, :, j))
