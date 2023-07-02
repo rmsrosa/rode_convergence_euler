@@ -477,7 +477,7 @@ end
 
 function Random.rand!(rng::AbstractRNG, noise::FractionalBrownianMotionProcess, yt::AbstractVector{Float64})
 
-    length(yt) ≤ noise.d || throw(
+    length(yt) -1 ≤ noise.d || throw(
         ArgumentError(
             "length of the sample path vector should be at most that given in the construction of the fBm noise process."
         )

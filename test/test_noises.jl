@@ -232,7 +232,7 @@
         @test var(ytf) ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.1)
     end
 
-    #= @testset "fBm process" begin
+    @testset "fBm process" begin
         rng = Xoshiro(123)
         y0 = 0.0
         H = 0.25
@@ -252,7 +252,7 @@
         @test var(ythf) ≈ (tf/2)^(2H) (atol = 0.1)
         @test mean(ytf) ≈ y0 (atol = 0.1)
         @test var(ytf) ≈ tf^(2H) (atol = 0.1)
-    end =#
+    end
     
     @testset "Product process I" begin
         rng = Xoshiro(123)
@@ -326,7 +326,7 @@
         
         @test_nowarn (@inferred rand!(rng, noise,ymt))
 
-        #= noise = ProductProcess(
+        noise = ProductProcess(
             WienerProcess(t0, tf, y0),
             OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ),
             GeometricBrownianMotionProcess(t0, tf, y0, μ, σ),
@@ -386,6 +386,6 @@
         @test vars[7] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.2)
 
         @test means[8] ≈ y0 (rtol = 0.2)
-        @test vars[8] ≈ tf^(2hurst) (rtol = 0.2) =#
+        @test vars[8] ≈ tf^(2hurst) (rtol = 0.2)
     end
 end
