@@ -3,8 +3,8 @@ target_exact1! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt:
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
 
-    n = size(xt, 1)
-    dt = (tf - t0) / (n - 1)
+    n = size(xt, 1) - 1
+    dt = (tf - t0) / n
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = zero(T)
@@ -16,37 +16,37 @@ target_exact1! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt:
 end
 
 target_exact2! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, rng::AbstractRNG) where {T, F}
-    ntgt = size(xt, 1)
-    dt = (tf - t0) / (ntgt - 1)
+    ntgt = size(xt, 1) - 1
+    dt = (tf - t0) / ntgt
     xt[1] = x0
     integral = 0.0
-    for n in 2:ntgt
+    for n in 2:ntgt+1
         integral += (yt[n, 1] + yt[n-1, 1] + 3yt[n, 2] + 3yt[n-1, 2]) * dt / 8 + sqrt(dt^3 / 12) * randn(rng)
         xt[n] = x0 * exp(integral)
     end
 end
 
 target_exact3! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, rng::AbstractRNG) where {T, F}
-    ntgt = size(xt, 1)
-    dt = (tf - t0) / (ntgt - 1)
+    ntgt = size(xt, 1) - 1
+    dt = (tf - t0) / ntgt
     for j in eachindex(axes(xt, 2), x0)
         xt[1, j] = x0[j]
     end
     integral = 0.0
-    for n in 2:ntgt
+    for n in 2:ntgt+1
         integral += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
         xt[n, :] .= exp(integral) .* x0
     end
 end
 
 target_exact4! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, rng::AbstractRNG) where {T, F}
-    ntgt = size(xt, 1)
-    dt = (tf - t0) / (ntgt - 1)
+    ntgt = size(xt, 1) - 1
+    dt = (tf - t0) / ntgt
     for j in eachindex(axes(xt, 2), x0)
         xt[1, j] = x0[j]
     end
     integral = 0.0
-    for n in 2:ntgt
+    for n in 2:ntgt+1
         integral += (yt[n, 1] + yt[n-1, 1] + 3yt[n, 2] + 3yt[n-1, 2]) * dt / 8 + sqrt(dt^3 / 12) * randn(rng)
         xt[n, :] .= exp(integral) .* x0
     end
@@ -59,8 +59,8 @@ end
     ntgt = 2^4
     ns = 2 .^ (2:3)
     m = 100
-    trajerrors = zeros(last(ns), length(ns))
-    trajstderrs = zeros(last(ns), length(ns))
+    trajerrors = zeros(last(ns) + 1, length(ns) + 1)
+    trajstderrs = zeros(last(ns) + 1, length(ns) + 1)
 
     @testset "Scalar/Scalar Euler" begin
 

@@ -3,8 +3,8 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
 
-    n = size(xt, 1)
-    dt = (tf - t0) / (n - 1)
+    n = size(xt, 1) - 1
+    dt = (tf - t0) / n
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = zero(T)
@@ -35,7 +35,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -52,7 +52,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -70,11 +70,11 @@ end
         f = (t, x, y) -> (y[1] + 3y[2])/4 * x
 
         target_exact! = function (xt, t0, tf, x0, f, yt, rng)
-            ntgt = size(xt, 1)
-            dt = (tf - t0) / (ntgt - 1)
+            ntgt = size(xt, 1) - 1
+            dt = (tf - t0) / ntgt
             xt[1] = x0
             integral = 0.0
-            for n in 2:ntgt
+            for n in 2:ntgt+1
                 integral += (yt[n, 1] + yt[n-1, 1] + 3yt[n, 2] + 3yt[n-1, 2]) * dt / 8 + sqrt(dt^3 / 12) * randn(rng)
                 xt[n] = x0 * exp(integral)
             end
@@ -85,7 +85,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -97,7 +97,7 @@ end
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, RandomEuler(), RandomEuler(), ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -117,11 +117,11 @@ end
         f! = (dx, t, x, y) -> (dx .= y .* x)
 
         target_exact! = function (xt, t0, tf, x0, f!, yt, rng)
-            ntgt = size(xt, 1)
-            dt = (tf - t0) / (ntgt - 1)
+            ntgt = size(xt, 1) - 1
+            dt = (tf - t0) / ntgt
             xt[1, :] .= x0
             integral = 0.0
-            for n in 2:ntgt
+            for n in 2:ntgt+1
                 integral += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
                 xt[n, :] .= exp(integral) * x0
             end
@@ -132,7 +132,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -143,7 +143,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -167,11 +167,11 @@ end
         f! = (dx, t, x, y) -> (dx .= (y[1] + 3y[2]) .* x ./ 4)
 
         target_exact! = function (xt, t0, tf, x0, f!, yt, rng)
-            ntgt = size(xt, 1)
-            dt = (tf - t0) / (ntgt - 1)
+            ntgt = size(xt, 1) - 1
+            dt = (tf - t0) / ntgt
             xt[1, :] .= x0
             integral = 0.0
-            for n in 2:ntgt
+            for n in 2:ntgt+1
                 integral += (yt[n, 1] + yt[n-1, 1] + 3yt[n, 2] + 3yt[n-1, 2]) * dt / 8 + sqrt(dt^3 / 12) * randn(rng)
                 xt[n, :] .= exp(integral) * x0
             end
@@ -182,7 +182,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -193,7 +193,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
         str = @test_nowarn generate_error_table(results)
@@ -213,11 +213,11 @@ end
         f = (t, x, y) -> y * x / 10
 
         target_exact! = function (xt, t0, tf, x0, f, yt, rng)
-            ntgt = size(xt, 1)
-            dt = (tf - t0) / (ntgt - 1)
+            ntgt = size(xt, 1) - 1
+            dt = (tf - t0) / ntgt
             xt[1] = x0
             integral = 0.0
-            for n in 2:ntgt
+            for n in 2:ntgt+1
                 integral += (yt[n] + yt[n-1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
                 xt[n] = x0 * exp(integral / 10)
             end
@@ -228,7 +228,7 @@ end
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
-        @test results.deltas ≈ (tf - t0) ./ (ns .- 1)
+        @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
     end

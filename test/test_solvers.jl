@@ -11,8 +11,8 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
 
-    n = length(xt)
-    dt = (tf - t0) / (n - 1)
+    n = length(xt) - 1
+    dt = (tf - t0) / n
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = 0.0
@@ -30,12 +30,12 @@ end
     t0 = 0.0
     tf = 1.5
     n = 2^8
-    tt = range(t0, tf, length=n)
+    tt = range(t0, tf, length=n+1)
     @testset "scalar/scalar Euler" begin
         x0 = 0.5
         f = (t, x, y) -> ( y + cos(t) ) * x
         yt = cos.(tt)
-        xt = Vector{Float64}(undef, n)
+        xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( 2 * sin.(tt))
         method = RandomEuler()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
@@ -46,7 +46,7 @@ end
         x0 = 0.5
         f = (t, x, y) -> ( sum(y) + cos(t) ) * x
         yt = [0.3 0.7] .* cos.(tt)
-        xt = Vector{Float64}(undef, n)
+        xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( 2 * sin.(tt))
         method = RandomEuler()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
@@ -57,7 +57,7 @@ end
         x0 = [0.2, 0.3]
         f! = (dx, t, x, y) -> (dx .= ( y + cos(t) ) .* x)
         yt = cos.(tt)
-        xt = Matrix{Float64}(undef, n, length(x0))
+        xt = Matrix{Float64}(undef, n + 1, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
         method = RandomEuler(2)
         @test_nowarn solve!(xt, t0, tf, x0, f!, yt, method)
@@ -68,7 +68,7 @@ end
         x0 = [0.2, 0.3]
         f! = (dx, t, x, y) -> (dx .= ( sum(y) + cos(t) ) .* x)
         yt = [0.2 0.2 0.6] .* cos.(tt)
-        xt = Matrix{Float64}(undef, n, length(x0))
+        xt = Matrix{Float64}(undef, n + 1, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
         method = RandomEuler(2)
         @test_nowarn solve!(xt, t0, tf, x0, f!, yt, method)
@@ -79,7 +79,7 @@ end
         x0 = 0.5
         f = (t, x, y) -> ( y + cos(t) ) * x
         yt = cos.(tt)
-        xt = Vector{Float64}(undef, n)
+        xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( 2 * sin.(tt))
         method = RandomHeun()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, method)
@@ -92,7 +92,7 @@ end
         x0 = 0.5
         f = (t, x, y) -> y * x
         yt = cos.(tt)
-        xt = Vector{Float64}(undef, n)
+        xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( sin.(tt))
 
         method = CustomUnivariateMethod(custom_solver, nothing)
@@ -106,10 +106,10 @@ end
         x0 = 0.5
         f = (t, x, y) -> y * x
         noise = WienerProcess(t0, tf, 0.0)
-        yt = Vector{Float64}(undef, n)
+        yt = Vector{Float64}(undef, n + 1)
         rand!(rng, noise, yt)
-        xt = Vector{Float64}(undef, n)
-        dt = (tf - t0) / (n - 1)
+        xt = Vector{Float64}(undef, n + 1)
+        dt = (tf - t0) / n
         sol = x0 * exp.( cumsum(yt) * dt)
     
         method = RandomEuler()

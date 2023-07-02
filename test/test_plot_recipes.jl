@@ -3,8 +3,8 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
 
-    n = size(xt, 1)
-    dt = (tf - t0) / (n - 1)
+    n = size(xt, 1) - 1
+    dt = (tf - t0) / n
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = zero(T)
