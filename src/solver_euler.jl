@@ -66,8 +66,8 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
             "Column of `xt` and `x0` must match indices."
         )
     )
-    N = length(xt) - 1 # mesh intervals
-    dt = (tf - t0) / N
+    n = size(xt, 1) - 1 # mesh intervals
+    dt = (tf - t0) / n
     i1 = firstindex(axes(xt, 1))
     xt[i1, :] .= x0
     ti1 = t0
@@ -92,8 +92,8 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     ( axes(xt, 2) isa Base.OneTo{Int64} && axes(method.cachex, 1) isa Base.OneTo{Int64} && size(method.cachex, 1) ≥ size(xt, 2)) || error(
         "row-length of the cache vector `method.cachex` should be greater than or equal to the column-size of `xt`"
     )
-    N = length(xt) - 1 # mesh intervals
-    dt = (tf - t0) / N
+    n = size(xt, 1) - 1 # mesh intervals
+    dt = (tf - t0) / n
     i1 = firstindex(axes(xt, 1))
     xt[i1, :] .= x0
     ti1 = t0
