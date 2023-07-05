@@ -1015,25 +1015,25 @@ For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the 
 This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
 
 \begin{table}
-        \begin{tabular}[htb]{|r|l|l|l|}
+    \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.0667 & 0.0208 & 0.00139 \\
-        32 & 0.0323 & 0.0112 & 0.000862 \\
-        64 & 0.0159 & 0.00573 & 0.000523 \\
-        128 & 0.00787 & 0.00281 & 0.000242 \\
-        256 & 0.00392 & 0.00136 & 0.000107 \\
-        512 & 0.00196 & 0.00073 & 6.33e-5 \\
-        1024 & 0.000978 & 0.000354 & 2.81e-5 \\
-        2048 & 0.000489 & 0.000178 & 1.62e-5 \\
-        4096 & 0.000244 & 8.6e-5 & 7.5e-6 \\
-        8192 & 0.000122 & 4.86e-5 & 4.87e-6 \\
-        16384 & 6.1e-5 & 2.54e-5 & 2.57e-6 \\
+        16 & 0.0625 & 0.0379 & 0.0042 \\
+        32 & 0.0312 & 0.0192 & 0.00208 \\
+        64 & 0.0156 & 0.0095 & 0.00103 \\
+        128 & 0.00781 & 0.00478 & 0.000519 \\
+        256 & 0.00391 & 0.0024 & 0.000269 \\
+        512 & 0.00195 & 0.00123 & 0.000143 \\
+        1024 & 0.000977 & 0.000633 & 7.43e-5 \\
+        2048 & 0.000488 & 0.000324 & 3.74e-5 \\
+        4096 & 0.000244 & 0.000154 & 1.65e-5 \\
+        8192 & 0.000122 & 7.71e-5 & 8.35e-6 \\
+        16384 & 6.1e-5 & 3.76e-5 & 4.06e-6 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ for each mesh resolution $N$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I = [0.0, 1.0]$, based on $M = 500$ sample paths for each fixed time step, with the target solution calculated with $65536$ points. The order of strong convergence is estimated to be $p = 0.974$, with the 95\% confidence interval $[0.9406, 1.0079]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ for each mesh resolution $N$, with initial condition $X_0 \sim \mathcal{N}(0, 1)$ and a standard Wiener process noise $\{W_t\}_t$, on the time interval $I = [0.0, 1.0]$, based on $M = 500$ sample paths for each fixed time step, with the target solution calculated with $65536$ points. The order of strong convergence is estimated to be $p = 0.993$, with the 95\% confidence interval $[0.9497, 1.0362]$.}
     \label{tablinearhomogeneousrode}
 \end{table}
 
@@ -1081,15 +1081,15 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0159 & 0.252 & 0.0258 \\
-        128 & 0.00787 & 0.121 & 0.0124 \\
-        256 & 0.00392 & 0.0607 & 0.00621 \\
-        512 & 0.00196 & 0.0301 & 0.00308 \\
+        64 & 0.0156 & 0.196 & 0.0201 \\
+        128 & 0.00781 & 0.0951 & 0.00972 \\
+        256 & 0.00391 & 0.0473 & 0.00483 \\
+        512 & 0.00195 & 0.0237 & 0.00242 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 80$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.012$, with the 95\% confidence interval $[0.8945, 1.13]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 80$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.017$, with the 95\% confidence interval $[0.8982, 1.1349]$.}
     \label{taballnoises}
 \end{table}
 
@@ -1272,13 +1272,13 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
     \begin{tabular}[htb]{|c|c|c|c|}
         \hline $H$ & $p$ & $p_{\textrm{min}}$ & $p_{\textrm{max}}$ \\
         \hline \hline
-        0.1 & 0.630713 & 0.570904 & 0.690539 \\
-        0.2 & 0.759896 & 0.700519 & 0.819179 \\
-        0.3 & 0.855504 & 0.796137 & 0.915043 \\
-        0.4 & 0.942058 & 0.884659 & 0.999264 \\
-        0.5 & 1.0012   & 0.944985 & 1.0571 \\
-        0.7 & 1.00544  & 0.946344 & 1.06458 \\
-        0.9 & 0.99782  & 0.936901 & 1.05873 \\
+        0.1 & 0.618829 & 0.558371 & 0.679264 \\
+        0.2 & 0.714901 & 0.652603 & 0.777104 \\
+        0.3 & 0.809808 & 0.751078 & 0.868671 \\
+        0.4 & 0.882603 & 0.822044 & 0.942833 \\
+        0.5 & 0.997408 & 0.93889 & 1.05586 \\
+        0.7 & 1.00102 & 0.945619 & 1.05755 \\
+        0.9 & 1.00198 & 0.936873 & 1.06707 \\
         \hline
     \end{tabular}
     \bigskip
@@ -1357,17 +1357,17 @@ Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh re
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.0667 & 0.00994 & 0.000325 \\
-        32 & 0.0323 & 0.00475 & 0.000164 \\
-        64 & 0.0159 & 0.00219 & 8.44e-5 \\
-        128 & 0.00787 & 0.00114 & 4.27e-5 \\
-        256 & 0.00392 & 0.000553 & 2.08e-5 \\
-        512 & 0.00196 & 0.000279 & 1.06e-5 \\
+        16 & 0.0625 & 0.00554 & 0.000253 \\
+        32 & 0.0312 & 0.00269 & 0.000126 \\
+        64 & 0.0156 & 0.00122 & 5.65e-5 \\
+        128 & 0.00781 & 0.000637 & 2.87e-5 \\
+        256 & 0.00391 & 0.000318 & 1.59e-5 \\
+        512 & 0.00195 & 0.000169 & 8.22e-6 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for population dynamics for each mesh resolution $N$, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.012$, with the 95\% confidence interval $[0.9874, 1.0381]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for population dynamics for each mesh resolution $N$, with initial condition $X_0 \sim \mathrm{Beta}(7.0, 5.0)$ and gBm and step process noises, on the time interval $I = [0.0, 1.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.011$, with the 95\% confidence interval $[0.9759, 1.0453]$.}
     \label{tabpopdyn}
 \end{table}
 
@@ -1444,16 +1444,15 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        32 & 0.161 & 0.557 & 0.0328 \\
-        64 & 0.0794 & 0.272 & 0.0156 \\
-        128 & 0.0394 & 0.136 & 0.0105 \\
-        256 & 0.0196 & 0.0714 & 0.0092 \\
-        512 & 0.00978 & 0.0346 & 0.00397 \\
+        64 & 0.0312 & 2.09 & 0.18 \\
+        128 & 0.0156 & 0.962 & 0.0761 \\
+        256 & 0.00781 & 0.437 & 0.0356 \\
+        512 & 0.00391 & 0.212 & 0.0175 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $I = [0.0, 5.0]$, based on $M = 100$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 0.985$, with the 95\% confidence interval $[0.9224, 1.0553]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for mechanical structure model under ground-shaking random excitations for each mesh resolution $N$, with initial condition $X_0 = \mathbf{0}$ and transport process noise, on the time interval $I = [0.0, 2.0]$, based on $M = 100$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.106$, with the 95\% confidence interval $[1.0181, 1.1935]$.}
     \label{tableearthquake}
 \end{table}
 
@@ -1495,17 +1494,16 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        16 & 0.333 & 1.22 & 0.0485 \\
-        32 & 0.161 & 0.563 & 0.0237 \\
-        64 & 0.0794 & 0.27 & 0.0112 \\
-        128 & 0.0394 & 0.133 & 0.00537 \\
-        256 & 0.0196 & 0.0677 & 0.00448 \\
-        512 & 0.00978 & 0.0331 & 0.00191 \\
+        32 & 0.156 & 0.623 & 0.0354 \\
+        64 & 0.0781 & 0.3 & 0.0169 \\
+        128 & 0.0391 & 0.146 & 0.00818 \\
+        256 & 0.0195 & 0.0716 & 0.00403 \\
+        512 & 0.00977 & 0.0354 & 0.00202 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $I = [0.0, 5.0]$, based on $M = 200$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.018$, with the 95\% confidence interval $[0.9874, 1.0493]$}.
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a toggle-switch model of gene regulation for each mesh resolution $N$, with initial condition $X_0 = 4.0, Y_0 = 4.0$ and coupled compound Poisson process and geometric Brownian motion noises, on the time interval $I = [0.0, 5.0]$, based on $M = 100$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.034$, with the 95\% confidence interval $[0.9865, 1.0809]$.}
     \label{tabletoggleswitch}
 \end{table}
 
@@ -1608,15 +1606,15 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        64 & 0.0476 & 0.175 & 0.0109 \\
-        128 & 0.0236 & 0.0818 & 0.0054 \\
-        256 & 0.0118 & 0.043 & 0.00236 \\
-        512 & 0.00587 & 0.0212 & 0.00135 \\
+        64 & 0.0469 & 0.223 & 0.0167 \\
+        128 & 0.0234 & 0.115 & 0.00878 \\
+        256 & 0.0117 & 0.0579 & 0.00405 \\
+        512 & 0.00586 & 0.0286 & 0.00209 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a risk model for each mesh resolution $N$, with initial condition $X_0 = 1.0$ and coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes, on the time interval $I = [0.0, 3.0]$, based on $M = 400$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 0.999$, with the 95\% confidence interval $[0.9273, 1.0707]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for a risk model for each mesh resolution $N$, with initial condition $X_0 = 1.0$ and coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes, on the time interval $I = [0.0, 3.0]$, based on $M = 400$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 0.987$, with the 95\% confidence interval $[0.9019, 1.0727]$.}
     \label{tableriskmodel}
 \end{table}
 
@@ -1691,14 +1689,14 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ Table \ref
     \begin{tabular}[htb]{|r|l|l|l|}
         \hline N & dt & error & std err \\
         \hline \hline
-        32 & 0.0645 & 112.0 & 17.9 \\
-        128 & 0.0157 & 26.2 & 4.18 \\
-        512 & 0.00391 & 4.99 & 0.795 \\
+        32 & 0.0625 & 128.0 & 20.4 \\
+        128 & 0.0156 & 30.2 & 4.82 \\
+        512 & 0.00391 & 6.53 & 1.04 \\
         \hline
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for the Fisher-KPP equation for each mesh resolution $N$, with initial condition $X_0 = 0$ and Hawkes-modulated Ornstein-Uhlenbeck colored noise, on the time interval $I = [0.0, 2.0]$, based on $M = 40$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.11$, with the 95\% confidence interval $[0.9953, 1.2256]$.}
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for the Fisher-KPP equation for each mesh resolution $N$, with initial condition $X_0 = 0$ and Hawkes-modulated Ornstein-Uhlenbeck colored noise, on the time interval $I = [0.0, 2.0]$, based on $M = 40$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.072$, with the 95\% confidence interval $[0.9558, 1.1882]$.}
     \label{tablefisherkpp}
 \end{table}
 

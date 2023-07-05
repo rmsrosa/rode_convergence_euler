@@ -77,10 +77,10 @@ The time interval:
 t0, tf = 0.0, 2.0
 ````
 
-The discretization in space is made with `l` mesh points $x_j = (j-1) / (l-1)$, for $j = 1, \ldots, l$, corresponding to `l-1` mesh intervals of length $\Delta x = 1 / (l-1)$. The points $x_1 = 0$ and $x_l = 1$ are the boundary points. For illustration purposes, we start by setting `l` to
+The discretization in space is made with `l+1` mesh points $x_j = j / l$, for $j = 0, \ldots, l$, corresponding to `l` mesh intervals of length $\Delta x = 1 / l$. The points $x_0 = 0$ and $x_l = 1$ are the boundary points. For illustration purposes, we start by setting `l` to
 
 ````@example 09-fisherkpp
-l = 65
+l = 64
 ````
 
 Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
@@ -94,7 +94,7 @@ u₀(x) = 0.0
 The discretized initial condition is then
 
 ````@example 09-fisherkpp
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
 ````
 
 For the discretization of the equation we use finite differences with the classic second-order discretization of the second derivative:
@@ -103,21 +103,21 @@ For the discretization of the equation we use finite differences with the classi
   \frac{\partial^2 u}{\partial x^2}(t, x_j) \approx \frac{u(t, x_{j+1}) - 2u(t, x_j) + u(t, x_{j-1})}{\Delta x^2}, \quad j = 1, \ldots, l
 ```
 
-Notice this goes up to the boundary points $j=1$ and $j=l$, corresponding to $x=0$ and $x=1$, and depends on the "ghost" points $x_0 = -\Delta x$ and $x_{l+1} = 1 + \Delta x$. These points are solved for by using the Neumann boundary conditions and a centered second-order finite difference approximation of the first derivative, namely
+Notice this goes up to the boundary points $j=0$ and $j=l$, corresponding to $x=0$ and $x=1$, and depends on the "ghost" points $x_{-1} = -\Delta x$ and $x_{l+1} = 1 + \Delta x$. These points are solved for by using the Neumann boundary conditions and a centered second-order finite difference approximation of the first derivative, namely
 
 ```math
   \frac{\partial u}{\partial x}(t, x_j) \approx \frac{u(t, x_{j+1} - u(t, x_{j-1}))}{2\Delta x},
 ```
 
-on the boundary points $j=1$ and $j=l$, so that
+on the boundary points $j=0$ and $j=l$, so that
 
 ```math
-  u(t, x_0) = u(t, x_2) + 2Y_t \Delta x, \qquad u(t, x_{l+1}) = u(t, x_{l-1}).
+  u(t, x_{-1}) = u(t, x_1) + 2Y_t \Delta x, \qquad u(t, x_{l+1}) = u(t, x_{l-1}).
 ```
 
 These points are plugged into the second-order approximation of the second derivatives at the boundary points.
 
-This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE.
+This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE, keeping in mind that julia is 1-based, so the `j` indices are shifted up by one.
 
 ````@example 09-fisherkpp
 function f!(du, t, u, y) # ; μ=μ, λ=λ, uₘ=uₘ)
@@ -127,22 +127,22 @@ function f!(du, t, u, y) # ; μ=μ, λ=λ, uₘ=uₘ)
     λ = 10.0
     uₘ = 1.0
 
-    l = length(u)
-    dx = 1.0 / (l - 1)
+    l = length(u) - 1
+    dx = 1.0 / l
     dx² = dx ^ 2
 
     # interior points
-    for j in 2:l-1
+    for j in 2:l
         du[j] = μ * (u[j-1] - 2u[j] + u[j+1]) / dx² + λ * u[j] * (1.0 - u[j] / uₘ)
     end
 
     # ghost points
-    gh0 = u[2] + 2dx * max(0.0, y[1] * y[2])
-    ghl1 = u[l-1]
+    gh01 = u[2] + 2dx * max(0.0, y[1] * y[2])
+    ghl1 = u[l]
 
     # boundary points
-    du[1] = μ * ( u[2] - 2u[1] + gh0 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
-    du[l] = μ * ( ghl1 - 2u[l] + u[l-1] ) / dx² + λ * u[l] * ( 1.0 - u[l] / uₘ )
+    du[1] = μ * ( u[2] - 2u[1] + gh01 ) / dx² + λ * u[1] * ( 1.0 - u[1] / uₘ )
+    du[l+1] = μ * ( ghl1 - 2u[l+1] + u[l] ) / dx² + λ * u[l+1] * ( 1.0 - u[l+1] / uₘ )
     return nothing
 end
 ````
@@ -216,8 +216,8 @@ noise = ProductProcess(colored_noise, hawkes_envelope_noise)
 Here is a sample path of the two noises:
 
 ````@example 09-fisherkpp
-tt = range(t0, tf, length=2^9)
-yt = Matrix{Float64}(undef, 2^9, 2)
+tt = range(t0, tf, length=2^9+1)
+yt = Matrix{Float64}(undef, 2^9+1, 2)
 rand!(rng, noise, yt)
 ````
 
@@ -241,12 +241,12 @@ nothing # hide
 Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$ This condition follows from the Von Neumann stability analysis, by checking for discrete solution $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$ of the error, where $\tau = \Delta t$, $h = \Delta x$, and requiring that the amplification factor at each time step is bounded by $1 + \mathcal{O}(\tau).$
 
 ````@example 09-fisherkpp
-l = 513 # 2^9 + 1
-u0law = product_distribution(Tuple(Dirac(u₀((j-1) / (l-1))) for j in 1:l)...)
+l = 512 # 2^9
+u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
 ks = [2^6, 2^5, 2^4]
-@info  (l-1) ./ ks # 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
+@info  l ./ ks # 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 #nothing # hide
 ````
 
@@ -326,10 +326,10 @@ nothing # hide
 For the sake of illustration, we plot the evolution of a sample target solution:
 
 ````@example 09-fisherkpp
-dt = (tf - t0) / (ntgt - 1)
+dt = (tf - t0) / ntgt
 
 @time anim = @animate for i in 1:div(ntgt, 2^7):div(ntgt, 1)
-    plot(range(0.0, 1.0, length=l), view(suite.xt, i, :), ylim=(0.0, 1.1), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", legend=false)
+    plot(range(0.0, 1.0, length=l+1), view(suite.xt, i, :), ylim=(0.0, 1.1), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", legend=false)
 end
 
 nothing # hide

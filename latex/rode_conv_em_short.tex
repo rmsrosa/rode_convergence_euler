@@ -991,7 +991,18 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \end{tabular}
     \bigskip
 
-    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 80$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.012$, with the 95\% confidence interval $[0.8945, 1.13]$.}
+    \begin{tabular}[htb]{|r|l|l|l|}
+        \hline N & dt & error & std err \\
+        \hline \hline
+        64 & 0.0156 & 0.196 & 0.0201 \\
+        128 & 0.00781 & 0.0951 & 0.00972 \\
+        256 & 0.00391 & 0.0473 & 0.00483 \\
+        512 & 0.00195 & 0.0237 & 0.00242 \\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    \caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \| \mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t$ for each mesh resolution $N$, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$ and vector-valued noise $\{\mathbf{Y}_t\}_t$ with all the implemented noises, on the time interval $I = [0.0, 1.0]$, based on $M = 80$ sample paths for each fixed time step, with the target solution calculated with $262144$ points. The order of strong convergence is estimated to be $p = 1.017$, with the 95\% confidence interval $[0.8982, 1.1349]$.}
     \label{taballnoises}
 \end{table}
 
@@ -1054,13 +1065,13 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
     \begin{tabular}[htb]{|c|c|c|c|}
         \hline $H$ & $p$ & $p_{\textrm{min}}$ & $p_{\textrm{max}}$ \\
         \hline \hline
-        0.1 & 0.630713 & 0.570904 & 0.690539 \\
-        0.2 & 0.759896 & 0.700519 & 0.819179 \\
-        0.3 & 0.855504 & 0.796137 & 0.915043 \\
-        0.4 & 0.942058 & 0.884659 & 0.999264 \\
-        0.5 & 1.0012   & 0.944985 & 1.0571 \\
-        0.7 & 1.00544  & 0.946344 & 1.06458 \\
-        0.9 & 0.99782  & 0.936901 & 1.05873 \\
+        0.1 & 0.618829 & 0.558371 & 0.679264 \\
+        0.2 & 0.714901 & 0.652603 & 0.777104 \\
+        0.3 & 0.809808 & 0.751078 & 0.868671 \\
+        0.4 & 0.882603 & 0.822044 & 0.942833 \\
+        0.5 & 0.997408 & 0.93889 & 1.05586 \\
+        0.7 & 1.00102 & 0.945619 & 1.05755 \\
+        0.9 & 1.00198 & 0.936873 & 1.06707 \\
         \hline
     \end{tabular}
     \bigskip
