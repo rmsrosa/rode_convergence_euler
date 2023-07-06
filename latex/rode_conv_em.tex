@@ -982,7 +982,7 @@ The exact distribution of $\int_0^\tau W_s\;\mathrm{d}s$ given the step $\Delta 
 \end{equation}
 As for the distribution of the integral over a mesh interval $[t_i, t_{i+1}]$ when given the endpoints $W_{t_i}$ and $W_{t_{i+1}},$ we use that $s \mapsto W_{t_i+s} - W_{t_i}$ is a standard Wiener process to find, from \eqref{exactintWt}, that
 \begin{align*}
-    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i} + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
+    \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s & = W_{t_i}(t_{i+1} - t_i) + \int_{t_i}^{t_{i+1}} (W_s - W_{t_i})\;\mathrm{d}s \\
     & = W_{t_i}(t_{i+1} - t_i) + \int_{0}^{t_{i+1} - t_i} (W_{t_i+s} - W_{t_i})\;\mathrm{d}s \\
     & = W_{t_i}(t_{i+1} - t_i) + \frac{(t_{i+1} - t_i)}{2}(W_{t_{i+1}}-W_{t_{i}}) + Z_i \\
     & = \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i,
@@ -1000,7 +1000,7 @@ Thus, breaking down the sum over the mesh intervals:
 \end{equation}
 where $Z_0, \ldots, Z_{N-1}$ are independent random variables with distribution \eqref{linearhomogeneousZidistribution}.
 
-Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a higher-order correction term.
+Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a correction term.
 
 \begin{figure}
     \includegraphics[scale=0.6]{img/approximation_linearhomogenous.png}
