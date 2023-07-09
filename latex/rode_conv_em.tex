@@ -108,7 +108,9 @@ where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Om
 
 Under certain regularity conditions on $f$, it is proved in \cite[Theorem 3]{WangCaoHanKloeden2021} that, when the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, the Euler scheme converges to the exact solution in the mean square sense with order $\theta$ with respect to the time step. This implies the strong convergence \eqref{strongordertheta} with the same order $\theta$. For pathwise convergence, see e.g. \cite{GruneKloeden2001,KloedenJentzen2007,JentzenKloeden2011,AsaiKloeden2016,HanKloeden2017}. In the case of fractional Brownian motion noise with Hurst parameter $H$, it is proved in \cite[Theorem 2]{WangCaoHanKloeden2021} that the mean square convergence is of order $H$.
 
-Our aim is to show that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and of order $H + 1/2$, when $0 < H < 1/2$.
+In some particular cases, the order of convergence of the Euler method may be higher than the associated H\"older exponent of the noise, such as for Wiener process noises (see e.g. \cite[Example 5]{WangCaoHanKloeden2021}), but in general that would not be expected from previous results.
+
+Our aim is to show, however, that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and of order $H + 1/2$, when $0 < H < 1/2$.
 
 The global condition on $f$ is a natural assumption when looking for strong convergence. Pathwise convergence, on the other hand, usually requires less stringent conditions (see e.g. \cite{JentzenKloedenNeuenkirch2009, JentzenKloeden2011}), but those are not the subject of interest here. The possibility of extending the improved order of strong convergence to pathwise convergence seems feasible for the case of sample paths of bounded variation but not so much for It\^o process noises for which the It\^o isometry is of fundamental importance. These will be investigated in a future oportunity.
 
@@ -195,12 +197,12 @@ In this case, disregarding the higher order term,
 \end{align*}
 which, upon taking the expectation of the absolute value, yields a strong convergence of order $H + 1/2$.
 
-Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
+Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression (similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}) driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
 
 \section{Pathwise solutions}
 \label{secpathwisesolution}
 
-For the notion and main results on pathwise solution for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017} and \cite[Section 3.3]{NeckelRupp2013}.
+For the notion and main results on pathwise solutions for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017} and \cite[Section 3.3]{NeckelRupp2013}.
 
 We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
 
@@ -901,7 +903,7 @@ We omit the proof since it is just a combination of \cref{lemmonotonicbound} and
 \section{Numerical examples}
 \label{secnumericalexamples}
 
-In this section, we illustrate the strong order 1 convergence with a few examples that fall into one of the cases considered above. We start with some linear equations, including all sorts of noises. Then we illustrate the $H + 1/2$ order of convergence in the case of a fractional Brownian motion (fBm) noise with Hurst parameter $0 < H < 1/2$. Next we move to a number of linear and nonlinear models, as mentioned in the Introduction. Details of the numerical implementations, with the full working code for reproducibility puposes is available in the github repository \cite{RODEConvEM2023}.
+In this section, we illustrate the strong order 1 convergence with a several examples that fall into one of the cases considered above. We start with some linear equations, including all sorts of noises. Then we illustrate the $H + 1/2$ order of convergence in the case of a fractional Brownian motion (fBm) noise with Hurst parameter $0 < H < 1/2$. Next we move to a number of linear and nonlinear models, as mentioned in the Introduction. Details of the numerical implementations, with the full working code for reproducibility puposes is available in the github repository \cite{RODEConvEM2023}.
 
 For estimating the order of convergence, we use the Monte Carlo method, computing a number of numerical approximations $\{X_{t_j}^N(\omega_m)\}_{j=0, \ldots, N}$, of sample path solutions $\{X_t(\omega_m)\}_{t\in I}$, for samples $\omega_m,$ with $m = 1, \ldots, M$, and taking the maximum in time of the average of their absolute differences at the mesh points:
 \begin{equation}
@@ -952,7 +954,7 @@ As for the implementation itself, all code is written in the Julia language \cit
 
 Julia has a feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations, and so on. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and domain specific applications.
 
-Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented here, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, so that the reviewing process for checking the accuracy of the implementation, for publication purposes, becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
+Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented here, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, so that the reviewing process for checking the accuracy of the implementation becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
 
 \subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
@@ -993,7 +995,7 @@ where
     Z_i \sim \mathcal{N}\left(0, \frac{(t_{i+1}- t_i)^3}{12}\right) = \frac{\sqrt{(t_{i+1} - t_i)^3}}{\sqrt{12}}\mathcal{N}(0, 1).
 \end{equation}
 
-Thus, breaking down the sum over the mesh intervals:
+Thus, breaking down the sum over the mesh intervals,
 \begin{equation}
     \label{exactintW}
     \int_0^{t_j} W_s\;\mathrm{d}s = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} W_s\;\mathrm{d}s = \sum_{i=0}^{j-1} \left( \frac{(W_{t_{i+1}}+W_{t_{i}})}{2}(t_{i+1} - t_i) + Z_i\right),
@@ -1042,7 +1044,7 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
     \label{Xtlinearhomogeneousrode}
     X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 \end{equation}
-for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. Figure \ref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
+for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. \cref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
@@ -1050,7 +1052,7 @@ for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearh
     \label{figlinearhomogeneousrode}
 \end{figure}
 
-Table \ref{tablinearhomogeneousrode} shows the estimated strong error obtained from a thousand sample paths for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. \cref{figlinearhomogeneousrode} illustrates the order of convergence.
+\cref{tablinearhomogeneousrode} shows the estimated strong error obtained from the Monte Carlo simulations for each chosen time step, with initial condition $X_0 \sim \mathcal{N}(0, 1)$, on the interval $[0, T]$. \cref{figlinearhomogeneousrode} illustrates the order of convergence.
 
 \subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
@@ -1099,7 +1101,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figallnoises}
 \end{figure}
 
-Table \ref{taballnoises} shows the estimated strong error obtained from $M = 80$ sample paths for each chosen time step, with initial condition $\mathbf{X}_0 \sim \mathcal{N}(\mathbf{0}, \mathrm{I})$, i.e. normally distributed on each coordinate, independently of the other coordinates, and on the time interval $[0.0, 1.0]$. \cref{figallnoises} illustrates the order of convergence.
+\cref{taballnoises} shows the estimated strong error obtained from the Monte Carlo simulations. \cref{figallnoises} illustrates the order of convergence.
 
 Finally, \cref{figsamplepathsallnoises} illustrates sample paths of all the noises used in this system.
 
@@ -1266,7 +1268,7 @@ As for illustrating numerically the order of strong convergence, although the ab
 \end{equation}
 computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
 
-More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). Table \ref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). \cref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|c|c|}
@@ -1301,7 +1303,7 @@ Here, we consider a population dynamics problem modeled by a logistic equation w
     \label{rodepopulationdynamics}
     \frac{\mathrm{d}X_t}{\mathrm{d}t} = \Lambda_t X_t (1 - \frac{X_t}{r}) - \alpha H_t \frac{X_t}{r + X_t},
 \end{equation}
-where $r, \alpha > 0$ are constants and $\{\Lambda_t\}_{t \geq 0}$ and $\{H_t\}_{t \geq 0}$ are stochastic processes. The first term is a logistic growth, with carrying capacity $r$ and random specific growth $\Lambda_t$. The second term is the harvest term, with $\alpha$ being an overall modulation factor; the term $X_t / (r + X_t)$ accounting for the scarcity of the population, when $X_t \ll r$; and $0 \leq H_t \leq 1$ is a random harvest factor accounting. 
+where $r, \alpha > 0$ are constants and $\{\Lambda_t\}_{t \geq 0}$ and $\{H_t\}_{t \geq 0}$ are stochastic processes. The first term is a logistic growth, with carrying capacity $r$ and random specific growth $\Lambda_t$. The second term is the harvest term, with $\alpha$ being an overall modulation factor, the term $X_t / (r + X_t)$ accounting for the scarcity of the population when $X_t \ll r$, and with $0 \leq H_t \leq 1$ being a random harvest factor. 
 
 More specifically, $\{\Lambda_t\}_{t \geq 0}$ is given by
 \[
@@ -1315,7 +1317,7 @@ The harvest term $\{H_t\}_{t\geq 0}$ is a ``Poisson step'' process of the form
 \]
 where $\{N_t\}_{t\geq 0}$ is a Poisson point-process with rate $\lambda$, $S_0 = 0$, and the $S_i$, for $i=1, 2, \ldots$, are independent and identically distributed random variables with nonnegative values within the interval $[0, 1]$, independent also of the Poisson counter $\{N_t\}_{t\geq 0}$.
 
-We suppose the initial condition is nonnegative and bounded almost surely:
+We suppose the initial condition is nonnegative and bounded almost surely, i.e.
 \[
     0 \leq X_0 \leq R,
 \]
@@ -1351,7 +1353,7 @@ Notice that we can write
 \]
 Hence, when $\alpha H_t \geq r\Lambda_t$, the population decays for arbitrary $X_t > 0$, leading to an extinction of the population. The parameters chosen above keep the population from extinction but may often get close to the critical values.
 
-Table \ref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while \cref{figpopdyn} illustrates the order of convergence, estimated to be close enough to the theoretical value of strong order 1. Finally, \cref{figsamplepopdyn} shows an approximation sequence of a sample path.
+\cref{tabpopdyn} shows the estimated strong error obtained for each mesh resolution, while \cref{figpopdyn} illustrates the order of convergence, estimated to be close enough to the theoretical value of strong order 1. Finally, \cref{figsamplepopdyn} shows an approximation sequence of a sample path.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1406,7 +1408,7 @@ For the numerical simulations, the second-order equation is written as a system 
         \dot V_t = - \omega_0^2 X_t - 2\zeta_0\omega_0 X_t - Y_t,
     \end{cases}
 \]
-where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershocks, or any other ground motion.
+where $\{V_t\}_t$ is the random velocity of the celing relative to the ground and where $\{Y_t\}_t$ is the stochastic noise excitation term given as the ground acceleration, $Y_t = \ddot M_t$, generated by an Earthquake and its aftershocks, or any other type of ground motion.
 
 The structure is originally at rest, so we have the conditions
 \[
@@ -1436,9 +1438,9 @@ The excitation itself becomes
 \end{align*}
 where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 
-More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
+More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as the following exponential and uniform distributions: $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Uniform}(0.0, 4.0),$ $\delta_i \sim \textrm{Uniform}(8.0, 12.0),$ and $\omega_i \sim \textrm{Uniform}(8\pi, 32\pi).$
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 500.$ Table \ref{tableearthquake} shows the estimated strong error obtained with this setup, while \cref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 100.$ \cref{tableearthquake} shows the estimated strong error obtained with this setup, while \cref{figearthquake} illustrates the order of convergence. \cref{figearthquakenoise} shows a sample ground motion and the corresponding ground acceleration and its envelope.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1488,7 +1490,7 @@ In the simulations below, we use parameters similar to those in \cite[Section 7.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 200.$ Table \ref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=4, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 200.$ \cref{tabletoggleswitch} shows the estimated strong error obtained with this setup, while \cref{figtoggleswitch} illustrates the order of convergence. \cref{figtoggleswitchevolution} shows a sample solution, while \cref{figtoggleswitchnoise} illustrates the two components $(A_t, B_t)$ of a sample noise.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1600,7 +1602,7 @@ with $\{R_t\}_t$ as above.
 
 For the numerical simulations, we use $O_0 = 0$, $\nu = 5$ and $\varepsilon = 0.8$, for the Ornstein-Uhlenbeck process $\{O_t\}_t$; $\lambda = 8.0$ and $C_i \sim \mathrm{Uniform}(0, 0.2)$, for the compound Poisson process $\{C_t\}$; $R_0 = 0.2$, $\mu = 0.02$ and $\sigma = 0.4$, for the interest rate process $\{R_t\}_t$; and we take $X_0 = 1.0$, so that $U_0 = X_0 + O_0 + R_0 = 1.2$. We set $T = 3.0,$ as the final time.
 
-For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 100.$ Table \ref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
+For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for $i=6, \ldots, 9$. For the Monte-Carlo estimate of the strong error, we choose $M = 100.$ \cref{tableriskmodel} shows the estimated strong error obtained with this setup, while \cref{figriskmodel} illustrates the order of convergence. \cref{figriskmodelnoise} shows a sample path of the noise, which is composed of three processes, while \cref{figriskmodelsurplus} shows a sample path of the surplus.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
@@ -1663,7 +1665,7 @@ and a given a initial condition
 
 The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
 
-The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random wave trains of incoming population. More precisely, $Y_t = H_t O_t$, where $\{H_t\}_t$ is a Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 0.3$, exponential decay rate $\delta = 5.0$, and jump law following an exponential distribution with scale $\theta = 1/1.8;$ and $\{O_t\}_t$ is an Orstein-Uhlenbeck process with $O_0 = 0.0,$ time-scale $\tau = 0.005$, drift $\nu = 1/\tau$ and diffusion $\sigma = \tilde \sigma/\tau,$ where $\tilde\sigma = 0.1.$
+The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random wave trains of incoming populations. More precisely, $Y_t = H_t O_t$, where $\{H_t\}_t$ is a Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 0.3$, exponential decay rate $\delta = 5.0$, and jump law following an exponential distribution with scale $\theta = 1/1.8;$ and $\{O_t\}_t$ is an Orstein-Uhlenbeck process with $O_0 = 0.0,$ time-scale $\tau = 0.005$, drift $\nu = 1/\tau$ and diffusion $\sigma = \tilde \sigma/\tau,$ where $\tilde\sigma = 0.1.$
 
 This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 
