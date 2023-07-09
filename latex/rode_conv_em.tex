@@ -1685,7 +1685,7 @@ The equation involves a nonlinear term which is not globally Lipschitz continuou
 
 For the time-mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^5, 2^7, 2^9.$ The spatial discretization is done with finite differences, with the number of spatial points depending on the time mesh, for stability and convergence reasons. Indeed, the Von Neumann stability analysis requires that $2\mu\Delta t / \Delta_x^2 \leq 1.$ With that in mind, for each $N_i = 2^5, 2^7, 2^9$, we take the $K_i + 1$ spatial points $0 = x_0 < \ldots x_{K_i},$ with $K_i = 2^3,$ $2^4,$ and $2^5,$ respectively, while for the target solution, we use $K_{\textrm{tgt}} = 2^9.$
 
-For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ Table \ref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
+For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tablefisherkpp} shows the estimated strong error obtained with this setup, while \cref{figfisherkpp} illustrates the order of convergence.
 
 \begin{table}
     \begin{tabular}[htb]{|r|l|l|l|}
