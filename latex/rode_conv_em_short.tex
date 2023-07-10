@@ -1003,7 +1003,9 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figallnoises}
 \end{figure}
 
-\cref{taballnoises} shows the estimated strong error obtained from the Monte Carlo simultions. \cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
+\cref{taballnoises} shows the estimated strong error obtained from the $M = 80$ Monte Carlo simulations for each chosen time step $N_i = 2^6, \ldots, 2^9$,  on the time interval $[0, T] = [0.0, 1.0]$. All coordinates of the initial condition are normally distributed with mean zero and variance 1. The target resolution is set to $N_{\textrm{tgt}} = 2^{18}$.
+
+\cref{figallnoises} illustrates the order of convergence and sample paths of all the noises used in this system.
 
 The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
@@ -1050,7 +1052,7 @@ As for illustrating numerically the order of strong convergence, although the ab
 \end{equation}
 computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
 
-More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$,  $N = 64,$ $128,$ $256,$ and $512,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). \cref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching reasonably well the theoretical estimate of $p = \min\{H+1/2, 1\}.$
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, the initial condition as $X_0 \sim \mathcal{N}(0, 1),$ set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t = 1/N$, with $N = 2^6, \ldots, 2^9,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). \cref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|c|c|}
