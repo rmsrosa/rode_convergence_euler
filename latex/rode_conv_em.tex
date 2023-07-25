@@ -260,16 +260,32 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
     Under the \cref{standinghypotheses1}, suppose further that
     \begin{equation}
         \label{EX0strongbound}
-        \mathbb{E}[\|X_0\|^\beta] < \infty
+        \mathbb{E}[\|X_0\|] < \infty
     \end{equation}
     and
     \begin{equation}
         \label{EMtstrongbound}
-        \int_0^T \mathbb{E}[M_s^\beta] \;\mathrm{d}s < \infty,
+        \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty,
     \end{equation}
-    for some $\beta \geq 1,$ and that $\{L_t\}_{t\in I}$ is essentially bounded, uniformly on $I$, i.e. there exists a constant $L_X > 0$ such that $L_t \leq L_x$ almost surely for every $t\in I.$ Then,
+    and that $\{L_t\}_{t\in I}$ is essentially bounded, uniformly on $I$, i.e. there exists a constant $L_X > 0$ such that
+    \begin{equation}
+        \label{LtLXbound}
+        L_t \leq L_X, \quad  t\in I,
+    \end{equation}
+    almost surely. Then
     \begin{equation}
         \label{EXtstrongbound}
+        \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{L_X t}, \quad t\in I.
+    \end{equation}
+    If, moreover,
+    \begin{equation}
+        \label{EX0Mtstrongboundbeta}
+        \mathbb{E}[\|X_0\|^\beta] < \infty, \quad
+        \int_0^T \mathbb{E}[M_s^\beta] \;\mathrm{d}s < \infty,
+    \end{equation}
+    for a given $\beta \geq 1,$ then,
+    \begin{equation}
+        \label{EXtstrongboundbeta}
         \mathbb{E}[\|X_t\|^\beta] \leq \left(\mathbb{E}[\|X_0\|^\beta] + \int_0^t \mathbb{E}[M_s^\beta]\;\mathrm{d}s\right) e^{((\beta - 1) + \beta L_X) t}, \quad t\in I.
     \end{equation}
 \end{lemma}
@@ -407,24 +423,27 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
-    Under the \cref{standinghypotheses1}, it follows that
+    Under the \cref{standinghypotheses1} and assuming moreover that $t \mapsto L_t$ is bounded almost surely, we find that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
-        \int_0^{t_j}\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (M_s + L_X\|X_s\|) \;\mathrm{d}s.
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N \left(\sup_{0\leq t \leq T} L_t \right)\int_0^{t_j} (M_s + L_s\|X_s\|) \;\mathrm{d}s.
     \end{equation}
 \end{lemma}
 
 \begin{proof}
-    By assumption \eqref{standinghypothesesMbound} of the \cref{standinghypotheses1}, we have almost surely that
+    By assumptions \eqref{standinghypothesesLipschitzbound} and \eqref{standinghypothesesMbound} of the \cref{standinghypotheses1}, we have almost surely that
     \[
       \left\|X_s - X_{\tau^N(s)}\right\| = \left\|\int_{\tau^N(s)}^s f(\xi, X_\xi, Y_\xi)\;\mathrm{d}\xi\right\| \leq \int_{\tau^N(s)}^s (M_\xi + L_\xi\|X_\xi\|)\;\mathrm{d}\xi.
     \]
     Integrating over $[0, t_j]$ and using Fubini's theorem to exchange the order of integration,
     \begin{align*}
         \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + L_X\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
-        & = \int_0^{t_j}(M_\xi + L_\xi\|X_\xi\|) \int_\xi^{\tau^N(\xi) + \Delta t_N} L_s\;\mathrm{d}s \;\mathrm{d}\xi \\
-        & =  \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) (M_\xi + L_X\|X_\xi\|) \;\mathrm{d}\xi.
+        & = \int_0^{t_j}(M_\xi + L_\xi\|X_\xi\|) \int_\xi^{\tau^N(\xi) + \Delta t_N} L_s\;\mathrm{d}s \;\mathrm{d}\xi.
     \end{align*}
+    Using that $t \mapsto L_t$ is bounded almost surely, we find that
+    \[
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \left(\sup_{0\leq t \leq T} L_t \right)(M_\xi + L_s\|X_\xi\|) \;\mathrm{d}\xi
+    \]
     Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are nonnegative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N,$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}.
 \end{proof}
 
@@ -432,7 +451,7 @@ Combining the two previous results we obtain the following:
 
 \begin{proposition}
     \label{propbasicestimate}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound} and \eqref{EMtstrongbound} hold and that, for some constant $C_0 \geq 0$, 
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound} and \eqref{LtLXbound} hold and that, for some constant $C_0 \geq 0$, 
     \begin{equation}
         \label{EX0X0N}
         \mathbb{E}[\|X_0 - X_0^N\|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
@@ -446,29 +465,29 @@ Combining the two previous results we obtain the following:
 \end{proposition}
 
 \begin{proof}
-    Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by taking the expectation of \eqref{Etjbasicbound} in \cref{lembasicestimate} and properly estimating the first two terms on the right hand side. The first term is handled with the assumption \eqref{EX0X0N}. We just need to take care of the second term.
+    Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by taking the expectation of \eqref{Etjbasicbound} in \cref{lembasicestimate}, using the assumption \eqref{LtLXbound} to bound the exponential term, and properly estimating the first two terms inside the parentheses. The first term is handled with the assumption \eqref{EX0X0N}. We just need to take care of the second term.
     
-    Under the \cref{standinghypotheses1}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
-    Using \eqref{EX0strongbound} and \eqref{EMtstrongbound}, that inequality yields
+    Under the \cref{standinghypotheses1}, together with \eqref{LtLXbound}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
+    Using \eqref{LtLXbound}, that inequality yields
     \[
-        \int_0^{t_j} \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N L_X \int_0^{t_j} (\mathbb{E}[M_s] + L_X\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
     \]
-    Using now \eqref{XtboundLXMt}, we obtain
+    Thanks to \eqref{EX0strongbound} and \eqref{EMtstrongbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
     \begin{align*}
-        \int_0^{t_j} & \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
-        & \leq \Delta t_N \int_0^{t_j} \left(\mathbb{E}[M_s] + L_X\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \right)\;\mathrm{d}s \\
-        & \leq \Delta t_N \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + L_X \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \;\mathrm{d}s\right) \\
-        & = \Delta t_N \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{L_X t_j} - 1\right) \right).
+        \int_0^{t_j} & L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
+        & \leq \Delta t_N L_X \int_0^{t_j} \left(\mathbb{E}[M_s] + L_X\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \right)\;\mathrm{d}s \\
+        & \leq \Delta t_N L_X \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + L_X \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X s} \;\mathrm{d}s\right) \\
+        & = \Delta t_N L_X \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{L_X t_j} - 1\right) \right).
     \end{align*}
     Thus,
     \begin{equation}
         \label{expectedestimatesecondterminglobalerrorintegral}
-        \int_0^{t_j} \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N L_X \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{L_X t_j}.
     \end{equation}
 
-    Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound}, we arrive at
+    Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} and using \eqref{LtLXbound} to bound the exponential term, we arrive at
     \begin{multline*}
-        \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + L_X \int_0^{t_j} \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
+        \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + \int_0^{t_j} L_s \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
         \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{L_X t_j}.
     \end{multline*}
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
