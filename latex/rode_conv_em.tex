@@ -277,6 +277,25 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
     In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. But we leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
 \end{remark}
 
+\section{Pathwise approximation}
+\label{secpathwiseapproximation}
+
+Similarly, under the \cref{standinghypotheses1}, we may obtain estimates for the Euler approximation \eqref{emscheme}. Notice that
+\begin{align*}
+    \|X_{t_j}^N\| & \leq \|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}})\| \\
+    & \leq \|X_{t_{j-1}}^N\| + \Delta t_N (M_{t_{j-1}} + L_{t_{j-1}}\|X_{t_{j-1}}\|) \\
+    & \leq \left(1 + L_{t_{j-1}}\Delta t_N\right)\|X_{t_{j-1}}^N\| + \Delta t_N M_{t_{j-1}}.
+\end{align*}
+We bound $(1 + a) \leq e^a$, so that
+\[
+    \|X_{t_j}^N\| \leq e^{L_{t_{j-1}}\Delta t_N}\|X_{t_{j-1}}^N\| + \Delta t_N M_{t_{j-1}}.
+\]
+Iterating this relation we obtain the bound
+\begin{equation}
+    \label{XNtboundLXMt}
+    \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} M_{t_i}\right)e^{\Delta t_N \sum_{i=0}^{j-1} L_{t_i}}, \quad \forall j = 0, \ldots, N.
+\end{equation}
+
 \section{Integral formula for the global pathwise error}
 
 In this section, we derive the following integral formula for the global error:
