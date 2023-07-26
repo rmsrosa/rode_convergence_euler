@@ -114,7 +114,7 @@ Our aim is to show, however, that, in many classical examples, it is possible to
 
 The global condition on $f$ is a natural assumption when looking for strong convergence. Pathwise convergence, on the other hand, usually requires less stringent conditions (see e.g. \cite{JentzenKloedenNeuenkirch2009, JentzenKloeden2011}), but those are not the subject of interest here. The possibility of extending the improved order of strong convergence to pathwise convergence seems feasible for the case of sample paths of bounded variation but not so much for It\^o process noises for which the It\^o isometry is of fundamental importance. These will be investigated in a future oportunity.
 
-The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error (see \cref{lemglobalerrorintegralformula}), as it is done for approximations of stochastic differential equations, namely
+The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error (see \cref{lemglobalerrorintegralformula}), similarly to the way it is done for approximations of stochastic differential equations, namely
 \begin{equation}
     \label{lemglobalerrorintegralformulaintro}
     \begin{aligned}
@@ -125,7 +125,7 @@ The first main idea of the proof is to not estimate the local error and, instead
 \end{equation}
 for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$, defined in \eqref{tauNt}.
 
-The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being uniformly globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{multline}
     \label{Etjbasicboundintro}
         \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + L_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
@@ -144,42 +144,19 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
-either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o process noise. In any case, we bound the global error term using the Fubini Theorem,
+either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The more general case of semi-martingales include more complicated terms, but the above is sufficient to give the main idea. With that, we bound the global error term using the Fubini Theorem,
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
 \end{multline*}
-Then, we find that
+Then, since $0 \leq \tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N$, we find that
 \begin{multline*}
     \mathbb{E}\left[\left\| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right] \\
-    \leq \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right\|\right].
+    \leq \Delta t_N\mathbb{E}\left[\left\| \int_0^{t_j} \;\mathrm{d} F_\xi \right\|\right].
 \end{multline*}
 
-In the case of an It\^o process noise, we assume
-\[
-    \mathrm{d}F_t = A_t\;\mathrm{d}t + B_t\;\mathrm{d}W_t,
-\]
-with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, which may actually depend on $\{Y_t\}_t$, so that multiplicative noise is allowed. Then, in this case, we bound the right hand side using the Lyapunov inequality and the It\^o isometry:
-\begin{multline*}
-    \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi \right\|\right] \\
-    \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \mathbb{E}[\|A_\xi\|] \;\mathrm{d}\xi + \left( \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi)^2 \mathbb{E}[\|B_\xi\|^2]\;\mathrm{d} \xi\right)^{1/2} \\ 
-    \leq \Delta t_N\left(\int_0^{t_j} \mathbb{E}[\|A_\xi\|]\;\mathrm{d} \xi + \left( \int_0^{t_j} \mathbb{E}[\|B_\xi\|^2] \;\mathrm{d}\xi \right)^{1/2} \right).
-\end{multline*}
-which yields the strong order 1 convergence, provided the integrals are finite.
-
-In the case of noises with bounded variation, we may actually relax the above condition and assume the steps are bounded by a process $\{\bar F_t\}_{t\in I}$ with monotonic non-decreasing sample paths,
-\[
-    \left\|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \leq \bar F_s - \bar F_{\tau^N(s)}.
-\]
-Using the monotonicity, this implies
-\[
-    \mathbb{E}\left[\left\| \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} \bar F_\xi \right\|\right] \leq \Delta t_N \left(\mathbb{E}[\bar F_{t_j}] - \mathbb{E}[\bar F_0]\right),
-\]
-yielding, again, strong order 1 convergence.
-
-These two cases are treated in \cref{secmonotonicbound} and \cref{secsubmartingale}, with the bounded variation case in \cref{secmonotonicbound}, and the It\^o process noise case in \cref{secsubmartingale}.
-
-The core results in these sections are \cref{thmcadlagfv}, for the pathwise convergence in the case of c\`adl\`ag, finite variation noises, and \cref{thmsemimartingale}, for the strong convergence of more general semi-martingale noises.
+We consider two types of noises, one whose paths are almost surely c\`adl\`ag (right continuous with left limits) with finite variation, and for which we prove the pathwise convergence of order 1, and more general semi-martingale noises, for which we prove the strong convergence of order 1.
+These two cases are treated, respectively, in \cref{secmonotonicbound} and \cref{secsubmartingale}, with the main results in \cref{thmcadlagfv} and \cref{thmsemimartingale}.
 
 We complement this work with a number of explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We include a system of linear equations with all sorts of noises, encompassing noises with sample paths with bounded variation and It\^o process noises. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not present a general proof of this order of convergence in the case of fBm noise, but we prove it here in a particular linear equation. In this example, we essentially have (see \eqref{stepfBm} and \eqref{BHtintegralformulastep})
 \[
