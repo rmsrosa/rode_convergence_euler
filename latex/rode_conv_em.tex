@@ -493,7 +493,7 @@ Combining the two previous results we obtain the following:
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
 \end{proof}
 
-\section{The case of noise with c\`adl\`ag sample paths of finite variation}
+\section{Pathwise convergence for noises with c\`adl\`ag sample paths of finite variation}
 
 Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`adl\`ag and with finite variation. By c\`adl\`ag we mean right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). More precisely, for almost every $\omega\in \Omega$, it is assumed that, for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation). For such a process, we define the left-limit process
 \begin{equation}
@@ -509,26 +509,45 @@ Almost surely, the sample paths of the jump process are constant except possibly
 \]
 In particular, for any given $\varepsilon > 0$, the set of times for which the jump $|\Delta Y_t|$ is larger than or equal to $\varepsilon$ is finite.
 
-Given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds for such processes (see \cite[Theorem 31]{Protter2005}):
+Given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds for such processes (see \cite[Theorems 31 and 33]{Protter2005}):
 \begin{equation}
-    f(Y_t) - f(Y_0) = \int_{0^+}^t f'(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - f'(Y_{s^-})\Delta Y_s\right).
+    f(Y_t) - f(Y_0) = \int_{0^+}^t Df(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - Df(Y_{s^-})\Delta Y_s\right).
 \end{equation}
-The summation at the right hand side is an at most countable summation since the summand vanishes for $s \notin J$. When $f=f(t, y)$ depends on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\in I}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula
+The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J$.
+
+The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, k}$ and $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, and
+\[
+    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, k} = \left( \sum_{j=1, \ldots, k} \partial y_j f_i(y) (Y_t)_j \right)_{i=1, \ldots, k}.
+\]
+
+When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\in I}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula
 \begin{multline}
     \label{changeofvariablesformulacadlagfv}
-    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t \partial_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
-    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - \partial_y f(s, Y_{s^-})\Delta Y_s\right).
+    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
+    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right).
 \end{multline}
+We actually apply this formula to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
 
 \begin{theorem}
     \label{thmcadlagfv}
-    Suppose that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with differentials $\partial_t f$ and $\partial_y f$ with at most linear growth in $x$, i.e.
+    Under the \cref{standinghypotheses1}, suppose also that
+    \begin{equation}
+        \label{Ltboundedas}
+        t \mapsto L_t \textrm{ is bounded almost surely};
+    \end{equation}
+    that 
+    \begin{equation}
+        \label{X0conv}
+        \|X_0 - X_0^N\| \leq C_0\Delta t,
+    \end{equation}
+    for a random variable $C_0$ which is finite almost surely; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with differentials $\partial_t f$ and $D_y f$ with at most linear growth in $x$, i.e.
     \begin{equation}
         \label{ftfylineargrowthcadlagfv}
-        \left\|\partial_t f(t, x, y)\right\| \leq C_1 + C_2 \|x\| + C_3\|y\|, \quad \left\|\partial_y f(t, x, y)\right\| \leq C_4 + C_5\|x\| + C_6\|y\|,
+        \left\|\partial_t f(t, x, y)\right\| \leq C_1 + C_2 \|x\| + C_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq C_4 + C_5\|x\| + C_6\|y\|,
     \end{equation}
     in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $C_1, C_2, C_3, C_4, C_5, C_6 \geq 0$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely c\`adl\`ag with finite variation $V(\{Y_t\}_{t\in I}; I)$, on $I$. Then, the Euler scheme is pathwise convergent of order 1, i.e.
     \begin{equation}
+        \label{ordercadlagfv}
         \max_{j=0, \ldots, N} \left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\| \leq C(\omega) \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
     for a suitable random variable $C$ which is finite almost surely.
@@ -537,34 +556,78 @@ The summation at the right hand side is an at most countable summation since the
 \begin{proof}
     In view of \cref{lembasicestimate}, we need to estimate the last term of \eqref{Etjbasicbound}, namely
     \[
-        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|    
+        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|
     \]
     Thanks to \eqref{changeofvariablesformulacadlagfv}, we have
     \begin{align*}
-        f(s, & X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \\
-        & + \int_{\tau^N(s)^+}^s \partial_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \\
-        & + \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - \partial_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right).
+        f(s, & X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \\
+        & + \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \\
+        & + \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right).
     \end{align*}
-    We need to estimate each term. The first two are as before. Let us concentrate on the last one, then. We have
+    We need to estimate each term.
+    
+    For the first term, we have, using \eqref{ftfylineargrowthcadlagfv},
+    \begin{align*}
+        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s.
+    \end{align*}
+    Exchanging the order of integration,
+    \begin{align*}
+        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
+    \end{align*}
+    For $s$ within $\xi \leq s < \tau^N(\xi) + \Delta t$, we have $\tau^N(s) = \tau^N(\xi)$. Moreover, $\tau^N(\xi) + \Delta t - \xi \leq \Delta t$. Hence
+    \begin{align*}
+        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_1 + C_2 \|X_{\tau^N(\xi)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
+        & \qquad \leq \Delta t\int_0^{t_j} \left(C_1 + C_2 \|X_{\tau^N(\xi)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
+    \end{align*}
+
+    The second term is similar, except that now we integrate with respect to a finite variation process:
+    \begin{align*}
+        & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\right\| \\
+        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
+        & \qquad \leq \Delta t \int_0^{t_j} \left(C_4 + C_5 \|X_{\tau^N(\xi)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|.
+    \end{align*}
+
+    For the third term, we have
     \begin{multline*}
-        \left\|f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - \partial_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right\| \\
+        \left\|f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right\| \\
         \leq 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|.
     \end{multline*}
     Hence,
     \begin{multline*}
-        \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - \partial_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
+        \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
         \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\|\Delta Y_\xi\|\;\mathrm{d}s.
     \end{multline*}
     Switching the order of the integral and the summation, we find
     \begin{align*}
-        & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - \partial_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
+        & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
         & \qquad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t} 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|\;\mathrm{d}s \\
         & \qquad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t} (C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
         & \qquad \leq 2\left(C_4 + C_5\sup_{i=0, \ldots, j}\|X_i^N\| + C_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) \Delta t \sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\| \\
-        & \qquad \leq 2\left(C_4 + C_5\sup_{i=0, \ldots, j}\|X_i^N\| + C_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]) \Delta t 
+        & \qquad \leq 2\left(C_4 + C_5\sup_{i=0, \ldots, j}\|X_i^N\| + C_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]) \Delta t.
     \end{align*}
-    Hence, this term is of order 1.
+    Putting the estimates together, we find that
+    \[
+        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\| \leq \tilde C \Delta t,
+    \]
+    where $\tilde C$ is the random variable
+    \begin{multline}
+        \tilde C = \int_0^T \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{s^-}\|\right)\;\mathrm{d}s \\
+        + \int_0^T \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{s^-}\|\right)\;\|\mathrm{d}Y_s\| \\
+        + 2\left(C_4 + C_5\sup_{i=0, \ldots, N}\|X_i^N\| + C_6\sup_{0\leq s \leq T}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]).
+    \end{multline}
+    Using this estimate in \eqref{Etjbasicbound}, we obtain
+    \[
+        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \int_0^{t_j} L_s\|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
+            \left. + \tilde C \Delta t\right) e^{\int_0^{t_j} L_s\;\mathrm{d}s}
+    \]
+    From \eqref{estimatesecondterminglobalerrorintegral} and the hypothesis \eqref{X0conv} on the initial condition we prove \eqref{ordercadlagfv}, with a suitable $C=C(\omega)$.
 \end{proof}
+
+\section{Strong converge for semi-martingale noises}
 
 \section{The case of noise with sample paths of bounded variation}
 \label{secmonotonicbound}
