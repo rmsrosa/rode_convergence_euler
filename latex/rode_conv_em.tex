@@ -144,7 +144,7 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 \]
-For a semi-martingale noise, the integral above can be a combination of a Riemann-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, 
+For a semi-martingale noise, the integral above can be a combination of a Lebesgue-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, 
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
@@ -639,7 +639,7 @@ The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[T
 \[
     [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta X_s\right)^2.
 \]
-Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Riemann-Stieltjes integral.
+Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
 
 \begin{theorem}
     \label{thmsemimartingale}
@@ -683,7 +683,7 @@ Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a
 
     The third term ... 
 
-    The fourth and last term involves a Riemann-Stieltjes integral and is handled in a similar way, so that
+    The fourth and last term involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
     \begin{align*}
         & \left\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s\right\| \\
         & \qquad \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
