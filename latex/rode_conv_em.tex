@@ -649,21 +649,47 @@ Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a
     \end{equation}
     that 
     \begin{equation}
-        \label{X0conv}
         \mathbb{E}\left[\|X_0 - X_0^N\|\right] \leq c_0\Delta t,
     \end{equation}
-    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with bounded differentials $\partial_t f$ and $D_y f$, i.e.
+    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partia differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying
     \begin{equation}
-        \label{ftfylineargrowthcadlagfv}
-        \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\|,
+        \label{ftfylineargrowthsemimartingale}
+        \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\|, \;\; \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\|, \;\; \left\|D_{yy} f(t, x, y)\right\| \leq c_7 + c_8\|x\|
     \end{equation}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_4, c_5 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is a semi-martingale. Then, the Euler scheme is strongly convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_4, c_5, c_7, c_8 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is a semi-martingale. Then, the Euler scheme is strongly convergent of order 1, i.e.
     \begin{equation}
-        \label{ordercadlagfv}
-        \max_{j=0, \ldots, N} \mathbb{E}\left[\left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\|\right] \leq c \Delta t_N, \qquad \forall N \in \mathbb{N},
+        \label{ordersemimartingale}
+        \max_{j=0, \ldots, N} \mathbb{E}\left[\left\| X_{t_j} - X_{t_j}^N \right\|\right] \leq c \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
     for a suitable constant $c\geq 0$.
 \end{theorem}
+
+\begin{proof}
+    As in the proof of \eqref{thmcadlagfv}, we need to estimate the last term of \eqref{Etjbasicbound}. Using \eqref{changeofvariablesformulasemimartingale}, the last term becomes
+    \begin{align*}
+        & \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
+        & = \int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \;\mathrm{d}s \\
+        & \quad + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s \\
+        & \quad + \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s \\ 
+        & \quad + \frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s.
+    \end{align*}
+    
+    The first term is handled just like in the proof of \cref{thmcadlagfv} and we obtain
+    \[
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}\xi.
+    \]
+    
+    The second term ...
+
+    The third term ... 
+
+    The fourth and last term involves a Riemann-Stieltjes integral and is handled in a similar way, so that
+    \begin{align*}
+        & \left\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s\right\| \\
+        & \qquad \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
+        & \qquad \leq \frac{\Delta t}{2}\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}[Y, Y]_\xi^c.
+    \end{align*}
+\end{proof}
 
 \section{The case of an It\^o process noise}
 
