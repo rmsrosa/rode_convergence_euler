@@ -123,7 +123,7 @@ The first main idea of the proof is to not estimate the local error and, instead
         & \qquad + \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s,
     \end{aligned}
 \end{equation}
-for $j = 1, \ldots, N,$ where $\tau^N$ is a piecewise constant function with jumps at the mesh points $t_j$, defined in \eqref{tauNt}.
+for $j = 1, \ldots, N,$ where $\tau^N(t) = \max_{t_j \leq t} t_j$ is a piecewise constant function jumping to the mesh points $t_j$ (see \eqref{tauNt}).
 
 The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{multline}
@@ -142,9 +142,9 @@ Instead, we look at the whole noise error
 \]
 and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y_t)$ can be controlled in a suitable global way. In order to give the main idea, let us consider a scalar equation with a scalar noise and assume that the sample paths of $\{F_t\}_{t\in I}$ satisfy
 \[
-    F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
+    F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 \]
-either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The more general case of semi-martingales include more complicated terms, but the above is sufficient to give the main idea. With that, we bound the global error term using the Fubini Theorem,
+For a semi-martingale noise, the integral above can be a combination of a Riemann-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, 
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
@@ -313,7 +313,7 @@ In this section, we derive the following integral formula for the global error:
     for $j = 1, \ldots, N,$ where $\tau^N$ is the piecewise constant jump function along the time mesh:
     \begin{equation}
         \label{tauNt}
-        \tau^N(t) = \max_j\{j\Delta t_N; \; j\Delta t_N \leq t\} = \left[\frac{t}{\Delta t_N}\right]\Delta t_N = \left[\frac{tN}{T}\right]\frac{T}{N}.
+        \tau^N(t) = \max_{t_j \leq t}\{t_j\} = \left[\frac{t}{\Delta t_N}\right]\Delta t_N = \left[\frac{tN}{T}\right]\frac{T}{N}.
     \end{equation}
 \end{lemma}
 
@@ -508,7 +508,7 @@ Given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb
 \begin{equation}
     f(Y_t) - f(Y_0) = \int_{0^+}^t Df(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - Df(Y_{s^-})\Delta Y_s\right).
 \end{equation}
-The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J$.
+The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J$. The summation can be written as an integral with respect to a jump measure, but we keep it as a summation for simplicity.
 
 The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, k}$ and $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, and
 \[
@@ -538,9 +538,9 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
     for a random variable $C_0$ which is finite almost surely; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with differentials $\partial_t f$ and $D_y f$ with at most linear growth in $x$, i.e.
     \begin{equation}
         \label{ftfylineargrowthcadlagfv}
-        \left\|\partial_t f(t, x, y)\right\| \leq C_1 + C_2 \|x\| + C_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq C_4 + C_5\|x\| + C_6\|y\|,
+        \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\| + c_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\| + c_6\|y\|,
     \end{equation}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $C_1, C_2, C_3, C_4, C_5, C_6 \geq 0$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely c\`adl\`ag with finite variation $V(\{Y_t\}_{t\in I}; I)$, on $I$. Then, the Euler scheme is pathwise convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_5, c_6 \geq 0$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely c\`adl\`ag with finite variation $V(\{Y_t\}_{t\in I}; I)$, on $I$. Then, the Euler scheme is pathwise convergent of order 1, i.e.
     \begin{equation}
         \label{ordercadlagfv}
         \max_{j=0, \ldots, N} \left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\| \leq C(\omega) \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -563,45 +563,45 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
     For the first term, we have, using \eqref{ftfylineargrowthcadlagfv},
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s.
+        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s.
     \end{align*}
     Exchanging the order of integration,
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
     \end{align*}
     For $s$ within $\xi \leq s < \tau^N(\xi) + \Delta t$, we have $\tau^N(s) = \tau^N(\xi)$. Moreover, $\tau^N(\xi) + \Delta t - \xi \leq \Delta t$. Hence
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_1 + C_2 \|X_{\tau^N(\xi)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
-        & \qquad \leq \Delta t\int_0^{t_j} \left(C_1 + C_2 \|X_{\tau^N(\xi)}^N\| + C_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
+        & \qquad \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
     \end{align*}
 
     The second term is similar, except that now we integrate with respect to a finite variation process:
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
-        & \qquad \leq \Delta t \int_0^{t_j} \left(C_4 + C_5 \|X_{\tau^N(\xi)}^N\| + C_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|.
+        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
+        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
+        & \qquad \leq \Delta t \int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|.
     \end{align*}
 
     For the third term, we have
     \begin{multline*}
         \left\|f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right\| \\
-        \leq 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|.
+        \leq 2(c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|.
     \end{multline*}
     Hence,
     \begin{multline*}
         \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
-        \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\|\Delta Y_\xi\|\;\mathrm{d}s.
+        \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} 2(c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\|\Delta Y_\xi\|\;\mathrm{d}s.
     \end{multline*}
     Switching the order of the integral and the summation, we find
     \begin{align*}
         & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
-        & \qquad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t} 2(C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|\;\mathrm{d}s \\
-        & \qquad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t} (C_4 + C_5\|X_{\tau^N(s)}^N\| + C_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
-        & \qquad \leq 2\left(C_4 + C_5\sup_{i=0, \ldots, j}\|X_i^N\| + C_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) \Delta t \sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\| \\
-        & \qquad \leq 2\left(C_4 + C_5\sup_{i=0, \ldots, j}\|X_i^N\| + C_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]) \Delta t.
+        & \qquad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t} 2(c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|\;\mathrm{d}s \\
+        & \qquad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t} (c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
+        & \qquad \leq 2\left(c_4 + c_5\sup_{i=0, \ldots, j}\|X_i^N\| + c_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) \Delta t \sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\| \\
+        & \qquad \leq 2\left(c_4 + c_5\sup_{i=0, \ldots, j}\|X_i^N\| + c_6\sup_{0\leq s \leq t_j}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]) \Delta t.
     \end{align*}
     Putting the estimates together, we find that
     \[
@@ -609,9 +609,9 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
     \]
     where $\tilde C$ is the random variable
     \begin{multline}
-        \tilde C = \int_0^T \left(C_1 + C_2 \|X_{\tau^N(s)}^N\| + C_3\|Y_{s^-}\|\right)\;\mathrm{d}s \\
-        + \int_0^T \left(C_4 + C_5 \|X_{\tau^N(s)}^N\| + C_6\|Y_{s^-}\|\right)\;\|\mathrm{d}Y_s\| \\
-        + 2\left(C_4 + C_5\sup_{i=0, \ldots, N}\|X_i^N\| + C_6\sup_{0\leq s \leq T}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]).
+        \tilde C = \int_0^T \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{s^-}\|\right)\;\mathrm{d}s \\
+        + \int_0^T \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{s^-}\|\right)\;\|\mathrm{d}Y_s\| \\
+        + 2\left(c_4 + c_5\sup_{i=0, \ldots, N}\|X_i^N\| + c_6\sup_{0\leq s \leq T}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]).
     \end{multline}
     Using this estimate in \eqref{Etjbasicbound}, we obtain
     \[
@@ -624,9 +624,45 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
 \section{Strong converge for semi-martingale noises}
 \label{secsubmartingale}
 
+In the more general case of a semi-martingale noise $\{Y_t\}_{t\in I}$, the change of variables formula \eqref{changeofvariablesformulacadlagfv} takes the form (see \cite[Theorems 31 and 33]{Protter2005})
+\begin{multline}
+    \label{changeofvariablesformulasemimartingale}
+    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
+    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right) \\
+    + \frac{1}{2}\int_0^t D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_t^c,
+\end{multline}
+where $\{[Y, Y]_t^c\}_{t\in I}$ is the continuous part of the quadratic variation process $\{[Y, Y]_t\}_{t\in I}$ defined by
+\[
+    [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{t^-} \;\mathrm{d}Y_t.
+\]
+The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[Theorem 22]{Protter2005}. The continuous part is given by
+\[
+    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta X_s\right)^2.
+\]
+Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Riemann-Stieltjes integral.
+
 \begin{theorem}
     \label{thmsemimartingale}
-    Still to come
+    Under the \cref{standinghypotheses1}, suppose also that
+    \begin{equation}
+        t \mapsto L_t \textrm{ is bounded almost surely};
+    \end{equation}
+    that 
+    \begin{equation}
+        \label{X0conv}
+        \mathbb{E}\left[\|X_0 - X_0^N\|\right] \leq c_0\Delta t,
+    \end{equation}
+    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with bounded differentials $\partial_t f$ and $D_y f$, i.e.
+    \begin{equation}
+        \label{ftfylineargrowthcadlagfv}
+        \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\|,
+    \end{equation}
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_4, c_5 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is a semi-martingale. Then, the Euler scheme is strongly convergent of order 1, i.e.
+    \begin{equation}
+        \label{ordercadlagfv}
+        \max_{j=0, \ldots, N} \mathbb{E}\left[\left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\|\right] \leq c \Delta t_N, \qquad \forall N \in \mathbb{N},
+    \end{equation}
+    for a suitable constant $c\geq 0$.
 \end{theorem}
 
 \section{The case of an It\^o process noise}
@@ -1130,9 +1166,9 @@ Therefore,
 \begin{multline}
     \label{firsttermfBm}
     \frac{1}{\Gamma(H + 1/2)}\Delta t_N \mathbb{E}\left[\left|\int_{-\infty}^{0} \int_{0}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right) \;\mathrm{d}s \;\mathrm{d}W_\xi \right|\right] \\
-    \leq C_H^{(1)}\Delta t_N,
+    \leq c_H^{(1)}\Delta t_N,
 \end{multline}
-for a suitable constant $C_H^{(1)}$. We see this term is of order 1 in $\Delta t_N.$
+for a suitable constant $c_H^{(1)}$. We see this term is of order 1 in $\Delta t_N.$
 
 The second term is similar,
 \begin{align*}
@@ -1156,9 +1192,9 @@ Therefore,
 \begin{multline}
     \label{secondtermfBm}
     \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_{0}^{t_j} \int_{\tau^N(\xi)+\Delta t_N}^{t_j} \left( (s-\xi)^{H-1/2} - (\tau^N(s)-\xi)^{H-1/2}\right)  \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \\
-    \leq C_H^{(2)}\Delta t_N,
+    \leq c_H^{(2)}\Delta t_N,
 \end{multline}
-for a possibly different constant $C_H^{(2)}$. This term is also of order 1.
+for a possibly different constant $c_H^{(2)}$. This term is also of order 1.
 
 For the last term, we have
 \begin{multline*}
@@ -1174,16 +1210,16 @@ so that, using the Lyapunov inequality and the It\^o isometry
 Therefore,
 \begin{equation}
     \label{thirdtermfBm}
-    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \leq C_H^{(3)} \Delta t_N^{H + 1/2},
+    \frac{1}{\Gamma(H + 1/2)}\mathbb{E}\left[\left|\int_0^{t_j} \int_\xi^{\tau^N(\xi) + \Delta t_N} (s - \xi)^{H-1/2} \;\mathrm{d}s \;\mathrm{d}W_\xi\right|\right] \leq c_H^{(3)} \Delta t_N^{H + 1/2},
 \end{equation}
-for a third constant $C_H^{(3)}$.
+for a third constant $c_H^{(3)}$.
 
 Putting the three estimates \eqref{firsttermfBm}, \eqref{secondtermfBm}, \eqref{thirdtermfBm} in \eqref{integralofstepfBm} we find that
 \begin{multline}
     \mathbb{E}\left[\left|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right|\right] \\
-    \leq C_H^{(4)} \Delta t_N + C_H^{(3)} \Delta t_N^{H + 1/2},
+    \leq c_H^{(4)} \Delta t_N + c_H^{(3)} \Delta t_N^{H + 1/2},
 \end{multline}
-where $C_H^{(4)} = C_H^{(1)} + C_H^{(2)}$. Using this estimate in \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
+where $c_H^{(4)} = c_H^{(1)} + c_H^{(2)}$. Using this estimate in \cref{propbasicestimate} shows that the Euler method is of order $H + 1/2$, when $0 < H < 1/2$, and is of order 1, when $1/2 \leq H < 1$, having in mind that $H=1/2$ corresponds to the classical Wiener process.
 
 In summary, we have proved the following result.
 \begin{theorem}
@@ -1194,9 +1230,9 @@ In summary, we have proved the following result.
     \end{equation}
     Then, the Euler scheme for this initial value problem is of strong order $H+1/2$, for $0 < H < 1/2$, and is of order $1$, for $1/2 \leq H < 1$. More precisely,
     \begin{equation}
-        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq C_1 \Delta t_N + C_2 \Delta t_N^{H + 1/2}, \qquad \forall N \in \mathbb{N},
+        \max_{j=0, \ldots, N}\mathbb{E}\left[ \left| X_{t_j} - X_{t_j}^N \right| \right] \leq c_1 \Delta t_N + c_2 \Delta t_N^{H + 1/2}, \qquad \forall N \in \mathbb{N},
     \end{equation}
-    for suitable constants $C_1, C_2 \geq 0$.
+    for suitable constants $c_1, c_2 \geq 0$.
 \end{theorem}
 
 As for illustrating numerically the order of strong convergence, although the above linear equation has the explicit solution
