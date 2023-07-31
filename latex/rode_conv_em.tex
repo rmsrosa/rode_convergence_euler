@@ -641,6 +641,8 @@ The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[T
 \]
 Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
 
+The Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposable in the form $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale.
+
 \begin{theorem}
     \label{thmsemimartingale}
     Under the \cref{standinghypotheses1}, suppose also that
@@ -679,27 +681,17 @@ Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a
         \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}\xi.
     \]
     
-    For the second term, we use the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposable in the form $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
-    \begin{multline}
-        \label{sm2}
-        \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi \;\mathrm{d}s \\  
-        + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi \;\mathrm{d}s,
-    \end{multline}
-    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral. Since $\{F_t\}_{t\in I}$ is of finite variation, the first part of \eqref{sm2} is estimated as in the proof of \cref{thmcadlagfv}, so that
+    For the second term, we use formula \cite[Theorem 29]{Protter2005}, which says that, for an adapted c\`adl\`ag process $\{H_t\}_{t\in I}$,
+    \begin{equation}
+        \left(\int_0^{t_j} H_\xi \;\mathrm{d}\xi\right)^2 = \int_0^{t_j} H_\xi^2 \;\mathrm{d}[X, X]_\xi.
+    \end{equation}
+    Hence,
     \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\|\;\mathrm{d}s \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}F_\xi\| \\
-        & \qquad \leq \Delta t \int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\| \\
-        & \qquad \leq \Delta t \left(c_4 + c_5 \max_{i=0, \ldots, j}\|X_{i}^N\| + c_6\sup_{0\leq \xi \leq t_j}\|Y_{\xi}\|\right)V(\{F_t\}_{t\in I}; [0, t_j]).
-    \end{align*}
-    For the second part of \eqref{sm2}, we use the It\^o isometry for local martingales, so that
-    \begin{align*}
-        & \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\right\|\right] \\
-        & \quad = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
-        & \quad \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right)^2\right]^{1/2} \\
-        & \quad \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t} \|D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z_\xi, Z_\xi]\right]^{1/2} \\
-        & \quad \leq \Delta t\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z_\xi, Z_\xi]\right]^{1/2}
+        & \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}X_\xi\;\mathrm{d}s\right\|\right] \\
+        & \quad = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}X_\xi\right\|\right] \\
+        & \quad \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}X_\xi\right)^2\right]^{1/2} \\
+        & \quad \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t} \|D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[X, X]_\xi\right]^{1/2} \\
+        & \quad \leq \Delta t\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[X, X]_\xi\right]^{1/2}
     \end{align*}
 
     The third term ... 
