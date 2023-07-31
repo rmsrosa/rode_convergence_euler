@@ -668,20 +668,24 @@ The Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that
 
 \begin{proof}
     As in the proof of \eqref{thmcadlagfv}, we need to estimate the last term of \eqref{Etjbasicbound}. Using \eqref{changeofvariablesformulasemimartingale}, the last term becomes
-    \begin{align*}
-        & \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
-        & = \int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \;\mathrm{d}s \\
-        & \quad + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s \\
-        & \quad + \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s \\ 
-        & \quad + \frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s.
-    \end{align*}
+    \begin{equation}
+        \label{smlasttermerror}
+        \begin{aligned}
+            & \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
+            & \quad = \int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \;\mathrm{d}s \\
+            & \qquad + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s \\
+            & \qquad + \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) \right. \\
+            & \qquad \qquad \qquad \qquad \qquad \qquad \qquad \left. - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s \\ 
+            & \qquad + \frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s.
+        \end{aligned}
+    \end{equation}
     
-    The first term is handled just like in the proof of \cref{thmcadlagfv} and we obtain
+    The first term in \eqref{smlasttermerror} is handled just like in the proof of \cref{thmcadlagfv} and we obtain
     \[
         \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}\xi.
     \]
 
-    For the second term, we use the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposed in the form $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
+    For the second term in \eqref{smlasttermerror}, we use the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposed as $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
     \begin{multline}
         \label{sm2}
         \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi \;\mathrm{d}s \\  
@@ -700,8 +704,8 @@ The Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that
         & \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\right\|\right] \\
         & \quad = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
         & \quad \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right)^2\right]^{1/2} \\
-        & \quad \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t} \|D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z_\xi, Z_\xi]\right]^{1/2} \\
-        & \quad \leq \Delta t\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z_\xi, Z_\xi]\right]^{1/2}.
+        & \quad \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t} \|D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
+        & \quad \leq \Delta t\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2}.
     \end{align*}
 
     The third term ... 
