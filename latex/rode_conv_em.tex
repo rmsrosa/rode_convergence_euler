@@ -708,13 +708,25 @@ The Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that
         & \quad \leq \Delta t\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2}.
     \end{align*}
 
-    The third term ... 
+    The third term can be treated as in \cref{thmcadlagfv}, but instead we use the bound on the second derivative of $D_{yy}f$ to write
+    \begin{multline*}
+        \left\| f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \Delta Y_\xi \right\| \\
+        \leq \left(c_7 + c_8 \|X_{\tau^N(s)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2.
+    \end{multline*}
+    Recall $\tau^N(s) = \tau^N(\xi)$ for $\xi \leq s < \tau^N(\xi) + \Delta t$ and $\tau^N(\xi) + \Delta t - \xi \leq \Delta t$. Thus,
+    \begin{align*}
+        & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s\right\| \\
+        & \quad \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
+        & \quad \leq \sum_{0 < \xi \leq t_j}\int_\xi^{\tau^N(\xi) + \Delta t} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
+        & \quad \leq \Delta t \left( c_7 + c_8 \sup_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9 \sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) \sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2
+    \end{align*}
 
-    The fourth and last term involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
+    The final term in \eqref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
     \begin{align*}
         & \left\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s\right\| \\
         & \qquad \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
-        & \qquad \leq \frac{\Delta t}{2}\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}[Y, Y]_\xi^c.
+        & \qquad \leq \frac{\Delta t}{2}\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}[Y, Y]_\xi^c \\ 
+        & \qquad \leq \frac{\Delta t}{2} \left(c_1 + c_2 \max_{i=0, \ldots, j}\|X_{t_i}^N\|\right) [Y, Y]_{t_j}^c.
     \end{align*}
 \end{proof}
 
