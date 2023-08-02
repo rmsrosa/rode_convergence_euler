@@ -277,6 +277,10 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
     In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. But we leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
 \end{remark}
 
+\section{Semi-martingale noises}
+
+Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$. An FV process is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`ad\`ag when it is left continuous with right limits (from the French, continue )
+
 \section{Pathwise approximation}
 \label{secpathwiseapproximation}
 
@@ -640,8 +644,6 @@ The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[T
     [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta X_s\right)^2.
 \]
 Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
-
-The Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005} which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposable in the form $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale.
 
 \begin{theorem}
     \label{thmsemimartingale}
