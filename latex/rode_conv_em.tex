@@ -279,7 +279,57 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 
 \section{Semi-martingale noises}
 
-Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$. An FV process is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`ad\`ag when it is left continuous with right limits (from the French, continue )
+Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$.
+
+An FV process, or Finite-Variation process, is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`ad\`ag when it is right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). Thus, an FV process $\{Y_t\}_{t\in I}$ is such that, for almost every $\omega\in \Omega$, and for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation, also called bounded variation). For such a process, we define the left-limit process
+\begin{equation}
+  Y_{t^{-}} = \lim_{t \rightarrow t^-} Y_s
+\end{equation}
+and the jump process
+\begin{equation}
+  \Delta Y_t = Y_t - Y_{t^{-}}.
+\end{equation}
+Almost surely, the sample paths of the jump process are constant except possibly at a countable number of points, denoted $J$, i.e. for almost every $\omega\in \Omega$, there exists a countable set $J(\omega) \subset I$ for which $\Delta Y_t(\omega)$ is constant on each connected component of $I\setminus J(\omega)$, and such that
+\[
+    \sum_{s\in J} \|\Delta Y_t\| \leq V(\{Y_t(\omega)\}_{t\in I}; I).
+\]
+In particular, for any given $\varepsilon > 0$, the set of times for which the jump $|\Delta Y_t|$ is larger than or equal to $\varepsilon$ is finite.
+
+Given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds for such processes (see \cite[Theorems 31 and 33]{Protter2005}):
+\begin{equation}
+    f(Y_t) - f(Y_0) = \int_{0^+}^t Df(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - Df(Y_{s^-})\Delta Y_s\right).
+\end{equation}
+The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J$. The summation can be written as an integral with respect to a jump measure, but we keep it as a summation for simplicity.
+
+The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, k}$ and $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, and
+\[
+    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, k} = \left( \sum_{j=1, \ldots, k} \partial y_j f_i(y) (Y_t)_j \right)_{i=1, \ldots, k}.
+\]
+
+When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\in I}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula
+\begin{multline}
+    \label{changeofvariablesformulacadlagfv}
+    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
+    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right).
+\end{multline}
+We actually apply this formula to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
+
+In the more general case of a semi-martingale noise $\{Y_t\}_{t\in I}$, the change of variables formula \eqref{changeofvariablesformulacadlagfv} takes the form (see \cite[Theorems 31 and 33]{Protter2005})
+\begin{multline}
+    \label{changeofvariablesformulasemimartingale}
+    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
+    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right) \\
+    + \frac{1}{2}\int_0^t D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_t^c,
+\end{multline}
+where $\{[Y, Y]_t^c\}_{t\in I}$ is the continuous part of the quadratic variation process $\{[Y, Y]_t\}_{t\in I}$ defined by
+\[
+    [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{t^-} \;\mathrm{d}Y_t.
+\]
+The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[Theorem 22]{Protter2005}. The continuous part is given by
+\[
+    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta X_s\right)^2.
+\]
+Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
 
 \section{Pathwise approximation}
 \label{secpathwiseapproximation}
@@ -494,38 +544,7 @@ Combining the two previous results we obtain the following:
 \section{Pathwise convergence for noises with c\`adl\`ag sample paths of finite variation}
 \label{secmonotonicbound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`adl\`ag and with finite variation. By c\`adl\`ag we mean right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). More precisely, for almost every $\omega\in \Omega$, it is assumed that, for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation). For such a process, we define the left-limit process
-\begin{equation}
-  Y_{t^{-}} = \lim_{t \rightarrow t^-} Y_s
-\end{equation}
-and the jump process
-\begin{equation}
-  \Delta Y_t = Y_t - Y_{t^{-}}.
-\end{equation}
-Almost surely, the sample paths of the jump process are constant except possibly at a countable number of points, denoted $J$, i.e. for almost every $\omega\in \Omega$, there exists a countable set $J(\omega) \subset I$ for which $\Delta Y_t(\omega)$ is constant on each connected component of $I\setminus J(\omega)$, and such that
-\[
-    \sum_{s\in J} \|\Delta Y_t\| \leq V(\{Y_t(\omega)\}_{t\in I}; I).
-\]
-In particular, for any given $\varepsilon > 0$, the set of times for which the jump $|\Delta Y_t|$ is larger than or equal to $\varepsilon$ is finite.
-
-Given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds for such processes (see \cite[Theorems 31 and 33]{Protter2005}):
-\begin{equation}
-    f(Y_t) - f(Y_0) = \int_{0^+}^t Df(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - Df(Y_{s^-})\Delta Y_s\right).
-\end{equation}
-The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J$. The summation can be written as an integral with respect to a jump measure, but we keep it as a summation for simplicity.
-
-The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, k}$ and $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, and
-\[
-    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, k} = \left( \sum_{j=1, \ldots, k} \partial y_j f_i(y) (Y_t)_j \right)_{i=1, \ldots, k}.
-\]
-
-When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\in I}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula
-\begin{multline}
-    \label{changeofvariablesformulacadlagfv}
-    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
-    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right).
-\end{multline}
-We actually apply this formula to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
+Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`adl\`ag and with finite variation.
 
 \begin{theorem}
     \label{thmcadlagfv}
@@ -628,22 +647,7 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
 \section{Strong converge for semi-martingale noises}
 \label{secsubmartingale}
 
-In the more general case of a semi-martingale noise $\{Y_t\}_{t\in I}$, the change of variables formula \eqref{changeofvariablesformulacadlagfv} takes the form (see \cite[Theorems 31 and 33]{Protter2005})
-\begin{multline}
-    \label{changeofvariablesformulasemimartingale}
-    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
-    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right) \\
-    + \frac{1}{2}\int_0^t D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_t^c,
-\end{multline}
-where $\{[Y, Y]_t^c\}_{t\in I}$ is the continuous part of the quadratic variation process $\{[Y, Y]_t\}_{t\in I}$ defined by
-\[
-    [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{t^-} \;\mathrm{d}Y_t.
-\]
-The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[Theorem 22]{Protter2005}. The continuous part is given by
-\[
-    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta X_s\right)^2.
-\]
-Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
+
 
 \begin{theorem}
     \label{thmsemimartingale}
