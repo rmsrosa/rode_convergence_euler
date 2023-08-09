@@ -203,7 +203,7 @@ Under these assumptions, for almost every sample value in $\Omega$, the integral
     \label{integralrodeform}
     X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
 \end{equation}
-has a unique solution, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$, of the initial condition, and $t\mapsto Y_t(\omega)$, of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is measurable (see \cite[Section 2.1.2]{HanKloeden2017}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
+has a unique solution, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$, of the initial condition, and $t\mapsto Y_t(\omega)$, of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is (jointly) measurable (see \cite[Section 2.1.2]{HanKloeden2017} and also \cite[Lemma 4.51]{AB2006}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
 Each pathwise solution of \eqref{integralrodeform} is absolutely continuous. From assumptions \eqref{standinghypothesesLipschitzbound} and \eqref{standinghypothesesMbound}, the solutions satisfy almost surely
 \[
@@ -1551,6 +1551,9 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tabl
 \end{figure}
 
 \begin{thebibliography}{25}
+
+    \bibitem{AB2006} C. Aliprantis and K. Border, \emph{Infinite dimensional analysis}, A hitchhiker's guide. Third edition. Springer, Berlin, 2006.
+
     \bibitem{Asai2016} Y. Asai, \emph{Numerical Methods for Random Ordinary Differential Equations and their Appli-
     cations in Biology and Medicine.} Dissertation, Institut f\"ur Mathematik, Goethe Universit\"at Frankfurt am Main, 2016.
 
