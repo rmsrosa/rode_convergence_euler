@@ -167,7 +167,7 @@ with adapted processes $\{A_t\}_t$, $\{B_t\}_t$, which may actually depend on $\
 \end{multline*}
 which yields the strong order 1 convergence, provided the integrals are finite.
 
-In the case of noises with bounded variation, we may actually relax the above condition and assume the steps are bounded by a process $\{\bar F_t\}_{t\in I}$ with monotonic non-decreasing sample paths,
+In the case of noises with bounded variation, we also assume the sample paths are almost surely c\`ad\`ag (i.e. right continuous with left limits), so that we may actually relax the above condition and assume the steps are bounded by a process $\{\bar F_t\}_{t\in I}$ with monotonic non-decreasing sample paths,
 \[
     \left\|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\right\| \leq \bar F_s - \bar F_{\tau^N(s)}.
 \]
@@ -179,7 +179,7 @@ yielding, again, strong order 1 convergence.
 
 These two cases are treated in \cref{secmonotonicbound} and \cref{secItonoise}, with the bounded variation case in \cref{secmonotonicbound}, and the It\^o process noise case in \cref{secItonoise}.
 
-The core results in these sections are \cref{lemmonotonicbound} and \cref{thmmonotonicbound}, for the bounded variation case, and \cref{lemItostep} and \cref{thmItostep}, for the It\^o process noise case. The conditions in such results, however, are not readily verifiable. With that in mind, \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of these two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions, while the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths of bounded variation or to be an It\^o process noise.
+The core results in these sections are \cref{lemmonotonicbound} and \cref{thmmonotonicbound}, for the bounded variation case, and \cref{lemItostep} and \cref{thmItostep}, for the It\^o process noise case. The conditions in such results, however, are not readily verifiable. With that in mind, \cref{thmdiffmonotonicbound} and \cref{thmItonoise} give more explicit conditions for each of these two cases. Essentially, $f=f(t, x, y)$ is required to have minimal regularity in the sense of differentiability and growth conditions, while the noise $\{Y_t\}_{t\in I}$ is either required to have sample paths almost surely c\`ad\`ag of bounded variation or to be an It\^o process noise.
 
 These two types of noises can also appear at same time, in a given equation or system of equations, as treated in \cref{secmixed}. This can be regarded as a vector-valued noise, where the components of the noise may either be of bounded variation or of It\^o type. See \cref{thmmixedcase} and \cref{thmmixedcasepractical}.
 
@@ -565,7 +565,7 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
         \left\|\partial_t f(t, x, y)\right\| \leq C_1 + C_2 \|x\| + C_3\|y\|, \quad \left\|\partial_y f(t, x, y)\right\| \leq C_4 + C_5\|x\| + C_6\|y\|,
     \end{equation}
     in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $C_1, C_2, C_3, C_4 \geq 0$.
-    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
+    Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely c\`adl\`ag of bounded variation $V(\{Y_t\}_{t\in I}; I)$, on $I$, with finite quadratic mean,
     \begin{equation}
         \label{EYtboundedsquarevariation2}
         \mathbb{E}[V(\{Y_t\}_{t\in I}; I)^2] < \infty,
@@ -613,16 +613,12 @@ The conditions of \cref{thmmonotonicbound}, especially \eqref{stepbound}-\eqref{
 
     Now, in order to apply \cref{thmmonotonicbound}, it remains to verify \eqref{stepbound}-\eqref{expectstepmonotonic}.
 
-    Since the noise is of bounded variation and $f=f(t, x, y)$ is continuously differentiable in $(t, y)$, we have $s\mapsto f(s, X_\tau, Y_s)$ of bounded variation, for each fixed $\tau,$ with
-    \[
-        f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau) = \int_\tau^s \partial_t f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d} Y_\xi.
-    \]
-
-    More precisely, assuming $\{Y_t\}_{t\in I}$ has values in $\mathbb{R}^k,$ $k\in \mathbb{N}$, we have each coordinate $t \mapsto (Y_t)_i$ with sample paths of bounded variation, and $\partial_y f = (\partial_{y_1}f, \ldots, \partial_{y_k}f)$, so that
-    \[
-        \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d} Y_\xi = \sum_{i=1}^k \int_\tau^s \partial_{y_i} f(\xi, X_\tau, Y_\xi) \;\mathrm{d} (Y_\xi)_i
-    \]
-    Then, using \eqref{ftfylineargrowth},
+    Since the noise is c\`adl\`ag process of bounded variation and $f=f(t, x, y)$ is continuously differentiable in $(t, y)$, we have $s\mapsto f(s, X_\tau, Y_s)$ also c\`adl\`ag with bounded variation, for each fixed $\tau,$ with (see \cite[Theorems 31 and 33]{Protter2005})
+    \begin{multline*}
+        f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau) = \int_\tau^s \partial_\xi f(\xi, X_\tau, Y_\xi) \;\mathrm{d}\xi + \int_\tau^s \partial_y f(\xi, X_\tau, Y_\xi) \;\mathrm{d} Y_\xi \\
+        \sum_{\tau < \xi \leq s} \left( f(\xi, X_\tau, Y_\xi) - f(\xi, X_\tau, Y_{\xi^-}) - \partial_y f(\xi, X_\tau, Y_{\xi^-}) \Delta Y_\xi \right),
+    \end{multline*}
+    where $Y_{\xi^-} = \lim_{\tilde \xi \rightarrow \xi^{-}} Y_{\tilde \xi}$ is the left limit at $\xi$ and $\Delta Y_\xi = Y_\xi - Y_{\xi}$ is the jump at $\xi$. Then, using \eqref{ftfylineargrowth},
     \begin{multline*}
         \|f(s, X_\tau, Y_s) - f(\tau, X_\tau, Y_\tau)\| \\
         \leq C_1 (s-\tau) + C_2(s-\tau) \|X_\tau\| + (C_3 + C_4 \|X_\tau\|) V(\{Y_t\}_{t\in I}; \tau, s).
@@ -893,7 +889,7 @@ We omit the proof since it is just a combination of \cref{lemmonotonicbound} and
 
 \begin{theorem}
     \label{thmmixedcasepractical}
-    Suppose that $f=f(t, x, y)$ is twice continuously differentiable with uniformly bounded derivatives. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are made of two independent components, one almost surely of bounded variation with finite quadratic mean, as in \eqref{EYtboundedsquarevariation2}, and another an It\^o process noise satisfying \eqref{YtItonoise} and \eqref{YtItonoiseinitialcondition}. Assume, moreover, that \eqref{EX0square2} holds. Then, the Euler scheme is of strong order 1, i.e.
+    Suppose that $f=f(t, x, y)$ is twice continuously differentiable with uniformly bounded derivatives. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are made of two independent components, one almost surely c\`adl\`ag of bounded variation with finite quadratic mean, as in \eqref{EYtboundedsquarevariation2}, and another an It\^o process noise satisfying \eqref{YtItonoise} and \eqref{YtItonoiseinitialcondition}. Assume, moreover, that \eqref{EX0square2} holds. Then, the Euler scheme is of strong order 1, i.e.
     \begin{equation}
         \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
     \end{equation}
