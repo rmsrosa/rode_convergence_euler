@@ -99,20 +99,29 @@ The Euler method for solving this initial value problem consists in approximatin
 \end{equation}
 Notice $t_j = j\Delta t_N = jT/N$ also depends on $N$, but we do not make this dependency explicit, for the sake of notational simplicity.
 
-We are interested in the order of \emph{strong} convergence, i.e. the approximation $\{X_{t_j}^N\}_j$ is said to converge to $\{X_t\}_t$ with \emph{strong order $\theta>0$} when there exists a constant $C \geq 0$ such that
+We are mostly interested in the order of \emph{strong} convergence, i.e. the approximation $\{X_{t_j}^N\}_j$ is said to converge to $\{X_t\}_t$ with \emph{strong order $\theta>0$} when there exists a constant $C \geq 0$ such that
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. There are other important notions of convergence, such as weak convergence, mean-square convergence, $p$-th mean convergence, and pathwise convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but we focus on strong convergence, here.
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, when  
+\begin{equation}
+    \label{strongordertheta}
+    \max_{j=0, \ldots, N}\left\| X_{t_j} - X_{t_j}^N \right\| \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
+\end{equation}
+almost surely, for a random variable $C=C(\omega)$ on $\Omega$.
+
+There are other important notions of convergence, such as weak convergence, mean-square convergence, and $p$-th mean convergence, and pathwise convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but we focus on the strong and pathwise convergence, here.
 
 Under certain regularity conditions on $f$, it is proved in \cite[Theorem 3]{WangCaoHanKloeden2021} that, when the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, the Euler scheme converges to the exact solution in the mean square sense with order $\theta$ with respect to the time step. This implies the strong convergence \eqref{strongordertheta} with the same order $\theta$. For pathwise convergence, see e.g. \cite{GruneKloeden2001,KloedenJentzen2007,JentzenKloeden2011,AsaiKloeden2016,HanKloeden2017}. In the case of fractional Brownian motion noise with Hurst parameter $H$, it is proved in \cite[Theorem 2]{WangCaoHanKloeden2021} that the mean square convergence is of order $H$.
 
-In some particular cases, the order of convergence of the Euler method may be higher than the associated H\"older exponent of the noise, such as for Wiener process noises (see e.g. \cite[Example 5]{WangCaoHanKloeden2021}), but in general that would not be expected from previous results.
+In some special cases, the order of convergence of the Euler method may be higher than the associated H\"older exponent of the noise, such as for It\^o diffusion noises (see e.g. \cite[Section 5]{WangCaoHanKloeden2021}, in particular \cite[Section 5.2, Example 12 and Remark 13]{WangCaoHanKloeden2021}), but in general that would not be expected from previous results.
 
-Our aim is to show, however, that, in many classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. It is also the case for fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and of order $H + 1/2$, when $0 < H < 1/2$.
+Our aim is to show that, in many more classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. We, show, in fact, that this is true for any noise that is a semi-martingale with bounded square variation.
 
-The global condition on $f$ is a natural assumption when looking for strong convergence. Pathwise convergence, on the other hand, usually requires less stringent conditions (see e.g. \cite{JentzenKloedenNeuenkirch2009, JentzenKloeden2011}), but those are not the subject of interest here. The possibility of extending the improved order of strong convergence to pathwise convergence seems feasible for the case of sample paths of bounded variation but not so much for It\^o process noises for which the It\^o isometry is of fundamental importance. These will be investigated in a future oportunity.
+We also consider a particular equation with fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and of order $H + 1/2$, when $0 < H < 1/2$.
+
+The global condition on $f$ is a natural assumption when looking for strong convergence. Pathwise convergence, on the other hand, usually requires less stringent conditions (see e.g. \cite{JentzenKloedenNeuenkirch2009, JentzenKloeden2011}), as seen in the FV process case.
 
 The first main idea of the proof is to not estimate the local error and, instead, work with an explicit formula for the global error (see \cref{lemglobalerrorintegralformula}), similarly to the way it is done for approximations of stochastic differential equations, namely
 \begin{equation}
@@ -144,7 +153,7 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 \]
-For a semi-martingale noise, the integral above can be a combination of a Lebesgue-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, 
+For a semi-martingale noise, the integral above can be a combination of a Lebesgue-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, hence
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
@@ -155,8 +164,7 @@ Then, since $0 \leq \tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N$, we find tha
     \leq \Delta t_N\mathbb{E}\left[\left\| \int_0^{t_j} \;\mathrm{d} F_\xi \right\|\right].
 \end{multline*}
 
-We consider two types of noises, one whose paths are almost surely c\`adl\`ag (right continuous with left limits) with finite variation, and for which we prove the pathwise convergence of order 1, and more general semi-martingale noises, for which we prove the strong convergence of order 1.
-These two cases are treated, respectively, in \cref{secmonotonicbound} and \cref{secsubmartingale}, with the main results in \cref{thmcadlagfv} and \cref{thmsemimartingale}.
+We consider two types of noises, one whose paths are almost surely c\`adl\`ag (right continuous with left limits) with finite variation (FV processes), and for which we prove the pathwise convergence of order 1, and more general semi-martingale noises (which can be characterized as a sum of an FV process and a local martingale), for which we prove the strong convergence of order 1. These two cases are treated, respectively, in \cref{secmonotonicbound} and \cref{secsubmartingale}, with the main results in \cref{thmcadlagfv} and \cref{thmsemimartingale}.
 
 We complement this work with a number of explicit examples and their numerical implementation, illustrating the strong order 1 convergence in the cases above. We include a system of linear equations with all sorts of noises, encompassing noises with sample paths with bounded variation and It\^o process noises. We also include an example with a fractional Brownian motion noise (fBm), for which the order of convergence drops to $H + 1/2$, when the Hurst parameter is in the range $0 < H < 1/2$. We do not present a general proof of this order of convergence in the case of fBm noise, but we prove it here in a particular linear equation. In this example, we essentially have (see \eqref{stepfBm} and \eqref{BHtintegralformulastep})
 \[
@@ -180,7 +188,6 @@ Many other examples are included and also presented in more details in the githu
 For the notion and main results on pathwise solutions for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017} and \cite[Section 3.3]{NeckelRupp2013}.
 
 We start with a fundamental set of conditions that imply the existence and uniqueness of pathwise solutions of the RODE \eqref{rodeeq} in the sense of Carath\'eodory:
-
 \begin{stdhyp}
     \label{standinghypotheses1}
     We consider a function $f=f(t, x, y)$ defined on $I\times \mathbb{R}^d\times\mathbb{R}^k$ and with values in $\mathbb{R}^d$, and an $\mathbb{R}^k$-valued stochastic process $\{Y_t\}_{t\in I}$, where $I=[0, T]$, $T > 0$, and $d, k\in \mathbb{N}.$ We make the following standing assumptions:
