@@ -144,7 +144,7 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi,
 \]
-either in the sense of a Riemann-Stieltjes integral or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o process noise. In any case, we bound the global error term using the Fubini Theorem,
+either in the sense of a Riemann-Stieltjes integral with jumps or of an It\^o integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an It\^o process noise. In any case, we bound the global error term using the Fubini Theorem,
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
