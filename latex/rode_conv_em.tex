@@ -44,7 +44,7 @@
 
 % Article info
 
-\title[Strong convergence of the Euler method for Random ODEs]{Improved error estimate for the order of strong convergence of the Euler method for random ordinary differential equations}
+\title[Convergence of the Euler method for Random ODEs with semi-martingales]{Improved order of convergence of the Euler method for random ordinary differential equations driven by semi-martingales}
 
 \author[P. E. Kloeden]{Peter E. Kloeden}
 \author[R. M. S. Rosa]{Ricardo M. S. Rosa}
@@ -57,7 +57,7 @@
 
 \date{\today}
 
-\thanks{The second author was partly supported by the Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ)}
+\thanks{The second author was partly supported by the Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ) and the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brasil (CAPES), finance code 001}
 
 \makeatletter
 \@namedef{subjclassname@2020}{\textup{2020} Mathematics Subject Classification}
@@ -72,7 +72,7 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, point process, fractional Brownian motion}.
 
 \begin{abstract}
-It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. This order increases to $1$ in some special cases, such as that of an It\^o diffusion noise. Here, it is proved that, in many more typical cases, further structures on the noise can be exploited so that the strong convergence is of order 1. This applies no only to It\^o process noises, but also to point-process noises, transport-type processes with sample paths of bounded variation, time-changed Brownian motion, and more generally to any noise that is a semi-martingale. The result follows from estimating the global error as an iterated integral over both large and small mesh scales, and then by switching the order of integration to move the critical regularity to the large scale. The work is complemented with numerical simulations illustrating the strong order 1 convergence in those cases, and with an example with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the semi-martingale examples above, but still higher than the order $H$ of convergence expected from previous works.
+It is well known that the Euler method for approximating the solutions of a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. This order increases to $1$ in some special cases, such as that of an It\^o diffusion noise, as particular cases of the Milstein method for stochastic differential equations. Here, it is proved that, in many more typical cases, further structures on the noise can be exploited so that the strong convergence is of order 1. This applies not only to yield a direct proof of order 1 convergence for It\^o process noises, but also to point-process noises, transport-type processes with sample paths of bounded variation, time-changed Brownian motion, and, more generally, to any noise that is a semi-martingale. The result follows from estimating the global error as an iterated integral over both large and small mesh scales, and then by switching the order of integration to move the critical regularity to the large scale. The work is complemented with numerical simulations illustrating the strong order 1 convergence in those cases, and with an example with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2$ for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the semi-martingale examples above, but still higher than the order $H$ of convergence expected from previous works.
 \end{abstract}
 
 \maketitle
@@ -104,20 +104,20 @@ We are mostly interested in the order of \emph{strong} convergence, i.e. the app
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, when  
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, where  
 \begin{equation}
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\left\| X_{t_j} - X_{t_j}^N \right\| \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 almost surely, for a random variable $C=C(\omega)$ on $\Omega$.
 
-There are other important notions of convergence, such as weak convergence, mean-square convergence, and $p$-th mean convergence, and pathwise convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but we focus on the strong and pathwise convergence, here.
+There are other important notions of convergence, such as weak convergence, mean-square convergence, and $p$-th mean convergence (see e.g. \cite{HanKloeden2017,HighamKloeden2021, JentzenKloeden2011}), but here we focus only on the strong and pathwise convergence.
 
 Under certain regularity conditions on $f$, it is proved in \cite[Theorem 3]{WangCaoHanKloeden2021} that, when the noise $\{Y_t\}_{t\in I}$ has $\theta$-H\"older continuous sample paths, the Euler scheme converges to the exact solution in the mean square sense with order $\theta$ with respect to the time step. This implies the strong convergence \eqref{strongordertheta} with the same order $\theta$. For pathwise convergence, see e.g. \cite{GruneKloeden2001,KloedenJentzen2007,JentzenKloeden2011,AsaiKloeden2016,HanKloeden2017}. In the case of fractional Brownian motion noise with Hurst parameter $H$, it is proved in \cite[Theorem 2]{WangCaoHanKloeden2021} that the mean square convergence is of order $H$.
 
-In some special cases, the order of convergence of the Euler method may be higher than the associated H\"older exponent of the noise, such as for It\^o diffusion noises (see e.g. \cite[Section 5]{WangCaoHanKloeden2021}, in particular \cite[Section 5.2, Example 12 and Remark 13]{WangCaoHanKloeden2021}), but in general that would not be expected from previous results.
+In some special cases, the order of convergence of the Euler method may be higher than the associated H\"older exponent of the noise, such as for It\^o diffusion noises, in which case the RODE can be seen as part of a system of stochastic differential equations (SDE), with the Euler method for the RODE part of the system being part of a special case of the Milstein method for the SDE, which is known to be of strong order one (see \cite[Section 5]{WangCaoHanKloeden2021}, in particular \cite[Section 5.2, Example 12 and Remark 13]{WangCaoHanKloeden2021}).
 
-Our aim is to show that, in many more classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, or an It\^o process, for which the convergence is of strong order 1. We, show, in fact, that this is true for any noise that is a semi-martingale with bounded square variation.
+Our aim is to show that, in many more classical examples, it is possible to exploit further conditions that yield in fact a higher strong order of convergence, with the sample noise paths still being H\"older continuous or even discontinuous. This is the case, for instance, when the noise is a point process, a transport process, an It\^o process or a time-changed Brownian motion. We, show, in fact, that this is true for any noise that is a semi-martingale with bounded square variation.
 
 We also consider a particular equation with fractional Brownian motion noise with Hurst parameter $H$, for which the sample paths are $H$-H\"older continuous, but the strong convergence is of order 1, when $1/2 \leq H < 1$, and of order $H + 1/2$, when $0 < H < 1/2$.
 
@@ -134,11 +134,11 @@ The first main idea of the proof is to not estimate the local error and, instead
 \end{equation}
 for $j = 1, \ldots, N,$ where $\tau^N(t) = \max_{t_j \leq t} t_j$ is a piecewise constant function jumping to the mesh points $t_j$ (see \eqref{tauNt}).
 
-The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be easily estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
+The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{multline}
     \label{Etjbasicboundintro}
-        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \ell_X \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
-        \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{\ell_X t_j}.
+        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \ell_x \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
+        \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{\ell_x t_j}.
 \end{multline}
 
 The only problematic, noise-sensitive term is the last one. The classical analysis is to use an assumed $\theta$-H\"older regularity of the noise sample paths and estimate the local error as
@@ -153,7 +153,7 @@ and assume that the steps of the process given by $F_t = f(t, X_{\tau^N(t)}^N, Y
 \[
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 \]
-For a semi-martingale noise, the integral above can be a combination of a Lebesgue-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, hence
+For a semi-martingale noise, the integral above can be a combination of a Lebesgue-Stieltjes integral, a stochastic integral, and an integral with respect to a jump measure, but we leave it like that just for the sake of explaining the main idea. With that, we bound the global error term using the Fubini Theorem, taking into consideration that, despite the inner integral being from $\xi$ to the ``future'' time $\tau^N(\xi) + \Delta t_N$, the integrand is still non-anticipative, hence
 \begin{multline*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
     = \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s \;\mathrm{d} F_\xi  = \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \;\mathrm{d} F_\xi.
@@ -205,12 +205,12 @@ We start with a fundamental set of conditions that imply the existence and uniqu
     \end{enumerate}
 \end{stdhyp}
 
-Under these assumptions, for almost every sample value in $\Omega$, the integral equation
+Under these assumptions, for almost every sample value $\omega$ in $\Omega$, the integral equation
 \begin{equation}
     \label{integralrodeform}
-    X_t = X_0 + \int_0^t f(s, X_s, Y_s) \;\mathrm{d}s
+    X_t(\omega) = X_0(\omega) + \int_0^t f(s, X_s(\omega), Y_s(\omega)) \;\mathrm{d}s
 \end{equation}
-has a unique solution, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$ of the initial condition and $t\mapsto Y_t(\omega)$ of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is (jointly) measurable (see \cite[Section 2.1.2]{HanKloeden2017} and also \cite[Lemma 4.51]{AB2006}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
+has a unique solution $t\mapsto X_t(\omega)$, in the Lebesgue sense, for the realizations $X_0 = X_0(\omega)$ of the initial condition and $t\mapsto Y_t(\omega)$ of the noise process (see \cite[Theorem 1.1]{CoddingtonLevinson1985}). Moreover, the mapping $(t, \omega) \mapsto X_t(\omega)$ is (jointly) measurable (see \cite[Section 2.1.2]{HanKloeden2017} and also \cite[Lemma 4.51]{AB2006}) and, hence, give rise to a well-defined stochastic process $\{X_t\}_{t\in I}$.
 
 Each pathwise solution of \eqref{integralrodeform} is absolutely continuous. From assumptions \eqref{standinghypothesesLipschitzbound} and \eqref{standinghypothesesMbound}, the solutions satisfy almost surely
 \[
@@ -249,15 +249,15 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
         \label{EMtstrongbound}
         \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty,
     \end{equation}
-    and that $\{L_t\}_{t\in I}$ is essentially bounded, uniformly on $I$, i.e. there exists a constant $\ell_X > 0$ such that
+    and that $\{L_t\}_{t\in I}$ is essentially bounded, uniformly on $I$, i.e. there exists a constant $\ell_x > 0$ such that
     \begin{equation}
         \label{LtLXbound}
-        L_t \leq \ell_X, \quad  t\in I,
+        L_t \leq \ell_x, \quad  t\in I,
     \end{equation}
     almost surely. Then
     \begin{equation}
         \label{EXtstrongbound}
-        \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{\ell_X t}, \quad t\in I.
+        \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{\ell_x t}, \quad t\in I.
     \end{equation}
     If, moreover,
     \begin{equation}
@@ -268,7 +268,7 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
     for a given $\beta \geq 1,$ then,
     \begin{equation}
         \label{EXtstrongboundbeta}
-        \mathbb{E}[\|X_t\|^\beta] \leq \left(\mathbb{E}[\|X_0\|^\beta] + \int_0^t \mathbb{E}[M_s^\beta]\;\mathrm{d}s\right) e^{((\beta - 1) + \beta \ell_X) t}, \quad t\in I.
+        \mathbb{E}[\|X_t\|^\beta] \leq \left(\mathbb{E}[\|X_0\|^\beta] + \int_0^t \mathbb{E}[M_s^\beta]\;\mathrm{d}s\right) e^{((\beta - 1) + \beta \ell_x) t}, \quad t\in I.
     \end{equation}
 \end{lemma}
 
@@ -277,18 +277,18 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 \end{proof}
 
 \begin{remark}
-    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are almost surely continuous, then the integrand in \eqref{integralrodeform} is almost surely continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are almost surely continuous except on a set of Lebesgue measure zero, then the integrand in \eqref{integralrodeform} is almost surely continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
 \end{remark}
 
 \begin{remark}
-    In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. But we leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
+    In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. We leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
 \end{remark}
 
 \section{Semi-martingale noises}
 
 Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$.
 
-An FV process, or Finite-Variation process, is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`ad\`ag when it is right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). Thus, an FV process $\{Y_t\}_{t\in I}$ is such that, for almost every $\omega\in \Omega$, and for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation, also called bounded variation). For such a process, we define the left-limit process
+An FV process, or Finite-Variation process, is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`adl\`ag when it is right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). Thus, an FV process $\{Y_t\}_{t\in I}$ is such that, for almost every $\omega\in \Omega$, and for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation, also called bounded variation). For such a process, we define the left-limit process
 \begin{equation}
   Y_{t^{-}} = \lim_{t \rightarrow t^-} Y_s
 \end{equation}
@@ -492,7 +492,7 @@ As for the second term, which only concerns the solution itself, not the approxi
     \]
     Integrating over $[0, t_j]$ and using Fubini's theorem to exchange the order of integration,
     \begin{align*}
-        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + \ell_X\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + \ell_x\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
         & = \int_0^{t_j}(M_\xi + L_\xi\|X_\xi\|) \int_\xi^{\tau^N(\xi) + \Delta t_N} L_s\;\mathrm{d}s \;\mathrm{d}\xi.
     \end{align*}
     Using that $t \mapsto L_t$ is bounded almost surely, we find that
@@ -514,8 +514,8 @@ Combining the two previous results we obtain the following:
     Then, for every $j = 0, \ldots, N$,
     \begin{multline}
         \label{expectedestimateglobalerrorintegral}
-            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N \ell_X \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_X t_j}\right. \\
-            \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell_X t_j}.
+            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N \ell_x \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_x t_j}\right. \\
+            \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell_x t_j}.
     \end{multline}
 \end{proposition}
 
@@ -525,25 +525,25 @@ Combining the two previous results we obtain the following:
     Under the \cref{standinghypotheses1}, together with \eqref{LtLXbound}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
     Using \eqref{LtLXbound}, that inequality yields
     \[
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell_X \int_0^{t_j} (\mathbb{E}[M_s] + \ell_X\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell_x \int_0^{t_j} (\mathbb{E}[M_s] + \ell_x\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
     \]
     Thanks to \eqref{EX0strongbound} and \eqref{EMtstrongbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
     \begin{align*}
         \int_0^{t_j} & L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
-        & \leq \Delta t_N \ell_X \int_0^{t_j} \left(\mathbb{E}[M_s] + \ell_X\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_X s} \right)\;\mathrm{d}s \\
-        & \leq \Delta t_N \ell_X \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \ell_X \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_X s} \;\mathrm{d}s\right) \\
-        & = \Delta t_N \ell_X \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{\ell_X t_j} - 1\right) \right).
+        & \leq \Delta t_N \ell_x \int_0^{t_j} \left(\mathbb{E}[M_s] + \ell_x\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_x s} \right)\;\mathrm{d}s \\
+        & \leq \Delta t_N \ell_x \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \ell_x \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_x s} \;\mathrm{d}s\right) \\
+        & = \Delta t_N \ell_x \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{\ell_x t_j} - 1\right) \right).
     \end{align*}
     Thus,
     \begin{equation}
         \label{expectedestimatesecondterminglobalerrorintegral}
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell_X \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_X t_j}.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell_x \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell_x t_j}.
     \end{equation}
 
     Now we look at \cref{lembasicestimate}. Taking the expectation of the global error formula \eqref{Etjbasicbound} and using \eqref{LtLXbound} to bound the exponential term, we arrive at
     \begin{multline*}
         \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + \int_0^{t_j} L_s \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
-        \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell_X t_j}.
+        \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell_x t_j}.
     \end{multline*}
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
 \end{proof}
