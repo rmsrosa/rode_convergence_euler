@@ -286,7 +286,7 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 
 \section{Semi-martingale noises}
 
-Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$.
+For the theory of semi-martingales, we refer the reader to \cite{Protter2005}. Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem 47]{Protter2005}, a semi-martingale is characterized as a process $\{Y_t\}_{t\in I}$ which can be decomposable as a sum $Y_t = F_t + Z_t$ of an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$.
 
 An FV process, or Finite-Variation process, is a stochastic process whose sample paths are almost surely c\`adl\`ag paths of finite variation. A function defined on a real interval is called c\`adl\`ag when it is right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). Thus, an FV process $\{Y_t\}_{t\in I}$ is such that, for almost every $\omega\in \Omega$, and for each $t\in I$, $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous); $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limits exist), and $V(\{Y_t\}_{t\in I}; I) = \sup_{t_0 < \ldots < t_n \in I, n\in \mathbb{N}} \sum_{i=1}^n \|Y_{t_i} - Y_{t_{i-1}}\| < \infty$ (finite variation, also called bounded variation). For such a process, we define the left-limit process
 \begin{equation}
