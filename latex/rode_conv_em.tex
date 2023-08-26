@@ -324,9 +324,10 @@ and the jump process
 Almost surely, the sample paths of the jump process are zero except possibly at a countable number of points, denoted $J$, i.e. for almost every $\omega\in \Omega$, there exists a countable set $J(\omega) \subset I$ for which $\Delta Y_t(\omega)$ is zero on each connected component of $I\setminus J(\omega)$.
 
 In the case of finite variation, we also have
-\[
+\begin{equation}
+    \label{estimatejumpfv}
     \sum_{s\in J} \|\Delta Y_t\| \leq V(\{Y_t(\omega)\}_{t\in I}; I) < \infty.
-\]
+\end{equation}
 
 In the more general case of semi-martingale, then $\{Y_t\}_{t\in I}$ has finite quadratic variation \cite[Section II.6]{Protter2005} and we find that
 \[
@@ -373,7 +374,7 @@ The quadratic variation is a c\'agl\'ag, increasing, and adapted process \cite[T
 \]
 Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral.
 
-The class of local martingales include It\^o diffusion processes and time-changed Brownian motion, for example.
+The class of local martingales include It\^o diffusion processes and time-changed Brownian motion, for example. For It\^o diffusion, see also \cite{Oksendal2003}.
 
 \section{Integral formula for the global pathwise error}
 
@@ -447,7 +448,7 @@ Here we derive an estimate that is the basis for the specific estimates for each
     \end{equation}
 \end{lemma}
 
-We are now ready to start proving our basic estimate for the global pathwise error.
+With that, we are ready to start proving our basic estimate for the global pathwise error.
 \begin{lemma}
     \label{lembasicestimate}
     Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
@@ -566,10 +567,10 @@ Combining the two previous results we obtain the following:
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
 \end{proof}
 
-\section{Pathwise convergence for noises with c\`adl\`ag sample paths of finite variation}
+\section{Pathwise convergence for FV noises}
 \label{secmonotonicbound}
 
-Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`adl\`ag and with finite variation.
+Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost surely with sample paths that are c\`adl\`ag and with finite variation.
 
 \begin{theorem}
     \label{thmcadlagfv}
@@ -588,7 +589,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
         \label{ftfylineargrowthcadlagfv}
         \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\| + c_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\| + c_6\|y\|,
     \end{equation}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_5, c_6 \geq 0$. Assume, further, that the sample paths of $\{Y_t\}_{t\in I}$ are almost surely c\`adl\`ag with finite variation $V(\{Y_t\}_{t\in I}; I)$, on $I$. Then, the Euler scheme is pathwise convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_5, c_6 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is an FV process. Then, the Euler scheme is pathwise convergent of order 1, i.e.
     \begin{equation}
         \label{ordercadlagfv}
         \max_{j=0, \ldots, N} \left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\| \leq C(\omega) \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -625,7 +626,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
         & \qquad \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
     \end{align*}
 
-    The second term is similar, except that now we integrate with respect to a finite variation process:
+    The second term is similar, except that now we integrate with respect to a finite variation process, so it is a Lebesgue-Stieltjes integral:
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\right\| \\
         & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
@@ -643,7 +644,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
         \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
         \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} 2(c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\}\|\Delta Y_\xi\|\;\mathrm{d}s.
     \end{multline*}
-    Switching the order of the integral and the summation, we find
+    Switching the order of the integral and the summation and using \eqref{estimatejumpfv}, we find
     \begin{align*}
         & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
         & \qquad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t} 2(c_4 + c_5\|X_{\tau^N(s)}^N\| + c_6\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|\;\mathrm{d}s \\
@@ -672,7 +673,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
 \section{Strong converge for semi-martingale noises}
 \label{secsubmartingale}
 
-
+We now consider the more general case of a semi-martingale noise. In this case, we estimate the strong convergence.
 
 \begin{theorem}
     \label{thmsemimartingale}
@@ -684,7 +685,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
     \begin{equation}
         \mathbb{E}\left[\|X_0 - X_0^N\|\right] \leq c_0\Delta t,
     \end{equation}
-    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partia differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying
+    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying
     \begin{equation}
         \label{ftfylineargrowthsemimartingale}
         \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\|, \;\; \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\|, \;\; \left\|D_{yy} f(t, x, y)\right\| \leq c_7 + c_8\|x\|
@@ -716,7 +717,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
         \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}\xi.
     \]
 
-    For the second term in \eqref{smlasttermerror}, we use the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, which says that $\{Y_t\}_{t\in I}$, as any semi-martingale, can be decomposed as $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process (almost surely c\`adl\`ag paths of finite variation) and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
+    For the second term in \eqref{smlasttermerror}, we use the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, which says that $\{Y_t\}_{t\in I}$ can be decomposed as $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
     \begin{multline}
         \label{sm2}
         \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi \;\mathrm{d}s \\  
@@ -760,12 +761,6 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to have sample paths that are c\`a
         & \qquad \leq \frac{\Delta t}{2} \left(c_1 + c_2 \max_{i=0, \ldots, j}\|X_{t_i}^N\|\right) [Y, Y]_{t_j}^c.
     \end{align*}
 \end{proof}
-
-\section{The case of an It\^o process noise}
-
-Here, as explained in the Introduction, we assume the process given by $F_t = f(s, X_{\tau^N(s)}, Y_s)$ is an It\^o process, which, in applications, follows from the It\^o formula, assuming that $f=f(t, x, y)$ is sufficiently regular and that the noise $\{Y_t\}_{t\in I}$ is itself an It\^o process.
-
-We recall (see e.g. \cite[Chapter 4]{Oksendal2003}) that an It\^o process is a process $\{Z_t\}_{t\in I}$ of the form
 
 \section{Numerical examples}
 \label{secnumericalexamples}
