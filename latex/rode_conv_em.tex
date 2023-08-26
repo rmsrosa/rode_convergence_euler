@@ -57,7 +57,7 @@
 
 \date{\today}
 
-\thanks{The second author was partly supported by the Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ) and the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brasil (CAPES), finance code 001}
+\thanks{The second author was partly supported by the Laborat\'orio de Matem\'atica Aplicada, Instituto de Matem\'atica, Universidade Federal do Rio de Janeiro (LabMA/IM/UFRJ) and the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brasil, grant 001.}
 
 \makeatletter
 \@namedef{subjclassname@2020}{\textup{2020} Mathematics Subject Classification}
@@ -760,6 +760,7 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         & \qquad \leq \frac{\Delta t}{2}\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\|\right)\;\mathrm{d}[Y, Y]_\xi^c \\ 
         & \qquad \leq \frac{\Delta t}{2} \left(c_1 + c_2 \max_{i=0, \ldots, j}\|X_{t_i}^N\|\right) [Y, Y]_{t_j}^c.
     \end{align*}
+    Putting these estimates together we obtain ...
 \end{proof}
 
 \section{Numerical examples}
@@ -816,7 +817,7 @@ As for the implementation itself, all code is written in the Julia language \cit
 
 Julia has a feature-rich \texttt{DifferentialEquations.jl} ecosystem of packages for solving differential equations \cite{RackauckasNie2017}, including random and stochastic differential equations, as well as delay equations, differential-algebraic equations, jump diffusions, partial differential equations, neural differential equations, and so on. It also has packages to seemlessly compose such equations in optimization problems, Bayesian parameter estimation, global sensitivity analysis, uncertainty quantification, and domain specific applications.
 
-Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented here, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, so that the reviewing process for checking the accuracy of the implementation becomes easier. All the source code for the numerical simulations presented below are in a Github repository \cite{RODEConvEM2023}.
+Although all the source code for \texttt{DifferentialEquations.jl} is publicly available, it involves a quite large ecosystem of packages, with an intricate interplay between them. Hence, for the numerical results presented here, we chose to implement our own routines, with a minimum set of methods necessary for the convergence estimates. This is done mostly for the sake of transparency, so that the reviewing process for checking the accuracy of the implementation becomes easier. All the source code for the numerical simulations presented below are in a github repository \cite{RODEConvEM2023}.
 
 \subsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
@@ -973,13 +974,9 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figsamplepathsallnoises}
 \end{figure}
 
-The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
+The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. The geometric Brownian motion is also expected to yield strong order 1 convergence thanks to the results in \cite{WangCaoHanKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
 Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in $\{\mathbf{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
-
-As for the geometric Brownian motion process, it is worth saying that its state at a given time $t$ depends solely on $t$ and on the state of an associated Wiener process at time $t$, so that the RODE can be transformed into another RODE with an additive noise. However, the corresponding nonlinear term does not have a global Lipschitz bound, so the strong order 1 does not follow from that. Our results, however, apply without further assumptions.
-
-Finally, the homogeneous linear It\^o process is a multiplicative noise whose state at time $t$ cannot be written explicitly as a function of $t$ and $W_t.$ It requires the previous history $W_s$ of the associated Wiener process, for $0\leq s \leq t,$ hence the associated RODE cannot be transformed into a RODE with additive noise.
 
 \subsection{Fractional Brownian motion noise}
 \label{secfBmnoise}
@@ -1171,7 +1168,7 @@ More specifically, $\{\Lambda_t\}_{t \geq 0}$ is given by
 \[
     \Lambda_t = \gamma (1 + \varepsilon \sin(G_t)),
 \]
-where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise, thus the convergence would not be expected to be of strong order 1 based on previous works.
+where $\gamma > 0,$ $0 < \varepsilon < 1,$ and $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion (gBm) process. A Wiener process is a natural choice, but we choose a gBm process instead since it is a multiplicative noise.
 
 The harvest term $\{H_t\}_{t\geq 0}$ is a ``Poisson step'' process of the form
 \[
@@ -1527,7 +1524,7 @@ and a given a initial condition
 
 The unknown $u(t, x)$ represents the density of a given quantity at time $t$ and point $x$; $D$ is a diffusivity coefficient; $\lambda$ is a reaction, or proliferation, coefficient; and $u_m$ is a carrying capacity density coefficient.
 
-The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random wave trains of incoming populations. More precisely, $Y_t = H_t O_t$, where $\{H_t\}_t$ is a Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 0.3$, exponential decay rate $\delta = 5.0$, and jump law following an exponential distribution with scale $\theta = 1/1.8;$ and $\{O_t\}_t$ is an Orstein-Uhlenbeck process with $O_0 = 0.0,$ time-scale $\tau = 0.005$, drift $\nu = 1/\tau$ and diffusion $\sigma = \tilde \sigma/\tau,$ where $\tilde\sigma = 0.1.$
+The random process $\{Y_t\}_t$, which drives the flux on the left boundary point, is taken to be a colored noise modulated by an exponentially decaying Hawkes process, representing random wave trains of incoming populations. More precisely, $Y_t = H_t O_t$, where $\{H_t\}_t$ is a Hawkes process with initial rate $\lambda_0 = 3.0$, base rate $a = 0.3$, exponential decay rate $\delta = 5.0$, and jump law following an exponential distribution with scale $\theta = 1/1.8;$ and $\{O_t\}_t$ is an Orstein-Uhlenbeck process with $O_0 = 0.0,$ time-scale $\tau = 0.005$, drift $\nu = 1/\tau$ and diffusion $\sigma = \tilde \sigma/\tau,$ where $\tilde\sigma = 0.1.$ Since both $\{H_t\}_t$ and $\{O_t\}_t$ are semi-martingales and the class of semi-martingales is an algebra \cite[Corollary II.3]{Protter2005}, the modulated process $\{Y_t\}_t$ is also a semi-martingale.
 
 This equation displays traveling wave solutions with a minimum wave speed of $2 \sqrt{\lambda \mu}$. We choose $\lambda = 10$ and $\mu= 0.009$, so the limit traveling speed is about $0.6$. The carrying capacity is set to $u_m = 1.0$.
 
