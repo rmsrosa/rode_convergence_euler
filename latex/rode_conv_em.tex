@@ -106,7 +106,7 @@ We are mostly interested in the order of \emph{strong} convergence, i.e. the app
 \end{equation}
 where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, where  
 \begin{equation}
-    \label{strongordertheta}
+    \label{pathwiseordertheta}
     \max_{j=0, \ldots, N}\left\| X_{t_j} - X_{t_j}^N \right\| \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
 almost surely, for a random variable $C=C(\omega)$ on $\Omega$.
@@ -195,7 +195,7 @@ We start with a fundamental set of conditions that imply the existence and uniqu
         \item \label{standinghypothesesLipschitzbound} The mapping $x \mapsto f(t, x, Y_t)$ is almost surely globally Lipschitz continuous on $x$, for every $t\in I$, with
         \begin{equation}
             \label{Ltassumptionbasic}
-            \|f(t, x_1, Y_t) - f(t, x_2, Y_t)\| \leq L_t \|x_1 - x_2\|, \quad \forall t \in I, \;\forall x_1, x_2 \in\mathbb{R}^k,
+            \|f(t, x_1, Y_t) - f(t, x_2, Y_t)\| \leq L_t \|x_1 - x_2\|, \quad \forall t \in I, \;\forall x_1, x_2 \in\mathbb{R}^d,
         \end{equation}
         for a non-negative stochastic process $\{L_t\}_{t\in I}$ with Lebesgue integrable sample paths $t\mapsto L_t(\omega)$ on $I$.
         
