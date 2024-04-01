@@ -104,7 +104,7 @@ We are mostly interested in the order of \emph{strong} convergence, i.e. the app
     \label{strongordertheta}
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 \end{equation}
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is the norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, where  
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$, and $\|\cdot\|$ is a norm in the appropriate phase space. The strong convergence is considered in the case of an arbitrary semi-martingale noise. For the particular case of a finite-variation noise (FV process), we also consider the \emph{pathwise convergence of order $\theta$}, where  
 \begin{equation}
     \label{pathwiseordertheta}
     \max_{j=0, \ldots, N}\left\| X_{t_j} - X_{t_j}^N \right\| \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
@@ -229,15 +229,12 @@ Using Grownwall's inequality and the assumptions that $\{M_t\}_{t\in I}$ and $\{
 This is a useful pathwise estimate. For a strong norm estimate, though, we need to assume more, as in the following result.
 \begin{lemma}
     Under the \cref{standinghypotheses1}, suppose further that
-    \begin{equation}
+    \begin{align}
         \label{EX0strongbound}
-        \mathbb{E}[\|X_0\|] < \infty
-    \end{equation}
-    and
-    \begin{equation}
+        \mathbb{E}[\|X_0\|] & < \infty, \\
         \label{EMtstrongbound}
-        \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty,
-    \end{equation}
+        \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s & < \infty,
+    \end{align}
     and that $\{L_t\}_{t\in I}$ is essentially bounded on $t\in I$ and $\Omega,$ i.e. there exists a constant $c_L \geq 0$ such that
     \begin{equation}
         \label{LtLXbound}
@@ -255,7 +252,7 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 \end{proof}
 
 \begin{remark}
-    More generally, since $t\mapsto X_t$ is absolutely continuous almost surely, we are allowed to take the derivative of $\|X_t\|^\beta$ for an arbitrary power $\beta \geq 1$ to find that
+    More generally, since $t\mapsto X_t$ is absolutely continuous almost surely, and assuming $\|\cdot\|$ is the Euclidian norm with the scalar product denote with a dot, we are allowed to take the derivative of $\|X_t\|^\beta$ for an arbitrary power $\beta \geq 1$ to find that
     \[
         \|X_t\|^\beta = \|X_0\|^\beta + q\int_0^t \|X_s\|^{\beta-2}X_s \cdot f(t, X_s, Y_s)\;\mathrm{d}s.
     \]
@@ -381,7 +378,7 @@ Iterating this relation we obtain the following bound.
     \label{XNtboundLXMtpre}
     \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} M_{t_i}\right)e^{\Delta t_N \sum_{i=0}^{j-1} L_{t_i}}, \quad \forall j = 0, \ldots, N.
 \end{equation}
-The right hand side, however, depends on the time mesh, so we need to estimate it properly. A straighforward estimate is obtained from assuming suitable uniform bounds on $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I},$ as follows.
+The right hand side, however, depends on the time mesh, so we need to estimate it properly. A straighforward estimate is obtained from assuming suitable uniform bounds on $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}.$
 \begin{lemma}
     \label{lemXNtboundLXMt}
     Under the \cref{standinghypotheses1}, assume moreover that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded on $I$, almost surely, i.e. there exist random variables $C_L=C_L(\omega)$ and $C_M=C_M(\omega)$ such that
@@ -398,18 +395,16 @@ The right hand side, however, depends on the time mesh, so we need to estimate i
     \end{equation}
     \qed
 \end{lemma}
-The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need the following estimate.
+The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need a stronger condition on $\{L_t\}_{t\in I}$, such as in the following result.
 \begin{lemma}
     \label{lemXNtmeanboundLXMt}
-    Under the \cref{standinghypotheses1}, assume moreover that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{LtLXbound} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
+    Under the \cref{standinghypotheses1}, assume moreover that \eqref{LtLXbound} and \eqref{esssuponMt} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
     \begin{equation}
         \label{XNtmeanboundLXMt}
-        \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \int_0^{t_j}\mathbb{E}[M_s]\;\mathrm{d}s \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
+        \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] t_j \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
     \end{equation}
     \qed
 \end{lemma}
-
-\comment{It remains to properly estimate concerning the $M_s$ term in \eqref{XNtmeanboundLXMt}}
 
 \section{Integral formula for the global pathwise error}
 
@@ -609,12 +604,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
 
 \begin{theorem}
     \label{thmcadlagfv}
-    Under the \cref{standinghypotheses1}, suppose also that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ i.e.
-    \begin{equation}
-        \label{Ltboundedas}
-        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq C_L(\omega),
-    \end{equation}
-    for a random variable $C_L=C_L(\omega)$ which is finite almost surely; that $X_0^N$ is a pathwise first order approximation of $X_0,$ i.e.
+    Under the \cref{standinghypotheses1}, suppose also that \eqref{esssuponLt} and \eqref{esssuponMt} hold; that $X_0^N$ is a first order approximation of $X_0,$ in the sense that
     \begin{equation}
         \label{X0conv}
         \|X_0(\omega) - X_0^N(\omega)\| \leq C_0(\omega)\Delta t_N,
