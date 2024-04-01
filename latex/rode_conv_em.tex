@@ -518,10 +518,10 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
-    Under the \cref{standinghypotheses1} and assuming moreover that $t \mapsto L_t$ is bounded almost surely, we find that
+    Under the \cref{standinghypotheses1} and assuming moreover that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ as in \eqref{esssuponLtMt}, we find that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
-        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N \left(\sup_{0\leq t \leq T} L_t \right)\int_0^{t_j} (M_s + L_s\|X_s\|) \;\mathrm{d}s.
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N C_L \int_0^{t_j} (M_s + L_s\|X_s\|) \;\mathrm{d}s.
     \end{equation}
 \end{lemma}
 
@@ -535,9 +535,9 @@ As for the second term, which only concerns the solution itself, not the approxi
         \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + c_L\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
         & = \int_0^{t_j}(M_\xi + L_\xi\|X_\xi\|) \int_\xi^{\tau^N(\xi) + \Delta t_N} L_s\;\mathrm{d}s \;\mathrm{d}\xi.
     \end{align*}
-    Using that $t \mapsto L_t$ is bounded almost surely, we find that
+    Using that $\{L_t\}_{t\in I}$ is essentially bounded, almost surely, we find that
     \[
-        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) \left(\sup_{0\leq t \leq T} L_t \right)(M_\xi + L_s\|X_\xi\|) \;\mathrm{d}\xi
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \int_0^{t_j} (\tau^N(\xi) + \Delta t_N - \xi) C_L(M_\xi + L_s\|X_\xi\|) \;\mathrm{d}\xi
     \]
     Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are nonnegative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N,$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}.
 \end{proof}
@@ -650,11 +650,11 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
 
     The second term is similar, except that now we integrate with respect to a finite variation process, so it is a Lebesgue-Stieltjes integral,
     \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
-        & \qquad \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\| \\
-        & \qquad \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \left(\|X_0\| + C_0\Delta t_N + C_M \xi \right)e^{C_L \xi} + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|.
+        \bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\bigg\| \\
+        & \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
+        & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
+        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\| \\
+        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \left(\|X_0\| + C_0\Delta t_N + C_M \xi \right)e^{C_L \xi} + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}Y_\xi\|.
     \end{align*}
 
     For the third term, we have
