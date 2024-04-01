@@ -137,8 +137,8 @@ for $j = 1, \ldots, N,$ where $\tau^N(t) = \max_{t_j \leq t} t_j$ is a piecewise
 The first term vanishes due to the initial condition $X_0^N = X_0$. The second term only depends on the solution and can be estimated with natural regularity conditions on the term $f=f(t, x, y)$. The third term is handled solely with the typical required condition on $f=f(t, x, y)$ of being globally Lipschitz continuous with respect to $x$. With those, we obtain the following basic bound for the global error (see \cref{lembasicestimate})
 \begin{multline}
     \label{Etjbasicboundintro}
-        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \ell \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
-        \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{\ell t_j}.
+        \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + c_L \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
+        \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{c_L t_j}.
 \end{multline}
 
 The only problematic, noise-sensitive term is the last one. The classical analysis is to use an assumed $\theta$-H\"older regularity of the noise sample paths and estimate the local error as
@@ -238,15 +238,15 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
         \label{EMtstrongbound}
         \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s < \infty,
     \end{equation}
-    and that $\{L_t\}_{t\in I}$ is essentially bounded on $\Omega,$ uniformly on $I$, i.e. there exists a constant $\ell > 0$ such that
+    and that $\{L_t\}_{t\in I}$ is essentially bounded on $t\in I$ and $\Omega,$ i.e. there exists a constant $c_L \geq 0$ such that
     \begin{equation}
         \label{LtLXbound}
-        L_t \leq \ell, \quad  t\in I,
+        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq c_L,
     \end{equation}
-    almost surely. Then
+    for almost all $\omega\in \Omega.$ Then
     \begin{equation}
         \label{EXtstrongbound}
-        \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{\ell t}, \quad t\in I.
+        \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{c_L t}, \quad t\in I.
     \end{equation}
 \end{lemma}
 
@@ -278,7 +278,7 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
     then the following strong norm estimate holds,
     \begin{equation}
         \label{EXtstrongboundbeta}
-        \mathbb{E}[\|X_t\|^\beta] \leq \left(\mathbb{E}[\|X_0\|^\beta] + \int_0^t \mathbb{E}[M_s^\beta]\;\mathrm{d}s\right) e^{((\beta - 1) + \beta \ell) t}, \quad t\in I.
+        \mathbb{E}[\|X_t\|^\beta] \leq \left(\mathbb{E}[\|X_0\|^\beta] + \int_0^t \mathbb{E}[M_s^\beta]\;\mathrm{d}s\right) e^{((\beta - 1) + \beta c_L) t}, \quad t\in I.
     \end{equation}
 \end{remark}
 
@@ -363,7 +363,7 @@ Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a
 
 The class of local martingales include It\^o diffusion processes and time-changed Brownian motion, for example. For It\^o diffusion, see also \cite{Oksendal2003}.
 
-\section{Bound on the pathwise approximation}
+\section{Bound on the pathwise approximations}
 \label{secpathwiseapproximation}
 
 We also need estimates for the Euler approximation \eqref{emscheme}, analogous to \eqref{XtboundLXMt}. Notice that
@@ -381,13 +381,18 @@ Iterating this relation we obtain the following bound.
     \label{XNtboundLXMtpre}
     \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} M_{t_i}\right)e^{\Delta t_N \sum_{i=0}^{j-1} L_{t_i}}, \quad \forall j = 0, \ldots, N.
 \end{equation}
-The right hand side, however, depends on the time mesh, so we need to estimate it properly. A straighforward estimate is obtained from assuming that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded.
+The right hand side, however, depends on the time mesh, so we need to estimate it properly. A straighforward estimate is obtained from assuming suitable uniform bounds on $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I},$ as follows.
 \begin{lemma}
     \label{lemXNtboundLXMt}
-    Under the \cref{standinghypotheses1}, assume moreover that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded, uniformly on $I$. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
+    Under the \cref{standinghypotheses1}, assume moreover that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded on $I$, almost surely, i.e. there exist random variables $C_L=C_L(\omega)$ and $C_M=C_M(\omega)$ such that
+    \begin{equation}
+        \label{esssuponLtMt}
+        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq C_L(\omega), \quad \operatorname{ess\,sup}_{t\in I} M_t(\omega) \leq C_M(\omega),
+    \end{equation}
+    for almost all $\omega\in\Omega$. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
     \begin{equation}
         \label{XNtboundLXMt}
-        \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \left(\operatorname{ess\;sup}_{t \in I} M_t \right) t_j \right)e^{\left(\operatorname{ess\;sup}_{t \in I} L_t \right) t_j}, \quad \forall j = 0, \ldots, N.
+        \|X_{t_j}^N\| \leq \left(\|X_0^N\| + C_M t_j \right)e^{C_L t_j}, \quad \forall j = 0, \ldots, N.
     \end{equation}
     \qed
 \end{lemma}
@@ -527,7 +532,7 @@ As for the second term, which only concerns the solution itself, not the approxi
     \]
     Integrating over $[0, t_j]$ and using Fubini's theorem to exchange the order of integration,
     \begin{align*}
-        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + \ell\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
+        \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s & \leq \int_0^{t_j}L_s\int_{\tau^N(s)}^s (M_\xi + c_L\|X_\xi\|) \;\mathrm{d}\xi \;\mathrm{d}s \\
         & = \int_0^{t_j}(M_\xi + L_\xi\|X_\xi\|) \int_\xi^{\tau^N(\xi) + \Delta t_N} L_s\;\mathrm{d}s \;\mathrm{d}\xi.
     \end{align*}
     Using that $t \mapsto L_t$ is bounded almost surely, we find that
@@ -549,8 +554,8 @@ Combining the two previous results we obtain the following:
     Then, for every $j = 0, \ldots, N$,
     \begin{multline}
         \label{expectedestimateglobalerrorintegral}
-            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N \ell \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell t_j}\right. \\
-            \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell t_j}.
+            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}\right. \\
+            \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{c_L t_j}.
     \end{multline}
 \end{proposition}
 
@@ -560,25 +565,25 @@ Combining the two previous results we obtain the following:
     Under the \cref{standinghypotheses1}, together with \eqref{LtLXbound}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
     Using \eqref{LtLXbound}, that inequality yields
     \[
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell \int_0^{t_j} (\mathbb{E}[M_s] + \ell\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N c_L \int_0^{t_j} (\mathbb{E}[M_s] + c_L\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
     \]
     Thanks to \eqref{EX0strongbound} and \eqref{EMtstrongbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
     \begin{align*}
         \int_0^{t_j} & L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
-        & \leq \Delta t_N \ell \int_0^{t_j} \left(\mathbb{E}[M_s] + \ell\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell s} \right)\;\mathrm{d}s \\
-        & \leq \Delta t_N \ell \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \ell \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell s} \;\mathrm{d}s\right) \\
-        & = \Delta t_N \ell \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{\ell t_j} - 1\right) \right).
+        & \leq \Delta t_N c_L \int_0^{t_j} \left(\mathbb{E}[M_s] + c_L\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L s} \right)\;\mathrm{d}s \\
+        & \leq \Delta t_N c_L \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + c_L \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L s} \;\mathrm{d}s\right) \\
+        & = \Delta t_N c_L \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{c_L t_j} - 1\right) \right).
     \end{align*}
     Thus,
     \begin{equation}
         \label{expectedestimatesecondterminglobalerrorintegral}
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N \ell \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{\ell t_j}.
+        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}.
     \end{equation}
 
     Now we look at \cref{lembasicestimate} and put the pieces together. Taking the expectation of the global error formula \eqref{Etjbasicbound} and using \eqref{LtLXbound} to bound the exponential term, we arrive at
     \begin{multline*}
         \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + \int_0^{t_j} L_s \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
-        \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{\ell t_j}.
+        \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{c_L t_j}.
     \end{multline*}
     Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
 \end{proof}
@@ -590,17 +595,17 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
 
 \begin{theorem}
     \label{thmcadlagfv}
-    Under the \cref{standinghypotheses1}, suppose also that
+    Under the \cref{standinghypotheses1}, suppose also that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ i.e.
     \begin{equation}
         \label{Ltboundedas}
-        t \mapsto L_t \textrm{ is bounded almost surely};
+        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq C_L(\omega),
     \end{equation}
-    that 
+    for a random variable $C_L=C_L(\omega)$ which is finite almost surely; that $X_0^N$ is a pathwise first order approximation of $X_0,$ i.e.
     \begin{equation}
         \label{X0conv}
-        \|X_0 - X_0^N\| \leq C_0\Delta t,
+        \|X_0(\omega) - X_0^N(\omega)\| \leq C_0(\omega)\Delta t,
     \end{equation}
-    for a random variable $C_0$ which is finite almost surely; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with differentials $\partial_t f$ and $D_y f$ with at most linear growth in $x$ and $y$, i.e.
+    for a random variable $C_0=C_0(\omega)$ which is finite almost surely; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is continuously differentiable in $(t, y)$, with differentials $\partial_t f$ and $D_y f$ with at most linear growth in $x$ and $y$, i.e.
     \begin{equation}
         \label{ftfylineargrowthcadlagfv}
         \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\| + c_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\| + c_6\|y\|,
@@ -625,16 +630,21 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         & + \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right).
     \end{align*}
     
-    For the first term, we have, using \eqref{ftfylineargrowthcadlagfv},
-    \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s.
-    \end{align*}
+    For the first term above, we have, using \eqref{ftfylineargrowthcadlagfv},
+    \begin{multline*}
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s.
+    \end{multline*}
     Exchanging the order of integration,
-    \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
-    \end{align*}
+    \begin{multline*}
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
+    \end{multline*}
+    Using the bound \eqref{XNtboundLXMt} on the pathwise approximation, we obtain
+    \begin{multline*}
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t} \left(c_1 + c_2 \left(\|X_0^N\| + C_M t_j \right)e^{C_L t_j} + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
+    \end{multline*}
     For $s$ within $\xi \leq s < \tau^N(\xi) + \Delta t$, we have $\tau^N(s) = \tau^N(\xi)$. Moreover, $\tau^N(\xi) + \Delta t - \xi \leq \Delta t$. Hence
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
@@ -670,11 +680,11 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
     \end{align*}
     Putting the estimates together, we find that
     \[
-        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\| \leq \tilde C \Delta t,
+        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\| \leq \tilde C_N \Delta t,
     \]
-    where $\tilde C$ is the random variable
+    where $\tilde C_N$ is the random variable
     \begin{multline}
-        \tilde C = \int_0^T \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{s^-}\|\right)\;\mathrm{d}s \\
+        \tilde C_N = \int_0^T \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{s^-}\|\right)\;\mathrm{d}s \\
         + \int_0^T \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{s^-}\|\right)\;\|\mathrm{d}Y_s\| \\
         + 2\left(c_4 + c_5\max_{i=0, \ldots, N}\|X_i^N\| + c_6\sup_{0\leq s \leq T}\|Y_s\|\right) V(\{Y_t\}_{t\in I}; [0, t_j]).
     \end{multline}
