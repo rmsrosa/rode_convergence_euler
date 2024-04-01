@@ -366,7 +366,7 @@ The class of local martingales include It\^o diffusion processes and time-change
 \section{Bound on the pathwise approximations}
 \label{secpathwiseapproximation}
 
-We also need estimates for the Euler approximation \eqref{emscheme}, analogous to \eqref{XtboundLXMt}. Notice that
+We also need estimates for the Euler approximation \eqref{emscheme} analogous to \eqref{XtboundLXMt} and \eqref{EXtstrongbound}. Notice that
 \begin{align*}
     \|X_{t_j}^N\| & \leq \|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}})\| \\
     & \leq \|X_{t_{j-1}}^N\| + \Delta t_N (M_{t_{j-1}} + L_{t_{j-1}}\|X_{t_{j-1}}\|) \\
@@ -385,10 +385,12 @@ The right hand side, however, depends on the time mesh, so we need to estimate i
 \begin{lemma}
     \label{lemXNtboundLXMt}
     Under the \cref{standinghypotheses1}, assume moreover that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded on $I$, almost surely, i.e. there exist random variables $C_L=C_L(\omega)$ and $C_M=C_M(\omega)$ such that
-    \begin{equation}
-        \label{esssuponLtMt}
-        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq C_L(\omega), \quad \operatorname{ess\,sup}_{t\in I} M_t(\omega) \leq C_M(\omega),
-    \end{equation}
+    \begin{align}
+        \label{esssuponLt}
+        \operatorname{ess\,sup}_{t\in I} L_t(\omega) & \leq C_L(\omega), \\
+        \label{esssuponMt}
+        \operatorname{ess\,sup}_{t\in I} M_t(\omega) & \leq C_M(\omega),
+    \end{align}
     for almost all $\omega\in\Omega$. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
     \begin{equation}
         \label{XNtboundLXMt}
@@ -396,6 +398,18 @@ The right hand side, however, depends on the time mesh, so we need to estimate i
     \end{equation}
     \qed
 \end{lemma}
+The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need the following estimate.
+\begin{lemma}
+    \label{lemXNtmeanboundLXMt}
+    Under the \cref{standinghypotheses1}, assume moreover that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, and \eqref{LtLXbound} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
+    \begin{equation}
+        \label{XNtmeanboundLXMt}
+        \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \int_0^{t_j}\mathbb{E}[M_s]\;\mathrm{d}s \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
+    \end{equation}
+    \qed
+\end{lemma}
+
+\comment{It remains to properly estimate concerning the $M_s$ term in \eqref{XNtmeanboundLXMt}}
 
 \section{Integral formula for the global pathwise error}
 
@@ -518,7 +532,7 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
-    Under the \cref{standinghypotheses1} and assuming moreover that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ as in \eqref{esssuponLtMt}, we find that
+    Under the \cref{standinghypotheses1} and assuming moreover that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ as in \eqref{esssuponLt}, we find that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N C_L \int_0^{t_j} (M_s + L_s\|X_s\|) \;\mathrm{d}s.
@@ -542,19 +556,19 @@ As for the second term, which only concerns the solution itself, not the approxi
     Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are nonnegative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N,$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}.
 \end{proof}
 
-Combining the two previous results we obtain the following:
+The basic estimate \cref{lembasicestimate}, in combination with \cref{lemestimatesecondterminglobalerror}, will be used in \cref{secmonotonicbound} to yield the pathwise convergence in the case of FV noises, for which the third term in \eqref{Etjbasicbound} will be estimated accordingly. For the strong convergence, in the more general case of semi-martingale noises, we need a different version of the basic estimate.
 
 \begin{proposition}
     \label{propbasicestimate}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound} and \eqref{LtLXbound} hold and that, for some constant $C_0 \geq 0$, 
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound} and \eqref{LtLXbound} hold and that, for some constant $c_0 \geq 0$, 
     \begin{equation}
         \label{EX0X0N}
-        \mathbb{E}[\|X_0 - X_0^N\|] \leq C_0 \Delta t_N, \qquad N\in \mathbb{N}.
+        \mathbb{E}[\|X_0 - X_0^N\|] \leq c_0 \Delta t_N, \qquad N\in \mathbb{N}.
     \end{equation}
     Then, for every $j = 0, \ldots, N$,
     \begin{multline}
         \label{expectedestimateglobalerrorintegral}
-            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( C_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}\right. \\
+            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}\right. \\
             \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{c_L t_j}.
     \end{multline}
 \end{proposition}
@@ -703,15 +717,7 @@ We now consider the more general case of a semi-martingale noise. In this case, 
 
 \begin{theorem}
     \label{thmsemimartingale}
-    Under the \cref{standinghypotheses1}, suppose also that
-    \begin{equation}
-        t \mapsto L_t \textrm{ is bounded almost surely};
-    \end{equation}
-    that 
-    \begin{equation}
-        \mathbb{E}\left[\|X_0 - X_0^N\|\right] \leq c_0\Delta t_N,
-    \end{equation}
-    for a constant $c_0 \geq 0$; and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{LtLXbound} and \eqref{EX0X0N} hold, and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
     \begin{equation}
         \label{ftfylineargrowthsemimartingale}
         \left\|D_{yy} f(t, x, y)\right\| \leq c_7 + c_8\|x\| + c_9\|y\|,
