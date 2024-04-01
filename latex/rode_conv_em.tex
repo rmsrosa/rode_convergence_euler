@@ -182,7 +182,7 @@ which, upon taking the expectation of the absolute value, yields a strong conver
 
 Many other examples are included and also presented in more details in the github repository \cite{RODEConvEM2023}, such as a logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process and with an extra point-process random term representing harvest; a toggle-switch model of gene expression (similar to \cite[Section 7.8]{Asai2016}, originated from \cite{VerdCrombachJaeger2014}, see also \cite{StrasserTheisMarr2012}) driven by a combination of a compound Poisson point process and an It\^o process, illustrating, again, the two main types of noises considered here; a mechanical structure model driven by a random disturbance simulating seismic ground-motion excitations in the form of a transport process, inspired by the Bogdanoff-Goldberg-Bernard model in \cite{BogdanoffGoldbergBernard1961} (see also \cite[Chapter 18]{NeckelRupp2013}, \cite{HousnerJenning1964}, and \cite{Kanai1957}, with this and other models, such as the ubiquotous Kanai-Tajimi and Clough-Penzien colored-noise models); an actuarial risk model for the surplus of an insurance company, inspired by \cite{GerberShiu1998} and \cite{BrigoMercurio2006}; and a Fisher-KPP partial differential equation with random boundary conditions, as inspired by the works of \cite{SalakoShen2020} and \cite{FreidlinWentzell1992} (see also \cite{Fisher1937} and \cite{KPP1937}), and where the noise is a colored noise modulated by a decaying self-exciting Hawkes point process.
 
-\section{Pathwise solutions}
+\section{Pathwise solutions and main assumptions}
 \label{secpathwisesolution}
 
 For the notion and main results on pathwise solutions for RODEs, we refer the reader to \cite[Section 2.1]{HanKloeden2017} and \cite[Section 3.3]{NeckelRupp2013}.
@@ -226,21 +226,37 @@ Using Grownwall's inequality and the assumptions that $\{M_t\}_{t\in I}$ and $\{
     \qed
 \end{lemma}
 
-This is a useful pathwise estimate. For a strong norm estimate, though, we need to assume more, as in the following result.
+This is a useful pathwise estimate on its own. For the convergence results, however, we will need further assumptions, as indicated below.
+
+For the pathwise convergence, for instance, we assume that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded on $I$, almost surely on $\Omega,$ i.e. there exist random variables $C_L=C_L(\omega)$ and $C_M=C_M(\omega)$ such that
+\begin{align}
+    \label{esssuponLt}
+    \operatorname{ess\,sup}_{t\in I} L_t(\omega) & \leq C_L(\omega), \\
+    \label{esssuponMt}
+    \operatorname{ess\,sup}_{t\in I} M_t(\omega) & \leq C_M(\omega),
+\end{align}
+for almost all $\omega\in\Omega$, with $C_L$ and $C_M$ finite almost everywhere on $\Omega.$ The initial condition $X_0=X_0(\omega)$ is also assumed to be finite almost everywhere on $\Omega.$
+
+For the strong converge, we assume, moreover, that $C_L$ is essentially bounded on $\Omega$ and that $C_M$ and $X_0$ have finite expectation, i.e. there exists a constant $c_L \geq 0$ such that
+\begin{equation}
+    \label{LtLXbound}
+    \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq c_L,
+\end{equation}
+for almost all $\omega\in \Omega,$
+\begin{equation}
+    \label{CMmeanbound}
+    \mathbb{E}\left[C_M\right] < \infty,
+\end{equation}
+and
+\begin{equation}
+    \label{EX0strongbound}
+    \mathbb{E}[\|X_0\|] < \infty,
+\end{equation}
+
+
 \begin{lemma}
-    Under the \cref{standinghypotheses1}, suppose further that
-    \begin{align}
-        \label{EX0strongbound}
-        \mathbb{E}[\|X_0\|] & < \infty, \\
-        \label{EMtstrongbound}
-        \int_0^T \mathbb{E}[M_s] \;\mathrm{d}s & < \infty,
-    \end{align}
-    and that $\{L_t\}_{t\in I}$ is essentially bounded on $t\in I$ and $\Omega,$ i.e. there exists a constant $c_L \geq 0$ such that
-    \begin{equation}
-        \label{LtLXbound}
-        \operatorname{ess\,sup}_{t\in I} L_t(\omega) \leq c_L,
-    \end{equation}
-    for almost all $\omega\in \Omega.$ Then
+    \label{lemstrongbound}
+    Under the \cref{standinghypotheses1}, assume that \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound} and \eqref{EX0strongbound} hold. Then
     \begin{equation}
         \label{EXtstrongbound}
         \mathbb{E}[\|X_t\|] \leq \left(\mathbb{E}[\|X_0\|] + \int_0^t \mathbb{E}[M_s]\;\mathrm{d}s\right) e^{c_L t}, \quad t\in I.
@@ -250,6 +266,10 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 \begin{proof}
     Thanks to \eqref{XtboundLXMt} and the above assumptions, the result is straightfoward.
 \end{proof}
+
+\begin{remark}
+    The conditions \eqref{esssuponMt} and \eqref{CMmeanbound} are a bit stronger. A good bound is already obtained by simply imposing that the expectation $\mathbb{E}\left[M_t\right]$ be integrable. But since these conditions will be used for the corresponding bound on the approximate solutions, we just use those.
+\end{remark}
 
 \begin{remark}
     More generally, since $t\mapsto X_t$ is absolutely continuous almost surely, and assuming $\|\cdot\|$ is the Euclidian norm with the scalar product denote with a dot, we are allowed to take the derivative of $\|X_t\|^\beta$ for an arbitrary power $\beta \geq 1$ to find that
@@ -280,11 +300,11 @@ This is a useful pathwise estimate. For a strong norm estimate, though, we need 
 \end{remark}
 
 \begin{remark}
-    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are almost surely continuous except on a set of Lebesgue measure zero, then the integrand in \eqref{integralrodeform} is almost surely continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
+    In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the conditions \eqref{esssuponMt} and \eqref{CMmeanbound} in \cref{lemstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. We leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
 \end{remark}
 
 \begin{remark}
-    In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the second condition \eqref{EMtstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. More generally, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. We leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
+    When $f=f(t, x, y)$ is continuous on all three variables, as well as uniformly globally Lipschitz continuous in $x$, and the sample paths of $\{Y_t\}_{t\geq 0}$ are almost surely continuous except on a set of Lebesgue measure zero, then the integrand in \eqref{integralrodeform} is almost surely continuous in $t$ and the integral becomes a Riemann integral. In this case, the integral form \eqref{integralrodeform} of the pathwise solutions of \eqref{rodeeq} holds in the Riemann sense.
 \end{remark}
 
 \section{Semi-martingale noises}
@@ -381,24 +401,17 @@ Iterating this relation we obtain the following bound.
 The right hand side, however, depends on the time mesh, so we need to estimate it properly. A straighforward estimate is obtained from assuming suitable uniform bounds on $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}.$
 \begin{lemma}
     \label{lemXNtboundLXMt}
-    Under the \cref{standinghypotheses1}, assume moreover that $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}$ are essentially bounded on $I$, almost surely, i.e. there exist random variables $C_L=C_L(\omega)$ and $C_M=C_M(\omega)$ such that
-    \begin{align}
-        \label{esssuponLt}
-        \operatorname{ess\,sup}_{t\in I} L_t(\omega) & \leq C_L(\omega), \\
-        \label{esssuponMt}
-        \operatorname{ess\,sup}_{t\in I} M_t(\omega) & \leq C_M(\omega),
-    \end{align}
-    for almost all $\omega\in\Omega$. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
+    Under the \cref{standinghypotheses1}, assume moreover conditions \eqref{esssuponLt} and \eqref{esssuponMt} on $\{L_t\}_{t\in I}$ and $\{M_t\}_{t\in I}.$ Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
     \begin{equation}
         \label{XNtboundLXMt}
         \|X_{t_j}^N\| \leq \left(\|X_0^N\| + C_M t_j \right)e^{C_L t_j}, \quad \forall j = 0, \ldots, N.
     \end{equation}
     \qed
 \end{lemma}
-The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need a stronger condition on $\{L_t\}_{t\in I}$, such as in the following result.
+The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need stronger conditions, such as in the following result.
 \begin{lemma}
     \label{lemXNtmeanboundLXMt}
-    Under the \cref{standinghypotheses1}, assume moreover that \eqref{LtLXbound} and \eqref{esssuponMt} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
+    Under the \cref{standinghypotheses1}, assume moreover that \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound} and \eqref{EX0strongbound} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
     \begin{equation}
         \label{XNtmeanboundLXMt}
         \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] t_j \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
@@ -481,7 +494,7 @@ Here we derive an estimate that is the basis for the specific estimates for each
 With that, we are ready to start proving our basic estimate for the global pathwise error.
 \begin{lemma}
     \label{lembasicestimate}
-    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated as
+    Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated almost surely as
     \begin{multline}
         \label{Etjbasicbound}
             \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \int_0^{t_j} L_s\|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
@@ -527,7 +540,7 @@ As for the second term, which only concerns the solution itself, not the approxi
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
-    Under the \cref{standinghypotheses1} and assuming moreover that $\{L_t\}_{t\in I}$ is essentially bounded on $I$, almost surely on $\Omega,$ as in \eqref{esssuponLt}, we find that
+    Under the \cref{standinghypotheses1} and assuming condition \eqref{esssuponLt}, we find that
     \begin{equation}
         \label{estimatesecondterminglobalerrorintegral}
         \int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s \leq \Delta t_N C_L \int_0^{t_j} (M_s + L_s\|X_s\|) \;\mathrm{d}s.
@@ -555,7 +568,7 @@ The basic estimate \cref{lembasicestimate}, in combination with \cref{lemestimat
 
 \begin{proposition}
     \label{propbasicestimate}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound} and \eqref{LtLXbound} hold and that, for some constant $c_0 \geq 0$, 
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{esssuponMt}, \eqref{CMmeanbound} and \eqref{LtLXbound} hold and that, for some constant $c_0 \geq 0$, 
     \begin{equation}
         \label{EX0X0N}
         \mathbb{E}[\|X_0 - X_0^N\|] \leq c_0 \Delta t_N, \qquad N\in \mathbb{N}.
@@ -563,8 +576,8 @@ The basic estimate \cref{lembasicestimate}, in combination with \cref{lemestimat
     Then, for every $j = 0, \ldots, N$,
     \begin{multline}
         \label{expectedestimateglobalerrorintegral}
-            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}\right. \\
-            \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{c_L t_j}.
+            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \Bigg( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j} \\
+            + \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\Bigg) e^{c_L t_j}.
     \end{multline}
 \end{proposition}
 
@@ -576,7 +589,7 @@ The basic estimate \cref{lembasicestimate}, in combination with \cref{lemestimat
     \[
         \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N c_L \int_0^{t_j} (\mathbb{E}[M_s] + c_L\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
     \]
-    Thanks to \eqref{EX0strongbound} and \eqref{EMtstrongbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
+    Thanks to \eqref{EX0strongbound}, \eqref{esssuponMt}, and \eqref{CMmeanbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
     \begin{align*}
         \int_0^{t_j} & L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
         & \leq \Delta t_N c_L \int_0^{t_j} \left(\mathbb{E}[M_s] + c_L\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L s} \right)\;\mathrm{d}s \\
@@ -614,7 +627,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         \label{ftfylineargrowthcadlagfv}
         \left\|\partial_t f(t, x, y)\right\| \leq c_1 + c_2 \|x\| + c_3\|y\|, \quad \left\|D_y f(t, x, y)\right\| \leq c_4 + c_5\|x\| + c_6\|y\|,
     \end{equation}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_5, c_6 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is an FV process. Then, the Euler scheme is pathwise convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_5, c_6 \geq 0$. Assume, further, that the noise $\{Y_t\}_{t\in I}$ is an FV process. Then, the Euler scheme is pathwise convergent of order 1, i.e.
     \begin{equation}
         \label{ordercadlagfv}
         \max_{j=0, \ldots, N} \left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\| \leq C(\omega) \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -703,16 +716,16 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
 \section{Strong converge for semi-martingale noises}
 \label{secsubmartingale}
 
-We now consider the more general case of a semi-martingale noise. In this case, we estimate the strong convergence.
+We now consider the more general case of a semi-martingale noise. In this case, we estimate the strong convergence, as stated in our second main theorem.
 
 \begin{theorem}
     \label{thmsemimartingale}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{EMtstrongbound}, \eqref{LtLXbound} and \eqref{EX0X0N} hold, and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound}, \eqref{EX0strongbound}, and \eqref{EX0X0N} hold, and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
     \begin{equation}
         \label{ftfylineargrowthsemimartingale}
         \left\|D_{yy} f(t, x, y)\right\| \leq c_7 + c_8\|x\| + c_9\|y\|,
     \end{equation}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_4, c_5, c_7, c_8 \geq 0$. Assume, further, that $\{Y_t\}_{t\in I}$ is a semi-martingale. Then, the Euler scheme is strongly convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_4, c_5, c_7, c_8 \geq 0$. Assume, further, that the noise $\{Y_t\}_{t\in I}$ is a semi-martingale process. Then, the Euler scheme is strongly convergent of order 1, i.e.
     \begin{equation}
         \label{ordersemimartingale}
         \max_{j=0, \ldots, N} \mathbb{E}\left[\left\| X_{t_j} - X_{t_j}^N \right\|\right] \leq c \Delta t_N, \qquad \forall N \in \mathbb{N},
