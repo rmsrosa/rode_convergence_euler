@@ -272,7 +272,7 @@ and
 \end{remark}
 
 \begin{remark}
-    More generally, since $t\mapsto X_t$ is absolutely continuous almost surely, and assuming $\|\cdot\|$ is the Euclidian norm with the scalar product denote with a dot, we are allowed to take the derivative of $\|X_t\|^\beta$ for an arbitrary power $\beta \geq 1$ to find that
+    More generally, since $t\mapsto X_t$ is absolutely continuous almost surely, and assuming $\|\cdot\|$ is the Euclidian norm with the scalar product denoted with a dot, we are allowed to take the derivative of $\|X_t\|^\beta$ for an arbitrary power $\beta \geq 1$ to find that
     \[
         \|X_t\|^\beta = \|X_0\|^\beta + q\int_0^t \|X_s\|^{\beta-2}X_s \cdot f(t, X_s, Y_s)\;\mathrm{d}s.
     \]
@@ -1186,7 +1186,7 @@ As for illustrating numerically the order of strong convergence, although the ab
 \end{equation}
 computing a distributionally exact solution of this form is a delicate process. Thus we check the convergence numerically by comparing the approximations with another Euler approximation on a much finer mesh.
 
-More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, the initial condition as $X_0 \sim \mathcal{N}(0, 1),$ set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t_N = 1/N$, with $N = 2^6, \ldots, 2^9,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). \cref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching the theoretical estimate of $p = \min\{H+1/2, 1\}.$
+More precisely, the Euler approximation is implemented for \eqref{linearnonhomogeneousfbm} with several values of $H$. We fix the time interval as $[0, T] = [0.0, 1.0]$, the initial condition as $X_0 \sim \mathcal{N}(0, 1),$ set the resolution for the target approximation to $N_{\textrm{tgt}} = 2^{18}$, choose the time steps for the convergence test as $\Delta t_N = 1/N$, with $N = 2^6, \ldots, 2^9,$ and use $M = 200$ samples for the Monte-Carlo estimate of the strong error. The fBm noise term is generated with the $\mathcal{O}(N\log N)$ fast Fourier transform (FFT) method of Davies and Harte, as presented in \cite{DiekerMandjes2003} (see also \cite[Section 14.4]{HanKloeden2017}). \cref{taborderdepHfBm} shows the obtained convergence estimates, for a number of Hurst parameters, which is illustrated in \cref{figorderdepHfBm}, matching the theoretical estimate of $p = \min\{H+1/2, 1\}.$
 
 \begin{table}
     \begin{tabular}[htb]{|c|c|c|c|}
