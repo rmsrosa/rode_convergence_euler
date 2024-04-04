@@ -642,26 +642,26 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
     \]
     Thanks to \eqref{changeofvariablesformulacadlagfv}, we have
     \begin{align*}
-        f(s, & X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \\
+        f(s, & X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) = \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \\
         & + \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \\
         & + \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right).
     \end{align*}
     
     For the first term above, we have, using \eqref{ftfylineargrowthcadlagfv} and exchanging the order of integration,
     \begin{align*}
-        \bigg\|\int_0^{t_j} \int_{\tau^N(s)}^s & D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}\xi\;\mathrm{d}s\bigg\| \\
+        \bigg\|\int_0^{t_j} \int_{\tau^N(s)}^s & \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}\xi\;\mathrm{d}s\bigg\| \\
         & \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s \\
         & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + c_2 \|X_{\tau^N(s)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi.
     \end{align*}
     For $s$ within $\xi \leq s < \tau^N(\xi) + \Delta t_N$, we have $\tau^N(s) = \tau^N(\xi)$. Moreover, $\tau^N(\xi) + \Delta t_N- \xi \leq \Delta t_N$. Hence
     \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
         & \qquad \qquad \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
         & \qquad \qquad \qquad \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
     \end{align*}
     Using the bound \eqref{XNtboundLXMt} on the pathwise approximation, the bound \eqref{X0conv} on the approximation of the initial condition, and the bound $\tau^N(\xi)\leq \xi$ on the mesh points, we obtain
     \begin{multline*}
-        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
         \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2 \left(\|X_0\| + C_0\Delta t_N + C_M \xi \right)e^{C_L \xi} + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
     \end{multline*}
 
@@ -740,7 +740,7 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         \label{smlasttermerror}
         \begin{aligned}
             \int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \\
-            & \quad = \int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \;\mathrm{d}s \\
+            & \quad = \int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi \;\mathrm{d}s \\
             & \qquad + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s \\
             & \qquad + \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) \right. \\
             & \hspace{3in} \left. - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s \\ 
@@ -750,12 +750,12 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     
     The first term in \eqref{smlasttermerror} is handled just like in the proof of \cref{thmcadlagfv} and we obtain
     \[
-        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
+        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi.
     \]
     Taking the expectation and using \eqref{XNtmeanboundLXMt}, we find
     \begin{multline}
         \label{semimartingalefirstterm}
-        \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)}^s D_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\|\right] \\
+        \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\|\right] \\
         \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2  \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] \xi \right)e^{c_L \xi} + c_3\mathbb{E}\left[\|Y_{\xi^-}\|\right]\right)\;\mathrm{d}\xi.
     \end{multline}
 
@@ -776,9 +776,8 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     Taking the expectation and using \eqref{XNtmeanboundLXMt}, we obtain
     \begin{align*}
         & \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\|\right] \\
-        & \quad \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \mathbb{E}\left[\|X_{\tau^N(\xi)}^N\|\right] + c_6\mathbb{E}\left[\|Y_{\xi^-}\right]\|\right)\;\|\mathrm{d}F_\xi\| \\
-        & \quad \leq \Delta t_N\left(c_4 + c_5 \max_{i=0, \ldots, j}\mathbb{E}\left[\|X_{i}^N\|\right] + c_6\sup_{0\leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi}\|\right]\right)V(\{F_t\}_{t\in I}; [0, t_j]) \\
-        & \quad \leq \Delta t_N\left(c_4 + c_5 \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] \xi \right)e^{c_L \xi} + c_6\sup_{0\leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi}\|\right]\right)V(\{F_t\}_{t\in I}; [0, t_j]).
+        & \quad \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\|\right] \\
+        & \quad \leq \Delta t_N\mathbb{E}\left[\left(c_4 + c_5 \max_{i=0, \ldots, j}\|X_{i}^N\| + c_6\sup_{0\leq \xi \leq t_j}\|Y_{\xi}\|\right)V(\{F_t\}_{t\in I}; [0, t_j])\right].
     \end{align*}
     
     For the second integral on the right hand side of \eqref{sm2}, we use the It\^o isometry for local martingales, so that
@@ -829,6 +828,10 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         \end{aligned}
     \end{equation}
 \end{proof}
+
+\begin{remark}
+    If the initial condition $X_0$ has bounded support, then \eqref{XtboundLXMt} shows that $X_t$ has bounded support, uniformly on a bounded interval $t\in [0, T].$ In this case, the conditions on the derivative of $f=f(t, x, y)$ can be relaxed to have an arbitrary growth on $x$. Similarly, if the noise has bounded support, uniformly on $t\in [0, T],$ then the derivatives are allowed to grow with $y$.
+\end{remark}
 
 \section{Numerical examples}
 \label{secnumericalexamples}
@@ -1041,7 +1044,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
     \label{figsamplepathsallnoises}
 \end{figure}
 
-The strong order 1 convergence is not a suprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. The geometric Brownian motion is also expected to yield strong order 1 convergence thanks to the results in \cite{WangCaoHanKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
+The strong order 1 convergence is not a surprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. The geometric Brownian motion is also expected to yield strong order 1 convergence thanks to the results in \cite{WangCaoHanKloeden2021}. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
 Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in $\{\mathbf{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
 
