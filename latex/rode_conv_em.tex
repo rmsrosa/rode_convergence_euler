@@ -475,7 +475,7 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimates for the global error}
 
-Here we derive two estimates that are the basis for the convergence estimates, one for the pathwise error and the other for the strong error. For those, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}). Its proof follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
+Here we derive two estimates that are the bases for the convergence estimates, one for the pathwise error and the other for the strong error. For both, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}). Its proof follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
 
 \begin{lemma}[Discrete Gronwall Lemma]
     \label{lemdiscretegronwall}
@@ -491,7 +491,7 @@ Here we derive two estimates that are the basis for the convergence estimates, o
     \end{equation}
 \end{lemma}
 
-With that, we are ready to prove our basic pathwise estimate for the global error.
+With that, we are ready to prove our basic \emph{pathwise} estimate for the global error.
 \begin{proposition}[Basic pathwise estimate]
     \label{propbasicpathwiseestimate}
     Under the \cref{standinghypotheses1}, the global error \eqref{globalerrorintegralformula} is estimated almost surely as
@@ -532,11 +532,27 @@ With that, we are ready to prove our basic pathwise estimate for the global erro
     This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete Gronwall \cref{lemdiscretegronwall}, we obtain \eqref{Etjbasicbound}.
 \end{proof}
 
-The first term in the right hand side of \eqref{Etjbasicbound} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to order $\Delta t_N$, which is useful for lower order approximations or for discretizations of (random) partial differential equations.
+Taking the expectation of \eqref{Etjbasicbound} and assuming a uniform almost surely bound on the Lipschitz coefficient, we obtain the strong-norm version of the basic estimate.
+\begin{proposition}[Basic strong estimate]
+    \label{propbasicstrongestimate}
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{LtLXbound} holds. Then, for every $j = 0, \ldots, N$,
+    \begin{multline}
+        \label{expectedestimateglobalerrorintegral}
+        \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \Bigg( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + \int_0^{t_j} L_s \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \\
+        + \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\Bigg) e^{c_L t_j}.
+    \end{multline}
+\end{proposition}
 
-The third term in \eqref{Etjbasicbound} is the more delicate one that will be handled differently in the next sections.
+\begin{proof}
+    Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by simply taking the expectation of \eqref{Etjbasicbound} in \cref{propbasicpathwiseestimate} and using the assumption \eqref{LtLXbound} to bound the exponential term.
+\end{proof}
 
-As for the second term, which only concerns the solution itself, not the approximation, we use the following simple but useful general result.
+
+The first terms in the right hand side of both \eqref{Etjbasicbound} and \eqref{expectedestimateglobalerrorintegral} usually vanish since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to first order $\Delta t_N$, which is useful for lower order approximations or for discretizations of (random) partial differential equations.
+
+The third terms in \eqref{Etjbasicbound} and \eqref{expectedestimateglobalerrorintegral} are the more delicate ones that will be handled differently in the next sections.
+
+As for the second terms, which only concern the solution itself, not the approximation, we use the following simple but useful general result.
 
 \begin{lemma}
     \label{lemestimatesecondterminglobalerror}
@@ -564,51 +580,38 @@ As for the second term, which only concerns the solution itself, not the approxi
     Using that $\tau^N(\xi) \leq \xi$ and that the remaining terms are nonnegative, we have $\tau^N(\xi) + \Delta t_N - \xi \leq \Delta t_N,$ and we obtain exactly \eqref{estimatesecondterminglobalerrorintegral}.
 \end{proof}
 
-The basic estimate \cref{propbasicpathwiseestimate}, in combination with \cref{lemestimatesecondterminglobalerror}, will be used in \cref{secmonotonicbound} to yield the pathwise convergence in the case of FV noises, for which the third term in \eqref{Etjbasicbound} will be estimated accordingly. For the strong convergence, in the more general case of semi-martingale noises, we need a different version of the basic estimate.
+Taking the expectation of \eqref{estimatesecondterminglobalerrorintegral} and assuming further conditions we obtain the following estimate useful for the strong norm error estimate.
 
-\begin{proposition}[Basic strong estimate]
-    \label{propbasicstrongestimate}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{EX0strongbound}, \eqref{esssuponMt}, \eqref{CMmeanbound} and \eqref{LtLXbound} hold and that, for some constant $c_0 \geq 0$, 
+\begin{lemma}
+    Under the \cref{standinghypotheses1} and assuming conditions \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound}, and \eqref{EX0strongbound}, we find that
     \begin{equation}
-        \label{EX0X0N}
-        \mathbb{E}[\|X_0 - X_0^N\|] \leq c_0 \Delta t_N, \qquad N\in \mathbb{N}.
+        \label{estimatesecondterminglobalstrongerrorintegral}
+        \mathbb{E}\left[\int_0^{t_j}L_s\left\|X_s - X_{\tau^N(s)}\right\| \;\mathrm{d}s\right] \leq \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}.
     \end{equation}
-    Then, for every $j = 0, \ldots, N$,
-    \begin{multline}
-        \label{expectedestimateglobalerrorintegral}
-            \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \Bigg( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j} \\
-            + \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\Bigg) e^{c_L t_j}.
-    \end{multline}
-\end{proposition}
+\end{lemma}
 
-\begin{proof}
-    Estimate \eqref{expectedestimateglobalerrorintegral} is obtained by taking the expectation of \eqref{Etjbasicbound} in \cref{propbasicpathwiseestimate}, using the assumption \eqref{LtLXbound} to bound the exponential term, and properly estimating the first two terms inside the parentheses. The first term is handled with the assumption \eqref{EX0X0N}. We need some more work to take care of the second term.
-    
-    Under the \cref{standinghypotheses1}, together with \eqref{LtLXbound}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
-    Using \eqref{LtLXbound}, that inequality yields
+\begin{proof}    
+    Under the \cref{standinghypotheses1}, together with \eqref{LtLXbound}, which implies \eqref{esssuponLt}, estimate \cref{lemestimatesecondterminglobalerror} applies and inequality \eqref{estimatesecondterminglobalerrorintegral} holds.
+    With \eqref{LtLXbound}, that inequality yields
     \[
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N c_L \int_0^{t_j} (\mathbb{E}[M_s] + c_L\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
+        \mathbb{E}\left[\int_0^{t_j} L_s\|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right] \leq \Delta t_N c_L \int_0^{t_j} (\mathbb{E}[M_s] + c_L\mathbb{E}[\|X_s\|]) \;\mathrm{d}s.
     \]
     Thanks to \eqref{EX0strongbound}, \eqref{esssuponMt}, and \eqref{CMmeanbound}, inequality \eqref{EXtstrongbound} holds, and we obtain
     \begin{align*}
-        \int_0^{t_j} & L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \\
+        \mathbb{E}\bigg[\int_0^{t_j} & L_s \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s\bigg] \\
         & \leq \Delta t_N c_L \int_0^{t_j} \left(\mathbb{E}[M_s] + c_L\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L s} \right)\;\mathrm{d}s \\
         & \leq \Delta t_N c_L \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + c_L \int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L s} \;\mathrm{d}s\right) \\
         & = \Delta t_N c_L \left(\int_0^{t_j} \mathbb{E}[M_s] \;\mathrm{d}s + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)\left(e^{c_L t_j} - 1\right) \right).
     \end{align*}
-    Thus,
-    \begin{equation}
-        \label{expectedestimatesecondterminglobalerrorintegral}
-        \int_0^{t_j} L_s \mathbb{E}[\|X_s - X_{\tau^N(s)}\|] \;\mathrm{d}s \leq \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j}.
-    \end{equation}
-
-    Now we look at \cref{propbasicpathwiseestimate} and put the pieces together. Taking the expectation of the global error formula \eqref{Etjbasicbound} and using \eqref{LtLXbound} to bound the exponential term, we arrive at
-    \begin{multline*}
-        \mathbb{E}\left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \left( \mathbb{E}\left[\|X_0 - X_0^N\|\right] + \int_0^{t_j} L_s \mathbb{E}\left[\|X_s - X_{\tau^N(s)}\|\right] \;\mathrm{d}s \right. \\
-        \left. \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\right) e^{c_L t_j}.
-    \end{multline*}
-    Using now estimate \eqref{expectedestimatesecondterminglobalerrorintegral} and condition \eqref{EX0X0N}, we find \eqref{expectedestimateglobalerrorintegral}, completing the proof.
+    This simplifies to \eqref{estimatesecondterminglobalstrongerrorintegral}.
 \end{proof}
+
+Putting things together, we have
+\begin{multline}
+    \label{expectedestimateglobalerrorintegralold}
+        \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \Bigg( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j} \\
+        + \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\Bigg) e^{c_L t_j}.
+\end{multline}
 
 \section{Pathwise convergence for FV noises}
 \label{secmonotonicbound}
@@ -720,7 +723,12 @@ We now consider the more general case of a semi-martingale noise. In this case, 
 
 \begin{theorem}
     \label{thmsemimartingale}
-    Under the \cref{standinghypotheses1}, suppose further that \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound}, \eqref{EX0strongbound}, and \eqref{EX0X0N} hold, and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
+    Under the \cref{standinghypotheses1}, suppose further that \eqref{esssuponMt}, \eqref{CMmeanbound}, \eqref{LtLXbound} and \eqref{EX0strongbound} hold; that $X_0^N$ is a first order approximation of $X_0,$ in the sense that 
+    \begin{equation}
+        \label{EX0X0N}
+        \mathbb{E}[\|X_0 - X_0^N\|] \leq c_0 \Delta t_N, \qquad N\in \mathbb{N},
+    \end{equation}
+    for some constant $c_0 \geq 0;$ and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$ and is twice continuously differentiable in $(t, y)$, with partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f$ satisfying \eqref{ftfylineargrowthcadlagfv} and
     \begin{equation}
         \label{ftfylineargrowthsemimartingale}
         \left\|D_{yy} f(t, x, y)\right\| \leq c_7 + c_8\|x\| + c_9\|y\|,
