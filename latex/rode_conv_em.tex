@@ -841,13 +841,18 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     \]
     Putting these estimates together we obtain
     \begin{equation}
-        \begin{aligned}
-            \mathbb{E}\bigg[\bigg\| & \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \bigg\|\bigg] \\
-            & \leq \;\Delta t_N \Bigg( c_1 t_j + \frac{c_2}{c_L} \left(\mathbb{E}\left[\|X_0\|\right] + c_0t_j + \mathbb{E}[C_M] t_j \right) e^{c_L t_j} \\
-            & \qquad \qquad + c_3\sup_{0 \leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi}\|\right] + c_4  \mathbb{E}\left[ V(\{F_t\}_{t\in I}; [0, t_j]) \right] + c_4\mathbb{E}\left[ [Z, Z]_{t_j}\right] \\
-            & \qquad \qquad + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2\right\|\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_{t_j}^c\right] \Bigg).
-        \end{aligned}
+        \label{lasttermestimateforstrongconv}
+        \mathbb{E}\bigg[\bigg\| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \bigg\|\bigg] \leq C_T \Delta t_N,
     \end{equation}
+    where
+    \begin{equation*}
+        \begin{aligned}
+            C_T & = c_1 T + \frac{c_2}{c_L} \left(\mathbb{E}\left[\|X_0\|\right] + c_0 T + \mathbb{E}[C_M] T \right) e^{c_L T} + c_3\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] \\
+            & \quad + c_4\mathbb{E}\left[ V(\{F_t\}_{t\in I}; I) \right] + c_4\sup_{0\leq s \leq T} \mathbb{E}\left[ [Z, Z]_s\right] \\
+            & \quad + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < s \leq T}\left( \Delta Y_s \right)^2\right\|\right] + \frac{c_7}{2} \sup_{0\leq s \leq T}\mathbb{E}\left[[Y, Y]_s^c\right].
+        \end{aligned}
+    \end{equation*}
+    Thanks to \eqref{CMmeanbound}, \eqref{EX0strongbound}, \eqref{Y0finiteexpectation}, \eqref{expectFVFtfinite}, and \eqref{expectZtfinite}, the constant $C_T$ above is finite. Plugging \eqref{lasttermestimateforstrongconv} into \eqref{expectedestimateglobalerrorintegral} and applying \eqref{estimatesecondterminglobalerrorintegral} and \eqref{EX0X0Nunif} yield the desired order-one estimate \eqref{ordersemimartingaleunif}.
 \end{proof}
 
 \begin{remark}
