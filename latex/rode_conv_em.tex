@@ -733,13 +733,22 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     for some constant $c_0 \geq 0;$ and that $f=f(t, x, y)$ is uniformly globally Lipschitz continuous in $x$, continuously differentiable with respect to $t$ and twice continuously differentiable with respect to $y$, with uniformly bounded partial differentials $\partial_t f$, $D_y f$ and $D_{yy} f,$ so that
     \begin{align}
         \label{ftfyunifboundcadlagfvpartialt}
-        \left\|\partial_t f(t, x, y)\right\| & \leq c_1 + c_2\|x\| + c_3\|y\|^2, \\
+        \left\|\partial_t f(t, x, y)\right\| & \leq c_1 + c_2\|x\| + c_3\|y\|, \\
         \label{ftfyunifboundcadlagfvpartialy}
         \left\|D_y f(t, x, y)\right\| & \leq c_4, \\
         \label{ftfyunifboundcadlagfvpartialyy}
         \left\|D_{yy} f(t, x, y)\right\| & \leq c_7,
     \end{align}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_7 \geq 0$. Assume, further, that the noise $\{Y_t\}_{t\in I}$ is a semi-martingale process. Then, the Euler scheme is strongly convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_7 \geq 0$. Assume, further, that the noise $\{Y_t\}_{t\in I}$ is a semi-martingale process, hence can be decomposed as $Y_t = Y_0 + F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process, $\{Z_t\}_{t\in I}$ is a local martingale, and $F_0 = Z_0 = 0,$ and assume they satisfy
+    \begin{align}
+        \label{Y0finiteexpectation}
+        & \mathbb{E}\left[Y_0\right] < \infty, \\
+        \label{expectFVFtfinite}
+        & \mathbb{E}\left[V(\{F_t\}_{t\in I}; I)\right] < \infty, \\
+        \label{expectZtfinite}
+        & \sup_{t\in I} \mathbb{E}\left[\|Z_t\|\right] < \infty.
+    \end{align}   
+    Then, the Euler scheme is strongly convergent of order 1, i.e.
     \begin{equation}
         \label{ordersemimartingaleunif}
         \max_{j=0, \ldots, N} \mathbb{E}\left[\left\| X_{t_j} - X_{t_j}^N \right\|\right] \leq c \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -764,9 +773,9 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     The expectation of the first term in \eqref{smlasttermerror} is estimated using \eqref{ftfyunifboundcadlagfvpartialt}, \eqref{XNtmeanboundLXMt}, and \eqref{EX0X0Nunif}, so that
     \begin{align*}
         \mathbb{E}\bigg[\bigg\| & \int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\bigg\|\bigg] \\
-        & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|^2\right)\;\mathrm{d}\xi\;\mathrm{d}s\right\|\right] \\
-        & \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2  \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] \xi \right)e^{c_L \xi} + c_3\mathbb{E}\left[\|Y_{\xi^-}\|^2\right]\right)\;\mathrm{d}\xi \\
-        & \leq \Delta t_N \left(c_1 t_j + \frac{c_2}{c_L} \left(\mathbb{E}\left[\|X_0\|\right] + c_0t_j + \mathbb{E}[C_M] t_j \right) e^{c_L t_j} + c_3\sup_{0 \leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi^-}\|^2\right]\right).
+        & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)}^s \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi\;\mathrm{d}s\right\|\right] \\
+        & \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2  \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}[C_M] \xi \right)e^{c_L \xi} + c_3\mathbb{E}\left[\|Y_{\xi^-}\|\right]\right)\;\mathrm{d}\xi \\
+        & \leq \Delta t_N \left(c_1 t_j + \frac{c_2}{c_L} \left(\mathbb{E}\left[\|X_0\|\right] + c_0t_j + \mathbb{E}[C_M] t_j \right) e^{c_L t_j} + c_3\sup_{0 \leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi}\|\right]\right).
     \end{align*}
 
     For the second term in \eqref{smlasttermerror}, we use the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, which says that $\{Y_t\}_{t\in I}$ can be decomposed as $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
@@ -775,58 +784,58 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi \;\mathrm{d}s \\  
         + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi \;\mathrm{d}s,
     \end{multline}
-    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \eqref{sm2} is estimated as in the proof of \cref{thmcadlagfv}, so that
+    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \eqref{sm2} is estimated as in the proof of \cref{thmcadlagfv} and using \eqref{ftfyunifboundcadlagfvpartialy}, so that
     \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\| \\
-        & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\|\;\mathrm{d}s \\
-        & \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\|\mathrm{d}F_\xi\| \\
-        & \qquad \leq \Delta t_N\int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\| \\
-        & \qquad \leq \Delta t_N\left(c_4 + c_5 \max_{i=0, \ldots, j}\|X_{i}^N\| + c_6\sup_{0\leq \xi \leq t_j}\|Y_{\xi}\|\right)V(\{F_t\}_{t\in I}; [0, t_j]).
+        \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\| & \leq \int_0^{t_j} \int_{\tau^N(s)}^s c_4\;\|\mathrm{d}F_\xi\|\;\mathrm{d}s \\
+        & \leq c_4\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s\;\|\mathrm{d}F_\xi\| \\
+        & \leq c_4\Delta t_N\int_0^{t_j} \;\|\mathrm{d}F_\xi\| \\
+        & \leq c_4\Delta t_N V(\{F_t\}_{t\in I}; [0, t_j]).
     \end{align*}
-    Taking the expectation and using \eqref{XNtmeanboundLXMt}, we obtain
-    \begin{align*}
-        & \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\|\right] \\
-        & \quad \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \left(c_4 + c_5 \|X_{\tau^N(\xi)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\|\right] \\
-        & \quad \leq \Delta t_N\mathbb{E}\left[\left(c_4 + c_5 \max_{i=0, \ldots, j}\|X_{i}^N\| + c_6\sup_{0\leq \xi \leq t_j}\|Y_{\xi}\|\right)V(\{F_t\}_{t\in I}; [0, t_j])\right].
-    \end{align*}
+    Taking the expectation and using \eqref{expectFVFtfinite}, we obtain
+    \begin{equation*}
+        \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\|\right] \leq c_4 \Delta t_N \mathbb{E}\left[ V(\{F_t\}_{t\in I}; [0, t_j]) \right].
+    \end{equation*}
     
-    For the second integral on the right hand side of \eqref{sm2}, we use the It\^o isometry for local martingales, so that
+    For the second integral on the right hand side of \eqref{sm2}, we use the It\^o isometry for local martingales then we use again the bound \eqref{ftfyunifboundcadlagfvpartialy}, so that
     \begin{align*}
         \mathbb{E}\bigg[\bigg\|\int_0^{t_j} & \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\
         & = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
         & \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right)^2\right]^{1/2} \\
         & \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} \|D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
         & \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \left(c_4 + c_5\|X_{\tau^N(\xi)}^N\| + c_6 \|Y_{\xi^-}\| \right)^2\;\mathrm{d}[Z, Z]_\xi\right].
+        & \leq c_4\Delta t_N\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d}[Z, Z]_\xi\right] \\
+        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j} - [Z, Z]_0\right]
     \end{align*}
 
-    Now we move to the third term in \eqref{smlasttermerror}. It could be treated as in \cref{thmcadlagfv}, but instead we use the bound \eqref{ftfylineargrowthsemimartingalepartialvv} on the second derivative of $D_{yy}f$ to write
-    \begin{multline*}
-        \left\| f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \Delta Y_\xi \right\| \\
-        \leq \frac{1}{2}\left(c_7 + c_8 \|X_{\tau^N(s)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2.
-    \end{multline*}
+    Now we move to the third term in \eqref{smlasttermerror}. It could be treated as in \cref{thmcadlagfv}, but instead we use the bound \eqref{ftfyunifboundcadlagfvpartialyy} on the second derivative of $D_{yy}f$ to write
+    \begin{equation*}
+        \left\| f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \Delta Y_\xi \right\| \leq \frac{c_7}{2}\left( \Delta Y_\xi \right)^2.
+    \end{equation*}
     Recall $\tau^N(s) = \tau^N(\xi)$ for $\xi \leq s < \tau^N(\xi) + \Delta t_N$ and $\tau^N(\xi) + \Delta t_N- \xi \leq \Delta t_N$. Thus,
     \begin{align*}
-        & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right) \;\mathrm{d}s\right\| \\
-        & \quad \leq \frac{1}{2}\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
-        & \quad \leq \frac{1}{2}\sum_{0 < \xi \leq t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_9 \max\{\|Y_\xi\|, \|Y_{\xi^-}\|\} \right)\left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
-        & \quad \leq \frac{\Delta t_N}{2} \left( c_7 + c_8 \max_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9 \sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) \sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2.
+        \Bigg\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \bigg(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - & f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\bigg) \;\mathrm{d}s\Bigg\| \\
+        & \leq \frac{c_7}{2}\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
+        & \leq \frac{c_7}{2}\sum_{0 < \xi \leq t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} \left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
+        & \leq \frac{c_7}{2} \Delta t_N  \sum_{0 < \xi \leq t_j}\left(\Delta Y_\xi \right)^2.
     \end{align*}
-    Taking the expectation and using \eqref{XNtmeanboundLXMt}, we obtain
-    \begin{align*}
-        \mathbb{E}\Bigg[\Bigg\|\int_0^{t_j} & \sum_{\tau^N(s) < \xi \leq s} \bigg(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) \\
-        & \hspace{2in} - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\bigg) \;\mathrm{d}s\Bigg\|\Bigg] \\
-        & \leq \frac{\Delta t_N}{2} \mathbb{E}\Bigg[\Bigg\|\left( c_7 + c_8 \max_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9 \sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) \sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2\Bigg\|\Bigg].
-    \end{align*}
-    \comment{Hmm, careful on how to estimate this expectation. It is bilinear in the noise.}
+    Taking the expectation,
+    \begin{multline*}
+        \mathbb{E}\Bigg[\Bigg\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \bigg(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) \\
+        - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\bigg) \;\mathrm{d}s\Bigg\|\Bigg] \\
+        \leq \frac{c_7}{2} \Delta t_N \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2\right\|\right].
+    \end{multline*}
 
     The final term in \eqref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
     \begin{align*}
-        & \left\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \right\| \\
-        & \qquad \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_0\|Y_{\xi^-}\|\right)\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
-        & \qquad \leq \frac{\Delta t_N}{2}\int_0^{t_j} \left(c_7 + c_8 \|X_{\tau^N(\xi)}^N\| + c_9\|Y_{\xi^-}\|\right)\;\mathrm{d}[Y, Y]_\xi^c \\ 
-        & \qquad \leq \frac{\Delta t_N}{2} \left(c_7 + c_8 \max_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9\sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) [Y, Y]_{t_j}^c.
+        \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\| \\
+        & \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left\|D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\right\|\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
+        & \leq \frac{c_7}{2}\Delta t_N\int_0^{t_j} \;\mathrm{d}[Y, Y]_\xi^c \\ 
+        & \leq \frac{c_7}{2}\Delta t_N \left([Y, Y]_{t_j}^c - [Y, Y]_{0}^c\right).
     \end{align*}
+    Taking the expectation,
+    \[
+        \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c - [Y, Y]_{0}^c\right].
+    \]
     Putting these estimates together we obtain
     \begin{equation}
         \begin{aligned}
@@ -843,6 +852,7 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     If the initial condition $X_0$ is bounded almost surely, then \eqref{XtboundLXMt} shows that $X_t$ is also bounded almost surely, uniformly on a bounded interval $t\in [0, T].$ In this case, the conditions on the derivative of $f=f(t, x, y)$ can be relaxed to have an arbitrary growth on $x$. Similarly, if the noise has bounded support almost surely, uniformly on $t\in [0, T],$ then the derivatives are allowed to grow with $y$. If the initial condition has no bounded support but higher moments are bounded, then appropriate power growths on $x$ are allowed. This last case is detailed in the following result.
 \end{remark}
 
+Under stronger conditions on the noise and on the initial condition $X_0$, the conditions on $f=f(t, x, y)$ can be relaxed, as the following result shows.
 \begin{theorem}
     \label{thmsemimartingale}
     Under the \cref{standinghypotheses1}, suppose further that \eqref{esssuponMt}, \eqref{CMmeanbound}, and \eqref{LtLXbound} and \eqref{EX0strongbound} hold; that the initial condition satisfies
@@ -886,11 +896,11 @@ We now consider the more general case of a semi-martingale noise. In this case, 
 
     For the second term in \eqref{smlasttermerror}, we use the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, which says that $\{Y_t\}_{t\in I}$ can be decomposed as $Y_t = F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process and $\{Z_t\}_{t\in I}$ is a local martingale. Hence, the second term can be written as
     \begin{multline}
-        \label{sm2}
+        \label{sm2b}
         \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi \;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi \;\mathrm{d}s \\  
         + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi \;\mathrm{d}s,
     \end{multline}
-    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \eqref{sm2} is estimated as in the proof of \cref{thmcadlagfv}, so that
+    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \eqref{sm2b} is estimated as in the proof of \cref{thmcadlagfv}, so that
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\| \\
         & \qquad \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + c_5 \|X_{\tau^N(s)}^N\| + c_6\|Y_{\xi^-}\|\right)\;\|\mathrm{d}F_\xi\|\;\mathrm{d}s \\
@@ -905,7 +915,7 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         & \quad \leq \Delta t_N\mathbb{E}\left[\left(c_4 + c_5 \max_{i=0, \ldots, j}\|X_{i}^N\| + c_6\sup_{0\leq \xi \leq t_j}\|Y_{\xi}\|\right)V(\{F_t\}_{t\in I}; [0, t_j])\right].
     \end{align*}
     
-    For the second integral on the right hand side of \eqref{sm2}, we use the It\^o isometry for local martingales, so that
+    For the second integral on the right hand side of \eqref{sm2b}, we use the It\^o isometry for local martingales, so that
     \begin{align*}
         \mathbb{E}\bigg[\bigg\|\int_0^{t_j} & \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\
         & = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
