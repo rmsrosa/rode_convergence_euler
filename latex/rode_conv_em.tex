@@ -833,21 +833,19 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\| \\
         & \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left\|D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\right\|\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
         & \leq \frac{c_7}{2}\Delta t_N\int_0^{t_j} \;\mathrm{d}[Y, Y]_\xi^c \\ 
-        & \leq \frac{c_7}{2}\Delta t_N \left([Y, Y]_{t_j}^c - [Y, Y]_{0}^c\right),
+        & \leq \frac{c_7}{2}\Delta t_N [Y, Y]_{t_j}^c,
     \end{align*}
-    where we used that $[Y, Y]_0^c$
-    Taking the expectation,
+    where we used that $[Y, Y]_0^c = 0.$ Taking the expectation,
     \[
-        \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c - [Y, Y]_{0}^c\right].
+        \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c\right].
     \]
     Putting these estimates together we obtain
     \begin{equation}
         \begin{aligned}
-            \bigg\|\int_0^{t_j} & \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \bigg\| \\
-            & \quad \leq \Delta t_N\int_0^{t_j} \left(c_1 + c_2 \|X_{\tau^N(\xi)}^N\| + c_3\|Y_{\xi^-}\|\right)\;\mathrm{d}\xi \\
-            & \qquad + \Delta t_N\mathbb{E}\left[\int_0^{t_j} \left(c_4 + c_5\|X_{\tau^N(\xi)}^N\| + c_6 \|Y_{\xi^-}\| \right)^2\;\mathrm{d}[Z, Z]_\xi\right] \\
-            & \qquad + \frac{\Delta t_N}{2} \left( c_7 + c_8 \max_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9 \sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) \sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2 \\
-            & \qquad + \frac{\Delta t_N}{2} \left(c_7 + c_8 \max_{i=0, \ldots, j}\|X_{t_i}^N\| + c_9\sup_{0\leq \xi \leq t_j}\|Y_\xi\|\right) [Y, Y]_{t_j}^c.
+            \mathbb{E}\bigg[\bigg\| & \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \bigg\|\bigg] \\
+            & \leq \;\Delta t_N \Bigg( c_1 t_j + \frac{c_2}{c_L} \left(\mathbb{E}\left[\|X_0\|\right] + c_0t_j + \mathbb{E}[C_M] t_j \right) e^{c_L t_j} \\
+            & \qquad \qquad + c_3\sup_{0 \leq \xi \leq t_j}\mathbb{E}\left[\|Y_{\xi}\|\right] + c_4  \mathbb{E}\left[ V(\{F_t\}_{t\in I}; [0, t_j]) \right] + c_4\mathbb{E}\left[ [Z, Z]_{t_j}\right] \\
+            & \qquad \qquad + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2\right\|\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_{t_j}^c\right] \Bigg).
         \end{aligned}
     \end{equation}
 \end{proof}
