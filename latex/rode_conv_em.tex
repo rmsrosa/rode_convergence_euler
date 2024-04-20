@@ -364,34 +364,76 @@ We actually apply this formula to a function of the form $f=f(t, x, y)$, but wit
 The class of FV processes include the compound Poisson process, inhomogeneous Poisson process, Hawkes self-exciting process, and so on. It also includes transport processes $Y_t = g(t, Y_0)$ where $Y_0$ is a random variable and $t \mapsto g(t, y_0)$ is a c\`adl\`ag function of finite variation, for every sample value $y_0=Y_0(\omega)$.
 
 In the more general case of a semi-martingale noise $\{Y_t\}_{t\in I}$, the change of variables formula \eqref{changeofvariablesformulacadlagfv} takes the form (see \cite[Theorems II.32 and II.33]{Protter2005})
-\begin{multline}
+\begin{equation}
     \label{changeofvariablesformulasemimartingale}
-    f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
-    + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right) \\
-    + \frac{1}{2}\int_0^t D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c,
-\end{multline}
-where $\{[Y, Y]_t^c\}_{t\in I}$ is the continuous part of the quadratic variation process $\{[Y, Y]_t\}_{t\in I}$ defined by
+    \begin{aligned}
+        f(t, Y_t) - f(0, Y_0) & = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
+        & \quad + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right) \\
+        & \quad + \frac{1}{2}\int_0^t D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c,
+    \end{aligned}
+\end{equation}
+where $\{[Y, Y]_t^c\}_{t\in I}$ is the continuous part of the quadratic variation process $\{[Y, Y]_t\}_{t\in I}$, defined by
+\[
+    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta Y_s\right)^2,
+\]
+where the quadratic variation process itself is defined by the limit
+\[
+    [Y, Y]_t = \lim_{\substack{t_0 < \ldots < t_n \in I, n\in \mathbb{N} \\ \max_{i=1, \ldots, n}|t_i - t_{i-1}| \rightarrow 0}} \sum_{i=1}^n (Y_{t_i} - Y_{t_{i-1}})^2,
+\]
+or, equivalently, by the formula
 \[
     [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
 \]
-The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[Theorem II.22]{Protter2005}. The continuous part is given by
-\[
-    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta Y_s\right)^2.
-\]
+The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[Theorem II.22]{Protter2005}.
+
 Since $[Y, Y]_t^c$ is continuous and increasing, the corresponding integral is a Lebesgue-Stieltjes integral. Notice that $[Y, Y]_0 = Y_0^2.$ For the continuous part, $[Y, Y]_t^0 = [Y, Y]_0 - \left(\Delta Y_0\right)^2 = Y_0^2 - Y_0^2 = 0.$
 
 The class of local martingales include It\^o diffusion processes and time-changed Brownian motion, for example. For It\^o diffusion, see also \cite{Oksendal2003}.
 
 Back to the decomposition of a semi-martingale in the form $Y_t = Y_0 + F_t + Z_t$, for an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$ with $F_0 = Z_0 = 0,$ we recall from \cite[Lemma 18.7]{Metivier1982} that
 \[
-    [Y, Y]_t = [Z, Z]_t + \sum_{0 \leq s \leq t} |\Delta F_s|^2.
+    [Y, Y]_t = [Z, Z]_t + \sum_{0 \leq s \leq t} \|\Delta F_s\|^2.
+\]
+Each step is bounded by the variation of $\{F_t\}_t,$ i.e.
+\begin{multline*}
+    \sum_{0 \leq s \leq t} \|\Delta F_s\|^2 = \sum_{0 \leq s \leq t} \|F_s - F_{s^-}\|^2 \leq \sum_{0 \leq s \leq t} (\|F_s\| + \|F_{s^-}\|)\|F_s - F_{s^-}\| \\
+    \leq 2\sup_{t\in I} \|F_t\| \sum_{0 \leq s \leq t} \|F_s - F_{s^-}\|.
+\end{multline*}
+Since the number of jumps is countable, we find, by an approximation procedure (taking sequences $s_j$ converging from below to each jump point $s$), that
+\[
+    \sum_{0 \leq s \leq t} \|\Delta F_s\|^2 \leq \sup_{t\in I} \|F_t\| \|V(\{F_t\}_{t\in I}; I)\| \leq \|V(\{F_t\}_{t\in I}; I)\|^2.
 \]
 
-Since we are considering the bounded interval $I=[0, T],$ the local martingale $Z_t = Z_{t \hat T},$ $0\leq t \leq T$ is a square-integrable martingale, and the Doob Maximal inequality holds (see e.g. cite[Theorem I.20]{Protter2005}), namely
+Since we are considering the bounded interval $I=[0, T],$ the local martingale $Z_t = Z_{t \land T},$ $0\leq t \leq T,$ where $t \land T = \min\{t, T\},$ is a square-integrable martingale, and the Doob Maximal inequality (see e.g. \cite[Theorem I.20]{Protter2005}) yields
 \[
-    \mathbb{E}[\sup_{t\in I} |Z_t|^2] \leq 4\mathbb{E}[|Z_T|^2] < \infty,
+    \mathbb{E}\left[\sup_{t\in I} \|Z_t\|^2\right] \leq 4\mathbb{E}[\|Z_T\|^2] < \infty,
 \]
-which is finite by the definition of martingale.
+which is finite by the definition of martingale. Since $F_0 = 0,$ the finite variation part is bounded by
+\[
+    \sup_{t\in I} \|F_t\| \leq V(\{F_t\}_{t\in I}; I),
+\]
+which implies, in particular,
+\[
+    \mathbb{E}\left[\sup_{t\in I} \|F_t\|\right] \leq \mathbb{E}\left[V(\{F_t\}_{t\in I}; I)\right], \qquad \mathbb{E}\left[\sup_{t\in I} \|F_t\|^2\right] \leq \mathbb{E}\left[V(\{F_t\}_{t\in I}; I)^2\right].
+\]
+For $Y_t = Y_0 + Z_t + F_t,$ we find
+% using that (a + b + c)^2 \leq 3(a^2 + b^2 + c^2)
+\[
+    \mathbb{E}\left[\sup_{t\in I} \|Y_t\|^2\right] \leq 3\mathbb{E}[\|Y_0\|^2] + 3\mathbb{E}\left[V(\{F_t\}_{t\in I}; I)^2\right] + 12\mathbb{E}[\|Z_T\|^2].
+\]
+
+For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the Burkholder-David-Gundy inequality relates the moments of the maximum of the local martingale with moments of its quadratic variation,
+\[
+    \frac{1}{c_p}\mathbb{E}\left[[Z, Z]_t^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq C_p\mathbb{E}\left[[Z, Z]_t^{p/2}\right],
+\]
+for $p > 0$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
+\[
+    \mathbb{E}\left[[Z, Z]_t^{p/2}\right] \leq 4c_p\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
+\]
+for any $t\in I$ and $p > 0,$ and then
+\[
+    \mathbb{E}\left[[Y, Y]_t^{p/2}\right] \leq 4c_p\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_{t\in I}; I)\|^2\right] < \infty.
+\]
 
 \section{Bound on the pathwise approximations}
 \label{secpathwiseapproximation}
@@ -1335,7 +1377,7 @@ In summary, we have proved the following result.
     Consider the equation \eqref{linearnonhomogeneousfbm} where $\{B^H_t\}_t$ is a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$. Suppose the initial condition $X_0$ satisfies
     \begin{equation}
         \label{EX0square2b}
-        \mathbb{E}[|X_0|^2] < \infty.
+        \mathbb{E}[\|X_0\|^2] < \infty.
     \end{equation}
     Then, the Euler scheme for this initial value problem is of strong order $H+1/2$, for $0 < H < 1/2$, and is of order $1$, for $1/2 \leq H < 1$. More precisely,
     \begin{equation}
