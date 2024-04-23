@@ -309,7 +309,17 @@ and
 
 \section{Semi-martingale noises}
 
-For the theory of semi-martingales, we refer the reader to \cite{Protter2005} and \cite{Metivier1982}. Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, a \emph{semi-martingale} is a c\`adl\`ag process $\{Y_t\}_{t\in I}$ characterized by being decomposable as a sum of an FV process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$ with $F_0 = Z_0 = 0.$
+For the theory of semi-martingales, we refer the reader to \cite{Protter2005} and \cite{Metivier1982}. The main idea is that semi-martingales are stochastic processes $\{Y_t\}_{t\geq 0}$ which are c\`adl\`ag, adapted, and ``good integrators,'' in the sense that the sums
+\[
+    I_Y(H) = H_0 Y_0 + \sum_{i=1}^n H_i(Y_{t_{i+1}}-Y_{t_i})
+\]
+are continuous functions from the space of \emph{simple predictable} processes
+\[
+    H_t = H_0 \chi_{0}(t) + \sum_{i=1}^n H_i \chi_{(T_i, T_{i+1}]},
+\]
+with the topology of uniform convergence in $(t, \omega)\in [0,\infty)\times \Omega,$ where $0=T_1 < \ldots < T_n,$ are stopping times, $H_i \in \mathcal{F}_{T_i},$ and $|H_i| < \infty,$ almost surely, to the space of finitely-valued random variables, endowed with the topology of convergence in probability.
+
+Thanks to the Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005}, a \emph{semi-martingale} is a c\`adl\`ag process $\{Y_t\}_{t\in I}$ characterized by being decomposable as a sum of an FV process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\in I}$ and a local martingale process $\{Z_t\}_{t\in I}$ with $F_0 = Z_0 = 0.$
 
 The class of FV processes include the compound Poisson process, inhomogeneous Poisson process, Hawkes self-exciting process, and so on. It also includes transport processes $Y_t = g(t, Y_0)$ where $Y_0$ is a random variable and $t \mapsto g(t, y_0)$ is a c\`adl\`ag function of finite variation, for every sample value $y_0=Y_0(\omega)$.
 
