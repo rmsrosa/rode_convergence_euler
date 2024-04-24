@@ -360,10 +360,9 @@ The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[T
 \]
 which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_t^0 = [Y, Y]_0 - \left(\Delta Y_0\right)^2 = Y_0^2 - Y_0^2 = 0.$
 
-A \emph{Finite-Variation process} (\emph{FV process}) is a c\`adl\`ag process $\{F_t\}_{t \geq 0}$ whose sample paths are almost surely of finite variation, $V(\{F_t\}_t; K)$, on compact subsets, i.e.
-\[ V(\{F_t\}_t; K) = \sup_{t_0 < \ldots < t_n \in K, n\in \mathbb{N}} \sum_{i=1}^n \|F_{t_i} - F_{t_{i-1}}\| < \infty,
+A \emph{Finite-Variation process} (\emph{FV process}) is a c\`adl\`ag process $\{F_t\}_{t \geq 0}$ whose sample paths are almost surely of finite variation, $V(\{F_t\}_t; K)$, on compact subsets $K\subset [0, \infty),$ i.e.
+\[ V(\{F_t\}_t; K) = \sup_{t_0 < \ldots < t_n \in K, n\in \mathbb{N}} \sum_{i=1}^n \|F_{t_i} - F_{t_{i-1}}\| < \infty.
 \]
-for every compact subset $K\subset [0, \infty).$
 
 A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ such that there exists a sequence of increasing stopping times $T_n \rightarrow \infty,$ almost surely, for which $\{Z_{t \wedge T_n}\}_{t \geq 0}$ is a uniformly integrable martingale, for each $n\in\mathbb{N},$ i.e.
 \[
