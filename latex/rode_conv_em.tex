@@ -392,10 +392,11 @@ We also have
     \sum_{s\in J_{Y}} \|\Delta F_t\| \leq V(\{F_t\}_t; I) < \infty.
 \end{equation}
 
-In the more general case of semi-martingale, then $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find that \comment{Check and give a more precise source}
-\[
-    \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 < \infty.
-\]
+In the more general case of semi-martingale, then $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that, componentwise, $[Y, Y]_0 = Y_0^2$ and $\Delta [Y, Y]_t = (\Delta Y)_t^2$ (see \cite[Theorem II.22]{Protter2005}),
+\begin{equation}
+    \label{estimatejumpsemimartingale}
+    \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \leq \|[Y, Y]_T\| < \infty.
+\end{equation}
 
 Since we are considering a bounded interval $I=[0, T],$ the local martingale $Z_t = Z_{t \land T},$ $0\leq t \leq T,$ where $t \land T = \min\{t, T\},$ is a square-integrable martingale, and the Doob Maximal inequality (see e.g. \cite[Theorem I.20]{Protter2005}) yields
 \[
@@ -424,9 +425,16 @@ for $p > 0$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
     \mathbb{E}\left[[Z, Z]_t^{p/2}\right] \leq 4c_p\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
 \]
 for any $t\in I$ and $p > 0,$ and then
-\[
-    \mathbb{E}\left[[Y, Y]_t^{p/2}\right] \leq 4c_p\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right] < \infty.
-\]
+\begin{equation}
+    \label{expectationofquadraticvariation}
+    \mathbb{E}\left[[Y, Y]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right] < \infty.
+\end{equation}
+
+This, together with \eqref{estimatejumpsemimartingale}, also yields
+\begin{equation}
+    \label{expectationsquaredjumps}
+    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right] < \infty.
+\end{equation}
 
 A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
 \begin{equation}
