@@ -527,13 +527,13 @@ In this section, we derive the following integral formula for the global error:
 \end{lemma}
 
 \begin{proof}
-    Under the \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the Lebesgue sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
+    Under the \cref{standinghypotheses1}, the solutions of \eqref{rodeeq} are pathwise solutions in the sense of \eqref{integralrodeform}. With that in mind, we first obtain an expression for a single time step, from time $t_{j-1}$ to $t_j = t_{j-1} + \Delta t_N$.
     
     The exact pathwise solution satisfies
     $$
     X_{t_j} = X_{t_{j-1}} + \int_{t_{j-1}}^{t_j} f(s, X_s, Y_s) \;\mathrm{d}s.
     $$
-    The Euler step is given by $X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}).$ Subtracting, we obtain
+    The Euler step is given by $X_{t_j}^N = X_{t_{j-1}}^N + \Delta t_N f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}).$ Subtracting them, we obtain
     $$
     X_{t_j} - X_{t_j}^N = X_{t_{j-1}} - X_{t_{j-1}}^N + \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
     $$
@@ -561,7 +561,7 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimates for the global error}
 
-Here we derive two estimates that are the bases for the convergence estimates, one for the pathwise error and the other for the strong error. For both, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}). Its proof follows from \cite[Lemma V.2.4]{GiraultRaviart1981} by taking $n = j$, $a_n = e_j$, $b_n = 0$, $c_n = b$, and $\lambda = a$.
+Here we derive two estimates that are the bases for the convergence estimates, one for the pathwise error and the other for the strong error. For both, we use the following classical discrete version of the Grownwall Lemma.
 
 \begin{lemma}[Discrete Gronwall Lemma]
     \label{lemdiscretegronwall}
@@ -570,12 +570,16 @@ Here we derive two estimates that are the bases for the convergence estimates, o
         \label{integralgronwall}
         e_j \leq \sum_{i=0}^{j-1} a_i e_i + b,
     \end{equation}
-    for every $j$, with $e_0 = 0$, and where $a_i, b \geq 0$. Then,
+    for every $j$, and where $a_i, b \geq 0$. Then,
     \begin{equation}
         \label{estimateintegralgronwall}
         e_j \leq b e^{\sum_{i=0}^{j-1} a_i}, \qquad \forall j.
     \end{equation}
 \end{lemma}
+
+\begin{proof}
+    See e.g. \cite[Lemma 1]{Sugiyama1969}, with $m=j,$ $u_m = e_j,$ $g_m = b \geq 0$ constant, and $K_k = a_i \geq 0.$
+\end{proof}
 
 With that, we are ready to prove our basic \emph{pathwise} estimate for the global error.
 \begin{proposition}[Basic pathwise estimate]
@@ -592,27 +596,27 @@ With that, we are ready to prove our basic \emph{pathwise} estimate for the glob
 \begin{proof}
     We estimate the first two integrals in \eqref{globalerrorintegralformula}. For the first one, we use \eqref{Ltassumptionbasic}, so that
     $$
-        \|f(s, X_s, Y_s) - f(s, X_t, Y_s)\| \leq L_s \|X_s - X_t\|,
+        \|f(s, X_s, Y_s) - f(s, X_t, Y_s)\| \leq L(\|Y_s\|) \|X_s - X_t\|,
     $$
     for $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     $$
-        \left\|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right\| \leq \int_0^{t_j} L_s \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s.
+        \left\|\int_0^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{\tau^N(s)}, Y_s) \right)\;\mathrm{d}s \right\| \leq \int_0^{t_j} L(\|Y_s\|) \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s.
     $$
     
     For the second term, we use again \eqref{Ltassumptionbasic}, so that
     $$
-        \|f(s, X_t, Y_s) - f(s, X_t^N, Y_s)\| \leq L_s \|X_t - X_t^N\|,
+        \|f(s, X_t, Y_s) - f(s, X_t^N, Y_s)\| \leq L(\|Y_s\|) \|X_t - X_t^N\|,
     $$
     for any $t, s \in I$, and, in particular, for $t = \tau^N(s)$. Hence,
     \begin{multline*}
-        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right\| \leq \int_0^{t_j} L_s \|X_{\tau^N(s)} - X_{\tau^N(s)}^N\| \;\mathrm{d}s \\
-        \leq \sum_{i=0}^{j-1} \left(\int_{t_i}^{t_{i+1}}L_s\;\mathrm{d}s \right) \|X_{t_i} - X_{t_i}^N\|.
+        \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}, Y_s) - f(s, X_{\tau^N(s)}^N, Y_s) \right)\;\mathrm{d}s \right\| \leq \int_0^{t_j} L(\|Y_s\|) \|X_{\tau^N(s)} - X_{\tau^N(s)}^N\| \;\mathrm{d}s \\
+        \leq \sum_{i=0}^{j-1} \left(\int_{t_i}^{t_{i+1}}L(\|Y_s\|)\;\mathrm{d}s \right) \|X_{t_i} - X_{t_i}^N\|.
     \end{multline*}
     
     With these two estimates, we bound \eqref{globalerrorintegralformula} as
     \begin{align*}
-        \|X_{t_j} - X_{t_j}^N\| & \leq \|X_0 - X_0^N\| + \int_0^{t_j} L_s \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \\
-        & \qquad + \sum_{i=0}^{j-1} \left(\int_{t_i}^{t_{i+1}}L_s\;\mathrm{d}s \right) \|X_{t_i} - X_{t_i}^N\| \\
+        \|X_{t_j} - X_{t_j}^N\| & \leq \|X_0 - X_0^N\| + \int_0^{t_j} L(\|Y_s\|) \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \\
+        & \qquad + \sum_{i=0}^{j-1} \left(\int_{t_i}^{t_{i+1}}L(\|Y_s\|)\;\mathrm{d}s \right) \|X_{t_i} - X_{t_i}^N\| \\
         & \qquad + \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|.
     \end{align*}
     This can be cast in the form of \eqref{integralgronwall}. Then, using the discrete Gronwall \cref{lemdiscretegronwall}, we obtain \eqref{Etjbasicbound}.
@@ -1882,8 +1886,6 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tabl
 
     \bibitem{BrigoMercurio2006}, D. Brigo, F. Mercurio, \emph{Interest Rate Models - Theory and Practice,} Springer-Verlag, Berlin, Heidelberg, 2006.
 
-    \bibitem{Clark1987} D. S. Clark, Short proof of a discrete Gronwall inequality, \emph{Discrete Applied Mathematics,} Vol. 16 (1987) no. 3, 279--281.
-
     \bibitem{CoddingtonLevinson1985} E. A. Coddington and N. Levinson, \emph{Theory of Ordinary Differential Equations,} New York: McGraw-Hill, 1987.
 
     \bibitem{DiekerMandjes2003} A. B. Dieker and M. Mandjes, On spectral simulation of fractional Brownian motion, \emph{Probability in the Engineering and Informational Sciences,} 17 (2003), 417--434.
@@ -1892,12 +1894,9 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tabl
 
     \bibitem{FreidlinWentzell1992} M. I. Freidlin and A. D. Wentzell, Reaction-diffusion equations with randomly perturbed boundary conditions, \emph{Ann. Probab.} 20 (1992), no. 2, 963--986.
 
-    \bibitem{GerberShiu1998} H. U. Gerber, E. S. W. Shiu, On the time value of ruin, North American Actuarial J. 
-    vol. 2 (1998), no. 1, 48--72.
+    \bibitem{GerberShiu1998} H. U. Gerber, E. S. W. Shiu, On the time value of ruin, North American Actuarial J., vol. 2 (1998), no. 1, 48--72.
 
     \bibitem{GHLOUZ1993} H. Gjessing, H. Holden, T. Lindstr{\o}n, B. {\O}ksendal, J. Ub{\o}e, and T.-S. Zhang, The Wick product, \emph{Vol. 1 Proceedings of the Third Finnish-Soviet Symposium on Probability Theory and Mathematical Statistics,} Turku, Finland, August 13--16, 1991, edited by H. Niemi, G. H\"ognas, A. N. Shiryaev and A. V. Melnikov, Berlin, Boston: De Gruyter, 1993, pp. 29-67.
-
-    \bibitem{GiraultRaviart1981} V. Girault and P.-A. Raviart, \emph{Finite-Element Approximation of the Navier-Stokes Equations,} Lecture Notes in Mathematics, vol. 749, Springer-Verlag, Berlin, Heidelberg, 1981.
 
     \bibitem{Gronwall1919} T. H. Gronwall, Note on the derivatives with respect to a parameter of the solutions of a system of differential equations, \emph{Ann. of Math.} (2) 20 (1919), 292--296.
 
@@ -1940,6 +1939,8 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tabl
     \bibitem{SalakoShen2020} R. B. Salako and W. Shen, Long time behavior of random and nonautonomous Fisher-KPP equations: Part I - stability of equilibria and spreading speeds, \emph{J. Dyn. Diff. Eqs.,} 33 (2021), 1035--1070.
 
     \bibitem{StrasserTheisMarr2012} M. Strasser, F. J. Theis, and C. Marr, Stability and multiattractor dynamics of a toggle switch based on a two-stage model of stochastic gene expression, \emph{Biophysical J.,} 102 (2012), 19--29.
+
+    \bibitem{Sugiyama1969} S. Sugiyama, Stability problems on difference and functional-differential equations, \emph{Proc. Japan Acad.} 45 (1969), no. 7, 526--529. % DOI: 10.3792/pja/1195520661
 
     \bibitem{Tajimi1960} H. Tajimi, A statistical method of determining the maximum response of a building during an Earthquake, \emph{Proceedings of the Second World Conference on Earthquake Engineering,} Tokyo and Kyoto, Japan, vol. II, 1960.
     
