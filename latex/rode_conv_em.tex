@@ -738,19 +738,13 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         & \qquad \qquad \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
         & \qquad \qquad \qquad \leq \Delta t_N\int_0^{t_j} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}\xi.
     \end{align*}
-    Using the bound \eqref{XNtboundLXMt} on the pathwise approximation, the bound \eqref{X0conv} on the approximation of the initial condition, and the bound $\tau^N(\xi)\leq \xi$ on the mesh points, together with the monononicity of the bounding function $\varphi_2,$ we obtain
-    \begin{multline*}
-        \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        \leq \Delta t_N\int_0^{t_j} \left(c_1 + \varphi_2\left(\left(\|X_0\| + C_0\Delta t_N + C_M \xi \right)e^{c_L \xi}\right) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}\xi.
-    \end{multline*}
 
     The second term is similar, except that now we integrate with respect to a finite variation process, so it is a Lebesgue-Stieltjes integral,
     \begin{align*}
         \bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\bigg\| \\
         & \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + \varphi_5 (\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
         & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
-        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + \varphi_5(\|X_{\tau^N(\xi)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\| \\
-        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + \varphi_5\left(\left(\|X_0\| + C_0\Delta t_N + C_M \xi \right)e^{c_L \xi}\right) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|.
+        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + \varphi_5(\|X_{\tau^N(\xi)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|.
     \end{align*}
 
     For the third term, using this time the monotonicity of the bounding function $\varphi_6,$ we have
@@ -768,9 +762,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
         & \quad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t_N} 2\left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\|\Delta Y_\xi\|\;\mathrm{d}s \\
         & \quad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
-        & \quad \leq 2\left(c_4 + \varphi_5(\max_{i=0, \ldots, j}\|X_i^N\|) + \varphi_6\left(\sup_{0\leq s \leq t_j}\|Y_s\|\right)\right) \Delta t_N\sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\| \\
-        & \quad \leq 2\bigg(c_4 + \varphi_5\left(\left(\|X_0\| + C_0\Delta t_N + C_M t_j \right)e^{c_L t_j}\right) \\
-        & \hspace{2.5in} + \varphi_6\left(\sup_{0\leq s \leq t_j}\|Y_s\|\right)\bigg) V(\{Y_t\}_t; [0, t_j]) \Delta t_N.
+        & \quad \leq 2\left(c_4 + \varphi_5\left(\max_{i=0, \ldots, j}\|X_i^N\|\right) + \varphi_6\left(\sup_{0\leq s \leq t_j}\|Y_s\|\right)\right) \Delta t_N\sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\|.
     \end{align*}
     Putting the estimates together, we find that
     \[
@@ -781,15 +773,19 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         \begin{aligned}
             \tilde C & = \int_0^T \left(c_1 + \varphi_2\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_3(\|Y_{s^-}\|)\right)\;\mathrm{d}s \\
             & + \int_0^T \left(c_4 + \varphi_5\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_6(\|Y_{s^-}\|)\right)\;\|\mathrm{d}Y_s\| \\
-            & + 2\left(c_4 + \varphi_5\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_6\left(\sup_{0\leq s \leq T}\|Y_s\|\right)\right) V(\{Y_t\}_t; I).
+            & + 2\left(c_4 + \varphi_5\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_6\left(\sup_{0\leq s \leq T}\|Y_s\|\right)\right) V(\{Y_t\}_t; I),
         \end{aligned}
     \end{equation}
+    with $C_M=C_M(\omega)$ given by
+    \[
+        C_M = ...
+    \]
     Using this estimate in \eqref{Etjbasicbound}, we obtain
     \[
         \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \int_0^{t_j} L_s\|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
             \left. + \tilde C \Delta t_N\right) e^{\int_0^{t_j} L_s\;\mathrm{d}s}.
     \]
-    From \eqref{estimatesecondterminglobalerrorintegral} and the hypothesis \eqref{X0conv} on the initial condition we prove \eqref{ordercadlagfv}, with a suitable $C=C(\omega)$. Thanks to the assumptions on $C_0,$ $C_M,$ $c_L,$ $X_0,$ on the bounding functions $\varphi_2,$ $\varphi_3,$ $\varphi_5,$ $\varphi_6,$ and on the finite-variation of the noise, the constant $C$ is also finite almost everywhere, completing the proof.
+    From \eqref{estimatesecondterminglobalerrorintegral} and the hypothesis \eqref{X0conv} on the initial condition we prove \eqref{ordercadlagfv}, with a suitable $C=C(\omega)$. Thanks to the assumptions on $C_0,$ $c_L,$ $X_0,$ on the bounding functions $\varphi_2,$ $\varphi_3,$ $\varphi_5,$ $\varphi_6,$ and on the finite-variation of the noise, the constant $C$ is also finite almost everywhere, completing the proof.
 \end{proof}
 
 \section{Strong converge for semi-martingale noises}
