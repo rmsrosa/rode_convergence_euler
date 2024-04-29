@@ -302,6 +302,46 @@ for every $t\in I,$ $y\in\mathbb{R}^k,$ and $x_1, x_2 \in\mathbb{R}^d.$
     In special \emph{dissipative} cases, depending on the structure of the equation, we might not need the condition \eqref{CMmeanbound} in \cref{lemstrongbound} and only require $\mathbb{E}[\|X_0\|] < \infty$. Indeed, when some bounded, positively invariant region exists and is of interest, we may truncate the nonlinear term to achieve the desired global conditions for the equation with the truncated term, but which coincides with the original equation in the region of interest. We leave these cases to be handled in the applications, such as the population dynamics example in \cref{secpopdyn}.
 \end{remark}
 
+\section{Bound on the pathwise approximations}
+\label{secpathwiseapproximation}
+
+We also need estimates for the Euler approximation \eqref{emscheme} analogous to \eqref{XtboundLXMt} and \eqref{EXtstrongbound}. Notice that
+\begin{align*}
+    \|X_{t_j}^N\| & \leq \|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}})\| \\
+    & \leq \|X_{t_{j-1}}^N\| + \Delta t_N (\|f(t_{j-1}, 0, Y_{t_{j-1}})\| + L(\|Y_{t_{j-1}}\|)\|X_{t_{j-1}}\|) \\
+    & \leq \left(1 + L(\|Y_{t_{j-1}}\|)\Delta t_N\right)\|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1},0,Y_{t_{j-1}})\|.
+\end{align*}
+We bound $(1 + a) \leq e^a$, so that
+\[
+    \|X_{t_j}^N\| \leq e^{L(\|Y_{t_{j-1}}\|)\Delta t_N}\|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1},0,Y_{t_{j-1}})\|.
+\]
+Iterating this relation we obtain the following bound.
+\begin{equation}
+    \label{XNtboundLXMtpre}
+    \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} \|f(t_i,0,Y_{t_i})\|\right)e^{\Delta t_N \sum_{i=0}^{j-1} L(\|Y_{t_i}\|)}, \quad \forall j = 0, \ldots, N.
+\end{equation}
+The right hand side above depends on the time mesh. A straighforward estimate independent of the time mesh is obtained from \eqref{XNtboundLXMtpre} and the fact that semi-martingales are pathwise locally bounded, almost surely.
+\begin{lemma}
+    \label{lemXNtboundLXMt}
+    Under the \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
+    \begin{equation}
+        \label{XNtboundLXMt}
+        \|X_{t_j}^N\| \leq \left(\|X_0^N\| + t_j \sup_{0\leq s\leq t_j} \|f(t_s,0,Y_s)\|\right)e^{t_j \sup_{0\leq s\leq t_j} L(\|Y_s\|)}, \quad \forall j = 0, \ldots, N.
+    \end{equation}
+    \qed
+\end{lemma}
+
+The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need stronger conditions, such as in the following result.
+\begin{lemma}
+    \label{lemXNtmeanboundLXMt}
+    Under the \cref{standinghypotheses1}, assume moreover that \eqref{EX0strongbound}, \eqref{CMmeanbound} and \eqref{LtLXbound} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
+    \begin{equation}
+        \label{XNtmeanboundLXMt}
+        \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}\left[\sum_{i=0}^{j-1} \|f(t_i,0,Y_{t_i})\|\Delta t_N \right] \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
+    \end{equation}
+    \qed
+\end{lemma}
+
 \section{Semi-martingale noises}
 \label{secsemimartingale}
 
@@ -450,46 +490,6 @@ In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the cha
     \end{aligned}
 \end{equation}
 Since $[Y, Y]_t^c$ is of finite variation, the corresponding integral is a Lebesgue-Stieltjes integral.
-
-\section{Bound on the pathwise approximations}
-\label{secpathwiseapproximation}
-
-We also need estimates for the Euler approximation \eqref{emscheme} analogous to \eqref{XtboundLXMt} and \eqref{EXtstrongbound}. Notice that
-\begin{align*}
-    \|X_{t_j}^N\| & \leq \|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}})\| \\
-    & \leq \|X_{t_{j-1}}^N\| + \Delta t_N (\|f(t_{j-1}, 0, Y_{t_{j-1}})\| + L(\|Y_{t_{j-1}}\|)\|X_{t_{j-1}}\|) \\
-    & \leq \left(1 + L(\|Y_{t_{j-1}}\|)\Delta t_N\right)\|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1},0,Y_{t_{j-1}})\|.
-\end{align*}
-We bound $(1 + a) \leq e^a$, so that
-\[
-    \|X_{t_j}^N\| \leq e^{L(\|Y_{t_{j-1}}\|)\Delta t_N}\|X_{t_{j-1}}^N\| + \Delta t_N \|f(t_{j-1},0,Y_{t_{j-1}})\|.
-\]
-Iterating this relation we obtain the following bound.
-\begin{equation}
-    \label{XNtboundLXMtpre}
-    \|X_{t_j}^N\| \leq \left(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} \|f(t_i,0,Y_{t_i})\|\right)e^{\Delta t_N \sum_{i=0}^{j-1} L(\|Y_{t_i}\|)}, \quad \forall j = 0, \ldots, N.
-\end{equation}
-The right hand side above depends on the time mesh. A straighforward estimate independent of the time mesh is obtained from \eqref{XNtboundLXMtpre} and the fact that semi-martingales are pathwise locally bounded, almost surely.
-\begin{lemma}
-    \label{lemXNtboundLXMt}
-    Under the \cref{standinghypotheses1}, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies almost surely
-    \begin{equation}
-        \label{XNtboundLXMt}
-        \|X_{t_j}^N\| \leq \left(\|X_0^N\| + t_j \sup_{0\leq s\leq t_j} \|f(t_s,Y_s)\|\right)e^{t_j \sup_{0\leq s\leq t_j} L(\|Y_s\|)}, \quad \forall j = 0, \ldots, N.
-    \end{equation}
-    \qed
-\end{lemma}
-
-The above estimate is sufficient for the pathwise convergence of the Euler method in the case of an FV noise. For the strong convergence, we need stronger conditions, such as in the following result.
-\begin{lemma}
-    \label{lemXNtmeanboundLXMt}
-    Under the \cref{standinghypotheses1}, assume moreover that \eqref{EX0strongbound}, \eqref{CMmeanbound} and \eqref{LtLXbound} hold. Then, the Euler approximation \eqref{emscheme} for a pathwise solution of the random ordinary differential equation \eqref{rodeeq} satisfies
-    \begin{equation}
-        \label{XNtmeanboundLXMt}
-        \mathbb{E}\left[\|X_{t_j}^N\|\right] \leq \left(\mathbb{E}\left[\|X_0^N\|\right] + \mathbb{E}\left[\sum_{i=0}^{j-1} \|f(t_i,0,Y_{t_i})\|\Delta t_N \right] \right)e^{c_L t_j}, \quad \forall j = 0, \ldots, N.
-    \end{equation}
-    \qed
-\end{lemma}
 
 \section{Integral formula for the global pathwise error}
 
@@ -706,7 +706,7 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         \label{ftfyboundedgrowthcadlagfpartialy}
         \left\|D_y f(t, x, y)\right\| & \leq c_4 + \varphi_5(\|x\|) + \varphi_6(\|y\|),
     \end{align}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_4 \geq 0$ and for suitable continuous and monotonically increasing nonnegative functions $\varphi_2, \varphi_3, \varphi_5, \varphi_6.$ Assume, further, that the noise $\{Y_t\}_{t\in I}$ is an FV process. Then, the Euler scheme is pathwise convergent of order 1, i.e.
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_4 \geq 0$ and for suitable continuous and monotonically increasing nonnegative functions $\varphi_2, \varphi_3, \varphi_5, \varphi_6$ which vanish at zero. Assume, further, that the noise $\{Y_t\}_{t\in I}$ is an FV process. Then, the Euler scheme is pathwise convergent of order 1, i.e.
     \begin{equation}
         \label{ordercadlagfv}
         \max_{j=0, \ldots, N} \left\| X_{t_j}(\omega) - X_{t_j}^N(\omega) \right\| \leq C(\omega) \Delta t_N, \qquad \forall N \in \mathbb{N},
@@ -733,19 +733,25 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + \varphi_2(\|X_{\tau^N(s)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\mathrm{d}\xi.
     \end{align*}
     For $s$ within $\xi \leq s < \tau^N(\xi) + \Delta t_N$, we have $\tau^N(s) = \tau^N(\xi)$. Moreover, $\tau^N(\xi) + \Delta t_N- \xi \leq \Delta t_N$. Hence
-    \begin{align*}
-        & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
-        & \qquad \qquad \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
-        & \qquad \qquad \qquad \leq \Delta t_N\int_0^{t_j} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}\xi.
-    \end{align*}
+    \begin{equation}
+        \label{ordercadlagfvterm1}
+        \begin{aligned}
+            & \left\|\int_0^{t_j} \int_{\tau^N(s)}^s \partial_\xi f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}\xi\;\mathrm{d}s\right\| \\
+            & \qquad \qquad \qquad \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\mathrm{d}\xi \\
+            & \qquad \qquad \qquad \leq \Delta t_N\int_0^{t_j} \left(c_1 + \varphi_2(\|X_{\tau^N(\xi)}^N\|) + \varphi_3(\|Y_{\xi^-}\|)\right)\;\mathrm{d}\xi.
+        \end{aligned}
+    \end{equation}
 
     The second term is similar, except that now we integrate with respect to a finite variation process, so it is a Lebesgue-Stieltjes integral,
-    \begin{align*}
-        \bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\bigg\| \\
-        & \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + \varphi_5 (\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
-        & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
-        & \leq \Delta t_N\int_0^{t_j} \left(c_4 + \varphi_5(\|X_{\tau^N(\xi)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|.
-    \end{align*}
+    \begin{equation}
+        \label{ordercadlagfvterm2}
+        \begin{aligned}
+            \bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Y_\xi\;\mathrm{d}s\bigg\| \\
+            & \leq \int_0^{t_j} \int_{\tau^N(s)}^s \left(c_4 + \varphi_5 (\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|\;\mathrm{d}s \\
+            & \leq \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\mathrm{d}s\;\|\mathrm{d}Y_\xi\| \\
+            & \leq \Delta t_N\int_0^{t_j} \left(c_4 + \varphi_5(\|X_{\tau^N(\xi)}^N\|) + \varphi_6(\|Y_{\xi^-}\|)\right)\;\|\mathrm{d}Y_\xi\|.
+        \end{aligned}
+    \end{equation}
 
     For the third term, using this time the monotonicity of the bounding function $\varphi_6,$ we have
     \begin{multline*}
@@ -758,34 +764,61 @@ Here, the noise $\{Y_t\}_{t\in I}$ is assumed to be an FV process, i.e. almost s
         \leq \int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} 2(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|)\})\|\Delta Y_\xi\|\;\mathrm{d}s.
     \end{multline*}
     Switching the order of the integral and of the summation and using \eqref{estimatejumpfv} and the monotonicity of the bounding functions, we find
-    \begin{align*}
-        & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
-        & \quad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t_N} 2\left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\|\Delta Y_\xi\|\;\mathrm{d}s \\
-        & \quad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
-        & \quad \leq 2\left(c_4 + \varphi_5\left(\max_{i=0, \ldots, j}\|X_i^N\|\right) + \varphi_6\left(\sup_{0\leq s \leq t_j}\|Y_s\|\right)\right) \Delta t_N\sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\|.
-    \end{align*}
-    Putting the estimates together, we find that
+    \begin{equation}
+        \label{ordercadlagfvterm3}
+        \begin{aligned}
+            & \left\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\right)\;\mathrm{d}s\right\| \\
+            & \quad \leq \sum_{0 < \xi \leq t_j} \int_{\xi}^{\tau(\xi)+\Delta t_N} 2\left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\|\Delta Y_\xi\|\;\mathrm{d}s \\
+            & \quad \leq 2 \sum_{0 < \xi \leq t_j} \left(\int_{\xi}^{\tau(\xi)+\Delta t_N} \left(c_4 + \varphi_5(\|X_{\tau^N(s)}^N\|) + \varphi_6\left(\max\{\|Y_{\xi^{-}}\|, \|Y_{\xi}\|\}\right)\right)\;\mathrm{d}s \right)\|\Delta Y_\xi\| \\
+            & \quad \leq 2\left(c_4 + \varphi_5\left(\max_{i=0, \ldots, j}\|X_{t_i}^N\|\right) + \varphi_6\left(\sup_{0\leq s \leq t_j}\|Y_s\|\right)\right) \Delta t_N\sum_{0 < \xi \leq t_j} \|\Delta Y_\xi\|.
+        \end{aligned}
+    \end{equation}
+    
+    Before we combine these estimates, we need a more appropriate bound for the aproximations $\|X_{t_j}^N\|.$ First notice that, from \eqref{ftfyboundedgrowthcadlagfpartialt} and \eqref{ftfyboundedgrowthcadlagfpartialy},
+    \[
+        \|f(t, 0, y)\| \leq c_1t + \varphi_3(\|y\|)t + c_4\|y\| + \varphi_6(\|y\|)\|y\|,
+    \]
+    for $t\in I$ and $y\in\mathbb{R}^k.$ Using this inequality in \eqref{XNtboundLXMtpre} yields 
+
+    \begin{multline*}
+        \|X_{t_j}^N\| \leq \Bigg(\|X_0^N\| + \Delta t_N \sum_{i=0}^{j-1} \bigg( c_1t_i + \varphi_3(\|Y_{t_i}\|)t_i  \\
+        + c_4\|Y_{t_i}\| + \varphi_6(\|Y_{t_i}\|)\|Y_{t_i}\|\bigg)\Bigg)e^{\Delta t_N \sum_{i=0}^{j-1} L(\|Y_{t_i}\|)}.
+    \end{multline*}
+    Using \eqref{ordercadlagfv},
+    \begin{multline*}
+        \|X_{t_j}^N\| \leq \Bigg(\|X_0\| + C_0 \Delta t_N + \Delta t_N \sum_{i=0}^{j-1} \bigg( c_1t_i + \varphi_3(\|Y_{t_i}\|)t_i  \\
+        + c_4\|Y_{t_i}\| + \varphi_6(\|Y_{t_i}\|)\|Y_{t_i}\|\bigg)\Bigg)e^{\Delta t_N \sum_{i=0}^{j-1} L(\|Y_{t_i}\|)}.
+    \end{multline*}
+    Then, using the fact that the noise paths are almost surely bounded,
+    \begin{equation}
+        \label{boundCM}
+        \|X_{t_j}^N\| \leq C_T
+    \end{equation}
+    where $C_T = C_T(\omega)$ is the random variable given by
+    \begin{multline}
+        \label{defCM}
+        C_T = \bigg(\|X_0\| + C_0T + c_1T^2 + \varphi_3\left(\sup_{0\leq s \leq T}\|Y_s\|\right)T \\
+        + c_4\sup_{0\leq s \leq T}\|Y_s\| + \varphi_6\left(\sup_{0\leq s \leq T}\|Y_s\|\right)\sup_{0\leq s \leq T}\|Y_s\|\bigg)e^{T L\left(\sup_{0\leq s \leq T}\|Y_s\|\right)}.
+    \end{multline}
+
+    Putting the estimates \eqref{ordercadlagfvterm1}, \eqref{ordercadlagfvterm2} and \eqref{ordercadlagfvterm3} together with \eqref{defCM}, we find that
     \[
         \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\| \leq \tilde C \Delta t_N,
     \]
     where $\tilde C=\tilde C(\omega)$ is the random variable
     \begin{equation}
         \begin{aligned}
-            \tilde C & = \int_0^T \left(c_1 + \varphi_2\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_3(\|Y_{s^-}\|)\right)\;\mathrm{d}s \\
-            & + \int_0^T \left(c_4 + \varphi_5\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_6(\|Y_{s^-}\|)\right)\;\|\mathrm{d}Y_s\| \\
-            & + 2\left(c_4 + \varphi_5\left(\left(\|X_0\| + (C_0 + C_M) T \right)e^{c_L T}\right) + \varphi_6\left(\sup_{0\leq s \leq T}\|Y_s\|\right)\right) V(\{Y_t\}_t; I),
+            \tilde C & = \int_0^T \left(c_1 + \varphi_2(C_T) + \varphi_3(\|Y_{s^-}\|)\right)\;\mathrm{d}s \\
+            & + \int_0^T \left(c_4 + \varphi_5(C_T) + \varphi_6(\|Y_{s^-}\|)\right)\;\|\mathrm{d}Y_s\| \\
+            & + 2\left(c_4 + \varphi_5(C_T) + \varphi_6\left(\sup_{0\leq s \leq T}\|Y_s\|\right)\right) V(\{Y_t\}_t; I),
         \end{aligned}
     \end{equation}
-    with $C_M=C_M(\omega)$ given by
-    \[
-        C_M = ...
-    \]
-    Using this estimate in \eqref{Etjbasicbound}, we obtain
+    with $C_T=C_T(\omega)$ given by \eqref{defCM}. Using this estimate in \eqref{Etjbasicbound}, we obtain
     \[
         \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + \int_0^{t_j} L_s\|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
             \left. + \tilde C \Delta t_N\right) e^{\int_0^{t_j} L_s\;\mathrm{d}s}.
     \]
-    From \eqref{estimatesecondterminglobalerrorintegral} and the hypothesis \eqref{X0conv} on the initial condition we prove \eqref{ordercadlagfv}, with a suitable $C=C(\omega)$. Thanks to the assumptions on $C_0,$ $c_L,$ $X_0,$ on the bounding functions $\varphi_2,$ $\varphi_3,$ $\varphi_5,$ $\varphi_6,$ and on the finite-variation of the noise, the constant $C$ is also finite almost everywhere, completing the proof.
+    From \eqref{estimatesecondterminglobalerrorintegral} and the hypothesis \eqref{X0conv} on the initial condition we prove \eqref{ordercadlagfv}, with a suitable $C=C(\omega)$. Thanks to the assumptions on the bounding functions $\varphi_2,$ $\varphi_3,$ $\varphi_5,$ $\varphi_6,$ on the initial condition, on the approximation of the initial condition, and on the noise, the constant $C$ is also finite almost everywhere, completing the proof.
 \end{proof}
 
 \section{Strong converge for semi-martingale noises}
