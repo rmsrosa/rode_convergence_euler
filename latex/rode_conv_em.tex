@@ -701,13 +701,6 @@ Taking the expectation of \eqref{estimatesecondterminglobalerrorintegral} and as
     This simplifies to \eqref{estimatesecondterminglobalstrongerrorintegral}.
 \end{proof}
 
-Putting things together, we have
-\begin{multline}
-    \label{expectedestimateglobalerrorintegralold}
-        \mathbb{E} \left[\|X_{t_j} - X_{t_j}^N\|\right] \leq \Bigg( c_0 \Delta t_N + \Delta t_N c_L \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[M_\xi]\;\mathrm{d}\xi\right)e^{c_L t_j} \\
-        + \mathbb{E}\left[\left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right]\Bigg) e^{c_L t_j}.
-\end{multline}
-
 \section{Pathwise convergence for FV noises}
 \label{secmonotonicbound}
 
