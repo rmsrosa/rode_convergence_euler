@@ -424,9 +424,10 @@ In the more general case of semi-martingale, then $\{Y_t\}_{t\geq 0}$ has finite
 \end{equation}
 
 Since we are considering a bounded interval $I=[0, T],$ the local martingale $Z_t = Z_{t \land T},$ $0\leq t \leq T,$ where $t \land T = \min\{t, T\},$ is a square-integrable martingale, and the Doob Maximal inequality (see e.g. \cite[Theorem I.20]{Protter2005}) yields
-\[
+\begin{equation}
+    \label{expectationZtsquaredfinite}
     \mathbb{E}\left[\sup_{t\in I} \|Z_t\|^2\right] \leq 4\mathbb{E}[\|Z_T\|^2] < \infty,
-\]
+\end{equation}
 which is finite by the definition of martingale. Since $F_0 = 0,$ the finite variation part is bounded by
 \[
     \sup_{t\in I} \|F_t\| \leq V(\{F_t\}_t; I),
@@ -436,10 +437,16 @@ which implies, in particular,
     \mathbb{E}\left[\sup_{t\in I} \|F_t\|\right] \leq \mathbb{E}\left[V(\{F_t\}_t; I)\right], \qquad \mathbb{E}\left[\sup_{t\in I} \|F_t\|^2\right] \leq \mathbb{E}\left[V(\{F_t\}_t; I)^2\right].
 \]
 For $Y_t = Y_0 + Z_t + F_t,$ we find
+\begin{equation}
+    \label{expectationYtfinite}
+    \mathbb{E}\left[\sup_{t\in I} \|Y_t\|\right] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}\left[V(\{F_t\}_t; I)\right] + 2\mathbb{E}\left[\|Z_T\|^2\right]^{1/2}.
+\end{equation}
+and
 % using that (a + b + c)^2 \leq 3(a^2 + b^2 + c^2)
-\[
+\begin{equation}
+    \label{expectationYtsquaredfinite}
     \mathbb{E}\left[\sup_{t\in I} \|Y_t\|^2\right] \leq 3\mathbb{E}[\|Y_0\|^2] + 3\mathbb{E}\left[V(\{F_t\}_t; I)^2\right] + 12\mathbb{E}[\|Z_T\|^2].
-\]
+\end{equation}
 
 For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the Burkholder-David-Gundy inequalities \cite[Theorem IV.48]{Protter2005} relate the moments of the maximum of the local martingale with moments of its quadratic variation,
 \[
@@ -452,13 +459,13 @@ for $p \geq 1$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
 for any $t\in I,$ and then
 \begin{equation}
     \label{expectationofquadraticvariation}
-    \mathbb{E}\left[[Y, Y]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right] < \infty.
+    \mathbb{E}\left[[Y, Y]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
 This, together with \eqref{estimatejumpsemimartingale}, also yields
 \begin{equation}
     \label{expectationsquaredjumps}
-    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right] < \infty.
+    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
 A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
@@ -845,15 +852,9 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_7 \geq 0$. Assume the semi-martingale noise $\{Y_t\}_{t\in I}$ is decomposed as $Y_t = Y_0 + F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process, $\{Z_t\}_{t\in I}$ is a local martingale, and $F_0 = Z_0 = 0,$ and assume they satisfy
     \begin{align}
         \label{Y0finiteexpectation}
-        & \mathbb{E}\left[Y_0\right] < \infty, \\
+        & \mathbb{E}\left[\|Y_0\|\right] < \infty, \\
         \label{expectFVFtfinite}
         & \mathbb{E}\left[V(\{F_t\}_t; I)\right] < \infty, \\
-        \label{expectZtfinite}
-        & \sup_{t\in I} \mathbb{E}\left[\|Y_t\|\right] < \infty, \\
-        \label{expectquadraticjumptsfinite}
-        & \mathbb{E}\left[\left\|\sum_{0 < s \leq T}\left( \Delta Y_s \right)^2\right\|\right] < \infty, \\
-        \label{expectquadraticvarfinite}
-        & \mathbb{E}[[Y, Y]_T] < \infty.
     \end{align}   
     Then, the Euler scheme is strongly convergent of order 1, i.e.
     \begin{equation}
@@ -913,13 +914,13 @@ We now consider the more general case of a semi-martingale noise. In this case, 
         & \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right)^2\right]^{1/2} \\
         & \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
         & \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & \leq c_4\Delta t_N\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d}[Z, Z]_\xi\right] \\
-        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j},\right],
+        & \leq c_4\Delta t_N\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
+        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j},\right]^{1/2},
     \end{align*}
     where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that $[Z, Z]_0 = Z_0^2 = 0,$ we obtain
     \begin{equation}
         \label{strongorderterm2b}
-        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \leq c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j}\right].
+        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \leq c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j}\right]^{1/2}.
     \end{equation}
     
     Now we move to the third term in \eqref{smlasttermerror}. It could be treated as in \cref{thmcadlagfv}, but instead we use the bound \eqref{ftfyunifboundcadlagfvpartialyy} on the second derivative of $D_{yy}f$ to write
@@ -962,15 +963,19 @@ We now consider the more general case of a semi-martingale noise. In this case, 
     \begin{equation*}
         \begin{aligned}
             C_T & = c_1 T + c_2\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] \\
-            & \quad + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] + c_4\mathbb{E}\left[ [Z, Z]_T\right] \\
-            & \quad + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < s \leq T}\left( \Delta Y_s \right)^2\right\|\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
+            & \qquad + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] + c_4\mathbb{E}\left[ [Z, Z]_T\right]^{1/2} \\
+            & \qquad + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < s \leq T}\left( \Delta Y_s \right)^2\right\|\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
         \end{aligned}
     \end{equation*}
-    Thanks to \eqref{CMmeanbound}, \eqref{EX0strongbound}, \eqref{Y0finiteexpectation}, \eqref{expectFVFtfinite}, \eqref{expectZtfinite}, \eqref{expectquadraticjumptsfinite}, and \eqref{expectquadraticvarfinite}, the constant $C_T$ above is finite. Plugging \eqref{lasttermestimateforstrongconv} into \eqref{expectedestimateglobalerrorintegral} and applying \eqref{estimatesecondterminglobalerrorintegral} and \eqref{EX0X0Nunif} yield the desired order-one estimate \eqref{ordersemimartingaleunif}.
+    Thanks to \eqref{CMmeanbound}, \eqref{EX0strongbound}, \eqref{Y0finiteexpectation}, \eqref{expectFVFtfinite}, \eqref{expectationYtfinite}, \eqref{expectationZtsquaredfinite}, \eqref{expectationofquadraticvariation}, and \eqref{expectationsquaredjumps}, the constant $C_T$ above is finite. Plugging \eqref{lasttermestimateforstrongconv} into \eqref{expectedestimateglobalerrorintegral} and applying \eqref{estimatesecondterminglobalerrorintegral} and \eqref{EX0X0Nunif} yield the desired order-one estimate \eqref{ordersemimartingaleunif}.
 \end{proof}
 
 \begin{remark}
-    If the initial condition $X_0$ is bounded almost surely, then \eqref{XtboundLXMt} shows that $X_t$ is also bounded almost surely, uniformly on a bounded interval $t\in [0, T].$ In this case, the conditions on the derivative of $f=f(t, x, y)$ can be relaxed to have an arbitrary growth on $x$. Similarly, if the noise has bounded support almost surely, uniformly on $t\in [0, T],$ then the derivatives are allowed to grow with $y$. If the initial condition has no bounded support but higher moments are bounded, then appropriate power growths on $x$ are allowed.
+    If the initial condition $X_0$ is bounded almost surely, then \eqref{XtboundLXMt} shows that $X_t$ is also bounded almost surely, uniformly on a bounded interval $t\in [0, T].$ In this case, the conditions on the derivative of $f=f(t, x, y)$ can be relaxed to have an arbitrary growth on $x$. Similarly, if the noise has bounded support almost surely, uniformly on $t\in [0, T],$ then the derivatives are allowed to grow with $y$. If the initial condition has no bounded support but higher moments are bounded, then appropriate power growths on $x$ are allowed. Even the uniform Lipschitz condition \eqref{LtLXbound} may be relaxed to bound such as
+    \[
+        \int_0^T \mathbb{E}[L(\|Y_s\|)] \;\mathrm{d}t < \infty
+    \]
+    provided higher-order moments of $\mathbb{X}_t$ are finite, such as in the linear example \eqref{linearhomogeneousrode}.
 \end{remark}
 
 \section{Numerical examples}
@@ -1045,6 +1050,7 @@ Since the noise is simply a Wiener process, the corresponding RODE can be turned
 
 Equation \eqref{linearhomogeneousrode} has the explicit solution
 \begin{equation}
+    \label{Xtlinearhomogeneousrodesolution}
     X_t = e^{\int_0^t W_s \;\mathrm{d}s}X_0.
 \end{equation}
 
@@ -1085,6 +1091,7 @@ Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the sec
 
 For a normal variable $N \sim \mathcal{N}(\mu, \sigma)$, the expectation of the random variable $e^N$ is $\mathbb{E}[e^N] = e^{\mu + \sigma^2/2}$. Hence,
 \begin{equation}
+    \label{Xtlinearhomogeneousrodeestimateexponentialofnomral}
     \mathbb{E}[e^{Z_i}] = e^{((t_{i+1}- t_i)^3)/24}.
 \end{equation}
 This is the contribution of this random variable to the mean of the exact solution. But we actually draw directly $Z_i$ and use $e^{\sum_i Z_i}$.
@@ -1118,6 +1125,8 @@ Hence, once an Euler approximation of \eqref{linearhomogeneousrode} is computed,
     X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
 \end{equation}
 for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearhomogeneousZidistribution}. \cref{samplepathslinearhomogeneousrode} shows an approximate solution and a few sample paths of exact solutions associated with the given realizations of the noise on the mesh points.
+
+The function $f(t, x, y) = yx$ associated with equation \eqref{linearhomogeneousrode} does not satisfy the uniform Lipschitz condition \eqref{LtLXbound}. Nevertheless, thanks to the form of the exact solution \eqref{Xtlinearhomogeneousrodesolution} the form of the approximation \eqref{Xtlinearhomogeneousrode} and estimates such as \eqref{Xtlinearhomogeneousrodeestimateexponentialofnomral}, the proof of \cref{thmsemimartingale} can be adapted to show strong order $1$ convergence in this case, as well.
 
 \begin{figure}[htb]
     \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
