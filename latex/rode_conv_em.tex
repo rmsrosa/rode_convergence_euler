@@ -285,7 +285,7 @@ for every $t\in I,$ $y\in\mathbb{R}^k,$ and $x_1, x_2 \in\mathbb{R}^d.$
         \label{XtboundLXMtbeta}
         \|X_t\|^p \leq \left(\|X_0\|^p + \int_0^t \|f(s, 0, Y_s)\|^p \;\mathrm{d}s\right) e^{\int_0^t \left(p - 1 + p L(\|Y_s\|)\right) \;\mathrm{d}s}.
     \end{equation}
-    If, moreover, \eqref{EX0strongbound} holds and 
+    If, moreover, \eqref{LtLXbound} holds and 
     \begin{equation}
         \label{EX0Mtstrongboundbeta}
         \mathbb{E}[\|X_0\|^p] < \infty, \quad
@@ -296,6 +296,23 @@ for every $t\in I,$ $y\in\mathbb{R}^k,$ and $x_1, x_2 \in\mathbb{R}^d.$
         \label{EXtstrongboundbeta}
         \mathbb{E}[\|X_t\|^p] \leq \left(\mathbb{E}[\|X_0\|^p] + \int_0^t \mathbb{E}[\|f(s, 0, Y_s)\|^p]\;\mathrm{d}s\right) e^{((p - 1) + p c_L) t}, \quad t\in I.
     \end{equation}
+    If \eqref{LtLXbound} does not hold but
+    \begin{equation}
+        \label{EexpintLptilde}
+        \mathbb{E}\left[e^{\frac{pq}{q - p}\int_0^t L(\|Y_s\|)\;\mathrm{d}s}\right]^{\frac{q - p}{q}} < \infty
+    \end{equation}
+    and
+    \begin{equation}
+        \label{EX0Mtstrongboundptilde}
+        \mathbb{E}[\|X_0\|^{q}] < \infty, \quad
+        \int_0^T \mathbb{E}[\|f(s, 0, Y_s)\|^{q}] \;\mathrm{d}s < \infty,
+    \end{equation}
+    for some $q > p \geq 1,$ then
+    \begin{multline}
+        \label{EXtstrongboundbetaptilde}
+        \mathbb{E}[\|X_t\|^p] \leq t^{\frac{q- p}{p}}e^{(p - 1)t}\Bigg(\mathbb{E}[\|X_0\|^{q}]^{\frac{p}{q}} \\ + \int_0^t \mathbb{E}[\|f(s, 0, Y_s)\|^{q} \;\mathrm{d}s]^{\frac{p}{q}}\Bigg) \mathbb{E}\left[e^{\frac{pq}{q - p}\int_0^t L(\|Y_s\|)\;\mathrm{d}s}\right]^{\frac{q - p}{q}},
+    \end{multline}
+    for all $t\in I.$
 \end{remark}
 
 \begin{remark}
