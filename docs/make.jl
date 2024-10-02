@@ -55,6 +55,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
         prettyurls = get(ENV, "CI", "false") == "true",
         canonical = "https://github.com/rmsrosa/rode_conv_em",
         edit_link = "main",
+        repolink = "https://github.com/rmsrosa/rode_conv_em",
     ),
     modules = [RODEConvergence],
 )
