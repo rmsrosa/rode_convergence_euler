@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/09-fisherkpp.jl"
+EditURL = "../../literate/examples/09-fisherkpp.jl"
 ```
 
 # Random Fisher-KPP partial differential equation

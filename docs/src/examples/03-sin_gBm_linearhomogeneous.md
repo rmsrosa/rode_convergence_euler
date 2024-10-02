@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/03-sin_gBm_linearhomogeneous.jl"
+EditURL = "../../literate/examples/03-sin_gBm_linearhomogeneous.jl"
 ```
 
 # Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient

@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/04-allnoises.jl"
+EditURL = "../../literate/examples/04-allnoises.jl"
 ```
 
 # Linear system with all implemented noises

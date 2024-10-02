@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/05-fBm_linear.jl"
+EditURL = "../../literate/examples/05-fBm_linear.jl"
 ```
 
 # Linear RODE with fractional Brownian motion

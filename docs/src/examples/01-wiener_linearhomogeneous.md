@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/01-wiener_linearhomogeneous.jl"
+EditURL = "../../literate/examples/01-wiener_linearhomogeneous.jl"
 ```
 
 # Homogenous linear RODE with a Wiener process noise coefficient

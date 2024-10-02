@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/07-toggle_switch.jl"
+EditURL = "../../literate/examples/07-toggle_switch.jl"
 ```
 
 # A toggle-switch model for gene expression

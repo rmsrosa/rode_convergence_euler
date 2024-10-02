@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/08-earthquake.jl"
+EditURL = "../../literate/examples/08-earthquake.jl"
 ```
 
 # Mechanical structural under random Earthquake-like seismic disturbances

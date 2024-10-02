@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "https://github.com/rmsrosa/rode_conv_em/docs/literate/examples/06-popdyn.jl"
+EditURL = "../../literate/examples/06-popdyn.jl"
 ```
 
 # Population dynamics with sin of gBm growth and step process harvest

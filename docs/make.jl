@@ -45,8 +45,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
         "Noises" => [
             "noises/noiseintro.md",
             "noises/homlin.md",
-            "noises/fBm.md",
-            "noises/colored.md"
+            "noises/fBm.md"
         ],
         "api.md",
     ],
