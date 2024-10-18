@@ -12,4 +12,4 @@ We use a few standard libraries ([Random](https://docs.julialang.org/en/v1/stdli
 
 This documentation makes use of [Documenter.jl](https://documenter.juliadocs.org/stable/) and [Literate.jl](https://fredrikekre.github.io/Literate.jl/stable/), with the help of [LiveServer.jl](https://tlienart.github.io/LiveServer.jl/stable/) and [Revise.jl](https://timholy.github.io/Revise.jl/stable/), during development.
 
-Some extra material uses [JuliaCI/BenchmarkToolsjl](https://juliaci.github.io/BenchmarkTools.jl/stable).
+Some extra material uses [JuliaCI/BenchmarkTools.jl](https://juliaci.github.io/BenchmarkTools.jl/stable).
