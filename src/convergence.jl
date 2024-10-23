@@ -1,5 +1,5 @@
 """
-    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, ks, m)
+    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, ks)
 
 Gather the data needed for computing the convergence error for a given RODE of the form
 ```math
