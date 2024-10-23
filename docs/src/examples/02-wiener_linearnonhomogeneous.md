@@ -212,7 +212,7 @@ plt = plot(result)
 ````
 
 ````@example 02-wiener_linearnonhomogeneous
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearnonhomogenous.pdf")) # hide
 nothing # hide
 ````
 

@@ -186,7 +186,7 @@ plt_result = plot(result)
 ````
 
 ````@example 04-allnoises
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.pdf")) # hide
 nothing # hide
 ````
 
@@ -201,11 +201,11 @@ plot(plts..., legend=false)
 We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
 ````@example 04-allnoises
-plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
 ````
 
 ````@example 04-allnoises
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.pdf")) # hide
 nothing # hide
 ````
 
@@ -222,7 +222,7 @@ plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"]
 ````
 
 ````@example 04-allnoises
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.png")) # hide
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.pdf")) # hide
 nothing # hide
 ````
 

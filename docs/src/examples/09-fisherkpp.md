@@ -319,7 +319,7 @@ plt = plot(result)
 ````
 
 ````@example 09-fisherkpp
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.pdf")) # hide
 nothing # hide
 ````
 

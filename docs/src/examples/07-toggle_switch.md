@@ -167,7 +167,7 @@ plt_result = plot(result)
 ````
 
 ````@example 07-toggle_switch
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.pdf")) # hide
 nothing # hide
 ````
 
@@ -190,7 +190,7 @@ plot!(plt_sols, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="\$
 ````
 
 ````@example 07-toggle_switch
-savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png")) # hide
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.pdf")) # hide
 nothing # hide
 ````
 
@@ -201,7 +201,7 @@ plt_suite = plot(suite)
 ````
 
 ````@example 07-toggle_switch
-savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png")) # hide
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.pdf")) # hide
 nothing # hide
 ````
 
@@ -212,7 +212,7 @@ plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], l
 ````
 
 ````@example 07-toggle_switch
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.pdf")) # hide
 nothing # hide
 ````
 
@@ -223,7 +223,7 @@ plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600)
 ````
 
 ````@example 07-toggle_switch
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.png")) # hide
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.pdf")) # hide
 nothing # hide
 ````
 

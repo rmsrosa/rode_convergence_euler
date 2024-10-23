@@ -165,7 +165,7 @@ plt = plot(result)
 ````
 
 ````@example 06-popdyn
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_popdyn_gBmPoisson.pdf")) # hide
 nothing # hide
 ````
 
@@ -176,7 +176,7 @@ plt = plot(suite, ns=nsample)
 ````
 
 ````@example 06-popdyn
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "sample_popdyn_gBmPoisson.pdf")) # hide
 nothing # hide
 ````
 

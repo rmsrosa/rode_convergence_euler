@@ -196,7 +196,7 @@ plt = plot(plt1, plt2, plt3, layout = (3, 1))
 ````
 
 ````@example 08-earthquake
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.pdf")) # hide
 nothing # hide
 ````
 
@@ -264,7 +264,7 @@ plt = plot(result)
 ````
 
 ````@example 08-earthquake
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.pdf")) # hide
 nothing # hide
 ````
 

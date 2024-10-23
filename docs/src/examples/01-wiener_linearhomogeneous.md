@@ -257,7 +257,7 @@ plt = plot(result)
 ````
 
 ````@example 01-wiener_linearhomogeneous
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.pdf")) # hide
 nothing # hide
 ````
 
@@ -266,7 +266,7 @@ For the sake of illustration, we plot the approximations of a sample target solu
 ````@example 01-wiener_linearhomogeneous
 plt = plot(suite, ns=nsample)
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.pdf")) # hide
 nothing # hide
 ````
 

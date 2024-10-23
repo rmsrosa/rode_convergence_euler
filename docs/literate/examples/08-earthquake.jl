@@ -175,7 +175,7 @@ plt = plot(plt1, plt2, plt3, layout = (3, 1))
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.pdf")) # hide
 nothing # hide
 
 # Now we are ready to check the order of convergence. We set the target resolution, the convergence test resolutions, the sample convergence resolutions, and the number of sample trajectories for the Monte-Carlo approximation of the strong error.
@@ -230,7 +230,7 @@ plt = plot(result)
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot a sample of an approximation of a target solution, in each case:

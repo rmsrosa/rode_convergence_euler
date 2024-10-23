@@ -225,14 +225,14 @@ plt = plot(result)
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot the approximations of a sample target solution:
 
 plt = plot(suite, ns=nsample)
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.pdf")) # hide
 nothing # hide
 
 # We can also visualize the noise associated with this sample solution:

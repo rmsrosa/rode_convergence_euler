@@ -105,7 +105,7 @@ plt = plot(result)
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot some approximations of a sample target solution:

@@ -266,7 +266,7 @@ plt = plot(result)
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot the evolution of a sample target solution:

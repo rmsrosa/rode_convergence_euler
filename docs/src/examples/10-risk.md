@@ -207,7 +207,7 @@ plt_result = plot(result)
 ````
 
 ````@example 10-risk
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_riskmodel.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
@@ -218,7 +218,7 @@ plt_sols = plot(suite, ns=nothing, label="\$X_t\$", linecolor=1)
 ````
 
 ````@example 10-risk
-savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_riskmodel.png")) # hide
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
@@ -229,7 +229,7 @@ plt_suite = plot(suite)
 ````
 
 ````@example 10-risk
-savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_riskmodel.png")) # hide
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
@@ -240,7 +240,7 @@ plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$R_t\$" "\$
 ````
 
 ````@example 10-risk
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_noises.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_noises.pdf")) # hide
 nothing # hide
 ````
 
@@ -251,7 +251,7 @@ plt_surplus = plot(range(t0, tf, length=ntgt+1), suite.xt .- suite.yt[:, 1] .- s
 ````
 
 ````@example 10-risk
-savefig(plt_surplus, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_surplus.png")) # hide
+savefig(plt_surplus, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_surplus.pdf")) # hide
 nothing # hide
 ````
 

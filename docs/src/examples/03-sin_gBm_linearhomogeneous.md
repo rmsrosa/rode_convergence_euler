@@ -126,7 +126,7 @@ plt = plot(result)
 ````
 
 ````@example 03-sin_gBm_linearhomogeneous
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.png")) # hide
+savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_sin_gBm_linearhomogenous.pdf")) # hide
 nothing # hide
 ````
 

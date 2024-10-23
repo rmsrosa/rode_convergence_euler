@@ -154,7 +154,7 @@ plt_result = plot(result)
 
 #
 
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_allnoises.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot a sample of the norms of a sequence of approximations of a target solution, along with the norm of the target:
@@ -165,11 +165,11 @@ plot(plts..., legend=false)
 
 # We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
-plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["Wiener" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
 
 #
 
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noisepath_allnoises.pdf")) # hide
 nothing # hide
 
 # and combined, with their sum squared, as it enters the homogenous term,
@@ -182,5 +182,5 @@ plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"]
 
 #
 
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.png")) # hide
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.pdf")) # hide
 nothing # hide

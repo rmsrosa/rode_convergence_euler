@@ -1101,7 +1101,7 @@ where $Z_0, \ldots, Z_{N-1}$ are independent random variables with distribution 
 Notice the first term in \eqref{exactintW} is the trapezoidal rule, with the second one being a correction term.
 
 \begin{figure}
-    \includegraphics[scale=0.6]{img/approximation_linearhomogenous.png}
+    \includegraphics[scale=0.6]{img/approximation_linearhomogenous.pdf}
     \caption{Euler approximation of a sample solution of $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$ with $X_0 \sim \mathcal{N}(0, 1)$, with a few mesh resolutions and with the target resolution.}
     \label{samplepathslinearhomogeneousrode}
 \end{figure}
@@ -1146,7 +1146,7 @@ for realizations $Z_i$ drawn from a normal distributions given by \eqref{linearh
 The function $f(t, x, y) = yx$ associated with equation \eqref{linearhomogeneousrode} does not satisfy the uniform Lipschitz condition \eqref{LtLXbound}. Nevertheless, thanks to the form of the exact solution \eqref{Xtlinearhomogeneousrodesolution} the form of the approximation \eqref{Xtlinearhomogeneousrode} and estimates such as \eqref{Xtlinearhomogeneousrodeestimateexponentialofnomral}, the proof of \cref{thmsemimartingale} can be adapted to show strong order $1$ convergence in this case, as well.
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.png}
+    \includegraphics[scale=0.6]{img/order_wiener_linearhomogenous.pdf}
     \caption{Order of convergence $p = 0.974$ of the strong error of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = W_t X_t$, based on \cref{tablinearhomogeneousrode}.}
     \label{figlinearhomogeneousrode}
 \end{figure}
@@ -1167,7 +1167,7 @@ The system of equations takes the form
 \end{equation}
 where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given vector-valued noise process with the same dimension as $\mathbf{X}_t$. Each coordinate of $\{\mathbf{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the simulations are the following, in the order of coordinates of $\mathbf{Y}_t$:
 \begin{enumerate}
-    \item A standard Wiener process;
+    \item A standard Wiener process (W);
     \item An Ornstein-Uhlenbeck process (OU) with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
     \item A geometric Brownian motion process (gBm) with drift $\mu = 0.3,$ diffusion coefficient $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
     \item A non-autonomous homogeneous linear It\^o process (hlp) $\{H_t\}_t$ given by $\mathrm{d}H_t = (\mu_1 + \mu_2\sin(\vartheta t))H_t\;\mathrm{d}t + \sigma\sin(\vartheta t)H_t\;\mathrm{d}W_t$ with $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.5,$ $\vartheta=3\pi,$ and initial condition $H_0 = 0.2;$
@@ -1195,7 +1195,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_allnoises.png}
+    \includegraphics[scale=0.6]{img/order_allnoises.pdf}
     \caption{Order of convergence $p = 1.012$ of the strong error of the Euler method for $\mathrm{d}\mathbf{X}_t/\mathrm{d}t = - \left\|\mathbf{Y}_t\right\|^2 \mathbf{X}_t + \mathbf{Y}_t,$ based on \cref{taballnoises}.}
     \label{figallnoises}
 \end{figure}
@@ -1205,7 +1205,7 @@ where $\{\mathbf{X}_t\}_t$ is vector valued, and $\{\mathbf{Y}_t\}_t$ is a given
 \cref{figallnoises} illustrates the obtained order of convergence, while \cref{figsamplepathsallnoises} illustrates some sample paths of all the noises used in this system.
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/noisepath_allnoises.png}
+    \includegraphics[scale=0.6]{img/noisepath_allnoises.pdf}
     \caption{Sample paths of all the noises used in the linear system \eqref{allnoisesRODEsystem}, mixing all different types of implemented noises.}
     \label{figsamplepathsallnoises}
 \end{figure}
@@ -1385,7 +1385,7 @@ More precisely, the Euler approximation is implemented for \eqref{linearnonhomog
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_dep_on_H_fBm.png}
+    \includegraphics[scale=0.6]{img/order_dep_on_H_fBm.pdf}
     \caption{Order $p$ of strong convergence for each value of the Hurst parameter $H$ (scattered plot) along with the theoretical value $p=\min\{H + 1/2, 1\}$ (dashed line).}
     \label{figorderdepHfBm}
 \end{figure}
@@ -1469,13 +1469,13 @@ Hence, when $\alpha H_t \geq r\Lambda_t$, the population decays for arbitrary $X
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_popdyn_gBmPoisson.png}
+    \includegraphics[scale=0.6]{img/order_popdyn_gBmPoisson.pdf}
     \caption{Order of convergence of the strong error of the Euler method for the population dynamics equation \eqref{rodepopulationdynamics}, based on \cref{tabpopdyn}.}
     \label{figpopdyn}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/sample_popdyn_gBmPoisson.png}
+    \includegraphics[scale=0.6]{img/sample_popdyn_gBmPoisson.pdf}
     \caption{An approximation sequence of a sample path solution of the population dynamics equation \eqref{rodepopulationdynamics}.}
     \label{figsamplepopdyn}
 \end{figure}
@@ -1554,13 +1554,13 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/convergence_earthquake.png}
+    \includegraphics[scale=0.6]{img/convergence_earthquake.pdf}
     \caption{Order of convergence of the strong error of the Euler method for the mechanical structure model \eqref{mechanicalstructuremodel}, based on \cref{tableearthquake}.}
     \label{figearthquake}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/noise_earthquake.png}
+    \includegraphics[scale=0.6]{img/noise_earthquake.pdf}
     \caption{Sample ground motion and the corresponding excitation (ground acceleration) and envelope of excitation (just the exponential decay, without the oscillations) for the mechanical structure model \eqref{mechanicalstructuremodel}.}
     \label{figearthquakenoise}
 \end{figure}
@@ -1605,19 +1605,19 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_toggleswitch.png}
+    \includegraphics[scale=0.6]{img/order_toggleswitch.pdf}
     \caption{Order of convergence of the strong error of the Euler method for the toggle-switch model \eqref{toggleswitchsystem}, based on \cref{tabletoggleswitch}.}
     \label{figtoggleswitch}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/evolution_toggleswitch.png}
+    \includegraphics[scale=0.6]{img/evolution_toggleswitch.pdf}
     \caption{Evolution of a sample solution of the toggle-switch model \eqref{toggleswitchsystem}.}
     \label{figtoggleswitchevolution}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/noises_toggleswitch.png}
+    \includegraphics[scale=0.6]{img/noises_toggleswitch.pdf}
     \caption{Noise sample paths for the toggle-switch model \eqref{toggleswitchsystem}.}
     \label{figtoggleswitchnoise}
 \end{figure}
@@ -1716,19 +1716,19 @@ For the mesh parameters, we set $N_{\textrm{tgt}} = 2^{18}$ and $N_i = 2^i$, for
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/convergence_riskmodel.png}
+    \includegraphics[scale=0.6]{img/convergence_riskmodel.pdf}
     \caption{Order of convergence of the strong error of the Euler method for the actuarial risk model \eqref{riskmodel}, based on \cref{tableriskmodel}.}
     \label{figriskmodel}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/riskmodel_noises.png}
+    \includegraphics[scale=0.6]{img/riskmodel_noises.pdf}
     \caption{Sample noises for the risk model \eqref{riskmodel}.}
     \label{figriskmodelnoise}
 \end{figure}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/riskmodel_surplus.png}
+    \includegraphics[scale=0.6]{img/riskmodel_surplus.pdf}
     \caption{Sample surplus solution for the risk model \eqref{riskmodel}.}
     \label{figriskmodelsurplus}
 \end{figure}
@@ -1798,7 +1798,7 @@ For the Monte-Carlo estimate of the strong error, we choose $M = 40.$ \cref{tabl
 \end{table}
 
 \begin{figure}[htb]
-    \includegraphics[scale=0.6]{img/order_fisherkpp.png}
+    \includegraphics[scale=0.6]{img/order_fisherkpp.pdf}
     \caption{Order of convergence of the strong error of the Euler method for the Fisher-KPP model \eqref{fisherkpprode}-\eqref{fisherkppbc}, based on \cref{tablefisherkpp}.}
     \label{figfisherkpp}
 \end{figure}

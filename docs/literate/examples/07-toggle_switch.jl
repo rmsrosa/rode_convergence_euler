@@ -139,7 +139,7 @@ plt_result = plot(result)
 
 #
 
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.png")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_toggleswitch.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration of the behavior of the system, we rebuild the problem with a longer time step and do a single run with it, for a single sample solution.
@@ -158,7 +158,7 @@ plot!(plt_sols, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="\$
 
 #
 
-savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.png")) # hide
+savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_toggleswitch.pdf")) # hide
 nothing # hide
 
 # We also illustrate the convergence to say the expression of the X gene:
@@ -167,7 +167,7 @@ plt_suite = plot(suite)
 
 #
 
-savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.png")) # hide
+savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_toggleswitch.pdf")) # hide
 nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
@@ -176,7 +176,7 @@ plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], l
 
 #
 
-savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.png")) # hide
+savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.pdf")) # hide
 nothing # hide
 
 # We finally combine all plots into a single one, for the article:
@@ -185,5 +185,5 @@ plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600)
 
 #
 
-savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.png")) # hide
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "toggleswitch_combined.pdf")) # hide
 nothing # hide
