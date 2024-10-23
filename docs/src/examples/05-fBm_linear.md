@@ -150,10 +150,11 @@ The following plot helps visualizing the result.
 ````@example 05-fBm_linear
 plt = plot(ylims=(-0.1, 1.2), xaxis="H", yaxis="p", guidefont=10)
 scatter!(plt, collect(hursts), ps, yerror=(ps .- pmins, pmaxs .- ps), label="computed")
-plot!(plt, 0.0:0.01:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
+plot!(plt, 0.0:0.5:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
+plot!(plt, 0.0:0.5:1.0, p -> p, linestyle=:dashdot, label="previous")
 ````
 
-Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2$).
+Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2;$ dash-dot line: previous theory $p = H.$).
 
 ````@example 05-fBm_linear
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_H_fBm.pdf")) # hide
