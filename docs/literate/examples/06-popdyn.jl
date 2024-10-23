@@ -1,4 +1,4 @@
-# # Population dynamics with sin of gBm growth and step process harvest
+# # Population dynamics with harvest
 #
 # This time we consider a population dynamics model with two types of noise, a geometric Brownian motion process affecting the growth rate and a point Poisson step process affecting the harvest.
 
