@@ -163,7 +163,7 @@ nothing # hide
 
 # We also illustrate the convergence to say the expression of the X gene:
 
-plt_suite = plot(suite)
+plt_suite = plot(suite, legend=:top)
 
 #
 
@@ -181,7 +181,7 @@ nothing # hide
 
 # We finally combine all plots into a single one, for the article:
 
-plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], titlefont=10)
+plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], legendfont=7)
 
 #
 
