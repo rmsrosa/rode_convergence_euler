@@ -178,7 +178,9 @@ plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\
 
 # We finally combine all the convergence plot and the noises into a single plot, for the article:
 
-plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"], legend=nothing)
+
+plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
 
 #
 
