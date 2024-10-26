@@ -1,5 +1,5 @@
 """
-    ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, ks)
+    ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m, ks)
 
 Gather the data needed for computing the convergence error for a given RODE of the form
 ```math
@@ -13,8 +13,9 @@ The data comprises of the following:
 
 * the initial and final times `t0` and `tf`;
 * the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
-* the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
+* the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y, params)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y, params)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
 * the univariate or multivariate process `noise` for the noise term ``Y_t``;
+* a tuple `params` of parameters for the function `f`;
 * the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically `EulerMethod()` with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution `CustomMethod()` with an exact distribution of the possible solutions conditioned to the already computed noise points;
 * the `method` to approximate the solution, typically the `EulerMethod()`, also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
@@ -29,12 +30,13 @@ Besides these data obtained from the supplied arguments, a few cache vectors or 
 
 The actual error is obtained by solving a ConvergenceSuite via `solve(rng::AbstractRNG, suite::ConvergenceSuite{T})` with a given RNG.
 """
-struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
+struct ConvergenceSuite{T, D, P, Q, F, N1, N2, M1, M2}
     t0::T
     tf::T
     x0law::D
     f::F
     noise::P
+    params::Q
     target::M1
     method::M2
     ntgt::Int
@@ -44,7 +46,7 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     yt::Array{T, N1} # cache
     xt::Array{T, N2} # cache
     xnt::Array{T, N2} # cache
-    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int, ks::Vector{Int}=ones(Int, length(ns))) where {T, D, P, F, M1, M2}
+    function ConvergenceSuite(t0::T, tf::T, x0law::D, f::F, noise::P, params::Q, target::M1, method::M2, ntgt::Int, ns::Vector{Int}, m::Int, ks::Vector{Int}=ones(Int, length(ns))) where {T, D, P, Q, F, M1, M2}
         ( ntgt > 0 && m > 0 ) || error(
             "`ntgt` and `m` arguments must be positive integers."
 
@@ -62,6 +64,9 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
     
         ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
             "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
+        )
+        ( Q isa NTuple{NT, T} where {NT} ) || error(
+            "The `params` tuple should be an `NTuple{NT, T}` of the same type `T` as the time variables `t0` and `tf`."
         )
         if D <: UnivariateDistribution
             xt = Vector{T}(undef, ntgt + 1)
@@ -89,7 +94,7 @@ struct ConvergenceSuite{T, D, P, F, N1, N2, M1, M2}
             )
         end
 
-        return new{T, D, P, F, N1, N2, M1, M2}(t0, tf, x0law, f, noise, target, method, ntgt, ns, m, ks, yt, xt, xnt)
+        return new{T, D, P, Q, F, N1, N2, M1, M2}(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m, ks, yt, xt, xnt)
     end
 end
 
@@ -131,6 +136,7 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
     x0law = suite.x0law
     f = suite.f
     noise = suite.noise
+    params = suite.params
     target = suite.target
     method = suite.method
     ntgt = suite.ntgt
@@ -154,9 +160,9 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
 
         # generate target path
         if D <: UnivariateDistribution
-            solve!(xt, t0, tf, xt[1], f, yt, target)
+            solve!(xt, t0, tf, xt[1], f, yt, params, target)
         else
-            solve!(xt, t0, tf, view(xt, 1, :), f, yt, target)            
+            solve!(xt, t0, tf, view(xt, 1, :), f, yt, params, target)            
         end
 
         # solve approximate solutions at selected time steps and update strong errors
@@ -166,13 +172,13 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
             kstep = ks[i]
 
             if D <: UnivariateDistribution && P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), params, method)
             elseif D <: UnivariateDistribution
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
             elseif P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi), method)
+                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi), params, method)
             else
-                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi, :), method)
+                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
             end
 
             for n in 2:nsi+1

@@ -1,7 +1,7 @@
 """
     RandomEuler(T::DataType=Float64, n::Int=0)
 
-Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method, solved by `solve!(xt, t0, tf, x0, f::F, yt::AbstractVector{T}, ::RandomEuler))]`
+Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method, solved by `solve!(xt, t0, tf, x0, f, yt, params, ::RandomEuler))]`
 
 Set `n` to `0` for solving a scalar equation and set `n` to the length of the system (e.g. the length of the initial condition).
 """
@@ -21,7 +21,7 @@ RandomEuler(T::DataType) = RandomEuler(T, 0)
 RandomEuler(n::Int) = RandomEuler(Float64, n)
 RandomEuler() = RandomEuler(Float64, 0)
 
-function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, ::RandomEuler{T, Univariate}) where {T, F}
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, params::Q, ::RandomEuler{T, Univariate}) where {T, F, Q}
     # scalar solution, scalar noise
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
@@ -33,13 +33,13 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVe
     xt[i1] = x0
     ti1 = t0
     for i in Iterators.drop(eachindex(xt, yt), 1)
-        xt[i] = xt[i1] + dt * f(ti1, xt[i1], yt[i1])
+        xt[i] = xt[i1] + dt * f(ti1, xt[i1], yt[i1], params)
         i1 = i
         ti1 += dt
     end
 end
 
-function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, ::RandomEuler{T, Univariate}) where {T, F}
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, params::Q, ::RandomEuler{T, Univariate}) where {T, F, Q}
     # scalar solution, vector noise
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The vector `xt` and the rows of the matrix `yt` must match indices")
@@ -50,13 +50,13 @@ function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMa
     xt[i1] = x0
     ti1 = t0
     for i in Iterators.drop(eachindex(xt), 1)
-        xt[i] = xt[i1] + dt * f(ti1, xt[i1], view(yt, i1, :))
+        xt[i] = xt[i1] + dt * f(ti1, xt[i1], view(yt, i1, :), params)
         i1 = i
         ti1 += dt
     end
 end
 
-function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, params::Q, method::RandomEuler{T, Multivariate}) where {T, F, Q}
     # vector solution, scalar noise
     axes(xt, 1) == axes(yt, 1) || throw(
         DimensionMismatch("The rows of the matrix `xt` and the vector `yt` must match indices")
@@ -72,7 +72,7 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        f(method.cachex, ti1, view(xt, i-1, :), yt[i-1])
+        f(method.cachex, ti1, view(xt, i-1, :), yt[i-1], params)
         for j in eachindex(axes(xt, 2), axes(method.cachex, 1))
             @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
         end
@@ -81,7 +81,7 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     end
 end
 
-function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::RandomEuler{T, Multivariate}) where {T, F}
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, params::Q, method::RandomEuler{T, Multivariate}) where {T, F, Q}
     # vector solution, vector noise
     axes(xt, 1) == axes(yt, 1) || error(
         "The rows of the matrices `xt` and `yt` must match indices"
@@ -98,7 +98,7 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        f(method.cachex, ti1, view(xt, i-1, :), view(yt, i-1, :))
+        f(method.cachex, ti1, view(xt, i-1, :), view(yt, i-1, :), params)
         for j in eachindex(axes(xt, 2))
             @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
         end

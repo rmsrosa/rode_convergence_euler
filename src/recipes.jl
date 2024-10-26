@@ -28,6 +28,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
     x0law = suite.x0law
     f = suite.f
     noise = suite.noise
+    params = suite.params
     method = suite.method
     ntgt = suite.ntgt
     yt = suite.yt
@@ -84,13 +85,13 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
             nstep = div(ntgt, nsi)
 
             if x0law isa UnivariateDistribution && noise isa UnivariateProcess
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), params, method)
             elseif x0law isa UnivariateDistribution
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
             elseif noise isa UnivariateProcess
-                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi), method)
+                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi), params, method)
             else
-                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi, :), method)
+                solve!(view(xnt, 1:nsi+1, :), t0, tf, view(xt, 1, :), f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
             end
 
             inds = first(axes(view(xnt, 1:nsi+1), 1)):max(1, div(size(view(xnt, 1:nsi+1), 1) - 1, resolution)):last(axes(view(xnt, 1:nsi+1), 1))

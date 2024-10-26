@@ -10,8 +10,8 @@ abstract type RODEMethod{N} end
 
 Custom method for solving a Random ODE. It has two fields:
 
-* `solver`: a function `solver(xt, t0, tf, x0, f, yt, params)` to solve, on the interval `t0` to `tf`, a Random ODE with right hand side `f`, "noise" sample path `yt`, initial condition `x0` and extra paramters `params`;
-* `params`: any argument or series of arguments necessary for the custom solver.
+* `solver`: a function `solver(xt, t0, tf, x0, f, params, yt, solver_params)` to solve, on the interval `t0` to `tf`, a Random ODE with right hand side `f`, "noise" sample path `yt`, initial condition `x0`, parameters `params` for the function `f`, and extra parameters `solver_params` for the custom solver;
+* `solver_params`: any argument or series of arguments necessary for the custom solver.
 
 Aliases:
 
@@ -20,30 +20,33 @@ Aliases:
 """
 struct CustomMethod{F, P, N} <: RODEMethod{N}
     solver::F
-    params::P
+    solver_params::P
 end
 
 const CustomUnivariateMethod{F, P} = CustomMethod{F, P, Univariate} where {F, P}
 
 const CustomMultivariateMethod{F, P} = CustomMethod{F, P, Multivariate} where {F, P}
 
-CustomMethod{N}(solver::F, params::P) where {F, P, N} = CustomMethod{F, P, N}(solver, params)
+CustomMethod{N}(solver::F, solver_params::P) where {F, P, N} = CustomMethod{F, P, N}(solver, solver_params)
 
-CustomUnivariateMethod(solver::F, params::P) where {F, P} = CustomMethod{F, P, Univariate}(solver, params)
+CustomUnivariateMethod(solver::F, solver_params::P) where {F, P} = CustomMethod{F, P, Univariate}(solver, solver_params)
 
-CustomMultivariateMethod(solver::F, params::P) where {F, P} = CustomMethod{F, P, Multivariate}(solver, params)
+CustomMultivariateMethod(solver::F, solver_params::P) where {F, P} = CustomMethod{F, P, Multivariate}(solver, solver_params)
 
 """
-    solve!(xt, t0, tf, x0, f, yt, method)
+    solve!(xt, t0, tf, x0, f, params, yt, method)
 
 Solve a random ODE with the provided `method`.
 
-More precisely, sove, inplace, (a sample path of) the (R)ODE `dx_t/dt = f(t, x_t, y_t),` for an unknown `x_t` and a given (noise path) `y_t`, with the following arguments:
+``\\mathrm{d}X_t / \\mathrm{d}t = f(t, X_t, Y_t)``
 
-* a function `f(t, x, y)`, if `x` is a scalar, or `f(dx, t, x, y)`, if `x` is a vector;
-* a scalar or vector initial condition `x0`;
+More precisely, sove, inplace, (a sample path of) the (R)ODE ``\\mathrm{d}X_t / \\mathrm{d}t = f(t, X_t, Y_t)``, with the following arguments:
+
+* a function `f(t, x, y, params)`, if `x` is a scalar, or `f(dx, t, x, y, params)`, if `x` is a vector;
+* a scalar or vector sample initial condition `x0`;
 * a time interval `t0` to `tf`;
-* a sample path `yt` of a "noise", either a vector (for scalar noise) or a matrix (for vectorial noise).
+* a sample path `yt` of a "noise", either a vector (for scalar noise) or a matrix (for vectorial noise);
+* an NTuple `params` of scalars for the function `f`;
 * a numerical `method`, either `RandomEuler()` for a scalar equation, `RandomEuler(n)` for an n-dimensional system of equations, or `RandomHeun()` for a scalar equation.
 
 The values of `xt` are updated with the computed solution values.
@@ -52,18 +55,18 @@ The time step is obtained from the length of the vector `xt` via `dt = (tf - t0)
 
 The noise `yt` should be of the same (row) length as `xt`.
 """
-function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, method::CustomUnivariateMethod) where {T, F}
-    method.solver(xt, t0, tf, x0, f, yt, method.params)
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, params::Q, method::CustomUnivariateMethod) where {T, F, Q}
+    method.solver(xt, t0, tf, x0, f, yt, params, method.solver_params)
 end
 
-function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, method::CustomUnivariateMethod) where {T, F}
-    method.solver(xt, t0, tf, x0, f, yt, method.params)
+function solve!(xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, params::Q, method::CustomUnivariateMethod) where {T, F, Q}
+    method.solver(xt, t0, tf, x0, f, yt, params, method.solver_params)
 end
 
-function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, method::CustomMultivariateMethod) where {T, F}
-    method.solver(xt, t0, tf, x0, f, yt, method.params)
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, params::Q, method::CustomMultivariateMethod) where {T, F, Q}
+    method.solver(xt, t0, tf, x0, f, yt, params, method.solver_params)
 end
 
-function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, method::CustomMultivariateMethod) where {T, F}
-    method.solver(xt, t0, tf, x0, f, yt, method.params)
+function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, params::Q, method::CustomMultivariateMethod) where {T, F, Q}
+    method.solver(xt, t0, tf, x0, f, yt, params, method.solver_params)
 end
