@@ -22,6 +22,7 @@
 # First we load the necessary packages
 
 using Plots
+using Measures
 using LinearAlgebra
 using Random
 using Distributions
@@ -180,7 +181,7 @@ plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\
 
 plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"], legend=nothing)
 
-plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
+plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(800, 240), title=["(a)" "(b)"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 
 #
 
