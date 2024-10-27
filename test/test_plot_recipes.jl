@@ -1,4 +1,4 @@
-custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -28,12 +28,13 @@ end
         x0law = Normal()
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
-        f = (t, x, y) -> y * x
+        f = (t, x, y ,p) -> y * x
+        params = nothing
 
         target = CustomUnivariateMethod(custom_solver, rng)
         method = RandomEuler()
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
@@ -51,12 +52,13 @@ end
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
         )
-        f = (t, x, y) -> (y[1] + 3y[2])/4 * x
+        f = (t, x, y, p) -> (y[1] + 3y[2])/4 * x
+        params = nothing
 
         target = RandomEuler()
         method = RandomEuler()
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
         
         @test_nowarn plot(suite)
@@ -77,12 +79,13 @@ end
         # X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
-        f! = (dx, t, x, y) -> (dx .= y .* x)
+        f! = (dx, t, x, y, p) -> (dx .= y .* x)
+        params = nothing
 
         target = RandomEuler(length(x0law))
         method = RandomEuler(length(x0law))
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)
@@ -110,12 +113,13 @@ end
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
         )
-        f! = (dx, t, x, y) -> (dx .= (y[1] + 3y[2]) .* x ./ 4)
+        f! = (dx, t, x, y, p) -> (dx .= (y[1] + 3y[2]) .* x ./ 4)
+        params = nothing
 
         target = RandomEuler(length(x0law))
         method = RandomEuler(length(x0law))
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
         results = @test_nowarn solve(rng, suite)
         @test_nowarn plot(suite)
         @test_nowarn plot(suite, yshow=true)

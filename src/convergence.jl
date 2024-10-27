@@ -65,9 +65,6 @@ struct ConvergenceSuite{T, D, P, Q, F, N1, N2, M1, M2}
         ( M1 <: RODEMethod && M2 <: RODEMethod ) || error(
             "The `target` and `method` solver methods should be subtypes of `RODEMethod`"
         )
-        ( Q isa NTuple{NT, T} where {NT} ) || error(
-            "The `params` tuple should be an `NTuple{NT, T}` of the same type `T` as the time variables `t0` and `tf`."
-        )
         if D <: UnivariateDistribution
             xt = Vector{T}(undef, ntgt + 1)
             xnt = Vector{T}(undef, last(ns) + 1)

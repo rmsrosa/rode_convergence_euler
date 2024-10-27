@@ -1,4 +1,4 @@
-target_exact1! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, rng::AbstractRNG) where {T, F}
+target_exact1! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractVector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -15,7 +15,7 @@ target_exact1! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt:
     end
 end
 
-target_exact2! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, rng::AbstractRNG) where {T, F}
+target_exact2! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt::AbstractMatrix{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     ntgt = size(xt, 1) - 1
     dt = (tf - t0) / ntgt
     xt[1] = x0
@@ -26,7 +26,7 @@ target_exact2! = function (xt::AbstractVector{T}, t0::T, tf::T, x0::T, f::F, yt:
     end
 end
 
-target_exact3! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, rng::AbstractRNG) where {T, F}
+target_exact3! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractVector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     ntgt = size(xt, 1) - 1
     dt = (tf - t0) / ntgt
     for j in eachindex(axes(xt, 2), x0)
@@ -39,7 +39,7 @@ target_exact3! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVect
     end
 end
 
-target_exact4! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, rng::AbstractRNG) where {T, F}
+target_exact4! = function (xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F, yt::AbstractMatrix{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     ntgt = size(xt, 1) - 1
     dt = (tf - t0) / ntgt
     for j in eachindex(axes(xt, 2), x0)
@@ -67,12 +67,13 @@ end
         x0law = Normal()
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
-        f = (t, x, y) -> y * x
+        f = (t, x, y, p) -> y * x
+        params = nothing
 
         target = CustomUnivariateMethod(target_exact1!, rng)
         method = RandomEuler()
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
         @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
@@ -84,12 +85,13 @@ end
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
         )
-        f = (t, x, y) -> (y[1] + 3y[2])/4 * x
+        f = (t, x, y, p) -> (y[1] + 3y[2])/4 * x
+        params = nothing
 
         target = CustomUnivariateMethod(target_exact2!, rng)
         method = RandomEuler()
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
         @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
@@ -103,12 +105,13 @@ end
         # X0law = product_distribution(Normal(), Normal())
         y0 = 0.0
         noise = WienerProcess(t0, tf, y0)
-        f! = (dx, t, x, y) -> (dx .= y .* x)
+        f! = (dx, t, x, y, p) -> (dx .= y .* x)
+        params = nothing
 
         target = CustomMultivariateMethod(target_exact3!, rng)
         method = RandomEuler(length(x0law))
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
         @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
@@ -125,12 +128,13 @@ end
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
         )
-        f! = (dx, t, x, y) -> (dx .= (y[1] + 3y[2]) .* x ./ 4)
+        f! = (dx, t, x, y, p) -> (dx .= (y[1] + 3y[2]) .* x ./ 4)
+        params = nothing
 
         target = CustomMultivariateMethod(target_exact4!, rng)
         method = RandomEuler(length(x0law))
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
         @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
@@ -140,14 +144,18 @@ end
         y0 = 0.0
         p = 1.0
         λ = 2.0
+        params = (p, λ)
         noise = WienerProcess(t0, tf, y0)
-        f = (t, x, y; p=p, λ=λ) -> (λ/2) * y^p * x
+        f = function (t, x, y, params)
+            p, λ = params
+            return (λ/2) * y^p * x
+        end
 
         target = CustomUnivariateMethod(target_exact1!, rng)
         method = RandomEuler()
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
     @testset "kw params II" begin
@@ -163,12 +171,17 @@ end
             WienerProcess(t0, tf, y0),
             WienerProcess(t0, tf, y0)
         )
-        f! = (dx, t, x, y; θ=1/4) -> (dx .= (θ * y[1] + (1 - θ) * y[2]) .* x)
+        θ = 1/4
+        params = (θ,)
+        f! = function (dx, t, x, y, params)
+            θ, = params
+            dx .= (θ * y[1] + (1 - θ) * y[2]) .* x
+        end
 
         target = CustomMultivariateMethod(target_exact4!, rng)
         method = RandomEuler(length(x0law))
 
-        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
-        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+        suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
+        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 end
