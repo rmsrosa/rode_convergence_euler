@@ -142,20 +142,17 @@ end
 
         x0law = Normal()
         y0 = 0.0
-        p = 1.0
+        r = 1.0
         λ = 2.0
-        params = (p, λ)
+        params = (r, λ)
         noise = WienerProcess(t0, tf, y0)
-        f = function (t, x, y, params)
-            p, λ = params
-            return (λ/2) * y^p * x
-        end
+        f = (t, x, y, p) -> (p[2]/2) * y^p[1] * x
 
         target = CustomUnivariateMethod(target_exact1!, rng)
         method = RandomEuler()
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
-        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 
     @testset "kw params II" begin
@@ -173,15 +170,12 @@ end
         )
         θ = 1/4
         params = (θ,)
-        f! = function (dx, t, x, y, params)
-            θ, = params
-            dx .= (θ * y[1] + (1 - θ) * y[2]) .* x
-        end
+        f! = (dx, t, x, y, p) -> (dx .= (p[1] * y[1] + (1 - p[1]) * y[2]) .* x)
 
         target = CustomMultivariateMethod(target_exact4!, rng)
         method = RandomEuler(length(x0law))
 
         suite = @test_nowarn ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
-        @test_broken (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
+        @test (@ballocated RODEConvergence.calculate_trajerrors!($rng, $trajerrors, $trajstderrs, $suite)) == 0
     end
 end
