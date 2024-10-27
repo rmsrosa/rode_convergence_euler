@@ -8,9 +8,10 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = zero(T)
+    λ = params[1]
     for i in Iterators.drop(eachindex(xt, yt), 1)
         integral += (yt[i] + yt[i1]) * dt / 2 + sqrt(dt^3 / 12) * randn(rng)
-        xt[i] = x0 * exp(integral)
+        xt[i] = x0 * exp( λ * integral)
         i1 = i
     end
 end
@@ -27,9 +28,10 @@ end
 
         x0law = Normal()
         y0 = 0.0
+        λ = 2.0
+        params = (λ,)
         noise = WienerProcess(t0, tf, y0)
-        f = (t, x, y, p) -> y * x
-        params = nothing
+        f = (t, x, y, p) -> p[1] * y * x
 
         target = CustomUnivariateMethod(custom_solver, rng)
         method = RandomEuler()
