@@ -16,12 +16,13 @@ custom_solver = function(xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}
     i1 = firstindex(xt)
     xt[i1] = x0
     integral = 0.0
+    λ = params[1]
     for i in Iterators.drop(eachindex(xt, yt), 1)
         integral += (yt[i] + yt[i1]) * dt / 2
         if solver_params isa AbstractRNG
             integral += sqrt(dt^3 / 12) * randn(solver_params)
         end
-        xt[i] = x0 * exp(integral)
+        xt[i] = x0 * exp(λ * integral)
         i1 = i
     end
 end
@@ -81,11 +82,12 @@ end
     end
     @testset "scalar/scalar Heun" begin
         x0 = 0.5
-        f = (t, x, y, p) -> ( y + cos(t) ) * x
+        k = 3
+        f = (t, x, y, p) -> ( y + (p[1] - 1) * cos(t) ) * x
         yt = cos.(tt)
         xt = Vector{Float64}(undef, n + 1)
-        sol = x0 * exp.( 2 * sin.(tt))
-        params = nothing
+        sol = x0 * exp.( k * sin.(tt))
+        params = (k,)
         method = RandomHeun()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
         @test maximum(abs, xt .- sol) < 0.05
@@ -95,11 +97,12 @@ end
     @testset "User solver 1" begin
         rng = Xoshiro(123)
         x0 = 0.5
-        f = (t, x, y, p) -> y * x
+        λ = 3.0
+        f = (t, x, y, p) -> p[1] * y * x
         yt = cos.(tt)
         xt = Vector{Float64}(undef, n + 1)
-        params = nothing
-        sol = x0 * exp.( sin.(tt))
+        params = (λ,)
+        sol = x0 * exp.( λ * sin.(tt))
 
         method = CustomUnivariateMethod(custom_solver, nothing)
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
@@ -110,14 +113,15 @@ end
     @testset "User solver 2" begin
         rng = Xoshiro(123)    
         x0 = 0.5
-        f = (t, x, y, p) -> y * x
+        λ = 3.0
+        f = (t, x, y, p) -> p[1] * y * x
         noise = WienerProcess(t0, tf, 0.0)
         yt = Vector{Float64}(undef, n + 1)
         rand!(rng, noise, yt)
         xt = Vector{Float64}(undef, n + 1)
-        params = nothing
+        params = (λ,)
         dt = (tf - t0) / n
-        sol = x0 * exp.( cumsum(yt) * dt)
+        sol = x0 * exp.( λ * cumsum(yt) * dt)
     
         method = RandomEuler()
         @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
