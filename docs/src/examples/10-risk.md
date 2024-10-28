@@ -104,11 +104,11 @@ The evolution law:
 params = (ν, γ)
 
 function f(t, x, y, p)
+    ν = p[1]
+    γ = p[2]
     o = y[1]
     r = y[2]
     c = y[3]
-    ν = p[1]
-    γ = p[2]
     dx = r * (x + c + o) + ν * o + γ
     return dx
 end
