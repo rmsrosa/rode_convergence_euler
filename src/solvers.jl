@@ -38,9 +38,14 @@ CustomMultivariateMethod(solver::F, solver_params::P) where {F, P} = CustomMetho
 
 Solve a random ODE with the provided `method`.
 
-``\\mathrm{d}X_t / \\mathrm{d}t = f(t, X_t, Y_t)``
-
-More precisely, sove, inplace, (a sample path of) the (R)ODE ``\\mathrm{d}X_t / \\mathrm{d}t = f(t, X_t, Y_t)``, with the following arguments:
+More precisely, sove, inplace, a sample path of the (R)ODE
+```math
+    \\begin{cases}
+        \\displaystyle\\frac{\\mathrm{d}X_t}{\\mathrm{d}t} = f(t, X_t, Y_t), & t_0 \\leq t \\leq t_f, \\\\
+        X_{t_0} = X_0,
+    \\end{cases}
+```
+with the following arguments:
 
 * a function `f(t, x, y, params)`, if `x` is a scalar, or `f(dx, t, x, y, params)`, if `x` is a vector;
 * a scalar or vector sample initial condition `x0`;

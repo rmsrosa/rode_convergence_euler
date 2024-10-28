@@ -62,7 +62,7 @@ The number of steps for the sample path is determined by the length of the given
 
 Since, by definition, ``\\Delta W_t \\sim \\mathcal{N}(0, t)``, a sample path is constructed recursively by solving the recursive relation
 ```math
-W_{t_i} = W_{t_{i-1}} + \\sqrt{dt} z_i, \\qquad i = 1, \\ldots,
+W_{t_i} = W_{t_{i-1}} + \\sqrt{\\mathrm{dt}} z_i, \\qquad i = 1, \\ldots,
 ```
 where at each step `z_i` is drawn from a standard Normal distribution.
 """
@@ -202,7 +202,7 @@ and
 ```
 Then, since ``\\ln Y_t`` is Gaussian, ``Y_t`` is log-normal with
 ```math
-\\mathbb{E}\\left[ Y_t \\right] = y_0 e^{\\int_0^t a(s) \\;\\mathrm{d}s},
+\\mathbb{E}\\left[ Y_t \\right] = y_0 e^{ \\int_0^t a(s) \\;\\mathrm{d}s},
 ```
 and
 ```math
