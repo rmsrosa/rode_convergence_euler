@@ -381,7 +381,6 @@
         @test means[6] ≈ a * δ / κ + (λ₀ - a * δ / κ) * exp( - κ * tf ) (rtol = 0.2)
         @test vars[6] ≈ μ₂ / κ * ( ( (a * δ) / 2κ - λ₀ ) * exp(-2κ * tf) + ( λ₀ - a * δ / κ) * exp( -κ * tf) + a * δ / 2κ) (rtol = 0.2)
 
-
         @test means[7] ≈ mean(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (atol = 0.01)
         @test vars[7] ≈ var(mean(sin(tf / r) for r in rand(rng, ylaw, nr)) for _ in 1:m) (rtol = 0.2)
 
