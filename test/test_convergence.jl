@@ -28,7 +28,7 @@ end
 
         x0law = Normal()
         y0 = 0.0
-        λ = 2.0
+        λ = 1.0
         params = (λ,)
         noise = WienerProcess(t0, tf, y0)
         f = (t, x, y, p) -> p[1] * y * x
