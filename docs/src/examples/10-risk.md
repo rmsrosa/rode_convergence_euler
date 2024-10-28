@@ -98,12 +98,17 @@ rng = Xoshiro(123)
 The evolution law:
 
 ````@example 10-risk
-function f(t, x, y)
+ν = 5.0
+γ = 1.0
+
+params = (ν, γ)
+
+function f(t, x, y, p)
     o = y[1]
     r = y[2]
     c = y[3]
-    ν = 5.0
-    γ = 1.0
+    ν = p[1]
+    γ = p[2]
     dx = r * (x + c + o) + ν * o + γ
     return dx
 end
@@ -172,7 +177,7 @@ method = RandomEuler()
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 10-risk
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):

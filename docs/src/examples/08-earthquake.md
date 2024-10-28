@@ -81,9 +81,14 @@ rng = Xoshiro(123)
 We define the evolution law for the displacement $X_t$ driven by a noise $Y_t$. Since it is a system of equations, we use the in-place formulation. Notice the noise is a product of the background colored noise `y[1]` and the envelope noise `y[2]`. The parameters are hard-coded for simplicity.
 
 ````@example 08-earthquake
-function f!(dx, t, x, y)
-    ζ₀ = 0.6
-    ω₀ = 15
+ζ₀ = 0.6
+ω₀ = 15.0
+
+params = (ζ₀, ω₀)
+
+function f!(dx, t, x, y, p)
+    ζ₀ = p[1]
+    ω₀ = p[2]
     dx[1] = x[2]
     dx[2] = - 2 * ζ₀ * ω₀ * x[2] - ω₀ ^ 2 * x[1] - y
     return dx
@@ -231,7 +236,7 @@ method = RandomEuler(length(x0law))
 With all the parameters set up, we build the convergence suites for each noise:
 
 ````@example 08-earthquake
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors:

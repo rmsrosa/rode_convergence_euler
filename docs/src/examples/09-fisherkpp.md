@@ -120,12 +120,18 @@ These points are plugged into the second-order approximation of the second deriv
 This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE, keeping in mind that julia is 1-based, so the `j` indices are shifted up by one.
 
 ````@example 09-fisherkpp
-function f!(du, t, u, y) # ; μ=μ, λ=λ, uₘ=uₘ)
+μ = 0.009
+λ = 10.0
+uₘ = 1.0
+
+params = (μ, λ, uₘ)
+
+function f!(du, t, u, y, p) # ; μ=μ, λ=λ, uₘ=uₘ)
     axes(u, 1) isa Base.OneTo || error("indexing of `x` should be Base.OneTo")
 
-    μ = 0.009
-    λ = 10.0
-    uₘ = 1.0
+    μ = p[1]
+    λ = p[2]
+    uₘ = p[3]
 
     l = length(u) - 1
     dx = 1.0 / l
@@ -163,7 +169,7 @@ u = sin.(π * xx) .^ 2
 du = similar(u)
 y = [0.0, 0.0]
 t = 0.0
-f!(du, t, u, y)
+f!(du, t, u, y, params)
 nothing # hide
 ````
 
@@ -177,7 +183,7 @@ plot!(xx, du, label="du/dt")
 and check performace
 
 ````@example 09-fisherkpp
-@btime f!($du, $t, $u, $y)
+@btime f!($du, $t, $u, $y, $params)
 nothing # hide
 ````
 
@@ -284,7 +290,7 @@ method = RandomEuler(length(u0law))
 With all the parameters set up, we build the convergence suite:
 
 ````@example 09-fisherkpp
-suite = ConvergenceSuite(t0, tf, u0law, f!, noise, target, method, ntgt, ns, m, ks)
+suite = ConvergenceSuite(t0, tf, u0law, f!, noise, params, target, method, ntgt, ns, m, ks)
 ````
 
 Then we are ready to compute the errors:

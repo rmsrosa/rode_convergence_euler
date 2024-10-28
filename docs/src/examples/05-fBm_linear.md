@@ -25,7 +25,8 @@ Then we set up some variables:
 ````@example 05-fBm_linear
 rng = Xoshiro(123)
 
-f(t, x, y) = - x + y
+f(t, x, y, p) = - x + y
+params = nothing
 
 t0 = 0.0
 tf = 1.0
@@ -64,7 +65,7 @@ method = RandomEuler()
 With all the parameters set up, we build the convergence suite:
 
 ````@example 05-fBm_linear
-allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
 pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 1000 and so on
 @info "`suite` memory: $(round(allctd / 10^(3pwr), digits=2)) $(("bytes", "Kb", "Mb", "Gb", "Tb")[pwr+1])"
@@ -130,7 +131,7 @@ Now we vary the Hurst parameter and record the corresponding order of convergenc
 
 for h in Iterators.drop(hursts, 1)
     loc_noise = FractionalBrownianMotionProcess(t0, tf, y0, h, ntgt)
-    loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, target, method, ntgt, ns, m)
+    loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, params, target, method, ntgt, ns, m)
     @time loc_result = solve(rng, loc_suite)
     @info "h = $h => p = $(loc_result.p) ($(loc_result.pmin), $(loc_result.pmax))"
     push!(ps, loc_result.p)
@@ -148,10 +149,10 @@ We print them out for inclusing in the paper:
 The following plot helps visualizing the result.
 
 ````@example 05-fBm_linear
-plt = plot(ylims=(-0.1, 1.2), xaxis="H", yaxis="p", guidefont=10)
+plt = plot(ylims=(-0.1, 1.2), xaxis="H", yaxis="p", guidefont=10, legend=:bottomright)
 scatter!(plt, collect(hursts), ps, yerror=(ps .- pmins, pmaxs .- ps), label="computed")
-plot!(plt, 0.0:0.5:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="expected")
-plot!(plt, 0.0:0.5:1.0, p -> p, linestyle=:dashdot, label="previous")
+plot!(plt, 0.0:0.5:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="current")
+plot!(plt, 0.0:0.5:1.0, p -> p, linestyle=:dot, label="previous")
 ````
 
 Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2;$ dash-dot line: previous theory $p = H.$).

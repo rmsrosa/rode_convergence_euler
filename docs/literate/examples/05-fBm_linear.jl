@@ -18,7 +18,8 @@ using RODEConvergence
 
 rng = Xoshiro(123)
 
-f(t, x, y) = - x + y
+f(t, x, y, p) = - x + y
+params = nothing
 
 t0 = 0.0
 tf = 1.0
@@ -51,7 +52,7 @@ method = RandomEuler()
 
 # With all the parameters set up, we build the convergence suite:     
 
-allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
 pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 1000 and so on
 @info "`suite` memory: $(round(allctd / 10^(3pwr), digits=2)) $(("bytes", "Kb", "Mb", "Gb", "Tb")[pwr+1])"
@@ -105,7 +106,7 @@ pmaxs = [result.pmax]
 
 for h in Iterators.drop(hursts, 1)
     loc_noise = FractionalBrownianMotionProcess(t0, tf, y0, h, ntgt)
-    loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, target, method, ntgt, ns, m)
+    loc_suite = ConvergenceSuite(t0, tf, x0law, f, loc_noise, params, target, method, ntgt, ns, m)
     @time loc_result = solve(rng, loc_suite)
     @info "h = $h => p = $(loc_result.p) ($(loc_result.pmin), $(loc_result.pmax))"
     push!(ps, loc_result.p)

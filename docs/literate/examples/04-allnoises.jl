@@ -34,7 +34,9 @@ rng = Xoshiro(123)
 
 # Next the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
 
-f!(dx, t, x, y) = (dx .= .- sum(abs2, y) .* x .+ y)
+f!(dx, t, x, y, p) = (dx .= .- sum(abs2, y) .* x .+ y)
+
+params = nothing
 
 # The time interval is given by the end points
 
@@ -125,7 +127,7 @@ method = RandomEuler(length(noise))
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 
 # Then we are ready to compute the errors via [`solve`](@ref):
 

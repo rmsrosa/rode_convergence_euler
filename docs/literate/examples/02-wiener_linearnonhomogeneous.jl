@@ -107,13 +107,15 @@ using RODEConvergence
 
 rng = Xoshiro(123)
 
-f(t, x, y) = - x + y
+f(t, x, y, p) = - x + y
 
 t0, tf = 0.0, 1.0
 x0law = Normal()
 
 y0 = 0.0
 noise = WienerProcess(t0, tf, y0)
+
+params = nothing
 
 ntgt = 2^16
 ns = 2 .^ (4:14)
@@ -129,7 +131,7 @@ nothing # hide
 
 # We define the *target* solution as described above.
 
-target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -162,7 +164,7 @@ method = RandomEuler()
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
 # Then we are ready to compute the errors via [`solve`](@ref):
 

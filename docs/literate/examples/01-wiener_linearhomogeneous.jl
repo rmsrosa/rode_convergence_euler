@@ -1,9 +1,5 @@
 # # Homogenous linear RODE with a Wiener process noise coefficient
 #
-# ```@meta
-# Draft = false
-# ```
-#
 # We start by considering a homogeneous linear equation in which the coefficient is a Wiener process. In this case, it is already know, by other means, that the Euler method converges strongly of order 1, because it can be regarded as system of stochastic differential equations with additive noise. Nevertheless, we use it here for illustrative purposes.
 
 # ## The equation
@@ -132,7 +128,7 @@ rng = Xoshiro(123)
 
 # We set the right hand side of the equation:
 
-f(t, x, y) = y * x
+f(t, x, y, p) = y * x
 
 # Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a [Distributions.Normal](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal) random variable:
 
@@ -143,6 +139,10 @@ x0law = Normal()
 
 y0 = 0.0
 noise = WienerProcess(t0, tf, y0)
+
+# There is no parameter in the equation, so we just set `params` to `nothing`.
+
+params = nothing
 
 # The number of mesh points for the target solution, the approximations, and for a visualization of the one sample approximation:
 
@@ -165,7 +165,7 @@ info = (
 
 # The *target* solution as described above is implemented as
 
-target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, rng::AbstractRNG) where {T, F}
+target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
     axes(xt) == axes(yt) || throw(
         DimensionMismatch("The vectors `xt` and `yt` must match indices")
     )
@@ -195,7 +195,7 @@ method = RandomEuler()
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
 # Then we are ready to compute the errors via [`solve`](@ref):
 

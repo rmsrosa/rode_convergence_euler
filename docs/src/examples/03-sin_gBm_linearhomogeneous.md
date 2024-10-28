@@ -45,7 +45,9 @@ Then we set up some parameters, with a [Distributions.Normal](https://juliastats
 ````@example 03-sin_gBm_linearhomogeneous
 rng = Xoshiro(123)
 
-f(t, x, y) = sin(y) * x
+f(t, x, y, p) = sin(y) * x
+
+params = nothing
 
 t0, tf = 0.0, 1.0
 x0law = Normal()
@@ -91,7 +93,7 @@ method = RandomEuler()
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 03-sin_gBm_linearhomogeneous
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):

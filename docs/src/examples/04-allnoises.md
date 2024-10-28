@@ -27,6 +27,7 @@ First we load the necessary packages
 
 ````@example 04-allnoises
 using Plots
+using Measures
 using LinearAlgebra
 using Random
 using Distributions
@@ -42,7 +43,9 @@ rng = Xoshiro(123)
 Next the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
 
 ````@example 04-allnoises
-f!(dx, t, x, y) = (dx .= .- sum(abs2, y) .* x .+ y)
+f!(dx, t, x, y, p) = (dx .= .- sum(abs2, y) .* x .+ y)
+
+params = nothing
 ````
 
 The time interval is given by the end points
@@ -151,7 +154,7 @@ method = RandomEuler(length(noise))
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 04-allnoises
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
@@ -218,7 +221,9 @@ plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\
 We finally combine all the convergence plot and the noises into a single plot, for the article:
 
 ````@example 04-allnoises
-plt_combined = plot(plt_result, plt_noises, size=(720, 240), title=["(a)" "(b)"], titlefont=10)
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"], legend=nothing)
+
+plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(800, 240), title=["(a)" "(b)"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
 ````@example 04-allnoises

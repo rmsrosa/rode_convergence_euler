@@ -54,10 +54,14 @@ rng = Xoshiro(123)
 The evolution law:
 
 ````@example 07-toggle_switch
-function f!(dx, t, x, y)
-    a⁴ = c⁴ = 0.25 ^ 4
-    b⁴ = d⁴ = 0.4 ^ 4
-    μ = ν = 0.75
+a⁴ = c⁴ = 0.25 ^ 4
+b⁴ = d⁴ = 0.4 ^ 4
+μ = ν = 0.75
+
+params = (a⁴, c⁴, b⁴, d⁴, μ,  ν)
+
+function f!(dx, t, x, y, p)
+    a⁴, c⁴, b⁴, d⁴, μ, ν = params
     α = y[1]
     β = y[2]
     x₁⁴ = x[1]^4
@@ -132,7 +136,7 @@ method = RandomEuler(length(x0law))
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 07-toggle_switch
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
@@ -177,7 +181,7 @@ For the sake of illustration of the behavior of the system, we rebuild the probl
 t0, tf = 0.0, 10.0
 m = 1
 ns = 2 .^ (6:9)
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 @time result = solve(rng, suite)
 nothing # hide
 ````
@@ -197,7 +201,7 @@ nothing # hide
 We also illustrate the convergence to say the expression of the X gene:
 
 ````@example 07-toggle_switch
-plt_suite = plot(suite)
+plt_suite = plot(suite, legend=:top)
 ````
 
 ````@example 07-toggle_switch
@@ -219,7 +223,7 @@ nothing # hide
 We finally combine all plots into a single one, for the article:
 
 ````@example 07-toggle_switch
-plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], titlefont=10)
+plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], legendfont=7)
 ````
 
 ````@example 07-toggle_switch

@@ -45,10 +45,14 @@ rng = Xoshiro(123)
 
 # The evolution law:
 
-function f!(dx, t, x, y)
-    a⁴ = c⁴ = 0.25 ^ 4
-    b⁴ = d⁴ = 0.4 ^ 4
-    μ = ν = 0.75
+a⁴ = c⁴ = 0.25 ^ 4
+b⁴ = d⁴ = 0.4 ^ 4
+μ = ν = 0.75
+
+params = (a⁴, c⁴, b⁴, d⁴, μ,  ν)
+
+function f!(dx, t, x, y, p)
+    a⁴, c⁴, b⁴, d⁴, μ, ν = params
     α = y[1]
     β = y[2]
     x₁⁴ = x[1]^4
@@ -109,7 +113,7 @@ method = RandomEuler(length(x0law))
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 
 # Then we are ready to compute the errors via [`solve`](@ref):
 
@@ -147,7 +151,7 @@ nothing # hide
 t0, tf = 0.0, 10.0
 m = 1
 ns = 2 .^ (6:9)
-suite = ConvergenceSuite(t0, tf, x0law, f!, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f!, noise, params, target, method, ntgt, ns, m)
 @time result = solve(rng, suite)
 nothing # hide
 

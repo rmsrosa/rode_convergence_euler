@@ -57,10 +57,15 @@ rng = Xoshiro(123)
 The right hand side of the evolution equation:
 
 ````@example 06-popdyn
-function f(t, x, y)
-    γ = 0.8
-    ϵ = 0.3
-    r = 1.0
+γ = 0.8
+ϵ = 0.3
+r = 1.0
+params = (γ, ϵ, r)
+
+function f(t, x, y, p)
+    γ = p[1]
+    ϵ = p[2]
+    r = p[3]
     α = γ * r^2
     dx = x > zero(x) ? γ * (1 + ϵ * sin(y[1])) * x * (1 - x / r) - α * y[2] * x / (r + x) : zero(x)
     return dx
@@ -130,7 +135,7 @@ method = RandomEuler()
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
 ````@example 06-popdyn
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, target, method, ntgt, ns, m)
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
