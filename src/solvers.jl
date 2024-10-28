@@ -46,7 +46,7 @@ More precisely, sove, inplace, (a sample path of) the (R)ODE ``\\mathrm{d}X_t / 
 * a scalar or vector sample initial condition `x0`;
 * a time interval `t0` to `tf`;
 * a sample path `yt` of a "noise", either a vector (for scalar noise) or a matrix (for vectorial noise);
-* an NTuple `params` of scalars for the function `f`;
+* parameters `params` for the function `f`;
 * a numerical `method`, either `RandomEuler()` for a scalar equation, `RandomEuler(n)` for an n-dimensional system of equations, or `RandomHeun()` for a scalar equation.
 
 The values of `xt` are updated with the computed solution values.
