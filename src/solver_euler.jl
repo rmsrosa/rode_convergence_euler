@@ -3,7 +3,7 @@
 
 Instantiate a `RandomEuler` method including a cache vector of length `n` for a non-allocating solver via the Euler method, solved by `solve!(xt, t0, tf, x0, f, yt, params, ::RandomEuler))]`
 
-Set `n` to `0` for solving a scalar equation and set `n` to the length of the system (e.g. the length of the initial condition).
+Set `n` to `0` when solving a scalar equation and set `n` to the length of the initial vector when solving a system of equations.
 """
 struct RandomEuler{T, N} <: RODEMethod{N}
     cachex::Vector{T}
