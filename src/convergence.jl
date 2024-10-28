@@ -15,7 +15,7 @@ The data comprises of the following:
 * the univariate or multivariate distribution `x0law` for the initial condition ``X_0``;
 * the right-hand-side term `f` for the equation, either in the out-of-place form `f=f(t, x, y, params)`, for a scalar equation (i.e. with a univariate initial condition `x0law`), or in the in-place form `f=f(dx, t, x, y, params)`, for a system of equations (i.e. with a multivariate initial condition `x0law`);
 * the univariate or multivariate process `noise` for the noise term ``Y_t``;
-* a tuple `params` of parameters for the function `f`;
+* parameters  `params` for the function `f`;
 * the method `target` to compute the target solution for the error calculation via `solve!(xt, t0, tf, x0, f, yt, target)`, typically `EulerMethod()` with a much finer resolution with `ntgt` mesh points or the order of the square of the highest number of mesh points in `ns` (see below) or a lower resolution `CustomMethod()` with an exact distribution of the possible solutions conditioned to the already computed noise points;
 * the `method` to approximate the solution, typically the `EulerMethod()`, also in the form `solve!(xt, t0, tf, x0, f, yt, method)`;
 * the number `ntgt` of mesh points in the fine mesh on which the target solution will be computed;
