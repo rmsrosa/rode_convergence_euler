@@ -72,9 +72,9 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        f(method.cachex, ti1, view(xt, i-1, :), yt[i-1], params)
+        f(method.cachex, ti1, view(xt, i1, :), yt[i1], params)
         for j in eachindex(axes(xt, 2), axes(method.cachex, 1))
-            @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
+            @inbounds xt[i, j] = xt[i1, j] + dt * method.cachex[j]
         end
         i1 = i
         ti1 += dt
@@ -98,9 +98,9 @@ function solve!(xt::AbstractMatrix{T}, t0::T, tf::T, x0::AbstractVector{T}, f::F
     xt[i1, :] .= x0
     ti1 = t0
     for i in Iterators.drop(eachindex(axes(xt, 1), axes(yt, 1)), 1)
-        f(method.cachex, ti1, view(xt, i-1, :), view(yt, i-1, :), params)
+        f(method.cachex, ti1, view(xt, i1, :), view(yt, i1, :), params)
         for j in eachindex(axes(xt, 2))
-            @inbounds xt[i, j] = xt[i-1, j] + dt * method.cachex[j]
+            @inbounds xt[i, j] = xt[i1, j] + dt * method.cachex[j]
         end
         i1 = i
         ti1 += dt
