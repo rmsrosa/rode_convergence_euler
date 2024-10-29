@@ -1,5 +1,10 @@
 # # An actuarial risk model
 #
+
+# ```@meta
+#     Draft = false
+# ```
+
 # A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (1998)](https://doi.org/10.1080/10920277.1998.10595671)) given by
 # ```math
 #   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
@@ -77,6 +82,7 @@
 # 
 # First we load the necessary packages:
 
+using JLD2
 using Plots
 using Random
 using LinearAlgebra
@@ -174,6 +180,10 @@ nothing # hide
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
+
+# We save the result for ploting a combined figure with results from different examples.
+
+save(joinpath(@__DIR__(),"results/10-risk.jl_result.jld2"), Dict("result" => result))
 
 # 
 # ### Plots

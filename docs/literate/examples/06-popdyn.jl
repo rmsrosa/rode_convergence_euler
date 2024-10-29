@@ -35,6 +35,7 @@
 # 
 # First we load the necessary packages
 
+using JLD2
 using Plots
 using Random
 using Distributions
@@ -132,7 +133,10 @@ nothing # hide
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
 
-# 
+# We save the result for ploting a combined figure with results from different examples.
+
+save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result))
+
 # 
 # ### Plots
 # 

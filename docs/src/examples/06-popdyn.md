@@ -40,6 +40,7 @@ We do not have an explicit solution for the equation so we use as target for the
 First we load the necessary packages
 
 ````@example 06-popdyn
+using JLD2
 using Plots
 using Random
 using Distributions
@@ -159,6 +160,12 @@ The calculated order of convergence is given by `result.p`:
 ````@example 06-popdyn
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
+````
+
+We save the result for ploting a combined figure with results from different examples.
+
+````@example 06-popdyn
+save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result))
 ````
 
 ### Plots

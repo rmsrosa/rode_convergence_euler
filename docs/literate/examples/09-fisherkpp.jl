@@ -53,6 +53,7 @@
 # First we load the necessary packages:
 
 using Plots
+using Measures
 using Random
 using LinearAlgebra
 using Distributions
@@ -168,17 +169,17 @@ nothing # hide
 
 y0 = 0.0
 τ = 0.005 # time scale
-σ̃ = 0.1 # large-scale diffusion
+ς = √τ # large-scale diffusion
 ν = 1/τ # drift
-σ = σ̃/τ # diffusion
+σ = ς/τ # diffusion
 colored_noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 # And the exponentially-decaying Hawkes process is defined by
 
-λ₀ = 3.0
-a = 0.3
-δ = 5.0
-β = 1.8
+λ₀ = 5.0
+a = 1.4
+δ = 8.0
+β = 0.4
 θ = 1/β
 dylaw = Exponential(θ)
 
@@ -196,11 +197,11 @@ rand!(rng, noise, yt)
 
 #
 
-plot(tt, yt, label=["OU" "Hawkes"], xlabel="\$t\$", ylabel="\$y\$")
+plt_OUandHawkes = plot(tt, yt, label=["OU" "Hawkes"], xlabel="\$t\$", ylabel="\$y\$")
 
 # and the modulated and truncated colored noise:
 
-plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
+plt_noise = plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
 
 # We also make sure drawing a noise sample path does not allocate:
 
@@ -268,16 +269,26 @@ nothing # hide
 # 
 # We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-plt = plot(result)
+plt_result = plot(result)
 
 #
 
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.pdf")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.pdf")) # hide
 nothing # hide
+
+# We also combine some plots into a single figure, for the article:
+
+plt_combined = plot(plt_result, plt_OUandHawkes, plt_noise, layout=@layout([ a [ b; c ] ]), size=(800, 280), title=["(a)" "(b)" "(c)"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
+
+#
+
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "fisherkpp_combined.pdf")) # hide
+nothing # hide
+
 
 # For the sake of illustration, we plot the evolution of a sample target solution:
 
-dt = (tf - t0) / ntgt
+dt = ( tf - t0 ) / ( ntgt - 1 )
 
 @time anim = @animate for i in 1:div(ntgt, 2^7):div(ntgt, 1)
     plot(range(0.0, 1.0, length=l+1), view(suite.xt, i, :), ylim=(0.0, 1.1), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", legend=false)

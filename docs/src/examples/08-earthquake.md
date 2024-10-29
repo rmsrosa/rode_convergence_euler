@@ -66,6 +66,7 @@ First we load the necessary packages:
 
 ````@example 08-earthquake
 using Plots
+using Measures
 using Random
 using LinearAlgebra
 using Distributions
@@ -194,14 +195,14 @@ nothing # hide
 Visualization
 
 ````@example 08-earthquake
-plt1 = plot(tt, mt, label="ground motion")
-plt2 = plot(tt, yt, label="ground acceleration")
-plt3 = plot(tt, et, label="envelope of acceleration")
-plt = plot(plt1, plt2, plt3, layout = (3, 1))
+plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label="ground motion")
+plt2 = plot(tt, yt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
+plt3 = plot(tt, et, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="envelope of acceleration")
+plt_ground = plot(plt1, plt2, plt3, layout = (3, 1))
 ````
 
 ````@example 08-earthquake
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.pdf")) # hide
+savefig(plt_ground, joinpath(@__DIR__() * "../../../../latex/img/", "noise_earthquake.pdf")) # hide
 nothing # hide
 ````
 
@@ -265,11 +266,11 @@ nothing # hide
 We create plots with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
 ````@example 08-earthquake
-plt = plot(result)
+plt_result = plot(result)
 ````
 
 ````@example 08-earthquake
-savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.pdf")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.pdf")) # hide
 nothing # hide
 ````
 
@@ -277,7 +278,18 @@ For the sake of illustration, we plot a sample of an approximation of a target s
 
 ````@example 08-earthquake
 nsample = ns[[1, 2, 3]]
-plot(suite, ns=nsample)
+plt_sample = plot(suite, ns=nsample)
+````
+
+We also combine some plots into a single figure, for the article:
+
+````@example 08-earthquake
+plt_combined = plot(plt_result, plt_sample, plt1, plt2, plt3, layout=@layout([[a; b] [c; d; e]]), size=(800, 480), title=["(a)" "(b)" "(c)" "(d)" "(e)"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
+````
+
+````@example 08-earthquake
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "earthquake_combined.pdf")) # hide
+nothing # hide
 ````
 
 We also draw an animation of the motion of the single-storey building in each case. First the model with the transport-modulated noise.
@@ -285,7 +297,7 @@ We also draw an animation of the motion of the single-storey building in each ca
 And now with the Hawkes-modulated noise.
 
 ````@example 08-earthquake
-dt = (tf - t0) / (ntgt - 1)
+dt = ( tf - t0 ) / ( ntgt - 1 )
 mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=ntgt)]
 
 @time anim = @animate for i in 1:div(ntgt, 2^9):div(ntgt, 1)
