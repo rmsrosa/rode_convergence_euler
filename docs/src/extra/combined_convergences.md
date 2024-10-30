@@ -1,15 +1,12 @@
 # Combined plot
 
-```@meta
-Draft = false
-```
-
 Here we just read the results of some examples to build a combined plot for the companion article.
 
 ```@example combined
 using JLD2
 using Plots
 using Measures
+using Distributions
 using RODEConvergence
 ```
 
