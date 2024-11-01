@@ -32,113 +32,76 @@ end
     tf = 1.5
     n = 2^8
     tt = range(t0, tf, length=n+1)
-
-    @testset "scalar/scalar Euler" begin
+    @testset "scalar/scalar" begin
         x0 = 0.5
-        f = (t, x, y, p) -> ( y + cos(t) ) * x
-        yt = cos.(tt)
-        xt = Vector{Float64}(undef, n + 1)
-        sol = x0 * exp.( 2 * sin.(tt))
-        params = nothing
-        method = RandomEuler()
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
-    end
-
-    @testset "scalar/vector Euler" begin
-        x0 = 0.5
-        f = (t, x, y, p) -> ( sum(y) + cos(t) ) * x
-        yt = [0.3 0.7] .* cos.(tt)
-        xt = Vector{Float64}(undef, n + 1)
-        sol = x0 * exp.( 2 * sin.(tt))
-        params = nothing
-        method = RandomEuler()
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
-    end
-
-    @testset "vector/scalar Euler" begin
-        x0 = [0.2, 0.3]
-        f! = (dx, t, x, y, p) -> (dx .= ( y + cos(t) ) .* x)
-        yt = cos.(tt)
-        xt = Matrix{Float64}(undef, n + 1, length(x0))
-        sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
-        params = nothing
-        method = RandomEuler(2)
-        @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
-    end
-
-    @testset "vector/vector Euler" begin
-        x0 = [0.2, 0.3]
-        f! = (dx, t, x, y, p) -> (dx .= ( sum(y) + cos(t) ) .* x)
-        yt = [0.2 0.2 0.6] .* cos.(tt)
-        xt = Matrix{Float64}(undef, n + 1, length(x0))
-        sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
-        params = nothing
-        method = RandomEuler(2)
-        @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
-    end
-
-    @testset "scalar/scalar Heun" begin
-        x0 = 0.5
-        k = 3
+        k = 2
         f = (t, x, y, p) -> ( y + (p[1] - 1) * cos(t) ) * x
         yt = cos.(tt)
         xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( k * sin.(tt))
         params = (k,)
-        method = RandomHeun()
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+
+        for method in (RandomEuler(), RandomHeun(), CustomUnivariateMethod(custom_solver, nothing))
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+            end
+        end
     end
 
-    @testset "scalar/vector Heun" begin
+    @testset "scalar/vector" begin
         x0 = 0.5
         f = (t, x, y, p) -> ( sum(y) + cos(t) ) * x
         yt = [0.3 0.7] .* cos.(tt)
         xt = Vector{Float64}(undef, n + 1)
         sol = x0 * exp.( 2 * sin.(tt))
         params = nothing
-        method = RandomHeun()
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+
+        for method in (RandomEuler(), RandomHeun())
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+            end
+        end
     end
 
-    @testset "vector/scalar Heun" begin
+    @testset "vector/scalar" begin
         x0 = [0.2, 0.3]
         f! = (dx, t, x, y, p) -> (dx .= ( y + cos(t) ) .* x)
         yt = cos.(tt)
         xt = Matrix{Float64}(undef, n + 1, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
         params = nothing
-        method = RandomHeun(2)
-        @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
+
+        for method in (RandomEuler(2), RandomHeun(2))
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
+            end
+        end
     end
 
-    @testset "vector/vector Heun" begin
+    @testset "vector/vector" begin
         x0 = [0.2, 0.3]
         f! = (dx, t, x, y, p) -> (dx .= ( sum(y) + cos(t) ) .* x)
         yt = [0.2 0.2 0.6] .* cos.(tt)
         xt = Matrix{Float64}(undef, n + 1, length(x0))
         sol = [x0[1] x0[2]] .* exp.( 2 * sin.(tt))
         params = nothing
-        method = RandomHeun(2)
-        @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
+        
+        for method in (RandomEuler(2), RandomHeun(2))
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f!, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f!, $yt, $params, $method)) == 0
+            end
+        end
     end
 
-    @testset "User solver 1" begin
+    @testset "scalar/scalar 2" begin
         rng = Xoshiro(123)
         x0 = 0.5
         λ = 1.0
@@ -148,13 +111,16 @@ end
         params = (λ,)
         sol = x0 * exp.( λ * sin.(tt))
 
-        method = CustomUnivariateMethod(custom_solver, nothing)
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+        for method in (RandomEuler(), RandomHeun(), CustomUnivariateMethod(custom_solver, nothing))
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+            end
+        end
     end
 
-    @testset "User solver 2" begin
+    @testset "scalar/scalar 3" begin
         rng = Xoshiro(123)    
         x0 = 0.5
         λ = 1.0
@@ -166,15 +132,13 @@ end
         params = (λ,)
         dt = (tf - t0) / n
         sol = x0 * exp.( λ * cumsum(yt) * dt)
-    
-        method = RandomEuler()
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
 
-        method = CustomUnivariateMethod(custom_solver, rng)
-        @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
-        @test maximum(abs, xt .- sol) < 0.05
-        @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+        for method in (RandomEuler(), RandomHeun(), CustomUnivariateMethod(custom_solver, nothing))
+            @testset "$(nameof(typeof(method)))" begin
+                @test_nowarn solve!(xt, t0, tf, x0, f, yt, params, method)
+                @test maximum(abs, xt .- sol) < 0.05
+                @test (@ballocated solve!($xt, $t0, $tf, $x0, $f, $yt, $params, $method)) == 0
+            end
+        end
     end
 end
