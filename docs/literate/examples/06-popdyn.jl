@@ -142,8 +142,6 @@ nothing # hide
 
 save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result)) # save to build/
 
-save(joinpath(@__DIR__(),"../../../docs/literate/examples/results/06-popdyn_result.jld2"), Dict("result" => result)) # save to src/
-
 # 
 # ### Plots
 # 

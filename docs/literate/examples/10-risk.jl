@@ -183,13 +183,8 @@ nothing # hide
 
 # We save the result for ploting a combined figure with results from different examples.
 
-save(joinpath(@__DIR__(),"results/10-risk.jl_result.jld2"), Dict("result" => result)) # save to docs/build/
+save(joinpath(@__DIR__(),"results/10-risk_result.jld2"), Dict("result" => result)) # save to docs/build/
 
-save(joinpath(@__DIR__(),"../../../docs/literate/examples/results/10-risk.jl_result.jld2"), Dict("result" => result)) # save to src/
-
-save(joinpath(@__DIR__(),"../../../docs/literate/examples/results/10-risk.jl_result.jld2"), Dict("result" => result)) # save to docs/src/
-
-print(joinpath(@__DIR__(),"../../../docs/literate/examples/results/10-risk.jl_result.jld2"))
 # 
 # ### Plots
 # 
