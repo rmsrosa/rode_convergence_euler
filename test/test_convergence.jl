@@ -41,10 +41,10 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
         info = (equation = "dx/dt = yx", ic = "Normal()", noise="Wiener process noise")
-        str = @test_nowarn generate_error_table(results, info)
+        str = @test_nowarn generate_error_table(results, suite, info)
         @test all(n -> occursin(string(n), str), ns)
         @test occursin(info.equation, str)
         @test occursin(info.ic, str)
@@ -58,7 +58,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
     end
 
@@ -92,7 +92,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler()
@@ -104,7 +104,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
     end
 
@@ -140,7 +140,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler(length(x0law))
@@ -151,7 +151,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
     end
 
@@ -191,7 +191,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
 
         target = RandomEuler(length(x0law))
@@ -202,7 +202,7 @@ end
         @test results.deltas ≈ (tf - t0) ./ ns
         @test results.p ≈ 1.0 (atol = 0.1)
         @test results.pmin ≤ results.p ≤ results.pmax
-        str = @test_nowarn generate_error_table(results)
+        str = @test_nowarn generate_error_table(results, suite)
         @test all(n -> occursin(string(n), str), ns)
     end
 

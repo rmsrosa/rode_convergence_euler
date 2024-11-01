@@ -1,5 +1,10 @@
 # # Population dynamics with harvest
 #
+
+# ```@meta
+#     Draft = false
+# ```
+
 # This time we consider a population dynamics model with two types of noise, a geometric Brownian motion process affecting the growth rate and a point Poisson step process affecting the harvest.
 
 # ## The equation
@@ -121,7 +126,7 @@ nothing # hide
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
 
-table = generate_error_table(result, info)
+table = generate_error_table(result, suite, info)
 
 println(table) # hide
 nothing # hide
@@ -135,7 +140,9 @@ nothing # hide
 
 # We save the result for ploting a combined figure with results from different examples.
 
-save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result))
+save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result)) # save to build/
+
+save(joinpath(@__DIR__(),"../../../docs/literate/examples/results/06-popdyn_result.jld2"), Dict("result" => result)) # save to src/
 
 # 
 # ### Plots

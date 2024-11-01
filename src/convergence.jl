@@ -96,10 +96,9 @@ struct ConvergenceSuite{T, D, P, Q, F, N1, N2, M1, M2}
 end
 
 """
-    ConvergenceResult{T, S}(suite::S, deltas::Vector{T}, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, errors::Vector{T}, stderrs::Vector{T}, lc::T, p::T, pmin::T, pmax::T) where {T, S}
+    ConvergenceResult{T, S}(deltas::Vector{T}, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, errors::Vector{T}, stderrs::Vector{T}, lc::T, p::T, pmin::T, pmax::T) where {T, S}
 
 Stores the result of `solve(rng, suite)` with fields
-* `suite`: the `ConvergenceSuite` which is to be solved for;
 * `deltas`: the time steps associated with the number of mesh points in the vector `suite.ns`;
 * `trajerrors`: a matrix where each column corresponds to the strong error, along the trajectory, at each mesh resolution determined by `suite.ns`, i.e. `trajerrors[i, k]` is the error at time ``t_0 + i \\Delta t``, for the time step ``\\Delta t = (t_f - t_0) / (n - 1)`` associated with the kth element `n = suite.ns[k]`;
 * `trajstderrs`: a matrix with the corresponding standard error for each entry in `trajerrors`;
@@ -109,8 +108,7 @@ Stores the result of `solve(rng, suite)` with fields
 * `p`: the estimated order of the strong convergence;
 * `pmin` and `pmax`: the 95% confidence interval for `p`;
 """
-struct ConvergenceResult{T, S}
-    suite::S
+struct ConvergenceResult{T}
     deltas::Vector{T}
     trajerrors::Matrix{T}
     trajstderrs::Matrix{T}
@@ -237,7 +235,7 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
     pmin, pmax = extrema(lcsandps[2, :])
 
     # return `result` as a `ConvergenceResult`
-    result = ConvergenceResult(suite, deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, pmin, pmax)
+    result = ConvergenceResult(deltas, trajerrors, trajstderrs, errors, stderrs, lc, p, pmin, pmax)
     return result
 end
 
@@ -247,18 +245,18 @@ end
 # Then rewrite `solve` to call `init` and then `solve!`.
 
 """
-    generate_error_table(result, info)
+    generate_error_table(result, suite, info)
 
 Generate the markdown table with the data for the strong errors. 
     
-This is obteined from `result.errors`, with time steps `result.deltas` and lengths `result.suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`.
+This is obteined from `result.errors`, with time steps `result.deltas` and lengths `suite.ns`, and the provided `info` for the problem, where `info` is given as a namedtuple with String fields `info.equation`, `info.ic`, and `info.noise`, some of which may be taken from `suite`.
 """
-function generate_error_table(result::ConvergenceResult, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(result.suite.x0law))), noise=string(nameof(typeof(result.suite.noise)))))
-    t0 = result.suite.t0
-    tf = result.suite.tf
-    ns = result.suite.ns
-    m = result.suite.m
-    ntgt = result.suite.ntgt
+function generate_error_table(result::ConvergenceResult, suite:: ConvergenceSuite, info::NamedTuple=(equation = "RODE", ic=string(nameof(typeof(suite.x0law))), noise=string(nameof(typeof(suite.noise)))))
+    t0 = suite.t0
+    tf = suite.tf
+    ns = suite.ns
+    m = suite.m
+    ntgt = suite.ntgt
     deltas = result.deltas
     errors = result.errors
     stderrs = result.stderrs

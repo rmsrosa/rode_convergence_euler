@@ -106,7 +106,7 @@ nothing # hide
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
 ````@example 03-sin_gBm_linearhomogeneous
-table = generate_error_table(result, info)
+table = generate_error_table(result, suite, info)
 
 println(table) # hide
 nothing # hide

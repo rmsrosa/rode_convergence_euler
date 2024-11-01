@@ -250,7 +250,7 @@ nothing # hide
 The computed strong error for each resolution in `ns` is stored in field `errors`, and raw LaTeX tables can be displayed for inclusion in the article:
 
 ````@example 08-earthquake
-println(generate_error_table(result, info)) # hide
+println(generate_error_table(result, suite, info)) # hide
 nothing # hide
 ````
 
