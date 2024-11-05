@@ -120,7 +120,7 @@ params = nothing
 ntgt = 2^16
 ns = 2 .^ (4:14)
 nsample = ns[[1, 2, 3, 4]]
-m = 100
+m = 80
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
