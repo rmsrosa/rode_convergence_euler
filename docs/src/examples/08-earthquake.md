@@ -211,7 +211,7 @@ Now we are ready to check the order of convergence. We set the target resolution
 ````@example 08-earthquake
 ntgt = 2^18
 ns = 2 .^ (6:9)
-m = 100 # 1_000
+m = 100
 nothing # hide
 ````
 
