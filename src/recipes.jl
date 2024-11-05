@@ -21,6 +21,7 @@ plot_suite(suite::ConvergenceSuite, kwargs...) = plot(suite, kwargs...)
 
     # assume suite has been solved and contains the noise in `suite.yt` and the target solution in `suite.xt` (from the last sample path of the Monte-Carlo simulation) and go from there to build a sequence of approximate solutions using the cached vector `suite.xnt`.
 
+    color_palette := :tab10
     xlabel := "\$t\$"
     ylabel := ( xshow !== nothing && xshow !== false ) ? "\$x\$" : "\$y\$"
     t0 = suite.t0
@@ -170,6 +171,7 @@ plot_convergence(results::ConvergenceResult) = plot(results)
     ylabel := "\$\\textrm{error}\$"
     xscale := :log10
     yscale := :log10
+    color_palette := :tab10
 
     @series begin
         linestyle --> :solid
