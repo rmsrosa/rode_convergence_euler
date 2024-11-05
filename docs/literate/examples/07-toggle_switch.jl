@@ -157,8 +157,8 @@ nothing # hide
 
 # We visualize the pair of solutions
 
-plt_sols = plot(suite, xshow=1, ns=nothing, label="X_t", linecolor=1)
-plot!(plt_sols, suite, xshow=2, ns=nothing, label="Y_t", linecolor=2, ylabel="\$\\textrm{concentration}\$")
+plt_sols = plot(suite, xshow=1, ns=nothing, label="\$X_t\$", linecolor=1)
+plot!(plt_sols, suite, xshow=2, ns=nothing, label="\$Y_t\$", linecolor=2, ylabel="\$\\textrm{concentration}\$")
 
 #
 
@@ -176,7 +176,7 @@ nothing # hide
 
 # We can also visualize the noises associated with this sample solution:
 
-plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], linecolor=[1 2])
+plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], linecolor=[1 2], linestyle=:auto)
 
 #
 
