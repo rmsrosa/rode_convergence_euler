@@ -115,7 +115,7 @@ nsample = ns[[1, 2, 3, 4]]
 The number of samples for the Monte-Carlo estimate:
 
 ````@example 06-popdyn
-m = 200
+m = 100
 ````
 
 And add some information about the simulation:
