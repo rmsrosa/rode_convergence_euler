@@ -61,7 +61,7 @@ b⁴ = d⁴ = 0.4 ^ 4
 params = (a⁴, c⁴, b⁴, d⁴, μ,  ν)
 
 function f!(dx, t, x, y, p)
-    a⁴, c⁴, b⁴, d⁴, μ, ν = params
+    a⁴, c⁴, b⁴, d⁴, μ, ν = p
     α = y[1]
     β = y[2]
     x₁⁴ = x[1]^4
