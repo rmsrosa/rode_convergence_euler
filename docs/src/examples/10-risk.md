@@ -4,6 +4,10 @@ EditURL = "../../literate/examples/10-risk.jl"
 
 # An actuarial risk model
 
+```@meta
+    Draft = false
+```
+
 A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (1998)](https://doi.org/10.1080/10920277.1998.10595671)) given by
 ```math
   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
@@ -284,9 +288,11 @@ plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 2], label="\$R_t\$
 plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 3], label="\$C_t\$", linecolor=4)
 
 plt_combined = plot(plt_result, plt_surplus_and_noises, legendfont=6, size=(800, 240), title=["(a)" "(b)"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
+````
 
+````@example 10-risk
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_combined.pdf")) # hide
-nothing #
+nothing # hide
 ````
 
 ---

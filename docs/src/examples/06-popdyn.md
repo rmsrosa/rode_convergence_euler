@@ -4,6 +4,10 @@ EditURL = "../../literate/examples/06-popdyn.jl"
 
 # Population dynamics with harvest
 
+```@meta
+    Draft = false
+```
+
 This time we consider a population dynamics model with two types of noise, a geometric Brownian motion process affecting the growth rate and a point Poisson step process affecting the harvest.
 
 ## The equation

@@ -1,5 +1,9 @@
 # # A toggle-switch model for gene expression
 #
+# ```@meta
+#     Draft = false
+# ```
+#
 # Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://doi.org/10.1186/1752-0509-8-43). See also [Strasser, Theis & Marr (2012)](https://doi.org/10.1016/j.bpj.2011.11.4000).
 
 # Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
@@ -34,6 +38,7 @@
 # First we load the necessary packages:
 
 using Plots
+using Measures
 using Random
 using LinearAlgebra
 using Distributions
@@ -183,9 +188,13 @@ plt_noises = plot(suite, xshow=false, yshow=true, label=["\$A_t\$" "\$B_t\$"], l
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "noises_toggleswitch.pdf")) # hide
 nothing # hide
 
-# We finally combine all plots into a single one, for the article:
+# We finally combine all plots into a single one, for a visual summary.
 
-plt_combined = plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], legendfont=7)
+plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], legendfont=7)
+
+# We also combine just some of them, for the article
+
+plt_combined = plot(plt_result, plt_suite, size=(800, 240), title=["(a)" "(b)"], layout = (1, 2), legendfont=7, bottom_margin=5mm, left_margin=5mm)
 
 #
 

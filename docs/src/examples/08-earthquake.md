@@ -4,6 +4,10 @@ EditURL = "../../literate/examples/08-earthquake.jl"
 
 # Mechanical structural under random Earthquake-like seismic disturbances
 
+```@meta
+    Draft = false
+```
+
 Now we consider a mechanical structure problem under ground-shaking Earthquake-like excitations. The problem is modeled by a second-order Random ODE driven by a random disturbance in the form of a transport process. The equation is inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293) (see also [Chapter 18]{NeckelRupp2013} and {HousnerJenning1964} with this and other models).
 
 There are a number of models for earthquake-type forcing, such as the ubiquitous Kanai-Tajimi and Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from {Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
@@ -72,6 +76,7 @@ More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\o
 First we load the necessary packages:
 
 ````@example 08-earthquake
+using JLD2
 using Plots
 using Measures
 using Random
@@ -348,6 +353,12 @@ The calculated order of convergence is given by field `p`:
 ````@example 08-earthquake
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
+````
+
+We save the result for ploting a combined figure with results from different examples.
+
+````@example 08-earthquake
+save(joinpath(@__DIR__(),"results/08-earthquake_result.jld2"), Dict("result" => result)) # save to docs/build/
 ````
 
 ### Plots
