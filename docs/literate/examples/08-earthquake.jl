@@ -43,20 +43,27 @@
 # ```math
 #    M_t = \sum_{i=1}^k \gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)),
 # ```
-# where $k\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other.
+# where $k\in \mathbb{N}$ is given, $(t-\tau_i)_+ = \max\{0, t - \tau_i\}$ is the positive part of the function, and the parameters $\gamma_i,$ $\tau_i,$ $\delta_i,$ and $\omega_i$ are all random variables, with $\tau_i$ being exponentially distributed, and $\gamma_i$, $\delta_i$, and $\omega_i$ being uniformly distributed, each with different support values, and all of them independent of each other. Each front (disregarding the oscillatory part) peaks at $t = \tau_i + 2/\delta_i,$ with peak value approximately $\gamma / 2\delta^2.$
 #
 # The excitation itself becomes
+#
 # ```math
 # \begin{align*}
-#    \ddot M(t) = & 2\sum_{i=1}^k\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-#        & + \sum_{i=1}^k\gamma_i (\delta_i^2 - \omega_i^2)(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-#        & -2\sum_{i=1}^k\gamma_i (\delta_i + \omega_i) (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-#        & +\delta_i\sum_{i=1}^k\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)),
+#    \ddot M(t) = \; & \sum_{i=1}^k \gamma_i e^{-\delta_i (t - \tau_i)} \bigg\{ \left(2 H(t - \tau_i) - 4\delta_i(t - \tau_i)_+ + (\delta_i^2 - \omega_i^2) (t - \tau_i)_+^2 \right) \cos(\omega_i (t - \tau_i)) \\
+#       &  \hspace{2in} + \left( -4\omega_i (t - \tau_i)_+ + 2\delta_i\omega_i (t - \tau_i)_+^2 \right) \sin(\omega_i (t - \tau_i)) \bigg\}
 # \end{align*}
 # ```
 # where $H = H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 #
-# More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=12$ and define the random parameters as $\tau_i \sim \textrm{Exponential}(0.25),$ $\gamma_i \sim \textrm{Unif}(0.0, 4.0),$ $\delta_i \sim \textrm{Unif}(8.0, 12.0),$ and $\omega_i \sim \textrm{Unif}(8\pi, 32\pi).$
+# More specifically, for the numerical simulations, we use $\zeta_0 = 0.6$ and $\omega_0 = 15\,\texttt{rad}/\texttt{s}$ as the structural parameters. We set $T = 2.0,$ as the final time. For the transport process, we set $k=8$ and define the random parameters as
+# ```math
+#    \begin{align*}
+#        \tau_i & \sim \textrm{Exponential}(1/2) \\
+#        \gamma_i & \sim \textrm{Unif}(16, 32), \\
+#        \delta_i & \sim \textrm{Unif}(12, 16), \\
+#        \omega_i & \sim \textrm{Unif}(16\pi, 32\pi).
+#     \end{align*}
+# ```
 #
 # ## Numerical approximation
 # 
@@ -106,16 +113,17 @@ x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 #
 # ```math
 #   \begin{align*}
-#   \dot m_i(t) = & 2\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+#   \dot m_i(t) = \; & 2\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
 #       & -\delta_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-#       & -\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i))
+#       & -\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
+#     = \; & \gamma_i e^{-\delta_i (t - \tau_i)} \left\{ \left(2(t - \tau_i)_+ - \delta_i (t - \tau_i)_+^2 \right) \cos(\omega_i (t - \tau_i)) - \omega_i (t - \tau_i)_+^2 \sin(\omega_i (t - \tau_i)) \right\}
 #   \end{align*}
 # ```
 # and the ground accelerations
 #
 # ```math
 #   \begin{align*}
-#   \ddot m_i(t) = & 2\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+#   \ddot m_i(t) = \; & 2\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
 #       & - 2\gamma_i \delta_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
 #       & - 2\gamma_i \omega_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\ 
 #       & - 2\delta_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
@@ -124,8 +132,8 @@ x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 #       & -2\omega_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
 #       & +\omega_i\gamma_i\delta_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
 #       & -\omega_i^2\gamma_i(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-#     = & \gamma_i e^{-\delta_i (t - \tau_i)} \bigg\{ \left(2 H(t - \tau_i) - 4\delta_i(t - \tau_i)_+ + (\delta_i^2 - \omega_i^2) (t - \tau_i)_+^2 \right) \cos(\omega_i (t - \tau_i)) \\
-#       &  \qquad \qquad \qquad + \left( -4\omega_i (t - \tau_i)_+ + 2\delta_i\omega_i (t - \tau_i)_+^2 \right) \sin(\omega_i (t - \tau_i)) \bigg\}
+#     = \; & \gamma_i e^{-\delta_i (t - \tau_i)} \bigg\{ \left(2 H(t - \tau_i) - 4\delta_i(t - \tau_i)_+ + (\delta_i^2 - \omega_i^2) (t - \tau_i)_+^2 \right) \cos(\omega_i (t - \tau_i)) \\
+#       &  \hspace{2in} + \left( -4\omega_i (t - \tau_i)_+ + 2\delta_i\omega_i (t - \tau_i)_+^2 \right) \sin(\omega_i (t - \tau_i)) \bigg\}
 #   \end{align*}
 # ```
 #
@@ -133,73 +141,121 @@ x0law = product_distribution(Dirac(0.0), Dirac(0.0))
 #
 # We implement these functions as
 
-function gm(t::T, t0::T, γ::T, α::T, ω::T) where {T}
-    tshift = max(zero(T), t - t0)
+function gm(t::T, τ::T, γ::T, α::T, ω::T) where {T}
+    tshift = max(zero(T), t - τ)
     m = γ * tshift ^2 * exp( -α * tshift ) * cos( ω * tshift )
     return m
 end
 
 function dgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
-    t₊ = max(zero(T), t - τ)
-    t₊² = t₊ ^ 2
-    expδt₊ = exp( -δ * t₊ )
-    sinωt₊, cosωt₊ = sincos(ω * t₊)
-    ṁ = γ * ( ( 2t₊ - δ * t₊² ) * cosωt₊ - ω * t₊²  * sinωt₊ ) * expδt₊
+    tshift₊ = max(zero(T), t - τ)
+    tshift₊² = tshift₊ ^ 2
+    expδt₊ = exp( -δ * tshift₊ )
+    sinωt₊, cosωt₊ = sincos(ω * tshift₊)
+    ṁ = γ * expδt₊ * ( ( 2tshift₊ - δ * tshift₊² ) * cosωt₊ - ω * tshift₊²  * sinωt₊ )
     return ṁ
 end
 
 function ddgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
     h = convert(T, t ≥ τ)
-    t₊ = ( t - τ ) * h
-    t₊² = t₊ ^ 2
-    expδt₊ = exp( -δ * t₊ )
-    sinωt₊, cosωt₊ = sincos(ω * t₊)
-    m̈ = γ * ( ( 2h + ( δ^2 - ω^2 ) * t₊² - 4δ * t₊) * cosωt₊ + ( -4ω * t₊ + 2δ * ω * t₊² ) * sinωt₊ ) * expδt₊
+    tshift₊ = ( t - τ ) * h
+    tshift₊² = tshift₊ ^ 2
+    expδt₊ = exp( -δ * tshift₊ )
+    sinωt₊, cosωt₊ = sincos(ω * tshift₊)
+    m̈ = γ * expδt₊ * ( ( 2h + ( δ^2 - ω^2 ) * tshift₊² - 4δ * tshift₊) * cosωt₊ + ( -4ω * tshift₊ + 2δ * ω * tshift₊² ) * sinωt₊ )
     return m̈
 end
+nothing # hide
 
-function ddgm_envelope(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
-    h = convert(T, t ≥ τ)
-    t₊ = ( t - τ ) * h
-    t₊² = t₊ ^ 2
-    expδt₊ = exp( -δ * t₊ )
-    A = ( 2h + ( δ^2 - ω^2 ) * t₊² - 4δ * t₊)
-    B = -4ω * t₊ + 2δ * ω * t₊²
-    AB = √(A^2 + B^2)
-    θ = -asin(B/AB)
-    envelope = γ * AB * cos(θ + ω * t₊) * expδt₊
-    return envelope
-end
+# Let us visualize a cooked up example of ground motion with two components
+
+tt = range(0.0, 2.0, length=2^9)
+dt = Float64(tt.step)
+
+τ₁ = 0.2
+γ₁ = 4.0
+δ₁ = 12.0
+ω₁ = 24π
+τ₂ = 0.8
+γ₂ = 2.0
+δ₂ = 16.0
+ω₂ = 32π
+
+mt = gm.(tt, τ₁, γ₁, δ₁, ω₁) .+ gm.(tt, τ₂, γ₂, δ₂, ω₂)
+
+dmt = dgm.(tt, τ₁, γ₁, δ₁, ω₁) .+ dgm.(tt, τ₂, γ₂, δ₂, ω₂)
+
+ddmt = ddgm.(tt, τ₁, γ₁, δ₁, ω₁) .+ ddgm.(tt, τ₂, γ₂, δ₂, ω₂)
+
+plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label="ground motion")
+plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$", label="ground velocity")
+plt3 = plot(tt, ddmt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
+plot(plt1, plt2, plt3, layout=(3, 1))
+
+# We also numerically integrate the acceleration and the velocity and compare them against the velocity and the position, to make sure we implemented the derivatives correctly.
+
+mt2 = accumulate(+, dmt) * dt
+dmt2 = accumulate(+, ddmt) * dt
+
+maximum(abs, mt2 - mt)
+
+# Notice this is of the order of the time step
+
+dt
+
+# The absolute error for the derivative is high, though, because the frequency is relatively high
+
+maximum(abs, dmt2 - dmt)
+
+# The relative errors, though, are both modest, considering the low order integration method used here.
+
+maximum(abs, (mt2 - mt)) / maximum(abs, mt)
 
 #
 
-ylaw = product_distribution(Exponential(tf/8), Uniform(0.0, 4.0), Uniform(8.0, 12.0), Uniform(8π, 32π))
-nr = 12
+maximum(abs, (dmt2 - dmt)) / maximum(abs, dmt)
+
+# Let us now illustrate a sample path with the laws used for the random variables and the associated transport process.
+
+τlaw = Exponential(tf/4)
+γlaw = Uniform(16.0, 32.0)
+δlaw = Uniform(12.0, 16.0)
+ωlaw = Uniform(16π, 32π)
+
+ylaw = product_distribution(τlaw, γlaw, δlaw, ωlaw)
+
+nr = 8
 g(t, r) = mapreduce(ri -> ddgm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(r))
 noise = TransportProcess(t0, tf, ylaw, g, nr)
+nothing # hide
 
 #
 
 n = 2^12
 tt = range(t0, tf, length=n)
 yt = Vector{Float64}(undef, n)
-rand!(rng, noise, yt)
+nothing # hide
 
-# Ground motion $m_t$:
+# Sample ground acceleration
+
+rand!(rng, noise, yt)
+nothing # hide
+
+# Associated ground motion $m_t$:
 
 mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
 nothing # hide
 
-# Envelope of ground excitation
+# Associated ground velocity
 
-et = [mapreduce(ri -> ddgm_envelope(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
+dmt = [mapreduce(ri -> dgm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
 nothing # hide
 
 # Visualization
 
 plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label="ground motion")
-plt2 = plot(tt, yt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
-plt3 = plot(tt, et, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="envelope of acceleration")
+plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$", label="ground velocity")
+plt3 = plot(tt, yt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
 plt_ground = plot(plt1, plt2, plt3, layout = (3, 1))
 
 #
@@ -259,7 +315,7 @@ plt_result = plot(result)
 
 #
 
-savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "convergence_earthquake.pdf")) # hide
+savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_earthquake.pdf")) # hide
 nothing # hide
 
 # For the sake of illustration, we plot a sample of an approximation of a target solution, in each case:
@@ -267,7 +323,7 @@ nothing # hide
 nsample = ns[[1, 2, 3]]
 plt_sample = plot(suite, ns=nsample)
 
-# We also combine some plots into a single figure, for the article:
+# We also combine some plots into a single figure, to summarize the results.
 
 plt_combined = plot(plt_result, plt_sample, plt1, plt2, plt3, layout=@layout([[a; b] [c; d; e]]), size=(800, 480), title=["(a)" "(b)" "(c)" "(d)" "(e)"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
 #
@@ -275,9 +331,7 @@ plt_combined = plot(plt_result, plt_sample, plt1, plt2, plt3, layout=@layout([[a
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "earthquake_combined.pdf")) # hide
 nothing # hide
 
-# We also draw an animation of the motion of the single-storey building in each case. First the model with the transport-modulated noise.
-
-# And now with the Hawkes-modulated noise.
+# We finally draw an animation of the motion of the single-storey building driven by the transport-modulated noise.
 
 dt = ( tf - t0 ) / ( ntgt - 1 )
 mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=ntgt)]
