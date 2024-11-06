@@ -1,10 +1,5 @@
 # # Combined plot
 #
-
-# ```@meta
-#     Draft = false
-# ```
-
 # Here we just read the results of some examples to build a combined plot for the companion article.
 
 using JLD2

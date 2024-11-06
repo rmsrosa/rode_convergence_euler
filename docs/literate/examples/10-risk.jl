@@ -1,10 +1,5 @@
 # # An actuarial risk model
 #
-
-# ```@meta
-#     Draft = false
-# ```
-
 # A classical model for the surplus $U_t$ at time $t$ of an insurance company is the Cramér–Lundberg model (see e.g. [Gerber & Shiu (1998)](https://doi.org/10.1080/10920277.1998.10595671)) given by
 # ```math
 #   U_t = U_0 + \gamma t - \sum_{i=1}^{N_t} C_i
