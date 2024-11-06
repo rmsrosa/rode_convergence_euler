@@ -1,9 +1,5 @@
 # # Mechanical structural under random Earthquake-like seismic disturbances
 #
-# ```@meta
-#     Draft = false
-# ```
-#
 # Now we consider a mechanical structure problem under ground-shaking Earthquake-like excitations. The problem is modeled by a second-order Random ODE driven by a random disturbance in the form of a transport process. The equation is inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293) (see also [Chapter 18]{NeckelRupp2013} and {HousnerJenning1964} with this and other models).
 #
 # There are a number of models for earthquake-type forcing, such as the ubiquitous Kanai-Tajimi and Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from {Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
