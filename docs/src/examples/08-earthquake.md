@@ -4,6 +4,10 @@ EditURL = "../../literate/examples/08-earthquake.jl"
 
 # Mechanical structural under random Earthquake-like seismic disturbances
 
+```@meta
+    Draft = false
+```
+
 Now we consider a mechanical structure problem under ground-shaking Earthquake-like excitations. The problem is modeled by a second-order Random ODE driven by a random disturbance in the form of a transport process. The equation is inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293) (see also [Chapter 18]{NeckelRupp2013} and {HousnerJenning1964} with this and other models).
 
 There are a number of models for earthquake-type forcing, such as the ubiquitous Kanai-Tajimi and Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from {Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
@@ -126,13 +130,19 @@ and the ground accelerations
 ```math
   \begin{align*}
   \ddot m_i(t) = & 2\gamma_i H(t - \tau_i) e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-      & + \delta_i^2\gamma_i (t - \tau_i)^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-      & -\omega_i^2\gamma_i (t - \tau_i)^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
-      & -2\delta_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & - 2\gamma_i \delta_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & - 2\gamma_i \omega_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
+      & - 2\delta_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & +\delta_i^2\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+      & +\delta_i\gamma_i\omega_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
       & -2\omega_i\gamma_i (t - \tau_i)_+ e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
-      & +\delta_i\omega_i\gamma_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i))
+      & +\omega_i\gamma_i\delta_i (t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\sin(\omega_i (t - \tau_i)) \\
+      & -\omega_i^2\gamma_i(t - \tau_i)_+^2 e^{-\delta_i (t - \tau_i)}\cos(\omega_i (t - \tau_i)) \\
+    = & \gamma_i e^{-\delta_i (t - \tau_i)} \bigg\{ \left(2 H(t - \tau_i) - 4\delta_i(t - \tau_i)_+ + (\delta_i^2 - \omega_i^2) (t - \tau_i)_+^2 \right) \cos(\omega_i (t - \tau_i)) \\
+      &  \qquad \qquad \qquad + \left( -4\omega_i (t - \tau_i)_+ + 2\delta_i\omega_i (t - \tau_i)_+^2 \right) \sin(\omega_i (t - \tau_i)) \bigg\}
   \end{align*}
 ```
+
 where $H=H(s)$ is the Heaviside function, where, for definiteness, we set $H(s) = 1,$ for $s \geq 1,$ and $H(s) = 0$, for $s < 0$.
 
 We implement these functions as
@@ -149,7 +159,7 @@ function dgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
     t₊² = t₊ ^ 2
     expδt₊ = exp( -δ * t₊ )
     sinωt₊, cosωt₊ = sincos(ω * t₊)
-    ṁ = γ * ( ( 2t₊ + δ * τ² ) * cosωt₊ - ω * t₊²  * sinωt₊ ) * expδt₊
+    ṁ = γ * ( ( 2t₊ - δ * t₊² ) * cosωt₊ - ω * t₊²  * sinωt₊ ) * expδt₊
     return ṁ
 end
 
@@ -159,8 +169,21 @@ function ddgm(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
     t₊² = t₊ ^ 2
     expδt₊ = exp( -δ * t₊ )
     sinωt₊, cosωt₊ = sincos(ω * t₊)
-    m̈ = γ * ( ( 2h + ( δ^2 - ω^2 ) * t₊² - 2δ * t₊) * cosωt₊ + ( -2ω * t₊ + δ * ω * t₊² ) * sinωt₊ ) * expδt₊
+    m̈ = γ * ( ( 2h + ( δ^2 - ω^2 ) * t₊² - 4δ * t₊) * cosωt₊ + ( -4ω * t₊ + 2δ * ω * t₊² ) * sinωt₊ ) * expδt₊
     return m̈
+end
+
+function ddgm_envelope(t::T, τ::T, γ::T, δ::T, ω::T) where {T}
+    h = convert(T, t ≥ τ)
+    t₊ = ( t - τ ) * h
+    t₊² = t₊ ^ 2
+    expδt₊ = exp( -δ * t₊ )
+    A = ( 2h + ( δ^2 - ω^2 ) * t₊² - 4δ * t₊)
+    B = -4ω * t₊ + 2δ * ω * t₊²
+    AB = √(A^2 + B^2)
+    θ = -asin(B/AB)
+    envelope = γ * AB * cos(θ + ω * t₊) * expδt₊
+    return envelope
 end
 ````
 
@@ -188,7 +211,7 @@ nothing # hide
 Envelope of ground excitation
 
 ````@example 08-earthquake
-et = [mapreduce(ri -> ddgm(t, ri[1], ri[2], ri[3], 0.0), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
+et = [mapreduce(ri -> ddgm_envelope(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) for t in range(t0, tf, length=length(yt))]
 nothing # hide
 ````
 
