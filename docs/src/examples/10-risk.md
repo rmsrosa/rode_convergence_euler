@@ -88,6 +88,7 @@ First we load the necessary packages:
 ````@example 10-risk
 using JLD2
 using Plots
+using Measures
 using Random
 using LinearAlgebra
 using Distributions
@@ -269,6 +270,27 @@ plt_surplus = plot(range(t0, tf, length=ntgt+1), suite.xt .- suite.yt[:, 1] .- s
 ````@example 10-risk
 savefig(plt_surplus, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_surplus.pdf")) # hide
 nothing # hide
+````
+
+Combining the plots
+
+````@example 10-risk
+tt = range(t0, tf, length=8ns[end]+1)
+
+ds = div(ntgt, 8ns[end])
+
+plt_surplus_and_noises = plot(tt, suite.xt[begin:ds:end] .- suite.yt[begin:ds:end, 1] .- suite.yt[begin:ds:end, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
+
+plt_surplus_and_noises_twin = twinx(plt_surplus_and_noises)
+
+plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 1], yaxis="\$\\textrm{noise}\$", label="\$O_t\$", legend=:top, linecolor=2)
+plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 2], label="\$R_t\$", linecolor=3)
+plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 3], label="\$C_t\$", linecolor=4)
+
+plt_combined = plot(plt_result, plt_surplus_and_noises, legendfont=6, size=(800, 240), title=["(a)" "(b)"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
+
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_combined.pdf")) # hide
+nothing #
 ````
 
 ---
