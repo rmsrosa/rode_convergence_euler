@@ -1,9 +1,5 @@
 # # Mechanical structural under random Earthquake-like seismic disturbances
 #
-# ```@meta
-#     Draft = false
-# ```
-#
 # Now we consider a mechanical structure problem under ground-shaking Earthquake-like excitations. The problem is modeled by a second-order Random ODE driven by a random disturbance in the form of a transport process. The equation is inspired by the model in [Bogdanoff, Goldberg & Bernard (1961)](https://doi.org/10.1785/BSSA0510020293) (see also [Chapter 18]{NeckelRupp2013} and {HousnerJenning1964} with this and other models).
 #
 # There are a number of models for earthquake-type forcing, such as the ubiquitous Kanai-Tajimi and Clough-Penzien models, where the noise has a characteristic spectral density, determined by the mechanical properties of the ground layer. The ideia, from {Kanai1957}, is that the spectrum of the noise at bedrock is characterized by a constant pattern, while at the ground surface it is modified by the vibration property of the ground layer. This interaction between the bedrock and the ground layer is modeled as a stochastic oscillator driven by a zero-mean Gaussian white noise, and whose solution leads to a noise with a characteristic power spectrum.
@@ -188,10 +184,10 @@ dmt = dgm.(tt, τ₁, γ₁, δ₁, ω₁) .+ dgm.(tt, τ₂, γ₂, δ₂, ω�
 
 ddmt = ddgm.(tt, τ₁, γ₁, δ₁, ω₁) .+ ddgm.(tt, τ₂, γ₂, δ₂, ω₂)
 
-plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label="ground motion")
-plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$", label="ground velocity")
-plt3 = plot(tt, ddmt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
-plot(plt1, plt2, plt3, layout=(3, 1))
+plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$")
+plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$")
+plt3 = plot(tt, ddmt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$")
+plot(plt1, plt2, plt3, layout=(3, 1), legend=false)
 
 # We also numerically integrate the acceleration and the velocity and compare them against the velocity and the position, to make sure we implemented the derivatives correctly.
 
@@ -254,9 +250,9 @@ nothing # hide
 
 # Visualization
 
-plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label="ground motion")
-plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$", label="ground velocity")
-plt3 = plot(tt, yt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label="ground acceleration")
+plt1 = plot(tt, mt, xlabel="\$t\$", ylabel="\$M_t\$", label=nothing)
+plt2 = plot(tt, dmt, xlabel="\$t\$", ylabel="\$\\dot{M}_t\$", label=nothing)
+plt3 = plot(tt, yt, xlabel="\$t\$", ylabel="\$\\ddot{M}_t\$", label=nothing)
 plt_ground = plot(plt1, plt2, plt3, layout = (3, 1))
 
 #
@@ -331,7 +327,7 @@ plt_sample = plot(suite, ns=nsample)
 
 # We also combine some plots into a single figure, to summarize the results.
 
-plt_combined = plot(plt_result, plt_sample, plt1, plt2, plt3, layout=@layout([[a; b] [c; d; e]]), size=(800, 480), title=["(a)" "(b)" "(c)" "(d)" "(e)"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_result, plt_sample, plt1, plt2, plt3, layout=@layout([[a; b] [c; d; e]]), size=(800, 480), title=["(a) seismic model" "(b) sample path" "(c) sample ground motion" "(d) sample ground velocity" "(e) sample ground acceleration"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
 #
 
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "earthquake_combined.pdf")) # hide

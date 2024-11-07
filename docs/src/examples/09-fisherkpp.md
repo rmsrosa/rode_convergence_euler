@@ -333,7 +333,7 @@ nothing # hide
 We also combine some plots into a single figure, for the article:
 
 ````@example 09-fisherkpp
-plt_combined = plot(plt_result, plt_OUandHawkes, plt_noise, layout=@layout([ a [ b; c ] ]), size=(800, 280), title=["(a)" "(b)" "(c)"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_result, plt_OUandHawkes, plt_noise, layout=@layout([ a [ b; c ] ]), size=(800, 280), title=["(a) Fisher-KPP model" "(b) noise parts" "(c) noise sample path"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
 ````@example 09-fisherkpp

@@ -4,10 +4,6 @@ EditURL = "../../literate/examples/07-toggle_switch.jl"
 
 # A toggle-switch model for gene expression
 
-```@meta
-    Draft = false
-```
-
 Here, we consider the toggle-switch model in Section 7.8 of [Asai (2016)](https://publikationen.ub.uni-frankfurt.de/frontdoor/index/index/docId/40146), originated from [Verd, Crombach & Jaeger (2014)](https://doi.org/10.1186/1752-0509-8-43). See also [Strasser, Theis & Marr (2012)](https://doi.org/10.1016/j.bpj.2011.11.4000).
 
 Toogle switches in gene expression consist of genes that mutually repress each other and exhibit two stable steady states of ON and OFF gene expression. It is a regulatory mechanism which is active during cell differentiation and is believed to act as a memory device, able to choose and maintain cell fate decisions.
@@ -228,13 +224,13 @@ nothing # hide
 We finally combine all plots into a single one, for a visual summary.
 
 ````@example 07-toggle_switch
-plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a)" "(b)" "(c)" "(d)"], legendfont=7)
+plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a) toggle-switch model" "(b) sample solution" "(c) Euler approximations" "(d) sample noises"], legendfont=7)
 ````
 
 We also combine just some of them, for the article
 
 ````@example 07-toggle_switch
-plt_combined = plot(plt_result, plt_suite, size=(800, 240), title=["(a)" "(b)"], layout = (1, 2), legendfont=7, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_result, plt_suite, size=(800, 240), title=["(a) toggle-switch model" "(b) Euler approximations"], layout = (1, 2), legendfont=7, bottom_margin=5mm, left_margin=5mm)
 ````
 
 ````@example 07-toggle_switch
