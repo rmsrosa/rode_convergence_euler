@@ -32,7 +32,7 @@ Draw combined plot
 plt_popdyn = plot(results_popdyn)
 plt_earthquake = plot(results_earthquake)
 
-plt_combined = plot(plt_popdyn, plt_earthquake, legendfont=6, size=(800, 240), title=["(a)" "(b)"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_popdyn, plt_earthquake, legendfont=6, size=(800, 240), title=["(a) population dynamics" "(b) seismic model"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
 Save it
