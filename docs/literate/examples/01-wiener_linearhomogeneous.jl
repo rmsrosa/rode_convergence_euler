@@ -125,10 +125,12 @@ using RODEConvergence
 # Then we set up some variables, starting by choosing the `Xoshiro256++` pseudo-random number generator, and setting its seed for the sake of reproducibility:
 
 rng = Xoshiro(123)
+nothing # hide
 
 # We set the right hand side of the equation:
 
 f(t, x, y, p) = y * x
+nothing # hide
 
 # Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a [Distributions.Normal](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal) random variable:
 
@@ -154,6 +156,7 @@ nothing # hide
 # Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
 m = 200
+nothing # hide
 
 # and add some information about the simulation:
 
@@ -162,6 +165,7 @@ info = (
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
+nothing # hide
 
 # The *target* solution as described above is implemented as
 
@@ -182,10 +186,12 @@ target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{
         i1 = i
     end
 end
+nothing # hide
 
 # and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 target = CustomUnivariateMethod(target_solver!, rng)
+nothing # hide
 
 # The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted [`RandomEuler`](@ref):
 
@@ -232,9 +238,11 @@ nothing # hide
 
 plt = plot(suite, ns=nsample)
 
+#
+
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.pdf")) # hide
 nothing # hide
 
-# We can also visualize the noise associated with this sample solution:
+# Finally, we also visualize the noise associated with this sample solution:
 
 plot(suite, xshow=false, yshow=true, label="Wiener noise")

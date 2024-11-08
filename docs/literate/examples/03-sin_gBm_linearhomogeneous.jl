@@ -1,6 +1,6 @@
 # # Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient
 
-# This time we take, as the coefficient of a homogeneous linear equation, the sine of a Geometric Brownian motion process. This is a multiplicative noise, so the classical theory yields a strong order 1/2 convergence for the Euler method, but our results show the strong convergence is actually of order 1, which is, in fact, achieved in the simulations that follow.
+# This time we take, as the coefficient of a homogeneous linear equation, the sine of a Geometric Brownian motion process. This is a multiplicative noise.
 
 # ## The equation
 
@@ -19,7 +19,7 @@
 
 # ## Computing a higher order approximation of the solution
 
-# As in the previous examples, the integral $\int_0^{t_j} \sin(Y_s)\;\mathrm{d}s$ and, hence, the exact solution, is not uniquely defined from the values $W_{t_j}$ of the noise on the mesh points. This time, an exact distribution for the collection of exact solutions conditioned on the mesh points is not available in closed form. Hence, we consider an approximation of an exact solution by solving the equation numerically, with the Euler method itself, but in a much higher resolution.
+# As in the previous examples, the integral $\int_0^{t_j} \sin(Y_s)\;\mathrm{d}s$ and, hence, the exact solution, is not uniquely defined from the values $W_{t_j}$ of the noise on the mesh points. This time, an exact distribution for the collection of exact solutions conditioned on the mesh points is not available in closed form. Hence, we consider an approximation of an exact solution by solving the equation numerically, with the Euler method itself, but with a much higher mesh resolution.
 
 # Indeed, the convergence will be estimated from a set of discretizations with mesh points with time step $\Delta t_N = (t\_f - t\_0) / 2^N$, for $N = N_1 < N_2 < \ldots N_n$, for some $n\in \mathbb{N}$, by comparing the error of such solutions to an approximated solutions computed in a finer mesh with $\Delta t_{\textrm{fine}} = \Delta t_{N_n}^2$, hence with $N_\textrm{fine} = N_n^2$.
 #
@@ -44,6 +44,7 @@ params = nothing
 
 t0, tf = 0.0, 1.0
 x0law = Normal()
+nothing # hide
 
 # The geometric Brownian motion noise is defined via [`GeometricBrownianMotionProcess`](@ref), with initial value $y_0$, drift $\mu$, and dissipation $\sigma$ as given by
 #
@@ -59,6 +60,7 @@ ntgt = 2^18
 ns = 2 .^ (4:9)
 nsample = ns[[1, 2, 3, 4]]
 m = 200
+nothing # hide
 
 # We add some information about the simulation:
 
@@ -67,6 +69,7 @@ info = (
     noise = "a geometric Brownian motion process noise \$\\{Y_t\\}_t\$ (ic=$y0, drift=$μ; diffusion=$σ)",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
+nothing # hide
 
 # We define the *target* solution as the approximation obtained by the Euler method in the much higher resolution `ntgt` of mesh points. The approximations are also obtained via the Euler method, in the coarser meshes defined by `ns`.
 
@@ -118,6 +121,6 @@ plot(suite, ns=nsample)
 
 plot(suite, xshow=false, yshow=true, label="gBm noise")
 
-# and the sine of the noise, which is the coefficient of he equation
+# and the sine of the noise, which is the coefficient of the equation
 
 plot(suite, xshow=false, yshow=sin, label="sin of gBm noise")

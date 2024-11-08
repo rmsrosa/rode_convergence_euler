@@ -71,7 +71,7 @@
 #   \begin{align*}
 #       \int_0^{t_j} e^s W_s\;\mathrm{d}s & = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s \\
 #       & = \sum_{i = 0}^{j-1} \left( W_{t_{i+1}}e^{t_{i+1}} - W_{t_i}e^{t_i} - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right) \\
-#       & = W_{t_j}e^{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right)
+#       & = W_{t_j}e^{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right).
 #   \end{align*}
 # ```
 #
@@ -151,10 +151,12 @@ target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{
         i1 = i
     end
 end
+nothing # hide
 
 # and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 target = CustomUnivariateMethod(target_solver!, rng)
+nothing # hide
 
 # The method for which want to estimate the rate of convergence is, naturally, the Euler method, implemented via [`RandomEuler`](@ref):
 
