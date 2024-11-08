@@ -64,7 +64,7 @@ Since, by definition, ``\\Delta W_t \\sim \\mathcal{N}(0, t)``, a sample path is
 ```math
 W_{t_i} = W_{t_{i-1}} + \\sqrt{\\mathrm{dt}} z_i, \\qquad i = 1, \\ldots,
 ```
-where at each step `z_i` is drawn from a standard Normal distribution.
+where at each step ``z_i`` is drawn from a standard Normal distribution.
 """
 struct WienerProcess{T} <: UnivariateProcess{T}
     t0::T
@@ -112,13 +112,13 @@ Thus, a sample path is constructed with exact distribution by solving the recurs
 ```math
 O_{t_i} = e^{-\\nu \\Delta t} O_{t_{i-1}} + \\frac{\\sigma}{\\sqrt{2\\nu}} \\sqrt{1 - e^{-2\\nu \\Delta t}} z_i, \\qquad i = 1, \\ldots,
 ```
-where at each time step `z_i` is drawn from a standard Normal distribution.
+where at each time step ``z_i`` is drawn from a standard Normal distribution.
 
 The Ornstein-Uhlenbeck process has mean, variance, and covariance given by
 ```math
-    \\mathbb{E}[O_t] = O_0 e^{-\nu t}, \\mathrm{Var}[O_t] = \\frac{\\sigma^2}{2\\nu}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\sigma^2}{2\\nu} e^{-\nu |t - s|}.
+    \\mathbb{E}[O_t] = O_0 e^{-\\nu t}, \\mathrm{Var}[O_t] = \\frac{\\sigma^2}{2\\nu}, \\quad \\mathrm{Cov}[O_tO_s] = \\frac{\\sigma^2}{2\\nu} e^{-\\nu |t - s|}.
 ```
-so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lesssim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\sigma^2 / 2\\nu = \\tau\\sigma^2/2 \\rightarrow 1``, this approximates a Gaussian white noise.
+so that ``O_t`` and ``O_s`` are significantly correlated only when ``|t - s| \\lesssim \\tau``, where ``\\tau = 1/\\nu`` is a characteristic time scale for the process. When ``\\tau \\rightarrow 0``, i.e. ``\\nu \\rightarrow \\infty``,  with ``\\sigma / \\nu = \\tau\\sigma \\rightarrow 1``, this approximates a Gaussian white noise.
 """
 struct OrnsteinUhlenbeckProcess{T} <: UnivariateProcess{T}
     t0::T
