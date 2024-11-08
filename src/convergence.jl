@@ -264,19 +264,22 @@ function generate_error_table(result::ConvergenceResult, suite:: ConvergenceSuit
     deltas = result.deltas
     errors = result.errors
     stderrs = result.stderrs
-    table = "    \\begin{tabular}[htb]{|r|l|l|l|}
-        \\hline N & dt & error & std err \\\\
-        \\hline \\hline\n"
+    table = "    \\begin{center}
+        \\begin{tabular}[htb]{|r|l|l|l|}
+            \\hline N & dt & error & std err \\\\
+            \\hline \\hline\n"
     for (n, dt, error, stderr) in zip(
         ns,
         round.(deltas, sigdigits=3),
         round.(errors, sigdigits=3),
         round.(stderrs, sigdigits=3)
     )
-        table *= "        $n & $dt & $error & $stderr \\\\\n"
+        table *= "            $n & $dt & $error & $stderr \\\\\n"
     end
-    table *= "        \\hline
-    \\end{tabular}
+    table *= "            \\hline
+        \\end{tabular}
+    \\end{center}
+    
     \\bigskip
 
     \\caption{Mesh points (N), time steps (dt), strong error (error), and standard error (std err) of the Euler method for $(info.equation) for each mesh resolution \$N\$, with initial condition $(info.ic) and $(info.noise), on the time interval \$I = [$t0, $tf]\$, based on \$M = $(m)\$ sample paths for each fixed time step, with the target solution calculated with \$$ntgt\$ points. The order of strong convergence is estimated to be \$p = $(round(result.p, digits=3))\$, with the 95\\% confidence interval \$[$(round(result.pmin, digits=4)), $(round(result.pmax, digits=4))]\$.}"
