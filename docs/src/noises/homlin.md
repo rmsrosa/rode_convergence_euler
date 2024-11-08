@@ -143,10 +143,9 @@ end
 nothing # hide
 ```
 
-We plot the ensemble of paths just for the sake of illustration, along with the mean and 95% confidence region.
+We plot the ensemble of paths just for the sake of illustration, along with the theoretical expected mean value.
 ```@example homlin
 plt = plot(title="Sample paths for the gBm process", titlefont=10)
-plot!(plt, tt, t -> y0 * exp( μ * t ) * ( 1 - 2sqrt( exp( σ^2 * t) - 1 ) ), fillrange = t -> y0 * exp( μ * t ) * (1 + 2sqrt( exp( σ^2 * t) - 1 ) ), alpha=0.5, color=2, label="95% region")
 plot!(plt, tt, t -> y0 * exp( μ * t), label="expectation", color = 2)
 plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
@@ -188,10 +187,9 @@ end
 nothing # hide
 ```
 
-For the sake of illustration, we plot the computed sample paths, along with the expectation and 95% confidence region.
+For the sake of illustration, we plot the computed sample paths, along with the theoretical expected mean value.
 ```@example homlin
 plt = plot(title = "Sample paths for the homogeneous linear RODE with exponential decay", titlefont=10)
-plot!(plt, tt, t -> y0 * exp(primitive_a(t) - 2sqrt(primitive_b2(t))), fillrange = t -> y0 * exp(primitive_a(t) + 2sqrt(primitive_b2(t))), alpha=0.5, color=2, label="95% region")
 plot!(plt, tt, t -> y0 * exp(primitive_a(t)), label="expectation", color = 2)
 plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
@@ -238,7 +236,7 @@ end
 nothing # hide
 ```
 
-For the sake of illustration, we plot the computed sample paths, along with the expectation and 95% confidence region.
+For the sake of illustration, we plot the computed sample paths, along with the theoretical expected mean value.
 ```@example homlin
 plt = plot(title = "Sample paths for the homogeneous linear RODE with exponential growth", titlefont=10)
 plot!(plt, tt, t -> y0 * exp(primitive_a(t) - 2sqrt(primitive_b2(t))), fillrange = t -> y0 * exp(primitive_a(t) + 2sqrt(primitive_b2(t))), alpha=0.5, color=2, label="95% region")
