@@ -88,6 +88,7 @@ using RODEConvergence
 # Then we define the random seed:
 
 rng = Xoshiro(123)
+nothing # hide
 
 # The evolution law:
 
@@ -105,10 +106,12 @@ function f(t, x, y, p)
     dx = r * (x + c + o) + ν * o + γ
     return dx
 end
+nothing # hide
 
 # The time interval:
 
 t0, tf = 0.0, 3.0
+nothing # hide
 
 # The law for the initial condition:
 
@@ -131,21 +134,30 @@ noise = ProductProcess(
     GeometricBrownianMotionProcess(t0, tf, R0, Rμ, Rσ),
     CompoundPoissonProcess(t0, tf, Cλ, Claw)
 )
+nothing # hide
 
 # The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
 ntgt = 2^18
 ns = 2 .^ (6:9)
-nsample = ns[[1, 2, 3, 4]]
-m = 400
 
-# And add some information about the simulation:
+#
+
+nsample = ns[[1, 2, 3, 4]]
+
+# The number of simulations for the Monte Carlo estimate is set to
+
+m = 400
+nothing # hide
+
+# And add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "a risk model",
     noise = "coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes",
     ic = "\$X_0 = $x0\$"
 )
+nothing # hide
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
@@ -176,10 +188,6 @@ nothing # hide
 
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
-
-# We save the result for ploting a combined figure with results from different examples.
-
-save(joinpath(@__DIR__(),"results/10-risk_result.jld2"), Dict("result" => result)) # save to docs/build/
 
 # 
 # ### Plots

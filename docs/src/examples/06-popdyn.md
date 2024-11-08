@@ -17,19 +17,19 @@ More precisely, we consider the RODE
 ```
 with
 ```math
-  \Lambda_t = \lambda(1 + \epsilon\sin(G_t))
+  \Lambda_t = \gamma(1 + \epsilon\sin(G_t))
 ```
 where $\{G_t\}_{t\geq 0}$ is a geometric Brownian motion process and $\{H_t\}_{t \geq 0}$ is a point Poisson step process with Beta-distributed steps.
 
-We fix $\lambda = 1.0$, $\epsilon = 0.3$, $r = 1.0$, and $\alpha = 0.5$. Notice the critical value for the bifurcation oscilates between $\lambda (1 - \epsilon) / 4$ and $\lambda (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, and we choose $\alpha = \lambda / 2$ so it oscillates below and above the critical value.
+We fix $\gamma = 1.0$, $\epsilon = 0.3$, and $r = 1.0$. Notice the critical value for the bifurcation oscilates between $\gamma (1 - \epsilon) / 4$ and $\gamma (1 + \epsilon) / 4$, while the harvest term oscillates between 0 and $\alpha$, and we choose $\alpha = \gamma / 2$ so it oscillates below and above the critical value.
 
 We choose a Beta distribution as the step law, with mean a little below $1/2$, so it stays mostly below the critical value, but often above it.
 
-The geometric Brownian motion process is chosen with drift $\mu = 1$, diffusion $\sigma = 0.8$ and initial value $y_0 = 1.0$.
+The geometric Brownian motion process is chosen with drift $\mu = 1.0$, diffusion $\sigma = 0.8$ and initial value $y_0 = 1.0$.
 
-The Poisson counter for the point Poisson step process is chosen with rate 15.0, while the time interval is chosen with unit time span.
+The Poisson counter for the point Poisson step process is chosen with rate $\lambda = 15.0,$ while the time interval is chosen with unit time span.
 
-As for the initial condition, we also choose a Beta distribution, so it stays within the growth region, and with the same parameters as for the steps, just for the sake of simplicity.
+As for the initial condition, we also choose a Beta distribution, so it stays within the growth region.
 
 We do not have an explicit solution for the equation so we use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
@@ -53,6 +53,7 @@ We set the seed:
 
 ````@example 06-popdyn
 rng = Xoshiro(123)
+nothing # hide
 ````
 
 The right hand side of the evolution equation:
@@ -61,22 +62,25 @@ The right hand side of the evolution equation:
 γ = 0.8
 ϵ = 0.3
 r = 1.0
-params = (γ, ϵ, r)
+α = γ * r^2
+params = (γ, ϵ, r, α)
 
 function f(t, x, y, p)
     γ = p[1]
     ϵ = p[2]
     r = p[3]
-    α = γ * r^2
+    α = p[4]
     dx = x > zero(x) ? γ * (1 + ϵ * sin(y[1])) * x * (1 - x / r) - α * y[2] * x / (r + x) : zero(x)
     return dx
 end
+nothing # hide
 ````
 
 The time interval:
 
 ````@example 06-popdyn
 t0, tf = 0.0, 1.0
+nothing # hide
 ````
 
 The law for the initial condition:
@@ -100,21 +104,27 @@ noise2 = PoissonStepProcess(t0, tf, λ, steplaw)
 noise = ProductProcess(noise1, noise2)
 ````
 
-The mesh resolution:
+The mesh resolutions:
 
 ````@example 06-popdyn
 ntgt = 2^18
 ns = 2 .^ (4:9)
+````
+
+and
+
+````@example 06-popdyn
 nsample = ns[[1, 2, 3, 4]]
 ````
 
-The number of samples for the Monte-Carlo estimate:
+The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 06-popdyn
 m = 100
+nothing # hide
 ````
 
-And add some information about the simulation:
+And add some information about the simulation, for the caption of the convergence figure.
 
 ````@example 06-popdyn
 info = (
@@ -122,6 +132,7 @@ info = (
     noise = "gBm and step process noises",
     ic = "\$X_0 \\sim \\mathrm{Beta}($(x0law.α), $(x0law.β))\$"
 )
+nothing # hide
 ````
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -162,10 +173,9 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 nothing # hide
 ````
 
-We save the result for ploting a combined figure with results from different examples.
-
 ````@example 06-popdyn
-save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result)) # save to build/
+# save to build/
+save(joinpath(@__DIR__(), "results/06-popdyn_result.jld2"), Dict("result" => result)) # hide
 ````
 
 ### Plots
@@ -198,10 +208,10 @@ We can also visualize the noises associated with this sample solution:
 plot(suite, xshow=false, yshow=true, label=["Z_t" "H_t"], linecolor=:auto)
 ````
 
-The gBm noises enters the equation via $G_t = \gamma(1 + \epsilon\sin(Z_t))$. Using the chosen parameters, this noise can be visualized below
+The gBm noises enters the equation via $\Lambda_t = \gamma(1 + \epsilon\sin(G_t))$. Using the chosen parameters, this noise can be visualized below
 
 ````@example 06-popdyn
-plot(suite, xshow=false, yshow= y -> 0.8 + 0.3sin(y[1]), label="\$G_t\$")
+plot(suite, xshow=false, yshow= y -> γ * ( 1  + ϵ * sin(y[1]) ), label="\$G_t\$")
 ````
 
 ---

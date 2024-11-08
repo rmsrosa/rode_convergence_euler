@@ -22,11 +22,11 @@ We consider the following simple model as discussed in [Asai (2016)](https://pub
 
 where $\{A_t\}_{t\geq 0}$ and $\{B_t\}_{t\geq 0}$ are given stochastic process representing the external activation on each gene; $a$ and $c$ determine the auto-activation thresholds; $b$ and $d$ determine the thresholds for mutual repression; and $\mu$ and $\nu$ are protein decay rates. In this model, the external activation $A_t$ is a compound Poisson processes (cP), while $B_t$ is a time-dependent version of the geometric Brownian motion process (tgBm).
 
-In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75$. The initial conditions are set to $X_0 = Y_0 = 4.0$. The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a non-autonomous version of a geometric Brownian motion process given by
+In the simulations below, we use the following parameters: We fix $a = c = 0.25$; $b = d = 0.4$; and $\mu = \nu = 0.75.$ The initial conditions are set to $X_0 = Y_0 = 4.0.$ The external activation $\{A_t\}_t$ is a compound Poisson process with Poisson rate $\lambda = 5.0$ and jumps uniformly distributed on $[0.0, 0.5]$. The external activation $\{B_t\}_t$ is a non-autonomous version of a geometric Brownian motion process given by
 ```math
   \mathrm{d}B_t = (\mu_1 + \mu_2\sin(\omega t))B_t\;\mathrm{d}t + \sigma\sin(\omega t)B_t\;\mathrm{d}W_t,
 ```
-and we choose $\mu_1 = 0.5,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ and $\omega=3\pi,$ with initial condition $A_0 = 0.2.$
+and we choose $\mu_1 = 0.7,$ $\mu_2 = 0.3,$ $\sigma = 0.3,$ and $\omega=3\pi,$ with initial condition $A_0 = 0.2.$
 
 We don't have an explicit solution for the equation so we just use as target for the convergence an approximate solution via Euler method at a much higher resolution.
 
@@ -50,6 +50,7 @@ Then we define the random seed:
 
 ````@example 07-toggle_switch
 rng = Xoshiro(123)
+nothing # hide
 ````
 
 The evolution law:
@@ -71,12 +72,14 @@ function f!(dx, t, x, y, p)
     dx[2] = ( β + x₂⁴ / (c⁴  + x₂⁴) ) * ( d⁴ / ( d⁴ + x₁⁴)) - ν * x[1]
     return dx
 end
+nothing # hide
 ````
 
 The time interval:
 
 ````@example 07-toggle_switch
 t0, tf = 0.0, 5.0
+nothing # hide
 ````
 
 The law for the initial condition:
@@ -106,16 +109,25 @@ noise = ProductProcess(
 )
 ````
 
-The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
+The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error
 
 ````@example 07-toggle_switch
 ntgt = 2^18
 ns = 2 .^ (5:9)
-nsample = ns[[1, 2, 3, 4]]
-m = 100
 ````
 
-And add some information about the simulation:
+````@example 07-toggle_switch
+nsample = ns[[1, 2, 3, 4]]
+````
+
+The number of simulations for the Monte Carlo estimate is set to
+
+````@example 07-toggle_switch
+m = 100
+nothing # hide
+````
+
+And add some information about the simulation, for the caption of the convergence figure.
 
 ````@example 07-toggle_switch
 info = (
@@ -123,6 +135,7 @@ info = (
     noise = "coupled compound Poisson process and geometric Brownian motion noises",
     ic = "\$X_0 = $x0, Y_0 = $y0\$"
 )
+nothing # hide
 ````
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -224,13 +237,13 @@ nothing # hide
 We finally combine all plots into a single one, for a visual summary.
 
 ````@example 07-toggle_switch
-plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a) toggle-switch model" "(b) sample solution" "(c) Euler approximations" "(d) sample noises"], legendfont=7)
+plot(plt_result, plt_sols, plt_suite, plt_noises, size=(800, 600), title=["(a) toggle-switch model" "(b) sample solution" "(c) Euler approximations" "(d) sample noises"], titlefont=10, legendfont=7)
 ````
 
 We also combine just some of them, for the article
 
 ````@example 07-toggle_switch
-plt_combined = plot(plt_result, plt_suite, size=(800, 240), title=["(a) toggle-switch model" "(b) Euler approximations"], layout = (1, 2), legendfont=7, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_result, plt_suite, size=(800, 240), title=["(a) toggle-switch model" "(b) Euler approximations"], titlefont=10, layout = (1, 2), legendfont=7, bottom_margin=5mm, left_margin=5mm)
 ````
 
 ````@example 07-toggle_switch

@@ -75,7 +75,7 @@ Summing up the terms, we find that
   \begin{align*}
       \int_0^{t_j} e^s W_s\;\mathrm{d}s & = \sum_{i = 0}^{j-1} \int_{t_i}^{t_{i+1}} e^s W_s\;\mathrm{d}s \\
       & = \sum_{i = 0}^{j-1} \left( W_{t_{i+1}}e^{t_{i+1}} - W_{t_i}e^{t_i} - \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right) \\
-      & = W_{t_j}e^{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right)
+      & = W_{t_j}e^{t_j} - \sum_{i = 0}^{j-1} \left( \frac{W_{t_{i+1}}-W_{t_i}}{t_{i+1}-t_i}\left(e^{t_{i+1}}-e^{t_i}\right) + Z_i\right).
   \end{align*}
 ```
 
@@ -126,9 +126,24 @@ params = nothing
 
 ntgt = 2^16
 ns = 2 .^ (4:14)
-nsample = ns[[1, 2, 3, 4]]
-m = 80
+````
 
+The numbers of mesh points for a visualization of one of the sample approximations
+
+````@example 02-wiener_linearnonhomogeneous
+nsample = ns[[1, 2, 3, 4]]
+````
+
+The number of simulations for the Monte Carlo estimate is set to
+
+````@example 02-wiener_linearnonhomogeneous
+m = 80
+nothing # hide
+````
+
+and the info about the simulation, for the caption of the convergence figure.
+
+````@example 02-wiener_linearnonhomogeneous
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
@@ -160,12 +175,14 @@ target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{
         i1 = i
     end
 end
+nothing # hide
 ````
 
 and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 ````@example 02-wiener_linearnonhomogeneous
 target = CustomUnivariateMethod(target_solver!, rng)
+nothing # hide
 ````
 
 The method for which want to estimate the rate of convergence is, naturally, the Euler method, implemented via [`RandomEuler`](@ref):

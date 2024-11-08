@@ -70,18 +70,21 @@ Then we set up some variables as usual, starting with the random seed:
 
 ````@example 09-fisherkpp
 rng = Xoshiro(123)
+nothing # hide
 ````
 
 The time interval:
 
 ````@example 09-fisherkpp
 t0, tf = 0.0, 2.0
+nothing # hide
 ````
 
 The discretization in space is made with `l+1` mesh points $x_j = j / l$, for $j = 0, \ldots, l$, corresponding to `l` mesh intervals of length $\Delta x = 1 / l$. The points $x_0 = 0$ and $x_l = 1$ are the boundary points. For illustration purposes, we start by setting `l` to
 
 ````@example 09-fisherkpp
 l = 64
+nothing # hide
 ````
 
 Notice that for the target solution we need a very fine *time* mesh, on top of having to repeat the simulation a number of times for the Monte-Carlo estimate. This is computationally demanding for large `l`, so we choose a moderate number just for illustration purpose.
@@ -90,6 +93,7 @@ The initial mass is zero:
 
 ````@example 09-fisherkpp
 u₀(x) = 0.0
+nothing # hide
 ````
 
 The discretized initial condition is then
@@ -152,6 +156,7 @@ function f!(du, t, u, y, p) # ; μ=μ, λ=λ, uₘ=uₘ)
     du[l+1] = μ * ( ghl1 - 2u[l+1] + u[l] ) / dx² + λ * u[l+1] * ( 1.0 - u[l+1] / uₘ )
     return nothing
 end
+nothing # hide
 ````
 
 We set the parameters for the equation
@@ -252,7 +257,13 @@ l = 512 # 2^9
 u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
+````
+
+````@example 09-fisherkpp
 ks = [2^6, 2^5, 2^4]
+````
+
+````@example 09-fisherkpp
 @info  l ./ ks # 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 #nothing # hide
 ````
@@ -267,9 +278,10 @@ The number of simulations for the Monte-Carlo estimate of the rate of strong con
 
 ````@example 09-fisherkpp
 m = 40
+nothing # hide
 ````
 
-We then add some information about the simulation:
+We then add some information about the simulation, for the caption of the convergence figure.
 
 ````@example 09-fisherkpp
 info = (
@@ -277,6 +289,7 @@ info = (
     noise = "Hawkes-modulated Ornstein-Uhlenbeck colored noise",
     ic = "\$X_0 = 0\$"
 )
+nothing # hide
 ````
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
@@ -347,7 +360,7 @@ For the sake of illustration, we plot the evolution of a sample target solution:
 dt = ( tf - t0 ) / ( ntgt - 1 )
 
 @time anim = @animate for i in 1:div(ntgt, 2^7):div(ntgt, 1)
-    plot(range(0.0, 1.0, length=l+1), view(suite.xt, i, :), ylim=(0.0, 1.1), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", legend=false)
+    plot(range(0.0, 1.0, length=l+1), view(suite.xt, i, :), ylim=(0.0, 1.1), xlabel="\$x\$", ylabel="\$u\$", fill=true, title="population density at time t = $(round((i * dt), digits=3))", titlefont=10, legend=false)
 end
 
 nothing # hide

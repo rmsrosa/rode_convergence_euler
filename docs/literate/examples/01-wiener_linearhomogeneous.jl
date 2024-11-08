@@ -146,19 +146,21 @@ noise = WienerProcess(t0, tf, y0)
 
 params = nothing
 
-# The number of mesh points for the target solution, the approximations, and for a visualization of the one sample approximation:
+# The number of mesh points for the target solution and the approximations
 
 ntgt = 2^16
 ns = 2 .^ (4:14)
+
+# and for a visualization of one of the sample approximations
+
 nsample = ns[[1, 2, 3, 4]]
-nothing # hide
 
 # Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
 m = 200
 nothing # hide
 
-# and add some information about the simulation:
+# and add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = W_t X_t\$",

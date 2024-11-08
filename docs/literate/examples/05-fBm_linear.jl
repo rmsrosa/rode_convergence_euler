@@ -28,20 +28,30 @@ x0law = Normal()
 
 ntgt = 2^18
 ns = 2 .^ (6:9)
+
+#
+
 nsample = ns[[1, 2, 3, 4]]
+
+# The number of simulations for the Monte Carlo estimate is set to
+
 m = 200
+nothing # hide
+
+#
 
 y0 = 0.0
 hursts = Iterators.flatten((0.1:0.1:0.5, 0.7:0.2:0.9))
 noise = FractionalBrownianMotionProcess(t0, tf, y0, first(hursts), ntgt)
 
-# And add some information about the simulation:
+# And add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + B^H_t\$",
     noise = "fBm noise",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
+nothing # hide
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
@@ -53,6 +63,8 @@ method = RandomEuler()
 # With all the parameters set up, we build the convergence suite:     
 
 allctd = @allocated suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+
+#
 
 pwr = Int(div(round(log10(allctd)), 3)) # approximate since Kb = 1024 bytes not 1000 and so on
 @info "`suite` memory: $(round(allctd / 10^(3pwr), digits=2)) $(("bytes", "Kb", "Mb", "Gb", "Tb")[pwr+1])"

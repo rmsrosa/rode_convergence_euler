@@ -119,8 +119,17 @@ params = nothing
 
 ntgt = 2^16
 ns = 2 .^ (4:14)
+
+# The numbers of mesh points for a visualization of one of the sample approximations
+
 nsample = ns[[1, 2, 3, 4]]
+
+# The number of simulations for the Monte Carlo estimate is set to
+
 m = 80
+nothing # hide
+
+# and the info about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = -X_t + W_t\$",

@@ -31,6 +31,7 @@ using RODEConvergence
 # Then we set up some variables, as in the first example. First, the RNG:
 
 rng = Xoshiro(123)
+nothing # hide
 
 # Next the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
 
@@ -41,16 +42,21 @@ params = nothing
 # The time interval is given by the end points
 
 t0, tf = 0.0, 1.0
+nothing # hide
 
 # and the mesh parameters are set to 
 
 ntgt = 2^18
 ns = 2 .^ (6:9)
+
+# and 
+
 nsample = ns[[1, 2, 3]]
 
 # The number of simulations for the Monte Carlo estimate is set to
 
 m = 80
+nothing # hide
 
 # Now we define all the noise parameters
 
@@ -81,6 +87,7 @@ transport(t, r) = mapreduce(ri -> cbrt(sin(ri * t)), +, r) / length(r)
 ylaw = Gamma(7.5, 2.0)
 
 hurst = 0.6
+nothing # hide
 
 # The noise is, then, defined as a (vectorial) [`ProductProcess`](@ref), where each coordinate is one of the implemented noise types:
 
@@ -95,28 +102,30 @@ noise = ProductProcess(
     TransportProcess(t0, tf, ylaw, transport, nr),
     FractionalBrownianMotionProcess(t0, tf, y0, hurst, ntgt)
 )
+nothing # hide
 
-# Both the Wiener and the Orsntein-Uhlenbeck processes are additive noises so the strong order 1 convergence for them is not a surprise based on previous work.
+# Both the Wiener and the Orsntein-Uhlenbeck processes are additive noises so the strong order 1 convergence for them is not a surprise based on previous work since the Euler method coincides with the Euler-Maruyama method which is known to be of order 1 for additive noises.
 
-# All the other noises, however, would be thought to have a lower order of convergence but our results prove they are still of order 1. Hence, their combination is also expected to be of order 1, as illustrated here.
+# The geometric Brownian motion noise and the time-dependent linear Itô diffusion noise are multiplicative noises and were also known to yield strong order 1 convergence since the Euler method for the RODE coincides also with the Milstein method for SDEs, which is known to be of order 1.
+#
+# Another way of addressing the geometric Brownian motion process as a noise for a RODE is to observe that it, say $\{G_t\}_t,$ is given explicitly in the form $G_t = g(t, W_t)$ for a Wiener process $\{W_t\}_{t}$, so the Euler method for the associated RODE coincides with the Euler method for an associated RODE with additive noise $\{W_t\}_t.$ However, the corresponding nonlinear term does not have global Lipschitz bound, so one needs to be careful with this interpretation. Our results, however, apply without further assumptions.
+#
+# All the other noises, however, would be thought to have a lower order of convergence but our results prove they are also of order 1. Hence, their combination is also expected to be of order 1, as illustrated here.
 #
 # Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in `noise`. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
-#
-# The geometric Brownian motion process, say $\{G_t\}_t,$ is a multiplicative noise, but since its solution is given explicitly in the form $G_t = g(t, W_t)$ for a Wiener process $\{W_t\}_{t}$, then the Euler method for the associated RODE coincides with the Euler method for an associated RODE with additive noise $\{W_t\}_t.$ However, the corresponding nonlinear term does not have global Lipschitz bound, so the strong order 1 does not follow from that. Our results, however, apply without further assumptions.
-#
-# Finally, the homogeneous linear Itô process is a multiplicative noise whose state at time $t$ cannot be written explicitly as a function of $t$ and $W_t.$ It requires the previous history $W_s$ of the associated Wiener process, for $0\leq s \leq t,$ hence it would genuinely be expected to be of strong order less than 1/2, which is not the case as we show here, proving it to also be of order 1.
 #
 # Now we set up the initial condition, taking into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
 
 x0law = MvNormal(zeros(length(noise)), I)
 
-# We finally add some information about the simulation:
+# We finally add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "\$\\mathrm{d}\\mathbf{X}_t/\\mathrm{d}t = - \\| \\mathbf{Y}_t\\|^2 \\mathbf{X}_t + \\mathbf{Y}_t\$",
     noise = "vector-valued noise \$\\{\\mathbf{Y}_t\\}_t\$ with all the implemented noises",
     ic = "\$\\mathbf{X}_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
 )
+nothing # hide
 
 # The method for which want to estimate the rate of convergence is, naturally, the Euler method, which is also used to compute the *target* solution, at the finest mesh:
 
@@ -181,7 +190,7 @@ plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\
 
 # We finally combine all the convergence plot and the noises into a single plot, for the article:
 
-plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"], legend=nothing)
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, legend=nothing)
 
 plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(800, 240), title=["(a) non-homogeneous linear system" "(b) sample paths of all noises"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 

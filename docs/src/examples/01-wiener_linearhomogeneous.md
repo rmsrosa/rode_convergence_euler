@@ -132,12 +132,14 @@ Then we set up some variables, starting by choosing the `Xoshiro256++` pseudo-ra
 
 ````@example 01-wiener_linearhomogeneous
 rng = Xoshiro(123)
+nothing # hide
 ````
 
 We set the right hand side of the equation:
 
 ````@example 01-wiener_linearhomogeneous
 f(t, x, y, p) = y * x
+nothing # hide
 ````
 
 Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a [Distributions.Normal](https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal) random variable:
@@ -160,22 +162,27 @@ There is no parameter in the equation, so we just set `params` to `nothing`.
 params = nothing
 ````
 
-The number of mesh points for the target solution, the approximations, and for a visualization of the one sample approximation:
+The number of mesh points for the target solution and the approximations
 
 ````@example 01-wiener_linearhomogeneous
 ntgt = 2^16
 ns = 2 .^ (4:14)
+````
+
+and for a visualization of one of the sample approximations
+
+````@example 01-wiener_linearhomogeneous
 nsample = ns[[1, 2, 3, 4]]
-nothing # hide
 ````
 
 Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
 ````@example 01-wiener_linearhomogeneous
 m = 200
+nothing # hide
 ````
 
-and add some information about the simulation:
+and add some information about the simulation, for the caption of the convergence figure.
 
 ````@example 01-wiener_linearhomogeneous
 info = (
@@ -183,6 +190,7 @@ info = (
     noise = "a standard Wiener process noise \$\\{W_t\\}_t\$",
     ic = "\$X_0 \\sim \\mathcal{N}(0, 1)\$"
 )
+nothing # hide
 ````
 
 The *target* solution as described above is implemented as
@@ -205,12 +213,14 @@ target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{
         i1 = i
     end
 end
+nothing # hide
 ````
 
 and with that we construct the [`CustomMethod`](@ref) that solves the problem with this `target_solver!`:
 
 ````@example 01-wiener_linearhomogeneous
 target = CustomUnivariateMethod(target_solver!, rng)
+nothing # hide
 ````
 
 The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted [`RandomEuler`](@ref):
@@ -267,12 +277,14 @@ For the sake of illustration, we plot the approximations of a sample target solu
 
 ````@example 01-wiener_linearhomogeneous
 plt = plot(suite, ns=nsample)
+````
 
+````@example 01-wiener_linearhomogeneous
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.pdf")) # hide
 nothing # hide
 ````
 
-We can also visualize the noise associated with this sample solution:
+Finally, we also visualize the noise associated with this sample solution:
 
 ````@example 01-wiener_linearhomogeneous
 plot(suite, xshow=false, yshow=true, label="Wiener noise")

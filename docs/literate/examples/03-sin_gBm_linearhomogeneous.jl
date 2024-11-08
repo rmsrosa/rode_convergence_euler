@@ -44,7 +44,6 @@ params = nothing
 
 t0, tf = 0.0, 1.0
 x0law = Normal()
-nothing # hide
 
 # The geometric Brownian motion noise is defined via [`GeometricBrownianMotionProcess`](@ref), with initial value $y_0$, drift $\mu$, and dissipation $\sigma$ as given by
 #
@@ -58,11 +57,17 @@ noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
 
 ntgt = 2^18
 ns = 2 .^ (4:9)
+
+# and
+
 nsample = ns[[1, 2, 3, 4]]
+
+# The number of simulations for the Monte Carlo estimate is set to
+
 m = 200
 nothing # hide
 
-# We add some information about the simulation:
+# We add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "\$\\mathrm{d}X_t/\\mathrm{d}t = \\sin(Y_t) X_t\$",

@@ -78,6 +78,7 @@ using RODEConvergence
 # Then we set up some variables, starting with the random seed, for reproducibility of the pseudo-random number sequence generator:
 
 rng = Xoshiro(123)
+nothing # hide
 
 # We define the evolution law for the displacement $X_t$ driven by a noise $Y_t$. Since it is a system of equations, we use the in-place formulation. Notice the noise is a product of the background colored noise `y[1]` and the envelope noise `y[2]`. The parameters are hard-coded for simplicity.
 
@@ -93,10 +94,12 @@ function f!(dx, t, x, y, p)
     dx[2] = - 2 * ζ₀ * ω₀ * x[2] - ω₀ ^ 2 * x[1] - y
     return dx
 end
+nothing # hide
 
 # The time interval is defined by the following end points:
 
 t0, tf = 0.0, 2.0
+nothing # hide
 
 # The structure is initially at rest, so the probability law is a vectorial product of two Dirac delta distributions, in $\mathbb{R}^2$:
 
@@ -264,16 +267,20 @@ nothing # hide
 
 ntgt = 2^18
 ns = 2 .^ (6:9)
+
+# The number of simulations for the Monte Carlo estimate is set to
+
 m = 100
 nothing # hide
 
-# We add some information about the simulation:
+# We add some information about the simulation, for the caption of the convergence figure.
 
 info = (
     equation = "mechanical structure model under ground-shaking random excitations",
     noise = "transport process noise",
     ic = "\$X_0 = \\mathbf{0}\$"
 )
+nothing # hide
 
 # We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
@@ -304,9 +311,11 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 nothing # hide
 
 
-# We save the result for ploting a combined figure with results from different examples.
+#
 
-save(joinpath(@__DIR__(),"results/08-earthquake_result.jld2"), Dict("result" => result)) # save to docs/build/
+## save to docs/build/
+save(joinpath(@__DIR__(),"results/08-earthquake_result.jld2"), Dict("result" => result)) # hide 
+nothing # hide
 
 # 
 # ### Plots
@@ -343,7 +352,7 @@ mt = [mapreduce(ri -> gm(t, ri[1], ri[2], ri[3], ri[4]), +,  eachcol(noise.rv)) 
     height = 3.0
     halfwidth = 2.0
     aspectfactor = (4/6) * 4halfwidth / height
-    plot([mt[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; mt[i] + halfwidth], [0.0; height; height; 0.0], xlim = (-2halfwidth, 2halfwidth), ylim=(0.0, aspectfactor * height), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", legend=false)
+    plot([mt[i] - halfwidth; ceiling - halfwidth; ceiling + halfwidth; mt[i] + halfwidth], [0.0; height; height; 0.0], xlim = (-2halfwidth, 2halfwidth), ylim=(0.0, aspectfactor * height), xlabel="\$\\mathrm{displacement}\$", ylabel="\$\\textrm{height}\$", fill=true, title="Building at time t = $(round((i * dt), digits=3))", titlefont=10, legend=false)
 end
 nothing # hide
 
