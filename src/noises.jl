@@ -151,6 +151,17 @@ Construct a Geometric Brownian motion process ``Y_t`` on the interval `t0` to `t
 
 The noise process `noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)` returned by the constructor is a subtype of `AbstractNoise{Univariate}`.
 
+The exact solution is given by
+```math
+Y_t = Y_0 e^{ \\left(\\mu - \\frac{\\sigma^2}{2}\\right) t + \\sigma W_t) }.
+```
+
+The discretized solution sample is computed recursively via
+```math
+Y_{t_j} = Y_{t_{j-1}} e^{ \\left(\\mu - \\frac{\\sigma^2}{2}\\right) \\Delta t + \\sigma \\sqrt{\\Delta t} Z_j) },
+```
+where ``Z_t \\sim \\mathcal{N}(0, 1)``.
+
 Sample paths are obtained by populating a pre-allocated vector `yt` with the sample path, via `rand!(rng, noise, yt)`.
     
 The number of steps for the sample path is determined by the length of the given vector `yt`, and the time steps are uniform and calculated according to `dt = (tf - t0) / (length(yt) - 1)`. The initial condition is `yt[1] = y0`, corresponding to the value at time `t0`.

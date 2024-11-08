@@ -121,9 +121,13 @@ struct ConvergenceResult{T}
 end
 
 """
-    calculate_trajerrors!(rng, trajerrors, suite)
+    calculate_trajerrors!(rng, trajerrors, trajstderrs, suite)
 
-Calculate the strong error at each time step along the trajectory.
+Calculate the strong error and the standard error of the suite at each time step along the trajectory.
+
+The strong errors are stored in the provided `trajerrors` matrix, while the standar errors are stored in the provided `trajstderrs`. All the info is given in the ConvergenceSuite `suite`. The RNG seed is given in `rng`.
+
+This method is used when solving a `ConvergenceSuite`.
 """
 function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T}, suite::ConvergenceSuite{T, D, P}) where {T, D, P}
     t0 = suite.t0
@@ -204,7 +208,7 @@ end
 """
     solve(rng, suite::ConvergenceSuite)
 
-Compute the strong errors and the order of convergence of the given suite.
+Compute the strong errors and the order of convergence of the given ConvergenceSuite `suite`, with the provided RNG seed `rng`.
 
 The result is returned in the form of a [`ConvergenceResult`](@ref).
 """
