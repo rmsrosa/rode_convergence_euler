@@ -2,7 +2,7 @@
 
 ## Preliminaries
 
-1. Make sure you have [Julia](https://julialang.org)  installed, version 1.8.x preferably;
+1. Make sure you have [Julia](https://julialang.org)  installed, the lates version 1.11.x preferably, but it should work in other recent versions;
 2. Change directory to the root of the project;
 3. Make sure you have all the packages in the `docs/` environment instantiated by going to the Julia REPL and typing `]activate docs; instantiate`.
 
@@ -28,7 +28,7 @@ For example, in VSCode, with the [Julia VSCode extension](https://www.julia-vsco
 
 Or copy and paste the code to the Julia REPL.
 
-## Necessary files
+## Necessary files for general documentation
 
 1. Have a `docs/` folder with a `make.jl` file and a `scr/` folder and at least an `index.md` file inside `scr/`;
 2. The `make.jl` file should have, at least, `using Documenter` and a `makedocs(sitename="name of site")`.
