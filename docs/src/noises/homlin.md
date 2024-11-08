@@ -1,5 +1,9 @@
 # Homogeneous linear Itô process noise
 
+```@meta
+    Draft = false
+```
+
 A classical type of noise is the geometric Brownian motion (gBm) process $\{Y_t\}_t$ satisfying
 ```math
 \mathrm{d}Y_t = \mu Y_t \;\mathrm{d}t + \sigma Y_t \;\mathrm{d}W_t,
@@ -85,7 +89,7 @@ using RODEConvergence
 
 ## Setup
 
-We start by setting the time interval, the mesh parameters, and the number of sample paths, common to all simulations,
+For the setup, we first set the time interval, the mesh parameters, and the number of sample paths, common to all simulations,
 ```@example homlin
 t0 = 0.0
 tf = 2.0
@@ -111,6 +115,7 @@ or via the homogeneous linear Itô process constructor, by given the primitive o
 primitive_a = t -> μ * t
 primitive_b2 = t -> σ^2 * t
 noise = HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_b2)
+nothing # hide
 ```
 
 For comparison, we generate a bunch of sample paths with both constructors and check their statistics.
@@ -141,7 +146,7 @@ nothing # hide
 We plot the ensemble of paths just for the sake of illustration, along with the mean and 95% confidence region.
 ```@example homlin
 plt = plot(title="Sample paths for the gBm process", titlefont=10)
-plot!(plt, tt, t -> y0 * exp( (μ - 2σ) * t ), fillrange = t -> y0 * exp( (μ + 2σ) * t ), alpha=0.5, color=2, label="95% region")
+plot!(plt, tt, t -> y0 * exp( μ * t ) * ( 1 - 2sqrt( exp( σ^2 * t) - 1 ) ), fillrange = t -> y0 * exp( μ * t ) * (1 + 2sqrt( exp( σ^2 * t) - 1 ) ), alpha=0.5, color=2, label="95% region")
 plot!(plt, tt, t -> y0 * exp( μ * t), label="expectation", color = 2)
 plot!(plt, tt, Yt, xlabel="\$t\$", ylabel="\$y\$", guidefont=10, label=nothing, color=1, alpha=0.2)
 ```
@@ -210,6 +215,7 @@ y0 = 0.1
 primitive_a = t -> t^2/10
 primitive_b2 = t -> t/20 - sin(3π * t) * cos(3π * t) / 60π 
 noise = HomogeneousLinearItoProcess(t0, tf, y0, primitive_a, primitive_b2)
+nothing # hide
 ```
 
 ```@example homlin

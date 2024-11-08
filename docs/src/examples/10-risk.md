@@ -283,7 +283,7 @@ plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 1], yaxis="\$\\tex
 plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 2], label="\$R_t\$", linecolor=3)
 plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 3], label="\$C_t\$", linecolor=4)
 
-plt_combined = plot(plt_result, plt_surplus_and_noises, legendfont=6, size=(800, 240), title=["(a) risk model" "(b) sample paths"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
+plt_combined = plot(plt_result, plt_surplus_and_noises, legendfont=6, size=(800, 240), title=["(a) risk model" "(b) sample paths" ""], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
 ````@example 10-risk

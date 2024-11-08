@@ -1,10 +1,10 @@
 # Main idea
 
-The improvement in the convergence estimates relies on a novel approach with **four main points:**
+The improvement in the convergence estimates relies on a different approach, with **four main points:**
 
 1. Estimate the accumulated global error instead of the local error;
 2. Write the global error as an iterated integral over the large and the small mesh scales;
-3. Use Fubini Theorem to switch the order of integration, moving the critical regularity from the small to the large scale;
+3. Use Fubini Theorem to switch the order of integration, moving the critical regularity from the small to the large scales;
 4. Assume either a control of the total variation of the sample paths of the noise (as in many point processes and transport process) or use the Itô isometry (when the noise is an It\^o process, such as Wiener, Ornstein-Uhlenbeck, and Geometric Brownian motion processes) in order to bound the large scale.
 
 Let us go over them with more details.
@@ -46,14 +46,14 @@ The second main idea is to consider the whole global error and assume that the s
 ```math
     F_s - F_\tau = \int_\tau^s \;\mathrm{d}F_\xi.
 ```
-This can be either in the sense of a Riemann-Stieltjes integral or of an Itô integral. The first sense fits the case of noises with bounded total variation, while the second one fits the case of an Itô noise. In this way, we write the global error as an iterated integral:
+This can be either in the sense of a Riemann-Stieltjes integral and/or an integral with respect to a jump measure and/or a stochastic integral. In this way, we write the global error as an iterated integral:
 ```math
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s.
 ```
 
 ## Third main idea: use Fubini to change the critical regularity to the large scale
 
-The third main idea is to use Fubini's Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the small scale of the time-step (on $[\tau^N(s), s]$). In this way, we obtain
+The third main idea is to use a stochastic Fubini Theorem to switch the order of integration, making the lower regularity (acting on the variable $\xi$) vary on the larger scale (on the interval $[0, t_j]$) instead of on the small scale of the time-step (on $[\tau^N(s), s]$). In this way, we obtain
 ```math
 \begin{align*}
     \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s & = \int_0^{t_j} \int_{\tau^N(s)}^s \;\mathrm{d}  F_\xi\;\mathrm{d}s \\
@@ -79,11 +79,7 @@ for suitable processes $\{A_t\}_t$ and $\{B_t\}_t$, and then we use the *Itô is
 \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq \int_0^T\mathbb{E}\left[\|A_t\|\right] \;\mathrm{d}t + \left( \int_0^T\mathbb{E}\left[\|B_t\|^2\right] \;\mathrm{d}t\right)^{1/2} < \infty.
 ```
 
-In the case of noises with sample paths of bounded variation, we can relax the above condition and work not with $\{F_t\}_{t\in I}$ itself but with a bound on the step of the form
-```math
-    \|f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)})\| \leq \bar F_s - \bar F_{\tau^N(s)}.
-```
-Only this bounding process $\{\bar F_t\}_{t\in I}$ is required to have sample paths of bounded variation, which is usually easier to check, and so that
+In the case of noises with sample paths of bounded variation, the bound takes the form
 ```math
 \mathbb{E}\left[\int_0^{t_j} \;\mathrm{d} F_\xi\right] \leq \mathbb{E}\left[V(F_\xi; 0, T)\right]\infty.
 ```

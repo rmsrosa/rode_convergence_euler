@@ -1,8 +1,10 @@
 # Extras
 
+Here are some calculations that did not make into the paper.
+
 ## A discrete Gronwall Lemma
 
-For the estimate of the global error, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in \cite{GiraultRaviart1981} (see also \cite{Clark1987}).
+For the estimate of the global error, we use the following discrete version of the Grownwall Lemma, which is a particular case of the result found in [Girault & Raviart (1981)](https://link.springer.com/book/10.1007/BFb0063447).
 
 **Discrete Gronwall Lemma:** Let $(e_j)_{j}$ be a (finite or infinite) sequence of positive numbers starting at $j=0$ and satisfying
 ```math
@@ -159,5 +161,5 @@ This eventually leads to a strong error of the form
 ```
 for suitable constants $C_1, C_2\geq 0.$ This proves that the error is of the order of
 ```math
-\textrm{strong error} \lesssim \max\{H + 1/2, 1\}.
+\textrm{strong error} \lesssim \min\{H + 1/2, 1\}.
 ```

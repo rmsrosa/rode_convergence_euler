@@ -18,17 +18,17 @@ with the initial condition
   X_0^N = X_0.
 ```
 
-When the noise $\{Y_t\}_{t\in I}$ has $\theta$-Hölder continuous sample paths, it can be show [Grune & Kloeden (2001)](https://link.springer.com/article/10.1023/A:1021995918864), under suitable regularity conditions on $f=f(t, x, y)$, that the Euler scheme converges pathwise with order $\theta$ with respect to the time step. Similarly, under suitable global conditions, that the convergence is in the strong sense, i.e. there exists a constant $C \geq 0$ such that
+When the noise $\{Y_t\}_{t\in I}$ has $\theta$-Hölder continuous sample paths, it is show in [Grune & Kloeden (2001)](https://link.springer.com/article/10.1023/A:1021995918864), under suitable regularity conditions on $f=f(t, x, y)$, that the Euler scheme converges pathwise with order at least $\theta$ with respect to the time step. Similarly, under suitable global conditions, the convergence holds also in the strong sense, i.e. there exists a constant $C \geq 0$ such that
 ```math
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N^\theta, \qquad \forall N \in \mathbb{N},
 ```
-where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on $\Omega$.
+where $\mathbb{E}[\cdot]$ indicates the expectation of a random variable on the underlying probability space.
 
 We show, in the paper, that, in many classical examples, it is possible to exploit further conditions that yield in fact a strong order 1 convergence, with the sample paths still being Hölder continuous or even discontinuous, i.e.
 ```math
     \max_{j=0, \ldots, N}\mathbb{E}\left[ \left\| X_{t_j} - X_{t_j}^N \right\| \right] \leq C \Delta t_N, \qquad \forall N \in \mathbb{N},
 ```
 
-This is the case, for instance, when the noise is a point process, a transport process, or an Itô process.
+We show that this holds essentially for any semi-martingale noise. This includes point processes, transport processes, and Itô diffusion process.
 
-For a fractional Brownian motion process with Hurst parameter $H$, we still get strong order 1 convergence for $1/2 \leq H < 1$, while for $0 < H < 1/2$ the strong order of convergence drops to $H + 1/2$, which, however, is still higher than the previously estimated order of $H$, which is the Hölder regularity of the pathwise solutions.
+For a fractional Brownian motion process with Hurst parameter $H$, which is not a semi-martingale when $H\neq 1/2,$ we still get strong order 1 convergence for $1/2 \leq H < 1,$ while for $0 < H < 1/2$ the strong order of convergence drops to $H + 1/2,$ which, however, is still higher than the previously estimated order of $H$, which is the Hölder regularity of the pathwise solutions.
