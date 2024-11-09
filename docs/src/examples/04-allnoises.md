@@ -242,16 +242,32 @@ savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises
 nothing # hide
 ````
 
-Now we simulate a series of Random ODEs, each with one of the noises above.
+## Univariate RODE with the individual noises
+
+Now we simulate a series of Random ODEs, each with one of the noises above, instead of the system with all combined noises.
+
+In the univariate case, the right hand side of the equation becomes
 
 ````@example 04-allnoises
 f(t, x, y, p) = - y^2 * x + y
+````
 
+The initial condition is also univariate
+
+````@example 04-allnoises
 eachx0law = Normal()
+````
 
+and so is the Euler method
+
+````@example 04-allnoises
 eachtarget = RandomEuler()
 eachmethod = RandomEuler()
+````
 
+Now we compute the error for each noise and gather the order of convergence in a vector.
+
+````@example 04-allnoises
 ps = Float64[result.p]
 pmins = Float64[result.pmin]
 pmaxs = Float64[result.pmax]
@@ -269,20 +285,22 @@ for eachnoise in noise.processes
     push!(pmaxs, eachresult.pmax)
 end
 
-noises = ["W"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "H"; "T"; "fBm"; "all"]
+noises_short = ["all"; "W"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "H"; "T"; "fBm"]
 ````
 
 We print them out for inclusing in the paper:
 
 ````@example 04-allnoises
-[noises ps pmins pmaxs]
+for (noisej, noiseshortj, pj, pminj, pmaxj) in zip(noises, noises_short, ps, pmins, pmaxs)
+    println("$noisej ($noiseshortj) & $(round(pj, sigdigits=6)) & $(round(pminj, sigdigits=6)) & $(round(pmaxj, sigdigits=6)) ")
+end
 ````
 
-The following plot helps visualizing the result.
+The following plot helps in visualizing the result.
 
 ````@example 04-allnoises
 plt_eachnoise = plot(ylims=(-0.1, 1.5), ylabel="\$p\$", guidefont=10, legend=:bottomright)
-scatter!(plt_eachnoise, noises, ps, yerror=(ps .- pmins, pmaxs .- ps), xrotation = 30, label="computed")
+scatter!(plt_eachnoise, noises_short, ps, yerror=(ps .- pmins, pmaxs .- ps), xrotation = 30, label="computed")
 hline!(plt_eachnoise, [1.0], linestyle=:dash, label="theory",bottom_margin=5mm, left_margin=5mm)
 ````
 
@@ -292,6 +310,8 @@ Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d
 savefig(plt_eachnoise, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_noise_allnoises.pdf")) # hide
 nothing # hide
 ````
+
+Combined with the noise sample paths:
 
 ````@example 04-allnoises
 plt_combined = plot(plt_eachnoise, plt_noises, legendfont=6, size=(800, 240), title=["(a) non-homogeneous linear system" "(b) sample paths of all noises"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
