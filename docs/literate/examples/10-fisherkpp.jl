@@ -1,5 +1,5 @@
 # # Random Fisher-KPP partial differential equation
-#
+# 
 # Here we simulate a Fisher-KPP equation with random boundary conditions, as inspired by the works of [Salako & Shen (2020)](https://doi.org/10.1007/s10884-020-09847-2) and [Freidlin & Wentzell (1992)](https://doi.org/10.1214/aop/1176989813). The first work addresses the Fisher-KPP equation with a random reaction coefficient, while the second work considers more general reaction-diffusion equations but driven by random boundary conditions. The deterministic Fisher-KPP equations has its origins in [Fisher (1937)](https://doi.org/10.1111/j.1469-1809.1937.tb02153.x) and [Kolmogorov, Petrovskii & Piscunov (1937)](https://www.bibsonomy.org/bibtex/23cfaf2cd2a49db658463fc5b115b3aa4/peter.ralph)
 
 # We consider the Fisher-KPP equation driven by Neumann boundary conditions, with a random influx on the left end point and no flux on the right end point. The intent here is to illustrate the strong order 1 convergence rate on a nonlinear partial differential equation.
@@ -208,9 +208,9 @@ plt_OUandHawkes = plot(tt, yt, label=["OU" "Hawkes"], xlabel="\$t\$", ylabel="\$
 
 plt_noise = plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
 
-# We also make sure drawing a noise sample path does not allocate:
+# We also make sure drawing a noise sample path does not allocate. We use a different, and disposable, random seed, not to mess up with the reproducibility, since benchmarks can have different evaluations and samples, depending on the system itself and on the system environment:
 
-@btime rand!($rng, $noise, $yt)
+@btime rand!($Xoshiro(), $noise, $yt)
 nothing # hide
 
 # Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$ This condition follows from the Von Neumann stability analysis, by checking for discrete solution $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$ of the error, where $\tau = \Delta t$, $h = \Delta x$, and requiring that the amplification factor at each time step is bounded by $1 + \mathcal{O}(\tau).$

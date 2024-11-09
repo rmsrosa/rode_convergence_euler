@@ -243,10 +243,10 @@ and the modulated and truncated colored noise:
 plt_noise = plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
 ````
 
-We also make sure drawing a noise sample path does not allocate:
+We also make sure drawing a noise sample path does not allocate. We use a different, and disposable, random seed, not to mess up with the reproducibility, since benchmarks can have different evaluations and samples, depending on the system itself and on the system environment:
 
 ````@example 10-fisherkpp
-@btime rand!($rng, $noise, $yt)
+@btime rand!($Xoshiro(), $noise, $yt)
 nothing # hide
 ````
 
