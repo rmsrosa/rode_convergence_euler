@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "../../literate/examples/09-fisherkpp.jl"
+EditURL = "../../literate/examples/10-fisherkpp.jl"
 ```
 
 # Random Fisher-KPP partial differential equation
@@ -56,7 +56,7 @@ which is nonnegative, provided $0 \leq u \leq u_m$ and $Y_t \geq 0$.
 
 First we load the necessary packages:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 using Plots
 using Measures
 using Random
@@ -68,21 +68,21 @@ using BenchmarkTools
 
 Then we set up some variables as usual, starting with the random seed:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 rng = Xoshiro(123)
 nothing # hide
 ````
 
 The time interval:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 t0, tf = 0.0, 2.0
 nothing # hide
 ````
 
 The discretization in space is made with `l+1` mesh points $x_j = j / l$, for $j = 0, \ldots, l$, corresponding to `l` mesh intervals of length $\Delta x = 1 / l$. The points $x_0 = 0$ and $x_l = 1$ are the boundary points. For illustration purposes, we start by setting `l` to
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 l = 64
 nothing # hide
 ````
@@ -91,14 +91,14 @@ Notice that for the target solution we need a very fine *time* mesh, on top of h
 
 The initial mass is zero:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 u₀(x) = 0.0
 nothing # hide
 ````
 
 The discretized initial condition is then
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
 ````
 
@@ -124,7 +124,7 @@ These points are plugged into the second-order approximation of the second deriv
 
 This yields the following in-place formulation for the right-hand side of the MOL Random ODE approximation of the Random PDE, keeping in mind that julia is 1-based, so the `j` indices are shifted up by one.
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 μ = 0.009
 λ = 10.0
 uₘ = 1.0
@@ -161,7 +161,7 @@ nothing # hide
 
 We set the parameters for the equation
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 μ = 0.009
 λ = 10.0
 uₘ = 1.0
@@ -169,7 +169,7 @@ uₘ = 1.0
 
 Now we make sure this is non-allocating. We use a finer spatial mesh for testing.
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 xx = 0.0:0.01:1.0
 u = sin.(π * xx) .^ 2
 du = similar(u)
@@ -181,14 +181,14 @@ nothing # hide
 
 Visualize the results
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 plot(xx, u, label="u")
 plot!(xx, du, label="du/dt")
 ````
 
 and check performace
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 @btime f!($du, $t, $u, $y, $params)
 nothing # hide
 ````
@@ -197,7 +197,7 @@ The noise is a colored Ornstein-Uhlenbeck noise truncated to non-negative values
 
 The Ornstein-Uhlenbeck is defined as follows
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 y0 = 0.0
 τ = 0.005 # time scale
 ς = √τ # large-scale diffusion
@@ -208,7 +208,7 @@ colored_noise = OrnsteinUhlenbeckProcess(t0, tf, y0, ν, σ)
 
 And the exponentially-decaying Hawkes process is defined by
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 λ₀ = 5.0
 a = 1.4
 δ = 8.0
@@ -221,69 +221,69 @@ hawkes_envelope_noise = ExponentialHawkesProcess(t0, tf, λ₀, a, δ, dylaw)
 
 The are combined into the following [`ProductProcess`](@ref)
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 noise = ProductProcess(colored_noise, hawkes_envelope_noise)
 ````
 
 Here is a sample path of the two noises:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 tt = range(t0, tf, length=2^9+1)
 yt = Matrix{Float64}(undef, 2^9+1, 2)
 rand!(rng, noise, yt)
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 plt_OUandHawkes = plot(tt, yt, label=["OU" "Hawkes"], xlabel="\$t\$", ylabel="\$y\$")
 ````
 
 and the modulated and truncated colored noise:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 plt_noise = plot(tt, map(y -> max(0.0, y[1] * y[2]), eachrow(yt)), label="noise", xlabel="\$t\$", ylabel="\$y\$")
 ````
 
 We also make sure drawing a noise sample path does not allocate:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 @btime rand!($rng, $noise, $yt)
 nothing # hide
 ````
 
 Now that we are done with testing, we set up the mesh parameters for the convergence. For stability reasons, we let $\Delta t \sim \Delta x^2$ and make sure that $2\mu \Delta t/\Delta x^2 \leq 1.$ This condition follows from the Von Neumann stability analysis, by checking for discrete solution $E_{j,k} = A e^{\alpha k\tau  - i \beta j h}$ of the error, where $\tau = \Delta t$, $h = \Delta x$, and requiring that the amplification factor at each time step is bounded by $1 + \mathcal{O}(\tau).$
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 l = 512 # 2^9
 u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 ks = [2^6, 2^5, 2^4]
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 @info  l ./ ks # 2^9 ./ ks = [2^3 2^4 2^5] = [8 16 32]
 #nothing # hide
 ````
 
 and make sure they meet all the requirements:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 ````
 
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 m = 40
 nothing # hide
 ````
 
 We then add some information about the simulation, for the caption of the convergence figure.
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 info = (
     equation = "the Fisher-KPP equation",
     noise = "Hawkes-modulated Ornstein-Uhlenbeck colored noise",
@@ -294,7 +294,7 @@ nothing # hide
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 target = RandomEuler(length(u0law))
 method = RandomEuler(length(u0law))
 ````
@@ -303,20 +303,20 @@ method = RandomEuler(length(u0law))
 
 With all the parameters set up, we build the convergence suite:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 suite = ConvergenceSuite(t0, tf, u0law, f!, noise, params, target, method, ntgt, ns, m, ks)
 ````
 
 Then we are ready to compute the errors:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 @time result = solve(rng, suite)
 nothing # hide
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 table = generate_error_table(result, suite, info)
 
 println(table) # hide
@@ -325,7 +325,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
 ````
@@ -334,29 +334,29 @@ nothing # hide
 
 We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 plt_result = plot(result)
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/",  "order_fisherkpp.pdf")) # hide
 nothing # hide
 ````
 
 We also combine some plots into a single figure, for the article:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 plt_combined = plot(plt_result, plt_OUandHawkes, plt_noise, layout=@layout([ a [ b; c ] ]), size=(800, 280), title=["(a) Fisher-KPP model" "(b) noise parts" "(c) noise sample path"], legendfont=7, titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "fisherkpp_combined.pdf")) # hide
 nothing # hide
 ````
 
 For the sake of illustration, we plot the evolution of a sample target solution:
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 dt = ( tf - t0 ) / ( ntgt - 1 )
 
 @time anim = @animate for i in 1:div(ntgt, 2^7):div(ntgt, 1)
@@ -366,7 +366,7 @@ end
 nothing # hide
 ````
 
-````@example 09-fisherkpp
+````@example 10-fisherkpp
 gif(anim, fps = 30) # hide
 ````
 

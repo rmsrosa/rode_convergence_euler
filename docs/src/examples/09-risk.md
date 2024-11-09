@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "../../literate/examples/10-risk.jl"
+EditURL = "../../literate/examples/09-risk.jl"
 ```
 
 # An actuarial risk model
@@ -81,7 +81,7 @@ with $\{R_t\}_t$ as above.
 
 First we load the necessary packages:
 
-````@example 10-risk
+````@example 09-risk
 using JLD2
 using Plots
 using Measures
@@ -93,14 +93,14 @@ using RODEConvergence
 
 Then we define the random seed:
 
-````@example 10-risk
+````@example 09-risk
 rng = Xoshiro(123)
 nothing # hide
 ````
 
 The evolution law:
 
-````@example 10-risk
+````@example 09-risk
 ν = 5.0
 γ = 1.0
 
@@ -120,21 +120,21 @@ nothing # hide
 
 The time interval:
 
-````@example 10-risk
+````@example 09-risk
 t0, tf = 0.0, 3.0
 nothing # hide
 ````
 
 The law for the initial condition:
 
-````@example 10-risk
+````@example 09-risk
 x0 = 1.0
 x0law = Dirac(x0)
 ````
 
 The Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes for the noise term:
 
-````@example 10-risk
+````@example 09-risk
 O0 = 0.0
 Oν = 5.0
 Oε = 0.8
@@ -154,25 +154,25 @@ nothing # hide
 
 The resolutions for the target and approximating solutions, as well as the number of simulations for the Monte-Carlo estimate of the strong error:
 
-````@example 10-risk
+````@example 09-risk
 ntgt = 2^18
 ns = 2 .^ (6:9)
 ````
 
-````@example 10-risk
+````@example 09-risk
 nsample = ns[[1, 2, 3, 4]]
 ````
 
 The number of simulations for the Monte Carlo estimate is set to
 
-````@example 10-risk
+````@example 09-risk
 m = 400
 nothing # hide
 ````
 
 And add some information about the simulation, for the caption of the convergence figure.
 
-````@example 10-risk
+````@example 09-risk
 info = (
     equation = "a risk model",
     noise = "coupled Ornstein-Uhlenbeck, geometric Brownian motion, and compound Poisson processes",
@@ -183,7 +183,7 @@ nothing # hide
 
 We define the *target* solution as the Euler approximation, which is to be computed with the target number `ntgt` of mesh points, and which is also the one we want to estimate the rate of convergence, in the coarser meshes defined by `ns`.
 
-````@example 10-risk
+````@example 09-risk
 target = RandomEuler()
 method = RandomEuler()
 ````
@@ -192,20 +192,20 @@ method = RandomEuler()
 
 With all the parameters set up, we build the [`ConvergenceSuite`](@ref):
 
-````@example 10-risk
+````@example 09-risk
 suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 ````
 
 Then we are ready to compute the errors via [`solve`](@ref):
 
-````@example 10-risk
+````@example 09-risk
 @time result = solve(rng, suite)
 nothing # hide
 ````
 
 The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 
-````@example 10-risk
+````@example 09-risk
 table = generate_error_table(result, suite, info)
 
 println(table) # hide
@@ -214,7 +214,7 @@ nothing # hide
 
 The calculated order of convergence is given by `result.p`:
 
-````@example 10-risk
+````@example 09-risk
 println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
 nothing # hide
 ````
@@ -223,62 +223,62 @@ nothing # hide
 
 We plot the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
-````@example 10-risk
+````@example 09-risk
 plt_result = plot(result)
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_result, joinpath(@__DIR__() * "../../../../latex/img/", "order_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
 For the sake of illustration of the behavior of the system, we visualize a sample solution
 
-````@example 10-risk
+````@example 09-risk
 plt_sols = plot(suite, ns=nothing, label="\$X_t\$", linecolor=1)
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_sols, joinpath(@__DIR__() * "../../../../latex/img/", "evolution_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
 We also illustrate the convergence to a sample solution
 
-````@example 10-risk
+````@example 09-risk
 plt_suite = plot(suite)
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_suite, joinpath(@__DIR__() * "../../../../latex/img/", "approximation_riskmodel.pdf")) # hide
 nothing # hide
 ````
 
 We can also visualize the noises associated with this sample solution:
 
-````@example 10-risk
+````@example 09-risk
 plt_noises = plot(suite, xshow=false, yshow=true, label=["\$O_t\$" "\$R_t\$" "\$C_t\$"], linecolor=[1 2 3])
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_noises, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_noises.pdf")) # hide
 nothing # hide
 ````
 
 The actual surplus is $U_t = X_t - O_t - C_t$, so we may visualize a sample solution of the surplus by subtracting these two noises from the solution of the above RODE.
 
-````@example 10-risk
+````@example 09-risk
 plt_surplus = plot(range(t0, tf, length=ntgt+1), suite.xt .- suite.yt[:, 1] .- suite.yt[:, 3], xaxis="\$t\$", yaxis="\$u\$", label="\$U_t\$", linecolor=1)
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_surplus, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_surplus.pdf")) # hide
 nothing # hide
 ````
 
 Combining the plots
 
-````@example 10-risk
+````@example 09-risk
 tt = range(t0, tf, length=8ns[end]+1)
 
 ds = div(ntgt, 8ns[end])
@@ -294,7 +294,7 @@ plot!(plt_surplus_and_noises_twin, tt, suite.yt[begin:ds:end, 3], label="\$C_t\$
 plt_combined = plot(plt_result, plt_surplus_and_noises, legendfont=6, size=(800, 240), title=["(a) risk model" "(b) sample paths" ""], titlefont=10, bottom_margin=5mm, left_margin=5mm)
 ````
 
-````@example 10-risk
+````@example 09-risk
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "riskmodel_combined.pdf")) # hide
 nothing # hide
 ````
