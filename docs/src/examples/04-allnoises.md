@@ -269,7 +269,7 @@ for eachnoise in noise.processes
     push!(pmaxs, eachresult.pmax)
 end
 
-noises = ["Wiener"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "Hawkes"; "Transp."; "fBm"; "all"]
+noises = ["W"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "H"; "T"; "fBm"; "all"]
 ````
 
 We print them out for inclusing in the paper:
@@ -281,7 +281,7 @@ We print them out for inclusing in the paper:
 The following plot helps visualizing the result.
 
 ````@example 04-allnoises
-plt_eachnoise = plot(ylims=(-0.1, 1.4), ylabel="\$p\$", guidefont=10, legend=:bottomright)
+plt_eachnoise = plot(ylims=(-0.1, 1.5), ylabel="\$p\$", guidefont=10, legend=:bottomright)
 scatter!(plt_eachnoise, noises, ps, yerror=(ps .- pmins, pmaxs .- ps), xrotation = 30, label="computed")
 hline!(plt_eachnoise, [1.0], linestyle=:dash, label="theory",bottom_margin=5mm, left_margin=5mm)
 ````
