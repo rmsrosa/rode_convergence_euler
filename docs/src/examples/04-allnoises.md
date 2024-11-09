@@ -242,6 +242,66 @@ savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises
 nothing # hide
 ````
 
+Now we simulate a series of Random ODEs, each with one of the noises above.
+
+````@example 04-allnoises
+f(t, x, y, p) = - y^2 * x + y
+
+eachx0law = Normal()
+
+eachtarget = RandomEuler()
+eachmethod = RandomEuler()
+
+ps = Float64[result.p]
+pmins = Float64[result.pmin]
+pmaxs = Float64[result.pmax]
+noises = String["all noises combined"]
+
+for eachnoise in noise.processes
+    eachsuite = ConvergenceSuite(t0, tf, eachx0law, f, eachnoise, params, eachtarget, eachmethod, ntgt, ns, m)
+
+    eachresult = solve(rng, eachsuite)
+
+    @info "noise = $(typeof(eachnoise)) => p = $(eachresult.p) ($(eachresult.pmin), $(eachresult.pmax))"
+    push!(noises, string(nameof(typeof(eachnoise)))[begin:end-7])
+    push!(ps, eachresult.p)
+    push!(pmins, eachresult.pmin)
+    push!(pmaxs, eachresult.pmax)
+end
+
+noises = ["Wiener"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "Hawkes"; "Transp."; "fBm"; "all"]
+````
+
+We print them out for inclusing in the paper:
+
+````@example 04-allnoises
+[noises ps pmins pmaxs]
+````
+
+The following plot helps visualizing the result.
+
+````@example 04-allnoises
+plt_eachnoise = plot(ylims=(-0.1, 1.4), ylabel="\$p\$", guidefont=10, legend=:bottomright)
+scatter!(plt_eachnoise, noises, ps, yerror=(ps .- pmins, pmaxs .- ps), xrotation = 30, label="computed")
+hline!(plt_eachnoise, [1.0], linestyle=:dash, label="theory",bottom_margin=5mm, left_margin=5mm)
+````
+
+Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^2 X_t + Y_t$ for a series of different noise $\{Y_t\}_t$ (scattered dots: computed values; dashed line: expected $p = 1;$ with 95% confidence interval).
+
+````@example 04-allnoises
+savefig(plt_eachnoise, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_noise_allnoises.pdf")) # hide
+nothing # hide
+````
+
+````@example 04-allnoises
+plt_combined = plot(plt_eachnoise, plt_noises, legendfont=6, size=(800, 240), title=["(a) non-homogeneous linear system" "(b) sample paths of all noises"], titlefont=10, bottom_margin=5mm, left_margin=5mm)
+````
+
+````@example 04-allnoises
+savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.pdf")) # hide
+nothing # hide
+````
+
 ---
 
 *This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
