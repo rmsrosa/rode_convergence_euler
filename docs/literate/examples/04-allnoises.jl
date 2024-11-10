@@ -1,17 +1,17 @@
 # # Linear system with all implemented noises
 #
-# This time we consider a linear *system* of equations with a vector-valued noise composed of all the implemented noises.
+# This time we consider linear equations in two different ways. Either a series of scalar equations each with a different noise or a system of equations with a vector-valued noise composed of all the implemented noises.
 
 # ## The equation
 
 # More precisely, we consider the RODE
 # ```math
 #   \begin{cases}
-#     \displaystyle \frac{\mathrm{d}\mathbf{X}_t}{\mathrm{d} t} = - \|\mathbf{Y}_t\|^2 \mathbf{X}_t + \mathbf{Y}_t, \qquad 0 \leq t \leq T, \\
-#   \left. \mathbf{X}_t \right|_{t = 0} = \mathbf{X}_0,
+#     \displaystyle \frac{\mathrm{d}{X}_t}{\mathrm{d} t} = - \|{Y}_t\|^2 {X}_t + {Y}_t, \qquad 0 \leq t \leq T, \\
+#   \left. {X}_t \right|_{t = 0} = {X}_0,
 #   \end{cases}
 # ```
-# where $\{\mathbf{Y}_t\}_{t\geq 0}$ is a vector-valued noise with each component being each of the implemented noises.
+# where $\{{Y}_t\}_{t\geq 0}$ is either a scalar noise with one of the many implemented noises or a vector-valued noise with all the noises, each as an independent component of the vector process.
 #
 # Again, the *target* solution is construced by solving the system via Euler method at a much higher resolution.
 #
@@ -32,12 +32,6 @@ using RODEConvergence
 
 rng = Xoshiro(123)
 nothing # hide
-
-# Next the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
-
-f!(dx, t, x, y, p) = (dx .= .- sum(abs2, y) .* x .+ y)
-
-params = nothing
 
 # The time interval is given by the end points
 
@@ -114,16 +108,24 @@ nothing # hide
 #
 # Notice we chose the hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that the strong convergence is also of order 1, just like for the other types of noises in `noise`. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
 #
-# Now we set up the initial condition, taking into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
+# ### The system with all noises combined
+#
+# Now we define the right hand side of the system of equations, in the *in-place* version, for the sake of performance. Here, the vector variable `dx` is updated with the right hand side of the system of equations. The norm squared of the noise `y` at a given time `t` is computed via `sum(abs2, y)`.
+
+f!(dx, t, x, y, p) = (dx .= .- sum(abs2, y) .* x .+ y)
+
+params = nothing
+
+# The initial condition for the system takes into account the number of equations in the system, which is determined by the dimension of the vector-valued noise.
 
 x0law = MvNormal(zeros(length(noise)), I)
 
-# We finally add some information about the simulation, for the caption of the convergence figure.
+# We now add some information about the simulation, for the caption of the convergence figure.
 
 info = (
-    equation = "\$\\mathrm{d}\\mathbf{X}_t/\\mathrm{d}t = - \\| \\mathbf{Y}_t\\|^2 \\mathbf{X}_t + \\mathbf{Y}_t\$",
-    noise = "vector-valued noise \$\\{\\mathbf{Y}_t\\}_t\$ with all the implemented noises",
-    ic = "\$\\mathbf{X}_0 \\sim \\mathcal{N}(\\mathbf{0}, \\mathrm{I})\$"
+    equation = "\$\\mathrm{d}{X}_t/\\mathrm{d}t = - \\| {Y}_t\\|^2 {X}_t + {Y}_t\$",
+    noise = "vector-valued noise \$\\{{Y}_t\\}_t\$ with all the implemented noises",
+    ic = "\${X}_0 \\sim \\mathcal{N}({0}, \\mathrm{I})\$"
 )
 nothing # hide
 
@@ -132,7 +134,7 @@ nothing # hide
 target = RandomEuler(length(noise))
 method = RandomEuler(length(noise))
 
-# ### Order of convergence
+# #### Order of convergence for the system with all the noises
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
 
@@ -158,7 +160,7 @@ println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)
 nothing # hide
 
 # 
-# ### Plots
+# #### Plots
 # 
 # We illustrate the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
 
@@ -186,7 +188,7 @@ nothing # hide
 
 # and combined, with their sum squared, as it enters the homogenous term,
 
-plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|\\mathbf{Y}_t\\right\\|\\right\\|^2\$")
+plot(suite, xshow=false, yshow= y -> sum(abs2, y), label="\$\\left\\|\\left\\|{Y}_t\\right\\|\\right\\|^2\$")
 
 # We finally combine all the convergence plot and the noises into a single plot, for the article:
 
@@ -199,7 +201,7 @@ plt_combined = plot(plt_result, plt_noises, legendfont=6, size=(800, 240), title
 savefig(plt_combined, joinpath(@__DIR__() * "../../../../latex/img/", "allnoises_combined.pdf")) # hide
 nothing # hide
 
-# ## Univariate RODE with the individual noises
+# ### Scalar equations with the individual noises
 
 # Now we simulate a series of Random ODEs, each with one of the noises above, instead of the system with all combined noises.
 
