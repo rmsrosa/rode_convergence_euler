@@ -4,7 +4,29 @@ EditURL = "../../literate/examples/05-fBm_linear.jl"
 
 # Linear RODE with fractional Brownian motion
 
+Here, we consider a linear equation driven by a fractional Brownian motion (fBm) noise. This noise has a parameter $H,$ in the range $0 < H < 1,$ which is called the Hurst parameter and controls the correlation between the increments of the process.
+
+When $0 < H < 1/2,$ the increments are negatively correlated, meaning that there is a higher chance of an increment to be opposite to a previous increment, yielding "rougher" paths, while for $1/2 < H < 1,$ the correlation is positive, yielding "smoother" paths. For $H = 1/2,$ the increments are uncorrelated and the fBm is a Wiener process.
+
+For $H \neq 1/2,$ this process is not a Markov process and, in particular, is not a semi-martingale. Thus, the result in the paper does not apply, and the strong convergence is not necessarily 1. A recent previous result (see [Wang, Cao, Han, & Kloeden (2021)](https://doi.org/10.1007/s11075-020-00967-w)) estimates the order of convergence to be $H,$ which is the Hölder exponent of the sample paths. We, however, show, for this particular linear equation with the fBm in the non-homogeneous term, that the convergence is of order $\min\{H + 1/2, 1\},$ hence higher than the rate $H$ in previously known. This rate coincides with the order 1 in the range $1/2 \leq H < 1,$ but is smaller than 1 in the range $0 < H < 1/2,$ which is fine since, as we said above, this is not a semi-martingale for $H$ in this range.
+
 ## The equation
+
+More precisely, we consider the RODE
+```math
+  \begin{cases}
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = - X_t + B^H_t, \qquad 0 \leq t \leq T, \\
+  \left. X_t \right|_{t = 0} = X_0,
+  \end{cases}
+```
+where the noise $\{B^H_t\}_t$ is assumed to be a fractional Brownian motion (fBm) with Hurst parameter $0 < H < 1$.
+
+The explicit solution is
+```math
+  X_t = e^{-t}X_0 + \int_0^t e^{-(t-s)}B^H_s\;\mathrm{d}s,
+```
+
+We do not compute numerically this integral solution. Instead, we compare the Euler approximations with another Euler approximation in a much finer mesh.
 
 ## Numerical approximation
 
@@ -169,7 +191,7 @@ plot!(plt, 0.0:0.5:1.0, p -> min(p + 0.5, 1.0), linestyle=:dash, label="current"
 plot!(plt, 0.0:0.5:1.0, p -> p, linestyle=:dot, label="previous")
 ````
 
-Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fractional Brownian motion process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2;$ dash-dot line: previous theory $p = H.$).
+Strong order $p$ of convergence of the Euler method for $\mathrm{d}X_t/\mathrm{d}t = - Y_t^H X_t$ with a fBm process $\{Y_t^H\}_t$ for various values of the Hurst parameter $H$ (scattered dots: computed values; dashed line: expected $p = H + 1/2;$ dash-dot line: previous theory $p = H.$).
 
 ````@example 05-fBm_linear
 savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/", "order_dep_on_H_fBm.pdf")) # hide
