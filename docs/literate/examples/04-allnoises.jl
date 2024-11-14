@@ -1,5 +1,5 @@
 # # Linear system with all implemented noises
-#
+# 
 # This time we consider linear equations in two different ways. Either a series of scalar equations each with a different noise or a system of equations with a vector-valued noise composed of all the implemented noises.
 
 # ## The equation
@@ -49,7 +49,7 @@ nsample = ns[[1, 2, 3]]
 
 # The number of simulations for the Monte Carlo estimate is set to
 
-m = 80
+m = 92
 nothing # hide
 
 # Now we define all the noise parameters
@@ -179,7 +179,7 @@ plot(plts..., legend=false)
 
 # We can also visualize the noises associated with this sample solution, both individually, as they enter the non-homogenous term,
 
-plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "Hawkes" "Transport" "fBm"])
+plt_noises = plot(suite, xshow=false, yshow=true, linecolor=:auto, label=["W" "OU" "gBm" "hlp" "cP" "sP" "H" "T" "fBm"], legend=:topright)
 
 #
 
@@ -228,21 +228,22 @@ noises = String["all noises combined"]
 for eachnoise in noise.processes
     eachsuite = ConvergenceSuite(t0, tf, eachx0law, f, eachnoise, params, eachtarget, eachmethod, ntgt, ns, m)
 
-    eachresult = solve(rng, eachsuite)
+    @time eachresult = solve(rng, eachsuite)
     
     @info "noise = $(typeof(eachnoise)) => p = $(eachresult.p) ($(eachresult.pmin), $(eachresult.pmax))"
+
     push!(noises, string(nameof(typeof(eachnoise)))[begin:end-7])
     push!(ps, eachresult.p)
     push!(pmins, eachresult.pmin)
     push!(pmaxs, eachresult.pmax) 
 end
 
-noises_short = ["all"; "W"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "H"; "T"; "fBm"]
-
 # We print them out for inclusing in the paper:
 
+noises_short = ["all"; "W"; "OU"; "gBm"; "hlp"; "cP"; "sP"; "H"; "T"; "fBm"]
+
 for (noisej, noiseshortj, pj, pminj, pmaxj) in zip(noises, noises_short, ps, pmins, pmaxs)
-    println("$noisej ($noiseshortj) & $(round(pj, sigdigits=6)) & $(round(pminj, sigdigits=6)) & $(round(pmaxj, sigdigits=6)) ")
+    println("$noisej ($noiseshortj) & $(round(pj, sigdigits=6)) & $(round(pminj, sigdigits=6)) & $(round(pmaxj, sigdigits=6)) \\\\")
 end
 
 # The following plot helps in visualizing the result.
