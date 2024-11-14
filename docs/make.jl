@@ -20,7 +20,7 @@ include(joinpath(@__DIR__(), "literate.jl"))
 
 @time makedocs(
     sitename = "Euler method for RODEs",
-    repo = "https://github.com/rmsrosa/rode_conv_em",
+    repo = "https://github.com/rmsrosa/rode_convergence_euler",
     pages = [
         "Overview" => "index.md",
         "Theory" => [
@@ -54,16 +54,16 @@ include(joinpath(@__DIR__(), "literate.jl"))
     draft = "draft" in ARGS,
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", "false") == "true",
-        canonical = "https://github.com/rmsrosa/rode_conv_em",
+        canonical = "https://github.com/rmsrosa/rode_convergence_euler",
         edit_link = "main",
-        repolink = "https://github.com/rmsrosa/rode_conv_em",
+        repolink = "https://github.com/rmsrosa/rode_convergence_euler",
     ),
     modules = [RODEConvergence],
 )
 
 if get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
     deploydocs(
-        repo = "github.com/rmsrosa/rode_conv_em.git",
+        repo = "github.com/rmsrosa/rode_convergence_euler.git",
         devbranch = "main",
         forcepush = true,
     )

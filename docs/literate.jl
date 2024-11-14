@@ -24,7 +24,7 @@ for fn in filter(f -> match(r"^\d\d\-(.*)\.jl", f) !== nothing, readdir(LITERATE
         GENERATED_DIR,
         documenter=true,
         execute=false,
-        repo_root_url = "https://github.com/rmsrosa/rode_conv_em"
+        repo_root_url = "https://github.com/rmsrosa/rode_convergence_euler"
     )
     push!(generated_examples, replace(joinpath(GENERATED_RELATIVE_DIR, fn), ".jl" => ".md"))
 end
