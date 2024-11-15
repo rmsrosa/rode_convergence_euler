@@ -1,7 +1,7 @@
 name = "RODEConvergence"
 uuid = "3e0417cb-ed7b-43e1-a831-672d2fe3e1aa"
 authors = ["Ricardo M. S. Rosa <rmsrosa@gmail.com>"]
-version = "0.2.0"
+version = "1.0.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
