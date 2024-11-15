@@ -1,6 +1,6 @@
 ## Overview
 
-These are the companion notes for the paper "Improved error estimate for the order of strong convergence of the Euler method for random ordinary differential equations driven by semi-martingale noises", by Peter E. Kloeden and Ricardo M. S. Rosa.
+These are the companion notes for the paper "Strong order-one convergence of the Euler method for random ordinary differential equations driven by semi-martingale noises", by Peter E. Kloeden and Ricardo M. S. Rosa.
 
 We briefly review the main results of the paper and reveal the numerical codes used for the examples presented in the paper.
 
