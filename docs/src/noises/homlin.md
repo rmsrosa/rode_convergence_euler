@@ -1,9 +1,5 @@
 # Homogeneous linear Itô process noise
 
-```@meta
-    Draft = false
-```
-
 A classical type of noise is the geometric Brownian motion (gBm) process $\{Y_t\}_t$ satisfying
 ```math
 \mathrm{d}Y_t = \mu Y_t \;\mathrm{d}t + \sigma Y_t \;\mathrm{d}W_t,
