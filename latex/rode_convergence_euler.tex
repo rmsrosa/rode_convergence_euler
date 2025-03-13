@@ -73,7 +73,7 @@
 \keywords{random ordinary differential equations, Euler method, strong convergence, It\^o process, finite-variation process, semi-martingale, fractional Brownian motion}.
 
 \begin{abstract}
-    It is well known that the Euler method for a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. This order is known to increase to $1$ in some special cases. Here, it is proved that, in many more typical cases, further structures on the noise can be exploited so that the strong convergence is of order 1. More precisely, we prove so for any semi-martingale noise. This includes It\^o diffusion processes, point-process noises, transport-type processes with sample paths of bounded variation, and time-changed Brownian motion. The result follows from estimating the global error as an iterated integral over both large and small mesh scales, and by switching the order of integration to move the critical regularity to the large scale. The work is complemented with numerical simulations showing the optimality of the strong order 1 convergence in those cases, and with an example with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2,$ which is not a semi-martingale and for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the semi-martingale case, but still higher than the order $H$ of convergence expected from previous works.
+    It is well known that the Euler method for a random ordinary differential equation $\mathrm{d}X_t/\mathrm{d}t = f(t, X_t, Y_t)$ driven by a stochastic process $\{Y_t\}_t$ with $\theta$-H\"older sample paths is estimated to be of strong order $\theta$ with respect to the time step, provided $f=f(t, x, y)$ is sufficiently regular and with suitable bounds. This order is known to increase to $1$ in some special cases. Here, it is proved that, in many more typical cases, further structures on the noise can be exploited so that the strong convergence is of order 1. In fact, we prove so for any semi-martingale noise. This includes It\^o diffusion processes, point-process noises, transport-type processes with sample paths of bounded variation, and time-changed Brownian motion. The result follows from estimating the global error as an iterated integral over both large and small mesh scales, and by switching the order of integration to move the critical regularity to the large scale. The work is complemented with numerical simulations showing the optimality of the strong order 1 convergence in those cases, and with an example with fractional Brownian motion noise with Hurst parameter $0 < H < 1/2,$ which is not a semi-martingale and for which the order of convergence is $H + 1/2$, hence lower than the attained order 1 in the semi-martingale case, but still higher than the order $H$ of convergence expected from previous works.
 \end{abstract}
 
 \maketitle
@@ -289,7 +289,7 @@ has a unique solution $t\mapsto X_t(\omega)$, for the realizations $X_0 = X_0(\o
 
 Adding and subtracting $f(s, 0, Y_s)$ and using assumption \cref{standinghypothesisLipschitzbound} yield the pathwise bound
 \[
-    \|X_t\| \leq \|X_0\| + \int_0^t \left(\|f(s, 0, Y_s)\| + L(\|Y_t\|)\|X_t\|\right)\;\mathrm{d}s,
+    \|X_t\| \leq \|X_0\| + \int_0^t \left(\|f(s, 0, Y_s)\| + L(\|Y_s\|)\|X_s\|\right)\;\mathrm{d}s,
 \]
 almost surely. Using Grownwall's inequality, we obtain the following result.
 \begin{lemma}
@@ -398,7 +398,7 @@ The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[T
 \[
     [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta Y_s\right)^2,
 \]
-which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_t^0 = [Y, Y]_0 - \left(\Delta Y_0\right)^2 = Y_0^2 - Y_0^2 = 0.$
+which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \left(\Delta Y_0\right)^2 = Y_0^2 - Y_0^2 = 0.$
 
 The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
 
@@ -432,7 +432,7 @@ We also have
     \sum_{s\in J_{Y}} \|\Delta F_t\| \leq V(\{F_t\}_t; I) < \infty.
 \end{equation}
 
-In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0^2$ and $\Delta [Y, Y]_t = (\Delta Y)_t^2$ componentwise (see \cite[Theorem II.22]{Protter2005}),
+In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0^2$ and $\Delta [Y, Y]_t = (\Delta Y_t)^2$ componentwise (see \cite[Theorem II.22]{Protter2005}),
 \begin{equation}
     \label{estimatejumpsemimartingale}
     \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \leq \|[Y, Y]_T\| < \infty.
@@ -469,7 +469,7 @@ For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the B
 \]
 for $p \geq 1$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
 \[
-    \mathbb{E}\left[[Z, Z]_t\right] \leq 4c_p\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
+    \mathbb{E}\left[[Z, Z]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
 \]
 for any $t\in I,$ and then
 \begin{equation}
@@ -483,15 +483,15 @@ This, together with \cref{estimatejumpsemimartingale}, also yields
     \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
-A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^k$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
+A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^d$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
 \begin{equation}
     f(Y_t) - f(Y_0) = \int_{0^+}^t Df(Y_{s^-}) \;\mathrm{d}Y_s + \sum_{0 < s \leq t} \left( f(Y_s) - f(Y_{s^{-}}) - Df(Y_{s^-})\Delta Y_s\right).
 \end{equation}
 The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J_{Y}$. The summation can be written as an integral with respect to a jump measure (see \cref{changeofvariablesformulasemimartingale} for the full expression), but we keep it as a summation for simplicity.
 
-The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, k}$ and $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, and
+The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, d}$ and $Y_t = ((Y_t)_l)_{l=1, \ldots, d}$, and
 \[
-    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, k} = \left( \sum_{j=1, \ldots, k} \partial y_j f_i(y) (Y_t)_j \right)_{i=1, \ldots, k}.
+    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, d} = \left( \sum_{l=1, \ldots, k} \partial y_l f_i(y) (\Delta Y_t)_l \right)_{i=1, \ldots, d}.
 \]
 
 When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\geq 0}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula for FV processes:
@@ -540,7 +540,7 @@ In this section, we derive the following integral formula for the global error:
     
     Subtracting the Euler step from the pathwise solution on a single time step yields
     $$
-    X_{t_j} - X_{t_j}^N = X_{t_{j-1}} - X_{t_{j-1}}^N + \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(t, X_t^N, Y_t) \right)\;\mathrm{d}s.
+    X_{t_j} - X_{t_j}^N = X_{t_{j-1}} - X_{t_{j-1}}^N + \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
     $$
 
     Adding and subtracting appropriate terms yield
@@ -548,7 +548,7 @@ In this section, we derive the following integral formula for the global error:
         \label{singlestep}
         \begin{aligned}
             X_{t_j} - X_{t_j}^N  = & X_{t_{j-1}} - X_{t_{j-1}}^N \\
-            = &  \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
+            & + \int_{t_{j-1}}^{t_j} \left( f(s, X_s, Y_s) - f(s, X_{t_{j-1}}, Y_s) \right)\;\mathrm{d}s \\ 
             & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}, Y_s) - f(s, X_{t_{j-1}}^N, Y_s) \right)\;\mathrm{d}s \\
             & + \int_{t_{j-1}}^{t_j} \left( f(s, X_{t_{j-1}}^N, Y_s) - f(t_{j-1}, X_{t_{j-1}}^N, Y_{t_{j-1}}) \right)\;\mathrm{d}s.
         \end{aligned}
@@ -566,21 +566,21 @@ In this section, we derive the following integral formula for the global error:
 
 \section{Basic estimates for the global error}
 
-Here we derive an estimate which is the basis for the convergence estimate. For that, we use the following classical discrete version of the Grownwall Lemma.
+Here we derive an estimate which is the basis for the convergence estimate. For that, we use the following classical discrete version of the Grownwall Lemma, which can be deduce from e.g. \cite[Lemma 1]{Sugiyama1969}.
 
 \begin{lemma}[Discrete Gronwall Lemma]
     \label{lemdiscretegronwall}
     Let $(e_j)_j$ be a (finite or infinite) sequence of positive numbers starting at $j=0$ and satisfying
     \begin{equation}
         \label{integralgronwall}
-        e_j \leq \sum_{i=0}^{j-1} a_i e_i + b,
+        e_j \leq \sum_{i=0}^{j-1} a_i e_i + b_i,
     \end{equation}
-    for every $j$, and where $a_i, b \geq 0$. Then, $e_j \leq b e^{\sum_{i=0}^{j-1} a_i},$ for all $j.$
+    for every $j$, and where $a_i, b_i \geq 0$, with $b_i$ nondecreasing. Then, for all $j,$ we have
+    \begin{equation}
+        \label{estimategronwall}
+        e_j \leq b_j e^{\sum_{i=0}^{j-1} a_i}.
+    \end{equation}
 \end{lemma}
-
-\begin{proof}
-    See e.g. \cite[Lemma 1]{Sugiyama1969}, with $m=j,$ $u_m = e_j,$ $g_m = b \geq 0$ constant, and $K_k = a_i \geq 0.$
-\end{proof}
 
 With that, we are ready to prove our basic estimate for the global error.
 \begin{proposition}[Basic strong estimate]
@@ -614,7 +614,7 @@ With that, we are ready to prove our basic estimate for the global error.
         \|X_{t_j} - X_{t_j}^N\| \leq \|X_0 - X_0^N\| + c_L \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s + c_L \sum_{i=0}^{j-1} \|X_{t_i} - X_{t_i}^N\| \Delta t \\
         + \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|.
     \end{multline*}
-    This can be cast in the form of \cref{integralgronwall}, with a constant coefficient $a_i = c_L.$ Then, using the discrete Gronwall \cref{lemdiscretegronwall}, we obtain
+    This can be cast in the form of \cref{integralgronwall}, with a constant coefficient $a_i = c_L \Delta t.$ Then, using the discrete Gronwall \cref{lemdiscretegronwall}, we obtain from \eqref{estimategronwall} that
     \begin{multline}
         \label{Etjbasicbound}
             \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + c_L \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
@@ -657,7 +657,7 @@ As for the second term, which only concerns the solution itself, not the approxi
     \begin{align*}
         \mathbb{E}\bigg[\int_0^{t_j}  \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s\bigg] & \leq \Delta t_N  \bigg(\int_0^{t_j} \mathbb{E}[\|f(s, 0, Y_s)\|] \;\mathrm{d}s \\
         & \quad + c_L\int_0^{t_j}\left(\mathbb{E}[\|X_0\|] + \int_0^s \mathbb{E}[\|f(\xi, 0, Y_\xi)\|]\;\mathrm{d}\xi\right)e^{c_L s} \;\mathrm{d}s\bigg) \\
-        & = \Delta t_N  \bigg(\int_0^{t_j} \mathbb{E}[\|f(s, 0, Y_s)\|] \;\mathrm{d}s \\
+        & \leq \Delta t_N  \bigg(\int_0^{t_j} \mathbb{E}[\|f(s, 0, Y_s)\|] \;\mathrm{d}s \\
         & \quad + \left(\mathbb{E}[\|X_0\|] + \int_0^{t_j} \mathbb{E}[\|f(\xi, 0, Y_\xi)\|]\;\mathrm{d}\xi\right)\left(e^{c_L t_j} - 1\right) \bigg).
     \end{align*}
     This simplifies to \cref{estimatesecondterminglobalstrongerrorintegral}.
@@ -713,7 +713,7 @@ We now prove the desired strong order 1 convergence.
         \end{aligned}
     \end{equation}
     
-    The expectation of the first term in \cref{smlasttermerror} is estimated using \cref{ftfyunifboundcadlagfvpartialt}, \cref{XNtmeanboundLXMt}, and \cref{EX0X0Nunif}, so that
+    The expectation of the first term in \cref{smlasttermerror} is estimated using \cref{ftfyunifboundcadlagfvpartialt}, so that
     \begin{equation}
         \label{strongorderterm1}
         \begin{aligned}
@@ -742,15 +742,15 @@ We now prove the desired strong order 1 convergence.
         \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\|\right] \leq c_4 \Delta t_N \mathbb{E}\left[ V(\{F_t\}_t; [0, t_j]) \right].
     \end{equation}
     
-    For the second integral on the right hand side of \cref{strongorderterm2}, we once again switch the order of integration, then use the It\^o isometry for local martingales and then again the bound \cref{ftfyunifboundcadlagfvpartialy}, so that
+    For the second integral on the right hand side of \cref{strongorderterm2}, we once again switch the order of integration, then use the Lyapunov inequality, the It\^o isometry for local martingales, and then again the bound \cref{ftfyunifboundcadlagfvpartialy}, so that
     \begin{align*}
         \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\
         & = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
-        & \leq \mathbb{E}\left[\left(\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right)^2\right]^{1/2} \\
+        & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|^2\right]^{1/2} \\
         & \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
         & \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
         & \leq c_4\Delta t_N\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j},\right]^{1/2},
+        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j} - [Z, Z]_0\right]^{1/2},
     \end{align*}
     where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that $[Z, Z]_0 = Z_0^2 = 0,$ we obtain
     \begin{equation}
@@ -760,21 +760,21 @@ We now prove the desired strong order 1 convergence.
     
     Now we move to the third term in \cref{smlasttermerror}. We use the bound \cref{ftfyunifboundcadlagfvpartialyy} on the second derivative of $D_{yy}f$ to write
     \begin{equation*}
-        \left\| f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \Delta Y_\xi \right\| \leq \frac{c_7}{2}\left( \Delta Y_\xi \right)^2.
+        \left\| f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \Delta Y_\xi \right\| \leq \frac{c_7}{2}\|\Delta Y_\xi\|^2.
     \end{equation*}
     Recall $\tau^N(s) = \tau^N(\xi)$ for $\xi \leq s < \tau^N(\xi) + \Delta t_N$ and $\tau^N(\xi) + \Delta t_N- \xi \leq \Delta t_N$. Thus,
     \begin{align*}
         \Bigg\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \bigg(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - & f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\bigg) \;\mathrm{d}s\Bigg\| \\
-        & \qquad \leq \frac{c_7}{2}\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
-        & \qquad \leq \frac{c_7}{2}\sum_{0 < \xi \leq t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} \left( \Delta Y_\xi \right)^2\;\mathrm{d}s \\
-        & \qquad \leq \frac{c_7}{2} \Delta t_N  \sum_{0 < \xi \leq t_j}\left(\Delta Y_\xi \right)^2.
+        & \qquad \leq \frac{c_7}{2}\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \left\| \Delta Y_\xi \right\|^2\;\mathrm{d}s \\
+        & \qquad \leq \frac{c_7}{2}\sum_{0 < \xi \leq t_j}\int_\xi^{\tau^N(\xi) + \Delta t_N} \left\| \Delta Y_\xi \right\|^2\;\mathrm{d}s \\
+        & \qquad \leq \frac{c_7}{2} \Delta t_N  \sum_{0 < \xi \leq t_j}\left\|\Delta Y_\xi \right\|^2.
     \end{align*}
     Taking the expectation,
     \begin{multline}
         \label{strongorderterm3}
         \mathbb{E}\Bigg[\Bigg\|\int_0^{t_j} \sum_{\tau^N(s) < \xi \leq s} \bigg(f(\xi, X_{\tau^N(s)}^N, Y_\xi) - f(\xi, X_{\tau^N(s)}^N, Y_{\xi^{-}}) \\
         - D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\Delta Y_\xi\bigg) \;\mathrm{d}s\Bigg\|\Bigg]
-        \leq \frac{c_7}{2} \Delta t_N \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left( \Delta Y_\xi \right)^2\right\|\right].
+        \leq \frac{c_7}{2} \Delta t_N \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left\| \Delta Y_\xi \right\|^2\right\|\right].
     \end{multline}
 
     The final term in \cref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
@@ -795,10 +795,10 @@ We now prove the desired strong order 1 convergence.
     \end{equation}
     where
     \begin{multline*}
-            C_T = c_1 T + c_2\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] \\
-            + c_4\mathbb{E}\left[ [Z, Z]_T\right]^{1/2} + \frac{c_7}{2} \mathbb{E}\left[\left\|\sum_{0 < s \leq T}\left( \Delta Y_s \right)^2\right\|\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
+            C_T = c_1 T + c_2T\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3T\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] \\
+            + c_4\mathbb{E}\left[ [Z, Z]_T\right]^{1/2} + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
     \end{multline*}
-    Thanks to \cref{CMmeanbound}, \cref{EX0strongbound}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
+    Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
 \end{proof}
 
 \begin{remark}
