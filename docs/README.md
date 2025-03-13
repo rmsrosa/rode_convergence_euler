@@ -4,7 +4,9 @@
 
 1. Make sure you have [Julia](https://julialang.org)  installed, the lates version 1.11.x preferably, but it should work in other recent versions;
 2. Change directory to the root of the project;
-3. Make sure you have all the packages in the `docs/` environment instantiated by going to the Julia REPL and typing `]activate docs; instantiate`.
+3. Activate the `docs/` environment with `]activate docs`;
+4. Instantiate the local package `RODEConvergeEuler` in dev mode with `]dev ../rode_convergence_euler`, or with any other directory name that you used to clone the repository into.
+5. Make sure you have all the packages in the `docs/` environment instantiated by typing `]instantiate`.
 
 ## Generate the documentation directly with Documenter
 
