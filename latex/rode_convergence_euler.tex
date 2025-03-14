@@ -7,6 +7,7 @@
 \usepackage[latin1]{inputenc}
 
 \usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+\crefformat{equation}{#2(#1)#3}
 \crefformat{enumi}{#2(#1)#3}
 
 %The Layout
@@ -27,8 +28,6 @@
 \theoremstyle{definition} % definition style for the following 
 \newtheorem{remark}{Remark}[section]
 \newtheorem{fact}{Fact}[section]
-
-\creflabelformat{enumerate}{#2[(#1)]#3}
 
 %\newcommand{\comment}[1]{\textcolor{red}{\framebox{\parbox{0.9\textwidth}{\textbf{#1}}}}}
 \newcommand{\comment}[1]{\textcolor{red}{\textbf{#1}}}
