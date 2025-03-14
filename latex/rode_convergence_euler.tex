@@ -374,11 +374,11 @@ for $j = 0, \ldots, N.$ With that, we obtain the following result, upon taking t
 
 For the theory of semi-martingales, we refer the reader to \cite{Protter2005} and \cite{Metivier1982}. The main idea is that \emph{semi-martingales} are stochastic processes $\{Y_t\}_{t\geq 0}$ which are c\`adl\`ag, adapted, and ``good integrators,'' in the sense that the sums
 \[
-    I_Y(H) = H_0 Y_0 + \sum_{j=1}^n H_i(Y_{t_j}-Y_{t_{j-1}})
+    I_Y(H) = H_0 Y_0 + \sum_{i=1}^n H_i(Y_{t_i}-Y_{t_{i-1}})
 \]
 are continuous functions from the space of \emph{simple predictable} processes
 \[
-    H_t = H_0 \chi_{0}(t) + \sum_{j=1}^n H_j \chi_{(T_{j-1}, T_j]},
+    H_t = H_0 \chi_{0}(t) + \sum_{i=1}^n H_j \chi_{(T_{i-1}, T_i]},
 \]
 to the space of finitely-valued random variables, where $0=T_1 < \ldots < T_n,$ are stopping times, $H_j \in \mathcal{F}_{T_j},$ and $|H_j| < \infty$ almost surely, with the former space endowed with the topology of uniform convergence in $(t, \omega)\in [0,\infty)\times \Omega,$ and the latter, with the topology of convergence in probability. We recall the definitions and some facts about (scalar or vector-valued) semi-martingale processes.
 
@@ -396,9 +396,9 @@ or, equivalently, by the formula (which is a particular case of an ``integration
 \[
     [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
 \]
-In the vector-valued case, denoting $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = (([Y, Y]_t)_{i,l})_{i,l=1,\ldots, k},$ with
+In the vector-valued case, denoting $Y_t = ((Y_t)_l)_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = (([Y, Y]_t)_{l_1,l_2})_{l_1,l_2=1,\ldots, k},$ with
 \[
-    ([Y, Y]_t)_{i,l} = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n ((Y_{t_j})_j - (Y_{t_{j-1}})_i) ((Y_{t_j})_l - (Y_{t_{j-1}})_l),
+    ([Y, Y]_t)_{l_1,l_2} = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n ((Y_{t_j})_{l_1} - (Y_{t_{j-1}})_{l_1}) ((Y_{t_j})_{l_2} - (Y_{t_{j-1}})_{l_2}),
 \]
 and
 \[
