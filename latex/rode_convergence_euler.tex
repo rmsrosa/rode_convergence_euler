@@ -34,6 +34,7 @@
 \newcommand{\doshow}[1]{#1}
 \newcommand{\dontshow}[1]{}
 \newcommand{\extra}[1]{\dontshow{#1}} % use \show to show the extra stuff or \donotshow not to show it
+\newcommand{\tr}{{\operatorname{tr}}}
 
 %\mathchardef\mhyphen="2D
 
@@ -379,15 +380,15 @@ are continuous functions from the space of \emph{simple predictable} processes
 \[
     H_t = H_0 \chi_{0}(t) + \sum_{j=1}^n H_j \chi_{(T_{j-1}, T_j]},
 \]
-to the space of finitely-valued random variables, where $0=T_1 < \ldots < T_n,$ are stopping times, $H_j \in \mathcal{F}_{T_j},$ and $|H_j| < \infty$ almost surely, with the former space endowed with the topology of uniform convergence in $(t, \omega)\in [0,\infty)\times \Omega,$ and the latter, with the topology of convergence in probability. We recall the definitions and some facts about semi-martingale processes.
+to the space of finitely-valued random variables, where $0=T_1 < \ldots < T_n,$ are stopping times, $H_j \in \mathcal{F}_{T_j},$ and $|H_j| < \infty$ almost surely, with the former space endowed with the topology of uniform convergence in $(t, \omega)\in [0,\infty)\times \Omega,$ and the latter, with the topology of convergence in probability. We recall the definitions and some facts about (scalar or vector-valued) semi-martingale processes.
 
 A function defined on a real interval is called \emph{c\`adl\`ag} when it is right continuous and with left limits (``continue \`a droite, limite \`a gauche", in French). A \emph{c\`adl\`ag process} is a stochastic process $\{Y_t\}_{t\geq 0}$ whose sample paths are almost surely c\`adl\`ag paths. Thus, $\{Y_t\}_{t\geq 0}$ is c\`adl\`ag process when for almost every $\omega\in \Omega$ and for all $t\geq 0$, we have that $\lim_{s\rightarrow t^+} Y_s(\omega) = Y_t(\omega)$ (right continuous) and the limit $\lim_{s \rightarrow t^-} Y_s(\omega)$ exists (left limit).
 
 For a c\`adl\`ag process such as semi-martingales, we define the left-limit process $Y_{t^{-}} = \lim_{t \rightarrow t^-} Y_s$ and the jump process $\Delta Y_t = Y_t - Y_{t^{-}},$ with the usual convention that $Y_{0^-} = 0,$ and thus $\Delta Y_0 = Y_0.$
 
-Almost surely, the sample paths of the jump process are zero except possibly at a countable number of points, denoted $J_{Y}$, i.e. for almost every $\omega\in \Omega$, there exists a countable set $J_{Y}(\omega) \subset I$ for which $\Delta Y_t(\omega)$ is zero on each connected component of $I\setminus J_{Y}(\omega)$. In fact, for any given $\varepsilon > 0$, the set of times for which the jump $|\Delta Y_t|$ is larger than or equal to $\varepsilon$ is finite. As a consequence, each sample path is continuous except on the countable null set $J_{Y}.$
+Almost surely, the sample paths of the jump process are zero except possibly at a countable number of points, denoted $J_{Y}$, i.e. for almost every $\omega\in \Omega$, there exists a countable set $J_{Y}(\omega) \subset I$ for which $\Delta Y_t(\omega)$ is zero on each connected component of $I\setminus J_{Y}(\omega)$. In fact, for any given $\varepsilon > 0$, the set of times for which the jump $\|\Delta Y_t\|$ is larger than or equal to $\varepsilon$ is finite. As a consequence, each sample path is continuous except on the countable null set $J_{Y}.$
 
-Another important process associated with a semi-martingale is the \emph{quadratic variation} $\{[Y, Y]_t\}_{t\geq 0}$ defined as the limit of the summations of quadratic increments as the mesh is refined,
+Another important process associated with a semi-martingale is the \emph{quadratic variation} $\{[Y, Y]_t\}_{t\geq 0}$ defined as the limit of the summations of quadratic increments as the mesh is refined. In the scalar case, this is given by
 \[
     [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})^2,
 \]
@@ -395,11 +396,21 @@ or, equivalently, by the formula (which is a particular case of an ``integration
 \[
     [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
 \]
+In the vector-valued case, denoting $Y_t = ((Y_t)_i)_{i=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = (([Y, Y]_t)_{i,l})_{i,l=1,\ldots, k},$ with
+\[
+    ([Y, Y]_t)_{i,l} = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n ((Y_{t_j})_j - (Y_{t_{j-1}})_i) ((Y_{t_j})_l - (Y_{t_{j-1}})_l),
+\]
+and
+\[
+    [Y, Y]_t = Y_tY_t^\tr - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s^\tr,
+\]
+where $Y_t^\tr$ is the transpose of $Y_t.$
+
 The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[Theorem II.22]{Protter2005}. The \emph{continuous part} $\{[Y, Y]_t^c\}_{t\geq 0}$ of the quadratic variation is defined by
 \[
-    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \left(\Delta Y_s\right)^2,
+    [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \Delta Y_s\Delta Y_s^\tr,
 \]
-which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \left(\Delta Y_0\right)^2 = Y_0^2 - Y_0^2 = 0.$
+which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \Delta Y_0\Delta Y_0^\tr = Y_0 Y_0^\tr - Y_0 Y_0^\tr = 0.$
 
 The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
 
@@ -410,13 +421,13 @@ The class of FV processes include the compound Poisson process, renewal-reward p
 
 A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ such that there exists a sequence of increasing stopping times with $T_n \rightarrow \infty$ almost surely, for which $\{Z_{t \wedge T_n}\}_{t \geq 0}$ is a uniformly integrable martingale, for each $n\in\mathbb{N},$ i.e.
 \[
-    \sup_{t \geq 0} \int_{T_n > 0}|Z_{t\wedge T_n}|\;\mathrm{d}\mathbb{P} < \infty.
+    \sup_{t \geq 0} \int_{T_n > 0}\|Z_{t\wedge T_n}\|\;\mathrm{d}\mathbb{P} < \infty.
 \]
 The class of local martingales includes time-changed Brownian motions and It\^o diffusion processes. For more on It\^o diffusion, see also \cite{Oksendal2003}.
 
 With the decomposition of a semi-martingale in the form $Y_t = Y_0 + F_t + Z_t$, for an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0,$ we recall from \cite[Lemma 18.7]{Metivier1982} that
 \[
-    [Y, Y]_t = [Z, Z]_t + \sum_{0 \leq s \leq t} \|\Delta F_s\|^2.
+    [Y, Y]_t = [Z, Z]_t + \sum_{0 \leq s \leq t} \Delta F_s \Delta F_s^\tr.
 \]
 Each step is bounded by the variation of $\{F_t\}_{t\geq 0},$ i.e.
 \begin{multline*}
@@ -433,7 +444,7 @@ We also have
     \sum_{s\in J_{Y}} \|\Delta F_t\| \leq V(\{F_t\}_t; I) < \infty.
 \end{equation}
 
-In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0^2$ and $\Delta [Y, Y]_t = (\Delta Y_t)^2$ componentwise (see \cite[Theorem II.22]{Protter2005}),
+In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0 Y_0^\tr$ and $\Delta [Y, Y]_t = \Delta Y_t \Delta Y_t^\tr$ (see \cite[Theorem II.22]{Protter2005}),
 \begin{equation}
     \label{estimatejumpsemimartingale}
     \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \leq \|[Y, Y]_T\| < \infty.
@@ -466,16 +477,16 @@ and
 
 For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the Burkholder-David-Gundy inequalities \cite[Theorem IV.48]{Protter2005} relate the moments of the maximum of the local martingale with moments of its quadratic variation,
 \[
-    \frac{1}{c_p}\mathbb{E}\left[[Z, Z]_t^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq C_p\mathbb{E}\left[[Z, Z]_t^{p/2}\right],
+    \frac{1}{c_p}\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq C_p\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right],
 \]
 for $p \geq 1$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
 \[
-    \mathbb{E}\left[[Z, Z]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
+    \mathbb{E}\left[\|[Z, Z]_t\|\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
 \]
 for any $t\in I,$ and then
 \begin{equation}
     \label{expectationofquadraticvariation}
-    \mathbb{E}\left[[Y, Y]_t\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
+    \mathbb{E}\left[\|[Y, Y]_t\|\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
 This, together with \cref{estimatejumpsemimartingale}, also yields
@@ -483,12 +494,6 @@ This, together with \cref{estimatejumpsemimartingale}, also yields
     \label{expectationsquaredjumps}
     \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
-
-All of the above applies not only to scalar processes but also to vector-valued process $Y_t = ((Y_t)_l)_{l=1, \ldots, k}$, with most expressions being defined component-wise and the only remarkable change being the quadratic variation process, which becomes matrix-valued, being defined as
-\begin{multline*}
-    [Y, Y]_t = (([Y, Y]_t)_{j,l})_{j,l=1,\ldots, k} \\
-    = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n ((Y_{t_j})_j - (Y_{t_{j-1}})_j) ((Y_{t_j})_l - (Y_{t_{j-1}})_l).
-\end{multline*}
 
 A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^d$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
 \begin{equation}
@@ -518,7 +523,7 @@ In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the cha
     \end{aligned}
 \end{equation}
 where each component of $D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c$ is given by
-\[ \left(D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c\right)_i = \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{i_1}}\partial_{y_{i_2}} f_i(s, Y_{s^-})\;\mathrm{d}([Y, Y]_s^c)_{l_1, l_2}.
+\[ \left(D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c\right)_i = \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}([Y, Y]_s^c)_{l_1, l_2}.
 \]
 Since $[Y, Y]_t^c$ is of finite variation, the last integral is a Lebesgue-Stieltjes integral.
 
