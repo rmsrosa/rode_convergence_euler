@@ -396,11 +396,14 @@ or, equivalently, by the formula (which is a particular case of an ``integration
 \[
     [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
 \]
-In the vector-valued case, denoting $Y_t = ((Y_t)_l)_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = (([Y, Y]_t)_{l_1,l_2})_{l_1,l_2=1,\ldots, k},$ with
+In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with
 \[
-    ([Y, Y]_t)_{l_1,l_2} = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n ((Y_{t_j})_{l_1} - (Y_{t_{j-1}})_{l_1}) ((Y_{t_j})_{l_2} - (Y_{t_{j-1}})_{l_2}),
+    [Y^{(l_1)}, Y^{(l_2)}] = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}),
 \]
-and
+which can be written in matrix form as
+\[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr,
+\]
+or, equivalently,
 \[
     [Y, Y]_t = Y_tY_t^\tr - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s^\tr,
 \]
@@ -501,9 +504,9 @@ A fundamental tool for integration and differentiation is the chain rule. In the
 \end{equation}
 The summation on the right hand side is an at most countable summation since the summand vanishes for $s \notin J_{Y}$. The summation can be written as an integral with respect to a jump measure (see \cref{changeofvariablesformulasemimartingale} for the full expression), but we keep it as a summation for simplicity.
 
-The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, d}$ and $Y_t = ((Y_t)_l)_{l=1, \ldots, k}$, and
+The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $f(y)=(f_i(y_1, \ldots, y_k))_{i=1, \ldots, d}$ and $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, and
 \[
-    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, d} = \left( \sum_{l=1, \ldots, k} \partial y_l f_i(y) (\Delta Y_t)_l \right)_{i=1, \ldots, d}.
+    Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, d} = \left( \sum_{l=1, \ldots, k} \partial y_l f_i(y) \Delta Y_t^{(l)} \right)_{i=1, \ldots, d}.
 \]
 
 When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\geq 0}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula for FV processes:
@@ -523,11 +526,17 @@ In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the cha
     \end{aligned}
 \end{equation}
 where each component of $D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c$ is given by
-\[ \left(D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c\right)_i = \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}([Y, Y]_s^c)_{l_1, l_2}.
+\[ \left(D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c\right)^{(i)} = \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_s^c.
 \]
 Since $[Y, Y]_t^c$ is of finite variation, the last integral is a Lebesgue-Stieltjes integral.
 
 We actually apply the formula \cref{changeofvariablesformulasemimartingale} to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
+
+Finally, a fundamental identity is the It\^o isometry, which, in the case of a vector-valued local martingale $\{Z_t\}_{t\geq 0}$ and an adapted matrix-valued process $\{A_t\}_{t\geq 0},$ takes the form
+\begin{multline*}
+    \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \int_0^t \mathbb{E}[A_s^\tr A_s] \odot \mathbb{E}[\mathrm{d}[Z_s, Z_s]] \\ = \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d\mathbb{E}[A_s^{(il_1)}A_s^{(il_2)}]\mathbb{E}[\mathrm{d}[Z_s^{(l_1)}Z_s^{(l_2)}]],
+\end{multline*}
+provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
 
 \section{Integral formula for the global pathwise error}
 
