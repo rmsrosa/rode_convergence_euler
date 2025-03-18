@@ -57,6 +57,9 @@ include(joinpath(@__DIR__(), "literate.jl"))
         canonical = "https://github.com/rmsrosa/rode_convergence_euler",
         edit_link = "main",
         repolink = "https://github.com/rmsrosa/rode_convergence_euler",
+        example_size_threshold = 100 * 2^10, # default is 8Kb, increase if necessary
+        size_threshold_warn = 200 * 2^10, # default is 100Kb; increase if necessary
+        size_threshold = 400 * 2^10, # default is 200Kb; increase if necessary
     ),
     modules = [RODEConvergence],
 )
