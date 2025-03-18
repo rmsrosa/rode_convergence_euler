@@ -771,15 +771,13 @@ We now prove the desired strong order 1 convergence.
         \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\
         & = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
         & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|^2\right]^{1/2} \\
-        & \leq \mathbb{E}\left[\int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\| \;\mathrm{d}s\right)^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & \leq \Delta t_N\mathbb{E}\left[\int_0^{t_j} \|D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-})\|^2 \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & \leq c_4\Delta t_N\mathbb{E}\left[\int_0^{t_j} \;\mathrm{d}[Z, Z]_\xi\right]^{1/2} \\
-        & = c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j} - [Z, Z]_0\right]^{1/2},
+        & \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k\int_0^{t_j} \;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right]^{1/2} \\
+        & = c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k[Z^{(l_1)}, Z^{(l_2)}]_{t_j} - [Z^{(l_1)}, Z^{(l_2)}]_0\right]^{1/2},
     \end{align*}
     where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that $[Z, Z]_0 = Z_0^2 = 0,$ we obtain
     \begin{equation}
         \label{strongorderterm2b}
-        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \leq c_4\Delta t_N\mathbb{E}\left[ [Z, Z]_{t_j}\right]^{1/2}.
+        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \leq c_4\sqrt{k}\Delta t_N\mathbb{E}\left[\left\| [Z, Z]_{t_j}\right\|\right]^{1/2}.
     \end{equation}
     
     Now we move to the third term in \cref{smlasttermerror}. We use the bound \cref{ftfyunifboundcadlagfvpartialyy} on the second derivative of $D_{yy}f$ to write
