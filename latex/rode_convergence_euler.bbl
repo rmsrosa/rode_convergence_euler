@@ -19,12 +19,12 @@ Yusuke Asai.
 
 \bibitem{BENDER200381}
 Christian Bender.
-\newblock An {I}tô formula for generalized functionals of a fractional
+\newblock An {I}t\^o formula for generalized functionals of a fractional
   {B}rownian motion with arbitrary {H}urst parameter.
 \newblock {\em Stochastic Process. Appl.}, 104(1):81--106, 2003.
 
 \bibitem{JSSv098i16}
-Mathieu Besançon, Theodore Papamarkou, David Anthoff, Alex Arslan, Simon
+Mathieu Besan\c{c}on, Theodore Papamarkou, David Anthoff, Alex Arslan, Simon
   Byrne, Dahua Lin, and John Pearson.
 \newblock {Distributions.jl: Definition and modeling of probability
   distributions in the JuliaStats ecosystem}.
