@@ -534,7 +534,7 @@ We actually apply the formula \cref{changeofvariablesformulasemimartingale} to a
 
 Finally, a fundamental identity is the It\^o isometry, which, in the case of a vector-valued local martingale $\{Z_t\}_{t\geq 0}$ and an adapted matrix-valued process $\{A_t\}_{t\geq 0},$ takes the form
 \begin{multline*}
-    \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \int_0^t \mathbb{E}[A_s^\tr A_s] \odot \mathbb{E}[\mathrm{d}[Z_s, Z_s]] \\ = \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d\mathbb{E}[A_s^{(il_1)}A_s^{(il_2)}]\mathbb{E}[\mathrm{d}[Z_s^{(l_1)}Z_s^{(l_2)}]],
+    \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z_s, Z_s]\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z_s^{(l_1)}, Z_s^{(l_2)}]\right],
 \end{multline*}
 provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
 
