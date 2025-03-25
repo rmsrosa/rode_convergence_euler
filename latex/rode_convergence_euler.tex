@@ -396,11 +396,11 @@ or, equivalently, by the formula (which is a particular case of an ``integration
 \[
     [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
 \]
-In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with
+In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with the appearence of the quadratic cross-variations
 \[
-    [Y^{(l_1)}, Y^{(l_2)}] = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}),
+    [Y^{(l_1)}, Y^{(l_2)}] = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}).
 \]
-which can be written in matrix form as
+The quadratic process can be written in matrix form as
 \[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr,
 \]
 or, equivalently,
@@ -414,6 +414,11 @@ The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[T
     [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \Delta Y_s\Delta Y_s^\tr,
 \]
 which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \Delta Y_0\Delta Y_0^\tr = Y_0 Y_0^\tr - Y_0 Y_0^\tr = 0.$
+
+The polarization identity
+\[ [Y^{(l_1)}, Y^{(l_2)}] = \frac{1}{4}\left([Y^{(l_1)} + Y^{(l_2)}, Y^{(l_1)} + Y^{(l_2)}] - [Y^{(l_1)} - Y^{(l_2)}, Y^{(l_1)} - Y^{(l_2)}]\right)
+\]
+implies that each quadratic cross-variation is a difference of quadratic variations, which are non-decreasing processes, so that each quadratic cross-variation is of finite variation.
 
 The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
 
