@@ -398,7 +398,7 @@ or, equivalently, by the formula (which is a particular case of an ``integration
 \]
 In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with the appearence of the quadratic variations and covariations
 \[
-    [Y^{(l_1)}, Y^{(l_2)}] = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}).
+    [Y^{(l_1)}, Y^{(l_2)}]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}).
 \]
 The quadratic process can be written in matrix form as
 \[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr,
@@ -414,11 +414,6 @@ The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[T
     [Y, Y]_t^c = [Y, Y]_t - \sum_{0\leq s \leq t} \Delta Y_s\Delta Y_s^\tr,
 \]
 which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \Delta Y_0\Delta Y_0^\tr = Y_0 Y_0^\tr - Y_0 Y_0^\tr = 0.$
-
-The polarization identity
-\[ [Y^{(l_1)}, Y^{(l_2)}] = \frac{1}{4}\left([Y^{(l_1)} + Y^{(l_2)}, Y^{(l_1)} + Y^{(l_2)}] - [Y^{(l_1)} - Y^{(l_2)}, Y^{(l_1)} - Y^{(l_2)}]\right)
-\]
-implies that each quadratic covariation is a difference of quadratic variations, which are non-decreasing processes, so that each quadratic covariation is also of finite variation.
 
 The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
 
@@ -538,10 +533,20 @@ Since $[Y, Y]_t^c$ is of finite variation, the last integral is a Lebesgue-Stiel
 We actually apply the formula \cref{changeofvariablesformulasemimartingale} to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
 
 Finally, a fundamental identity is the It\^o isometry, which, in the case of a vector-valued local martingale $\{Z_t\}_{t\geq 0}$ and an adapted matrix-valued process $\{A_t\}_{t\geq 0},$ takes the form
-\begin{multline*}
-    \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z_s, Z_s]\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z_s^{(l_1)}, Z_s^{(l_2)}]\right],
-\end{multline*}
+\begin{multline}
+    \label{eqitoisometrylocalmartingale}
+    \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z, Z]_s\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_s\right],
+\end{multline}
 provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
+
+For the estimates using the It\^o isometry \cref{eqitoisometrylocalmartingale}, it is important to note that the polarization identity
+\[ [Y^{(l_1)}, Y^{(l_2)}] = \frac{1}{4}\left([Y^{(l_1)} + Y^{(l_2)}, Y^{(l_1)} + Y^{(l_2)}] - [Y^{(l_1)} - Y^{(l_2)}, Y^{(l_1)} - Y^{(l_2)}]\right)
+\]
+implies that each quadratic covariation is a difference of quadratic variations, which are non-decreasing processes, so that each quadratic covariation is also of finite variation, with
+\begin{equation}
+    \label{eqquadraticvarcovarfiniteexpectation}
+    \sum_{l_1, l_2=1}^k \mathbb{E}\left[V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; I)\right] < \infty.
+\end{equation} 
 
 \section{Integral formula for the global pathwise error}
 
@@ -771,19 +776,19 @@ We now prove the desired strong order 1 convergence.
         \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\|\right] \leq c_4 \Delta t_N \mathbb{E}\left[ V(\{F_t\}_t; [0, t_j]) \right].
     \end{equation}
     
-    For the second integral on the right hand side of \cref{strongorderterm2}, we once again switch the order of integration, then use the Lyapunov inequality, the It\^o isometry for local martingales, and then again the bound \cref{ftfyunifboundcadlagfvpartialy}, so that
+    For the second integral on the right hand side of \cref{strongorderterm2}, we once again switch the order of integration, then use the Lyapunov inequality, the It\^o isometry \cref{eqitoisometrylocalmartingale} for local martingales, and then again the bound \cref{ftfyunifboundcadlagfvpartialy}, so that
     \begin{align*}
         \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s & D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\
         & = \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|\right] \\
         & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|^2\right]^{1/2} \\
-        & \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k\int_0^{t_j} \;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right]^{1/2} \\
-        & = c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k[Z^{(l_1)}, Z^{(l_2)}]_{t_j} - [Z^{(l_1)}, Z^{(l_2)}]_0\right]^{1/2},
+        & \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k\int_0^{t_j} \left|\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right|\right]^{1/2},
     \end{align*}
-    where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that $[Z, Z]_0 = Z_0^2 = 0,$ we obtain
-    \begin{equation}
+    where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that each quadratic variation and covariation is of finite variation, we obtain
+    \begin{multline}
         \label{strongorderterm2b}
-        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \leq c_4\sqrt{k}\Delta t_N\mathbb{E}\left[\left\| [Z, Z]_{t_j}\right\|\right]^{1/2}.
-    \end{equation}
+        \mathbb{E}\bigg[\bigg\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi\;\mathrm{d}s\bigg\|\bigg] \\ 
+        \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; [0, t_j])\right]^{1/2}.
+    \end{multline}
     
     Now we move to the third term in \cref{smlasttermerror}. We use the bound \cref{ftfyunifboundcadlagfvpartialyy} on the second derivative of $D_{yy}f$ to write
     \begin{equation*}
@@ -822,10 +827,11 @@ We now prove the desired strong order 1 convergence.
     \end{equation}
     where
     \begin{multline*}
-            C_T = c_1 T + c_2T\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3T\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] \\
-            + c_4\mathbb{E}\left[ [Z, Z]_T\right]^{1/2} + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
+            C_T = c_1 T + c_2T\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3T\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] \\
+            + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] + c_4\mathbb{E}\left[\sum_{l_1,l_2=1}^k V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; I)\right]^{1/2} \\
+            + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
     \end{multline*}
-    Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
+    Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{eqquadraticvarcovarfiniteexpectation}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
 \end{proof}
 
 \begin{remark}
