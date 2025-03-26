@@ -390,22 +390,19 @@ Almost surely, the sample paths of the jump process are zero except possibly at 
 
 Another important process associated with a semi-martingale is the \emph{quadratic variation} $\{[Y, Y]_t\}_{t\geq 0}$ defined as the limit of the summations of quadratic increments as the mesh is refined. In the scalar case, this is given by
 \[
-    [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})^2,
+    [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})^2.
 \]
-or, equivalently, by the formula (which is a particular case of an ``integration by parts" formula for the quadratic covariation process between two semi-martingales)
-\[
-    [Y, Y]_t = Y_t^2 - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s.
-\]
+
 In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with the appearence of the quadratic variations and covariations
 \[
-    [Y^{(l_1)}, Y^{(l_2)}]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}).
+    [Y^{(l_1)}, Y^{(l_2)}]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}),
+\]
+or, equivalently, by the ``integration by parts" formula for two semi-martingales,
+\[
+    [Y^{(l_1)}, Y^{(l_2)}]_t = Y_t^{(l_1)}, Y_t^{(l_2)} - \int_0^t Y_{s^-}^{(l_1)} \;\mathrm{d}Y_s^{(l_2)} - \int_0^t Y_{s^-}^{(l_2)} \;\mathrm{d}Y_s^{(l_1)}.
 \]
 The quadratic process can be written in matrix form as
-\[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr,
-\]
-or, equivalently,
-\[
-    [Y, Y]_t = Y_tY_t^\tr - 2\int_0^t Y_{s^-} \;\mathrm{d}Y_s^\tr,
+\[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr.
 \]
 where $Y_t^\tr$ is the transpose of $Y_t.$
 
@@ -480,23 +477,34 @@ and
 
 For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the Burkholder-David-Gundy inequalities \cite[Theorem IV.48]{Protter2005} relate the moments of the maximum of the local martingale with moments of its quadratic variation,
 \[
-    \frac{1}{c_p}\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq C_p\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right],
+    \frac{1}{\gamma_p}\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq \tilde{\gamma}_p\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right],
 \]
-for $p \geq 1$ and suitable constants $c_p, C_p > 0.$ Thus, we obtain the bound
-\[
-    \mathbb{E}\left[\|[Z, Z]_t\|\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
-\]
+for $p \geq 1$ and suitable constants $\gamma_p, \tilde{\gamma}_p > 0.$ Thus, we obtain the bound
+\begin{equation}
+    \label{expectationofquadraticvariationofZ}
+    \mathbb{E}\left[\|[Z, Z]_t\|\right] \leq 4\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty,
+\end{equation}
 for any $t\in I,$ and then
 \begin{equation}
     \label{expectationofquadraticvariation}
-    \mathbb{E}\left[\|[Y, Y]_t\|\right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
+    \mathbb{E}\left[\|[Y, Y]_t\|\right] \leq 4\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
 This, together with \cref{estimatejumpsemimartingale}, also yields
 \begin{equation}
     \label{expectationsquaredjumps}
-    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4c_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
+    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
+
+The polarization identity
+\[ [Y^{(l_1)}, Y^{(l_2)}] = \frac{1}{4}\left([Y^{(l_1)} + Y^{(l_2)}, Y^{(l_1)} + Y^{(l_2)}] - [Y^{(l_1)}, Y^{(l_1)}] - [Y^{(l_2)}, Y^{(l_2)}]\right)
+\]
+implies that each quadratic covariation is a difference of quadratic variations, which are increasing processes, so that each quadratic covariation is also of finite variation (see \cite[Corollary 1 of Theorem II.22]{Protter2005}). In particular, the continuous part of the quadratic local martingale term $\{Z_t\}_t$ is of finite variation and it follows from the definition of the continuous part of the quadratic variation, \cref{expectationofquadraticvariation}, and \cref{expectationofquadraticvariationofZ} that
+\begin{equation}
+    \label{eqquadraticvarcovarfiniteexpectation}
+    \left[V(\{[Z, Z]_t^c\}; I)\right] \leq 5\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty
+\end{equation} 
+
 
 A fundamental tool for integration and differentiation is the chain rule. In the case of an FV process, given a continuously differentiable function $f:\mathbb{R}^k \rightarrow \mathbb{R}^d$, the following change of variables formula holds (see \cite[Theorems II.31 and II.33]{Protter2005}):
 \begin{equation}
@@ -528,7 +536,8 @@ In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the cha
 where each component of $D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c$ is given by
 \[ \left(D_{yy}f(s, Y_{s^-})\;\mathrm{d}[Y, Y]_s^c\right)^{(i)} = \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_s^c.
 \]
-Since $[Y, Y]_t^c$ is of finite variation, the last integral is a Lebesgue-Stieltjes integral.
+
+Since $[Y, Y]_t^c$ is of finite variation, the last integral in \cref{changeofvariablesformulasemimartingale} is a Lebesgue-Stieltjes integral.
 
 We actually apply the formula \cref{changeofvariablesformulasemimartingale} to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
 
@@ -538,15 +547,6 @@ Finally, a fundamental identity is the It\^o isometry, which, in the case of a v
     \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z, Z]_s\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_s\right],
 \end{multline}
 provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
-
-For the estimates using the It\^o isometry \cref{eqitoisometrylocalmartingale}, it is important to note that the polarization identity
-\[ [Y^{(l_1)}, Y^{(l_2)}] = \frac{1}{4}\left([Y^{(l_1)} + Y^{(l_2)}, Y^{(l_1)} + Y^{(l_2)}] - [Y^{(l_1)} - Y^{(l_2)}, Y^{(l_1)} - Y^{(l_2)}]\right)
-\]
-implies that each quadratic covariation is a difference of quadratic variations, which are non-decreasing processes, so that each quadratic covariation is also of finite variation, with
-\begin{equation}
-    \label{eqquadraticvarcovarfiniteexpectation}
-    \sum_{l_1, l_2=1}^k \mathbb{E}\left[V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; I)\right] < \infty.
-\end{equation} 
 
 \section{Integral formula for the global pathwise error}
 
