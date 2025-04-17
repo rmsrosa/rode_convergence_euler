@@ -141,7 +141,7 @@ This strong order 1 convergence is not only a major improvement from previous re
     \label{figtoggleswitchintro}
 \end{figure}
 
-We numerically verify, in a series of examples, that the strong order 1 convergence is in fact optimal. Indeed, this work was motived by the fact that the observed convergence in these and many other examples was higher than what the theory predicted. The examples are presented in more details in the supplementary material in \cref{secsupplementary} and in the github repository \cite{RODEConvEM2023} and include the following:
+We numerically verify, in a series of examples, that the strong order 1 convergence is in fact optimal. Indeed, this work was motived by the fact that the observed convergence in these and many other examples was higher than what the theory predicted. The examples are presented in more details in \cref{secnumex} and in \cref{secsupplementary} and in the github repository \cite{RODEConvEM2023} and include the following:
 \begin{enumerate}
     \item Two types of non-homogeneous linear equations of the form
     \begin{equation}
@@ -841,7 +841,7 @@ We now prove the desired strong order 1 convergence.
 \section{A numerical example}
 \label{secnumex}
 
-We have briefly mentioned, in the Introduction, several numerical examples confirming the strong order one convergence and therefore showing this rate is optimal. Here, we describe how the order of convergence is estimated and then we give more details on one of the examples, namely the non-homogeneous linear example with different types of noises. 
+We have briefly mentioned, in the Introduction, several numerical examples confirming the strong order one convergence and therefore showing this rate is optimal. Here, we describe how the order of convergence is estimated and then we give more details on one of the examples, namely the non-homogeneous linear example with different types of noises. The remaining examples are left to \cref{secsupplementary}.
 
 \subsection{Estimating the order of convergence}
 \label{secconvergence}
@@ -891,7 +891,7 @@ With this setup, we proceed as follows.
     \item Finally, from the normal equations above, we compute the 95\% confidence interval $[p_{\min}, p_{\max}]$ by computing the minimum and maximum values of $p$ in the image, by the linear map $\mathbf{e} \mapsto (\ln(C), p) = (A^tA)^{-1}A^t\ln(\mathbf{e})$, of the polytope formed by all combinations of the indices in $(\epsilon_{\min}^{N_i})_i$ and $(\epsilon_{\max}^{N_i})_i$, which is the image of the set of 95\% confidence intervals for the errors obtained with the Monte-Carlo approximation of the strong error.
 \end{enumerate}
 
-\subsubsection{Non-homogeneous linear system of RODEs with different types of noises}
+\subsection{Non-homogeneous linear system of RODEs with different types of noises}
 
 We examine a linear equation with noise present in both the homogeneous and nonhomogeneous terms, approached in two ways: first, as a series of scalar equations, each with a unique univariate noise in a family of different types of noises; and secondly, as a system of equations that combines all these noise types. For most of the noises, the current knowledge expects a lower order of strong convergence than the strong order 1 we prove here. The aim of this section is to illustrate this improvement for all such noises.
 
@@ -990,15 +990,16 @@ The strong order 1 convergence is not a surprise in the case of the Wiener and O
 
 Notice we chose the Hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that our results guarantee that the strong convergence is also of order 1, just like for the other types of noises in $\{{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
 
+\appendix
 
-\section{Supplementary material}
+\section{Numerical setup and examples}
 \label{secsupplementary}
 
-In this supplementary material, we describe in details the numerical examples illustrating the main work. In all the examples driven by semi-martingale noises, we numerically verify the strong order 1 convergence of the Euler method. In the example with fractional Brownian motion, we verify the strong convergence of order $\min\{H+1/2, 1\},$ where $H$ is the Hurst parameter. The order of convergence is displayed with a 95\% confidence interval that perfectly matches the theory developed in the paper. They also show that the theoretical estimate is sharp.
+In this supplementary material, we describe in details the remaining numerical examples illustrating the main work. In all the examples driven by semi-martingale noises, we numerically verify the strong order 1 convergence of the Euler method. In the example with fractional Brownian motion, we verify the strong convergence of order $\min\{H+1/2, 1\},$ where $H$ is the Hurst parameter. The order of convergence is displayed with a 95\% confidence interval that perfectly matches the theory developed in the paper. These estimates show that the theoretical estimate is sharp.
 
 The code for all the examples is written in the Julia Programming Language \cite{Julia2017} and is available in the github repository \url{https://github.com/rmsrosa/rode_convergence_euler/} \cite{RODEConvEM2023}. The Julia language itself is available for download on the website \url{https://julialang.org/}.
 
-One of the distinguishing powers of the Julia language is to work both as a high-level, interactive, scripting language (with its dynamically typed and just-in-time compilation system), and as a fast, high-performance language (with its ahead-of-time and aggressive compilation capabilities). It allows for both easy prototyping and the production of efficient end code. As such, it is growing quickly as a language suitable for scientific computing and computationally-demanding real-world applications.
+One of the distinguishing powers of the Julia language is to work both as a high-level, interactive, scripting language (with its dynamically typed and just-in-time compilation system), and as a fast, high-performance language (with its aggressive compilation capabilities). It allows for both easy prototyping and the production of efficient end code. As such, it is growing quickly as a language suitable for scientific computing and computationally-demanding real-world applications.
 
 Our code has been tested in the currently most recent Julia version 1.11 as well as in previous versions down to version 1.8. The code is set up in a way that any change to the repository triggers an automatic rerun of all the documentation code and all the unit tests in a github server, to make sure it is always up to date. The result of the github documentation run is displayed online, on the website \url{https://rmsrosa.github.io/rode_conv_em/}.
 
@@ -1078,7 +1079,7 @@ The returned \texttt{result} is of a type \texttt{ConvergenceResult}, which stor
 \subsection{Numerical examples}
 \label{secnumericalexamples}
 
-We now describe in more details the examples used to illustrate the order of convergence. We start with some linear equations with all sorts of noises. Then we illustrate the $\min\{H + 1/2, 1\}$ order of convergence in the case of a fractional Brownian motion (fBm) noise with Hurst parameter $0 < H < 1.$ Next we move to a number of linear and nonlinear models, as mentioned in the \cref{secintro}.
+We now describe in more details the examples used to illustrate the order of convergence, except the non-homogeneous linear system, which is described in \cref{secnumex}. We start with a linear equation driven by a Wiener process, then we illustrate the $\min\{H + 1/2, 1\}$ order of convergence in the case of a fractional Brownian motion (fBm) noise with Hurst parameter $0 < H < 1.$ Next we move to a number of linear and nonlinear models, with different semi-martingale noises, as mentioned in the \cref{secintro}.
 
 \subsubsection{Homogeneous linear equation with Wiener noise}
 \label{seclinearhomogeneousrode}
