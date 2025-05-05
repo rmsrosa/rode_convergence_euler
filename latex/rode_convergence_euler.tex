@@ -89,15 +89,15 @@ A \textbf{random ordinary differential equation (RODE or Random ODE)} is a diffe
 \begin{equation}
   \label{rodeeq}
   \begin{cases}
-    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), & 0 \leq t \leq T, \\
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = f(t, X_t, Y_t), \\
     \left. X_t \right|_{t = 0} = X_0,
   \end{cases}
 \end{equation}
-on a time interval $I=[0, T]$, with $T > 0$, where the initial condition $X_0$ is a given random variable, and the noise $\{Y_t\}_{t\in I}$ is a given stochastic process, both defined on a sample space $\Omega$ with probability distribution $\mathbb{P}.$ The function $f=f(t, x, y)$ is such that the differential equation in \cref{rodeeq} can be either a scalar or a system of equations and the noise can also be either a scalar or a vector-valued process.
+for $t$ on a time interval which we take to be $I=[0, T]$, with $T > 0$, where the initial condition $X_0$ is a given random variable, and the noise $\{Y_t\}_{t\in I}$ is a given stochastic process, both defined on a sample space $\Omega$ with probability distribution $\mathbb{P}.$ The function $f=f(t, x, y)$ is such that the differential equation in \cref{rodeeq} can be either a scalar or a system of equations and the noise can also be either a scalar or a vector-valued process.
 
-Random ODEs appear in applications where the parameters either vary randomly or are not fully known. As such, they have been playing an important role in modeling practical problems and in uncertainty quantification (see e.g. \cite{Asai2016,BogdanoffGoldbergBernard1961,FreidlinWentzell1992,HanKloeden2017,MerdanBekiryaziciKesemenKhaniyev2017,NeckelRupp2013,SalakoShen2020,StrasserTheisMarr2012}). They are, in some cases, milder versions of the more popular stochastic diffusion equations (SDE), but, depending on the situation, they may actually lead to more realistic models, where, for example, the white noise is replaced by a more structured noise.
+Random ODEs appear in applications where the parameters either vary randomly or are not fully known. As such, they have been playing an important role in modeling practical problems, including uncertainty quantification (see e.g. \cite{Asai2016,BogdanoffGoldbergBernard1961,FreidlinWentzell1992,HanKloeden2017,MerdanBekiryaziciKesemenKhaniyev2017,NeckelRupp2013,SalakoShen2020,StrasserTheisMarr2012}). They are less known than the more popular It\^o-diffusion stochastic differential equations (SDE), but, depending on the situation, they may actually lead to more realistic models.
 
-As in many other models, numerical approximations are of crucial importance. One popular method for approximating random ODEs is the Euler method. It consists in approximating the solution on a uniform time mesh $t_j = t_j^N = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N},$ via
+As in many other models, numerical approximations are of crucial importance. One popular method for approximating Random ODEs is the Euler method. It consists in approximating the solution on a uniform time mesh $t_j = t_j^N = j\Delta t_N$, $j = 0, \ldots, N$, with fixed time step $\Delta t_N = T/N$, for a given $N\in \mathbb{N},$ via
 \begin{equation}
   \label{emscheme}
   \begin{cases}
@@ -125,7 +125,7 @@ In some special cases, the order of convergence of the Euler method is known to 
     \label{figallnoisesintro}
 \end{figure}
 
-In many more classical examples, though, the actual order of convergence seems to be higher than what the theory predicts. Our aim here is to show that, indeed, it is possible to exploit further properties of the noise that yield a strong order 1 convergence for essentially any noise that is a semi-martingale (see \cref{thmsemimartingale} for the precise statement). This includes noises such as point processes, transport processes, It\^o processes and time-changed Brownian motions, some of which are not even continuous and for which the previous theories did not apply.
+In many more classical examples, though, the actual order of convergence seems to be higher than what the theory predicts. Our aim here is to show that, indeed, it is possible to exploit further properties of the noise that yield a strong order 1 convergence for essentially any noise that is a semi-martingale (see \cref{thmsemimartingale} for the precise statement). This includes noises such as point processes, transport processes, It\^o processes, and time-changed Brownian motions, some of which are not even continuous and for which the previous theories did not apply.
 
 This strong order 1 convergence is not only a major improvement from previous results, but it is also remarkable that it follows with a unified proof for all semi-martingale noises. It also has potential extensions to pathwise convergence for RODEs in the case of non-globally Lipschitz functions, at least when driven by finite-variation process. The result should also extend to random partial differential equations. The technique may also yield improvements in the results concerning higher order methods and or other types of noises, although this requires a more thorough investigation.
 
@@ -149,7 +149,7 @@ We numerically verify, in a series of examples, that the strong order 1 converge
         \frac{\mathrm{d}X_t}{\mathrm{d} t} = - \left\|Y_t\right\|^2 X_t + Y_t,
     \end{equation} 
     where $\{Y_t\}_t$ is either (i) a univariate process of one of many types of semi-martingale processes or (ii) a vector-valued process combining all these noises as independent components.
-    \item A logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, where the specific growth is the sine of a geometric Brownian motion process $\{G_t\}_t$ and with an extra point-process random term $\{H_t\}_t$ representing harvest:
+    \item A logistic model of population dynamics with random coefficients, loosely inspired by \cite[Section 15.2]{HanKloeden2017}, and where the specific growth is the sine of a geometric Brownian motion process $\{G_t\}_t$ and with an extra point-process random term $\{H_t\}_t$ representing harvest:
     \begin{equation}
         \label{eqpopdyn}
         \frac{\mathrm{d}X_t}{\mathrm{d}t} = \gamma (1 + \varepsilon \sin(G_t)) X_t (1 - \frac{X_t}{r}) - \alpha H_t \frac{X_t}{r + X_t}.
@@ -393,13 +393,13 @@ Another important process associated with a semi-martingale is the \emph{quadrat
     [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})^2.
 \]
 
-In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with the appearence of the quadratic variations and covariations
+In the vector-valued case, denoting $Y_t = (Y_t^{(l)})_{l=1, \ldots, k}$, with the vectorial components $Y_t^{(l)},$ the quadratic process becomes matrix-valued, i.e. $[Y, Y]_t = ([Y^{(l_1)}, Y^{(l_2)}]_t)_{l_1,l_2=1,\ldots, k},$ with the appearence of the quadratic variations and covariations
 \[
     [Y^{(l_1)}, Y^{(l_2)}]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j}^{(l_1)} - Y_{t_{j-1}}^{(l_1)}) (Y_{t_j}^{(l_2)} - Y_{t_{j-1}}^{(l_2)}),
 \]
 or, equivalently, by the ``integration by parts" formula for two semi-martingales,
 \[
-    [Y^{(l_1)}, Y^{(l_2)}]_t = Y_t^{(l_1)}, Y_t^{(l_2)} - \int_0^t Y_{s^-}^{(l_1)} \;\mathrm{d}Y_s^{(l_2)} - \int_0^t Y_{s^-}^{(l_2)} \;\mathrm{d}Y_s^{(l_1)}.
+    [Y^{(l_1)}, Y^{(l_2)}]_t = Y_t^{(l_1)} Y_t^{(l_2)} - \int_0^t Y_{s^-}^{(l_1)} \;\mathrm{d}Y_s^{(l_2)} - \int_0^t Y_{s^-}^{(l_2)} \;\mathrm{d}Y_s^{(l_1)}.
 \]
 The quadratic process can be written in matrix form as
 \[ [Y, Y]_t = \lim_{\substack{0\leq t_0 < \ldots < t_n \leq t, \;n\in \mathbb{N} \\ \max_{j=1, \ldots, n}|t_j - t_{j-1}| \rightarrow 0}} \sum_{j=1}^n (Y_{t_j} - Y_{t_{j-1}})(Y_{t_j} - Y_{t_{j-1}})^\tr.
@@ -412,12 +412,12 @@ The quadratic variation is a c\`adl\`ag, increasing, and adapted process \cite[T
 \]
 which itself is a semi-martingale of finite-variation type. Notice that $[Y, Y]_0 = Y_0^2,$ while, for the continuous part, $[Y, Y]_0^c = [Y, Y]_0 - \Delta Y_0\Delta Y_0^\tr = Y_0 Y_0^\tr - Y_0 Y_0^\tr = 0.$
 
-The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write more precisely as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
+The Bichteler-Dellacherie Theorem \cite[Theorem III.47]{Protter2005} yields a characterization of a semi-martingale as a c\`adl\`ag process $\{Y_t\}_{t\geq 0}$ decomposable as a sum of a finite-variation (FV) process and a local martingale process, which we can write in standard form as $Y_t = Y_0 + F_t + Z_t$, with an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0.$
 
-A \emph{Finite-Variation process} (\emph{FV process}) is a c\`adl\`ag process $\{F_t\}_{t \geq 0}$ whose sample paths are almost surely of finite variation, $V(\{F_t\}_t; K)$, on compact subsets $K\subset [0, \infty),$ i.e.
+A \emph{Finite-Variation process} (\emph{FV process}) is a c\`adl\`ag process $\{F_t\}_{t \geq 0}$ whose sample paths are almost surely of finite variation $V(\{F_t\}_t; K)$ on compact subsets $K\subset [0, \infty),$ i.e.
 \[ V(\{F_t\}_t; K) = \sup_{t_0 < \ldots < t_n \in K, n\in \mathbb{N}} \sum_{j=1}^n \|F_{t_j} - F_{t_{j-1}}\| < \infty.
 \]
-The class of FV processes include the compound Poisson process, renewal-reward processes, inhomogeneous Poisson process, Hawkes self-exciting process, and many more. It also includes transport processes $Y_t = g(t, Y_0)$ where $Y_0$ is a random variable and $t \mapsto g(t, y_0)$ is a c\`adl\`ag function of finite variation, for every sample value $y_0=Y_0(\omega)$.
+The class of FV processes includes the compound Poisson process, renewal-reward processes, inhomogeneous Poisson process, Hawkes self-exciting process, and many more. It also includes transport processes $Y_t = g(t, Y_0)$ where $Y_0$ is a random variable and $t \mapsto g(t, y_0)$ is a c\`adl\`ag function of finite variation, for every sample value $y_0=Y_0(\omega)$.
 
 A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ such that there exists a sequence of increasing stopping times with $T_n \rightarrow \infty$ almost surely, for which $\{Z_{t \wedge T_n}\}_{t \geq 0}$ is a uniformly integrable martingale, for each $n\in\mathbb{N},$ i.e.
 \[
@@ -425,7 +425,7 @@ A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ 
 \]
 The class of local martingales includes time-changed Brownian motions and It\^o diffusion processes. For more on It\^o diffusion, see also \cite{Oksendal2003}.
 
-With the decomposition of a semi-martingale in the form $Y_t = Y_0 + F_t + Z_t$, for an FV process $\{F_t\}_{t\geq 0}$ and a local martingale process $\{Z_t\}_{t\geq 0}$ with $F_0 = Z_0 = 0,$ we recall from \cite[Lemma 18.7]{Metivier1982} that
+With the decomposition $Y_t = Y_0 + F_t + Z_t$ described above, we recall from \cite[Lemma 18.7]{Metivier1982} that
 \[
     [Y, Y]_t = [Z, Z]_t + \sum_{0 \leq s \leq t} \Delta F_s \Delta F_s^\tr.
 \]
@@ -444,7 +444,7 @@ We also have
     \sum_{s\in J_{Y}} \|\Delta F_t\| \leq V(\{F_t\}_t; I) < \infty.
 \end{equation}
 
-In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0 Y_0^\tr$ and $\Delta [Y, Y]_t = \Delta Y_t \Delta Y_t^\tr$ (see \cite[Theorem II.22]{Protter2005}),
+In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0 Y_0^\tr$ and $\Delta [Y, Y]_t = \Delta Y_t \Delta Y_t^\tr$ (see \cite[Theorem II.22]{Protter2005}), that
 \begin{equation}
     \label{estimatejumpsemimartingale}
     \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \leq \|[Y, Y]_T\| < \infty.
@@ -466,7 +466,7 @@ which implies, in particular,
 For $Y_t = Y_0 + Z_t + F_t,$ we find
 \begin{equation}
     \label{expectationYtfinite}
-    \mathbb{E}\left[\sup_{t\in I} \|Y_t\|\right] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}\left[V(\{F_t\}_t; I)\right] + 2\mathbb{E}\left[\|Z_T\|^2\right]^{1/2}.
+    \mathbb{E}\left[\sup_{t\in I} \|Y_t\|\right] \leq \mathbb{E}[\|Y_0\|] + \mathbb{E}\left[V(\{F_t\}_t; I)\right] + 2\mathbb{E}\left[\|Z_T\|^2\right]^{1/2},
 \end{equation}
 and
 % using that (a + b + c)^2 \leq 3(a^2 + b^2 + c^2)
@@ -502,7 +502,7 @@ The polarization identity
 implies that each quadratic covariation is a difference of quadratic variations, which are increasing processes, so that each quadratic covariation is also of finite variation (see \cite[Corollary 1 of Theorem II.22]{Protter2005}). In particular, the continuous part of the quadratic local martingale term $\{Z_t\}_t$ is of finite variation and it follows from the definition of the continuous part of the quadratic variation, \cref{expectationofquadraticvariation}, and \cref{expectationofquadraticvariationofZ} that
 \begin{equation}
     \label{eqquadraticvarcovarfiniteexpectation}
-    \left[V(\{[Z, Z]_t^c\}; I)\right] \leq 5\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty
+    \left[V(\{[Z, Z]_t^c\}; I)\right] \leq 5\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] < \infty.
 \end{equation} 
 
 
@@ -517,7 +517,7 @@ The formula above is written in vectorial form, with $f$ and $Y_t$ of the form $
     Df(y)\Delta Y_t = \left( \nabla f_i(y)\Delta Y_t\right)_{i=1, \ldots, d} = \left( \sum_{l=1, \ldots, k} \partial y_l f_i(y) \Delta Y_t^{(l)} \right)_{i=1, \ldots, d}.
 \]
 
-When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\geq 0}$. The first component is continuous hence has no jumps and the corresponding summation term vanishes. This leads to the following change of variables formula for FV processes:
+When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the extended process $\{(t, Y_t)\}_{t\geq 0}$. The first component is continuous, hence it has no jumps, and the corresponding summation term vanishes. This leads to the following change of variables formula for FV processes:
 \begin{multline}
     \label{changeofvariablesformulacadlagfv}
     f(t, Y_t) - f(0, Y_0) = \int_0^t \partial_s f(s, Y_{s^-})\;\mathrm{d}s + \int_{0^+}^t D_y f(s, Y_{s^-}) \;\mathrm{d}Y_s \\
@@ -654,9 +654,7 @@ With that, we are ready to prove our basic estimate for the global error.
             \|X_{t_j} - X_{t_j}^N\| \leq \left( \|X_0 - X_0^N\| + c_L \int_0^{t_j} \|X_s - X_{\tau^N(s)}\| \;\mathrm{d}s \right. \\
             + \left. \left\|\int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s\right\|\right) e^{c_L t_j},
     \end{multline}
-    for $j=1, \ldots, N$, where $\tau^N$ is given by \cref{tauNt}.
-
-    Taking the expectation of \cref{Etjbasicbound}, we obtain the desired result \cref{expectedestimateglobalerrorintegral}.
+    for $j=1, \ldots, N$, where $\tau^N$ is given by \cref{tauNt}. Taking the expectation of \cref{Etjbasicbound}, we obtain the desired result \cref{expectedestimateglobalerrorintegral}.
 \end{proof}
 
 The first term in the right hand side of \cref{expectedestimateglobalerrorintegral} usually vanishes since in general we take $X_0^N = X_0$, but it suffices to assume that $X_0^N$ approximates $X_0$ to first order $\Delta t_N$, which is useful for lower order approximations or for discretizations of (random) partial differential equations.
@@ -820,6 +818,9 @@ We now prove the desired strong order 1 convergence.
         \label{strongorderterm4}
         \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c\right].
     \end{equation}
+
+    \comment{Ops, it remains to consider the vector-valued form of this, where $[Y, Y]_{t_j}$ is a matrix, etc.}
+
     Putting the estimates \cref{strongorderterm1}, \cref{strongorderterm2}, \cref{strongorderterm2a}, \cref{strongorderterm2b}, \cref{strongorderterm3}, and \cref{strongorderterm4} together and using that $0 \leq [Y, Y]_t^c \leq [Y, Y]_t$ are increasing, we obtain, from \cref{smlasttermerror},
     \begin{equation}
         \label{lasttermestimateforstrongconv}
@@ -903,7 +904,7 @@ The equations take the form
         \left. {X}_t \right|_{t = 0} = {X}_0,
     \end{cases}
 \end{equation}
-where $\{{X}_t\}_t$ is either a scalar or a vector-valued process, and $\{{Y}_t\}_t$ is, correspondingly, either a scalar or a vector-valued noise process with the same dimension as ${X}_t$. In the case of the system, each coordinate of $\{{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the simulations are the following, in the order of coordinates of ${Y}_t$:
+where $\{{X}_t\}_t$ is either a scalar or a vector-valued process, and $\{{Y}_t\}_t$ is, correspondingly, either a scalar or a vector-valued noise process with the same dimension as ${X}_t$. In the case of a system, each coordinate of $\{{Y}_t\}_t$ is a scalar noise process independent of the noises in the other coordinates. The scalar noises used in the simulations are the following, in the order of coordinates of ${Y}_t$:
 \begin{enumerate}
     \item A standard Wiener process (W);
     \item An Ornstein-Uhlenbeck process (OU) with drift $\nu = 0.3,$ diffusion $\sigma = 0.5,$ and initial condition $y_0 = 0.2$;
@@ -986,9 +987,9 @@ where $\{{X}_t\}_t$ is either a scalar or a vector-valued process, and $\{{Y}_t\
     \label{supp:tabeachnoise}
 \end{table}
 
-The strong order 1 convergence is not a surprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In this case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. The geometric Brownian motion is also expected to yield strong order 1 convergence thanks to the results in \cite{WangCaoHanKloeden2021} and the fact that it is an It\^o diffusion process. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
+The strong order 1 convergence is not a surprise in the case of the Wiener and Ornstein-Uhlenbeck process since the corresponding RODE can be turned into an SDE with an additive noise. In such a case, the Euler-Maruyama approximation for the noise part of the SDE is distributionally exact, and the Euler method for the RODE becomes equivalent to the Euler-Maruyama method for the SDE, and it is known that the Euler-Maruyama method for an SDE with additive noise is of strong order 1 \cite{HighamKloeden2021}. The geometric Brownian motion is also expected to yield strong order 1 convergence thanks to the results in \cite{WangCaoHanKloeden2021} and the fact that it is an It\^o diffusion process. For the remaining noises, however, previous works would estimate the order of convergence to be below the order 1 attained here.
 
-Notice we chose the Hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that our results guarantee that the strong convergence is also of order 1, just like for the other types of noises in $\{{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
+Notice we chose the Hurst parameter of the fractional Brownian motion process to be between 1/2 and 1, so that our results for fBm indicate that the strong convergence should also be of order 1, just like for the other types of noises in $\{{Y}_t\}_t$. Previous knowledge would expect a strong convergence of order $H$, with $1/2 < H < 1,$ instead.
 
 \appendix
 
