@@ -781,6 +781,8 @@ We now prove the desired strong order 1 convergence.
         & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|^2\right]^{1/2} \\
         & \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k\int_0^{t_j} \left|\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right|\right]^{1/2},
     \end{align*}
+    \comment{Ops, the term $\left|\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right|$ should be squared, or just use $\ell^1$ norm in $\mathbb{R}^n$ and then go to the equivalent $\ell^2$}
+
     where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that each quadratic variation and covariation is of finite variation, we obtain
     \begin{multline}
         \label{strongorderterm2b}
@@ -807,7 +809,7 @@ We now prove the desired strong order 1 convergence.
         \leq \frac{c_7}{2} \Delta t_N \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left\| \Delta Y_\xi \right\|^2\right\|\right].
     \end{multline}
 
-    The final term in \cref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, so that
+    The final term in \cref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, with
     \begin{align*}
         \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\| \\
         & \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left\|D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\right\|\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
@@ -819,7 +821,14 @@ We now prove the desired strong order 1 convergence.
         \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c\right].
     \end{equation}
 
-    \comment{Ops, it remains to consider the vector-valued form of this, where $[Y, Y]_{t_j}$ is a matrix, etc.}
+    \comment{Ops, it remains to consider the vector-valued form of this, where $[Y, Y]_{t_j}$ is a matrix, etc., so we should actually have}
+    \begin{align*}
+        \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|^2 \\
+        & = \left(\frac{1}{2} \sum_{i=1}^n\int_0^{t_j} \int_{\tau^N(s)}^s \left(D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\right)^{(i)}\;\mathrm{d}s \right)^2\\
+        & = \left(\frac{1}{2} \sum_{i=1}^n\int_0^{t_j} \int_{\tau^N(s)}^s \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_s^c\;\mathrm{d}s\right)^2 \\
+        & \leq \ldots
+    \end{align*}
+    \comment{Ops, again, careful with the $\ell^1$ / $\ell^2$ norms}
 
     Putting the estimates \cref{strongorderterm1}, \cref{strongorderterm2}, \cref{strongorderterm2a}, \cref{strongorderterm2b}, \cref{strongorderterm3}, and \cref{strongorderterm4} together and using that $0 \leq [Y, Y]_t^c \leq [Y, Y]_t$ are increasing, we obtain, from \cref{smlasttermerror},
     \begin{equation}
