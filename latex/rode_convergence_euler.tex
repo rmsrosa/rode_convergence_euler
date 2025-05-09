@@ -547,6 +547,7 @@ Finally, a fundamental identity is the It\^o isometry, which, in the case of a v
     \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z, Z]_s\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_s\right],
 \end{multline}
 provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
+\comment{Ops, shouldn't there be a norm somewhere on the right hand side?}
 
 \section{Integral formula for the global pathwise error}
 
@@ -763,7 +764,7 @@ We now prove the desired strong order 1 convergence.
             & + \int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}Z_\xi \;\mathrm{d}s,
         \end{aligned}
     \end{equation}
-    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \cref{strongorderterm2} is estimated using \cref{ftfyunifboundcadlagfvpartialy}, so that
+    where the first inner integral is a Lebesgue-Stieltjes integral and the second inner integral is a stochastic integral with respect to a local martingale. Since $\{F_t\}_{t\in I}$ is of finite variation, the first integral on the right hand side of \cref{strongorderterm2} is estimated using \cref{ftfyunifboundcadlagfvpartialy} and switching the order of integration, so that
     \begin{align*}
         & \left\|\int_0^{t_j} \int_{\tau^N(s)^+}^s D_y f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-}) \;\mathrm{d}F_\xi\;\mathrm{d}s\right\| \leq \int_0^{t_j} \int_{\tau^N(s)}^s c_4\;\|\mathrm{d}F_\xi\|\;\mathrm{d}s \\
         & \qquad \leq c_4\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \;\mathrm{d}s\;\|\mathrm{d}F_\xi\|  \leq c_4\Delta t_N\int_0^{t_j} \;\|\mathrm{d}F_\xi\| \leq c_4\Delta t_N V(\{F_t\}_t; [0, t_j]).
@@ -781,8 +782,6 @@ We now prove the desired strong order 1 convergence.
         & \leq \mathbb{E}\left[\left\|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_y f(\xi, X_{\tau^N(\xi)}^N, Y_{\xi^-}) \;\mathrm{d}s \;\mathrm{d}Z_\xi\right\|^2\right]^{1/2} \\
         & \leq c_4\Delta t_N\mathbb{E}\left[\sum_{l_1,l_2=1}^k\int_0^{t_j} \left|\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right|\right]^{1/2},
     \end{align*}
-    \comment{Ops, the term $\left|\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_\xi\right|$ should be squared, or just use $\ell^1$ norm in $\mathbb{R}^n$ and then go to the equivalent $\ell^2$}
-
     where we used that, for any $0 \leq \xi \leq T,$ and for $\xi \leq s \leq \tau^N(\xi) + \Delta t_N,$ we have $\tau^N(s) = \tau^N(\xi),$ so we can write $X_{\tau^N(s)}^N = X_{\tau^N(\xi)}^N.$ Now, using that each quadratic variation and covariation is of finite variation, we obtain
     \begin{multline}
         \label{strongorderterm2b}
@@ -809,26 +808,22 @@ We now prove the desired strong order 1 convergence.
         \leq \frac{c_7}{2} \Delta t_N \mathbb{E}\left[\left\|\sum_{0 < \xi \leq t_j}\left\| \Delta Y_\xi \right\|^2\right\|\right].
     \end{multline}
 
-    The final term in \cref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, with
+    The final term in \cref{smlasttermerror} involves a Lebesgue-Stieltjes integral and is handled in a similar way, except that instead of the It\^o isometry we just bound the Euclidian norm by the sum norm and obtain
     \begin{align*}
-        \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\| \\
-        & \leq \frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left\|D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\right\|\;\mathrm{d}s\;\mathrm{d}[Y, Y]_\xi^c \\
-        & \leq \frac{c_7}{2}\Delta t_N\int_0^{t_j} \;\mathrm{d}[Y, Y]_\xi^c \leq \frac{c_7}{2}\Delta t_N [Y, Y]_{t_j}^c,
+        \bigg\|\frac{1}{2} \int_0^{t_j} & \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\| \\
+        & = \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}s \;\mathrm{d}[Y, Y]_\xi^c \bigg\| \\
+        & \leq \frac{1}{2} \sum_{i=1}^n \left|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left(D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}s \;\mathrm{d}[Y, Y]_\xi^c\right)^{(i)}\right| \\
+        & \leq \frac{1}{2} \sum_{i=1}^n \left|\int_0^{t_j} \int_{\xi}^{\tau^N(\xi) + \Delta t_N} \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}s\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_\xi^c\right| \\
+        & \leq \frac{1}{2} \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d} \int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} \left|\partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\right|\;\mathrm{d}s\right) \left|\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_\xi^c\right| \\
+        & \leq \frac{1}{2} \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d} \int_0^{t_j} \left(\int_{\xi}^{\tau^N(\xi) + \Delta t_N} c_7 \;\mathrm{d}s\right)\left|\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_\xi^c\right| \\
+        & \leq \frac{c_7}{2}\Delta t_N \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d} V(\{[Y^{(l_1)}, Y^{(l_2)}]_t\}; [0, t_j])
     \end{align*}
-    where we used that $[Y, Y]_0^c = 0.$ Taking the expectation,
-    \begin{equation}
+    Taking the expectation,
+    \begin{multline}
         \label{strongorderterm4}
-        \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \leq \frac{c_7}{2}\Delta t_N \mathbb{E}\left[[Y, Y]_{t_j}^c\right].
-    \end{equation}
-
-    \comment{Ops, it remains to consider the vector-valued form of this, where $[Y, Y]_{t_j}$ is a matrix, etc., so we should actually have}
-    \begin{align*}
-        \bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s & D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|^2 \\
-        & = \left(\frac{1}{2} \sum_{i=1}^n\int_0^{t_j} \int_{\tau^N(s)}^s \left(D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\right)^{(i)}\;\mathrm{d}s \right)^2\\
-        & = \left(\frac{1}{2} \sum_{i=1}^n\int_0^{t_j} \int_{\tau^N(s)}^s \sum_{l_1, l_2 = 1, \ldots, d} \partial_{y_{l_1}}\partial_{y_{l_2}} f_i(s, Y_{s^-})\;\mathrm{d}[Y^{(l_1)}, Y^{(l_2)}]_s^c\;\mathrm{d}s\right)^2 \\
-        & \leq \ldots
-    \end{align*}
-    \comment{Ops, again, careful with the $\ell^1$ / $\ell^2$ norms}
+        \mathbb{E}\left[\bigg\|\frac{1}{2} \int_0^{t_j} \int_{\tau^N(s)}^s D_{yy}f(\xi, X_{\tau^N(s)}^N, Y_{\xi^-})\;\mathrm{d}[Y, Y]_\xi^c\;\mathrm{d}s \bigg\|\right] \\
+        \leq \frac{c_7}{2}\Delta t_N \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d}\mathbb{E}\left[V(\{[Y^{(l_1)}, Y^{(l_2)}]_t\}; [0, t_j])\right].
+    \end{multline}
 
     Putting the estimates \cref{strongorderterm1}, \cref{strongorderterm2}, \cref{strongorderterm2a}, \cref{strongorderterm2b}, \cref{strongorderterm3}, and \cref{strongorderterm4} together and using that $0 \leq [Y, Y]_t^c \leq [Y, Y]_t$ are increasing, we obtain, from \cref{smlasttermerror},
     \begin{equation}
@@ -839,7 +834,7 @@ We now prove the desired strong order 1 convergence.
     \begin{multline*}
             C_T = c_1 T + c_2T\sup_{0\leq s \leq T} \mathbb{E}\left[\|X_{\tau^N(s)}^N\|\right] + c_3T\sup_{0 \leq s \leq T}\mathbb{E}\left[\|Y_s\|\right] \\
             + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] + c_4\mathbb{E}\left[\sum_{l_1,l_2=1}^k V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; I)\right]^{1/2} \\
-            + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \mathbb{E}\left[[Y, Y]_T\right].
+            + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d} V(\{[Y^{(l_1)}, Y^{(l_2)}]_t\}; [0, t_j]).
     \end{multline*}
     Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{eqquadraticvarcovarfiniteexpectation}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
 \end{proof}
