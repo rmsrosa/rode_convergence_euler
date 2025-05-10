@@ -825,7 +825,7 @@ We now prove the desired strong order 1 convergence.
         \leq \frac{c_7}{2}\Delta t_N \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d}\mathbb{E}\left[V(\{[Y^{(l_1)}, Y^{(l_2)}]_t\}; [0, t_j])\right].
     \end{multline}
 
-    Putting the estimates \cref{strongorderterm1}, \cref{strongorderterm2}, \cref{strongorderterm2a}, \cref{strongorderterm2b}, \cref{strongorderterm3}, and \cref{strongorderterm4} together and using that $0 \leq [Y, Y]_t^c \leq [Y, Y]_t$ are increasing, we obtain, from \cref{smlasttermerror},
+    Putting the estimates \cref{strongorderterm1}, \cref{strongorderterm2}, \cref{strongorderterm2a}, \cref{strongorderterm2b}, \cref{strongorderterm3}, and \cref{strongorderterm4} together, we obtain, from \cref{smlasttermerror}, that
     \begin{equation}
         \label{lasttermestimateforstrongconv}
         \mathbb{E}\bigg[\bigg\| \int_0^{t_j} \left( f(s, X_{\tau^N(s)}^N, Y_s) - f(\tau^N(s), X_{\tau^N(s)}^N, Y_{\tau^N(s)}) \right)\;\mathrm{d}s \bigg\|\bigg] \leq C_T \Delta t_N,
