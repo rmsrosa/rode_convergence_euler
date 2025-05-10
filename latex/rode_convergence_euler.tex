@@ -524,7 +524,7 @@ When $f=f(t, y)$ depends also on $t$, one can apply the above formula to the ext
     + \sum_{0 < s \leq t} \left( f(s, Y_s) - f(s, Y_{s^{-}}) - D_y f(s, Y_{s^-})\Delta Y_s\right).
 \end{multline}
 
-In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the change of variables formula \cref{changeofvariablesformulacadlagfv} takes the form (see e.g. \cite[Theorems II.32 and II.33]{Protter2005} and \cite[Section 1.3.3]{AitSahaliaJacod2014})
+In the more general case of a semi-martingale noise $\{Y_t\}_{t\geq 0}$, the change of variables formula \cref{changeofvariablesformulacadlagfv} takes the form (see e.g. \cite[Theorems II.32 and II.33]{Protter2005}, \cite[Section 1.3.3]{AitSahaliaJacod2014} and \cite[Theorem 3.6]{KaratzasShreve2014})
 \begin{equation}
     \label{changeofvariablesformulasemimartingale}
     \begin{aligned}
@@ -541,14 +541,12 @@ Since $[Y, Y]_t^c$ is of finite variation, the last integral in \cref{changeofva
 
 We actually apply the formula \cref{changeofvariablesformulasemimartingale} to a function of the form $f=f(t, x, y)$, but with $x$ constant, so the above formula suffices.
 
-Finally, a fundamental identity is the It\^o isometry, which, in the case of a vector-valued local martingale $\{Z_t\}_{t\geq 0}$ and an adapted matrix-valued process $\{A_t\}_{t\geq 0},$ takes the form
+Finally, a fundamental identity is the It\^o isometry, which, in the case of a vector-valued local martingale $\{Z_t\}_{t\geq 0}$ and an adapted matrix-valued process $\{A_t\}_{t\geq 0},$ takes the form (e.g. apply \cite[Proposition 2.17]{KaratzasShreve2014} to the expanded coordinate terms)
 \begin{multline}
     \label{eqitoisometrylocalmartingale}
     \mathbb{E}\left[\left\|\int_0^t A_s \;\mathrm{d}Z_s\right\|^2\right] = \mathbb{E}\left[ \int_0^t A_s^\tr A_s \odot \mathrm{d}[Z, Z]_s\right] \\ = \mathbb{E}\left[ \int_0^t \sum_{l_1, l_2 = 1}^k \sum_{i=1}^d A_s^{(il_1)}A_s^{(il_2)}\;\mathrm{d}[Z^{(l_1)}, Z^{(l_2)}]_s\right],
 \end{multline}
-provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions.
-\comment{Ops, shouldn't there be a norm somewhere on the right hand side?}
-\comment{Check out Karatzas, Chapter 3, Section 2, formulas (2.26) e (2.27), Proposition 2.17}
+provided the right hand side is finite, and where $\odot$ denotes the Hadamard product of two matrices of same dimensions. Recall the steps of the cross variation matrix $[Z, Z]_s$ is positive semi-definite, so the right hand side is nonnegative.
 
 \section{Integral formula for the global pathwise error}
 

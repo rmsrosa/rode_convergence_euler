@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: rode_convergence_euler.aux
 The style file: plain.bst
 Database file #1: rode_convergence_euler.bib
-You've used 41 entries,
+You've used 42 entries,
             2118 wiz_defined-function locations,
-            789 strings with 11563 characters,
-and the built_in function-call counts, 12352 in all, are:
-= -- 1209
-> -- 573
+            796 strings with 11723 characters,
+and the built_in function-call counts, 12627 in all, are:
+= -- 1238
+> -- 586
 < -- 1
-+ -- 229
-- -- 184
-* -- 856
-:= -- 2133
-add.period$ -- 128
-call.type$ -- 41
-change.case$ -- 205
++ -- 234
+- -- 188
+* -- 872
+:= -- 2182
+add.period$ -- 132
+call.type$ -- 42
+change.case$ -- 210
 chr.to.int$ -- 0
-cite$ -- 41
-duplicate$ -- 467
-empty$ -- 987
-format.name$ -- 184
-if$ -- 2552
+cite$ -- 42
+duplicate$ -- 479
+empty$ -- 1009
+format.name$ -- 188
+if$ -- 2612
 int.to.chr$ -- 0
-int.to.str$ -- 41
-missing$ -- 51
-newline$ -- 208
-num.names$ -- 82
-pop$ -- 207
+int.to.str$ -- 42
+missing$ -- 53
+newline$ -- 213
+num.names$ -- 84
+pop$ -- 212
 preamble$ -- 1
-purify$ -- 174
+purify$ -- 178
 quote$ -- 0
-skip$ -- 305
+skip$ -- 312
 stack$ -- 0
-substring$ -- 690
-swap$ -- 50
+substring$ -- 695
+swap$ -- 51
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 140
+type$ -- 142
 warning$ -- 0
-while$ -- 118
-width$ -- 43
-write$ -- 451
+while$ -- 120
+width$ -- 44
+write$ -- 464

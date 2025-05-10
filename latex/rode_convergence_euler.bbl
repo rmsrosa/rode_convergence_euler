@@ -134,6 +134,12 @@ K.~Kanai.
 \newblock Semi-empirical formula for the seismic characteristics of the ground.
 \newblock {\em Bull. Earthq. Res. Inst.}, 35:309--325, 1957.
 
+\bibitem{KaratzasShreve2014}
+Ioannis Karatzas and Steven~E. Shreve.
+\newblock {\em {Brownian Motion and Stochastic Calculus}}.
+\newblock {Graduate Texts in Mathematics}. Springer, New York, NY, 2nd edition,
+  2014.
+
 \bibitem{RODEConvEM2023}
 P.~Kloeden and R.~Rosa.
 \newblock Numerical examples of strong order of convergence of the euler method
@@ -194,7 +200,7 @@ Bernt {\O}ksendal.
 \bibitem{Protter2005}
 Philip~E. Protter.
 \newblock {\em Stochastic Integration and Differential Equations}.
-\newblock Springer-Verlag, Berlin, Heidelberg, 2 edition, 2005.
+\newblock Springer-Verlag, Berlin, Heidelberg, 2nd edition, 2005.
 
 \bibitem{DifferentialEquations.jl-2017}
 Christopher Rackauckas and Qing Nie.
