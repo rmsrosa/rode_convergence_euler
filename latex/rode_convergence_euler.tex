@@ -417,10 +417,11 @@ A \emph{Finite-Variation process} (\emph{FV process}) is a c\`adl\`ag process $\
 \]
 The class of FV processes includes the compound Poisson process, renewal-reward processes, inhomogeneous Poisson process, Hawkes self-exciting process, and many more. It also includes transport processes $Y_t = g(t, Y_0)$ where $Y_0$ is a random variable and $t \mapsto g(t, y_0)$ is a c\`adl\`ag function of finite variation, for every sample value $y_0=Y_0(\omega)$.
 
-A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ such that there exists a sequence of increasing stopping times with $T_n \rightarrow \infty$ almost surely, for which $\{Z_{t \wedge T_n}\}_{t \geq 0}$ is a uniformly integrable martingale, for each $n\in\mathbb{N},$ i.e.
+A \emph{local martingale} is an adapted, c\`adl\`ag process $\{Z_t\}_{t\geq 0}$ such that there exists a sequence of increasing stopping times $T_n$ with $T_n \rightarrow \infty$ almost surely, for which $\{Z_{t \wedge T_n}1_{T_n > 0}\}_{t \geq 0}$ is a uniformly integrable martingale, for each $n\in\mathbb{N}.$ Here, $t \land T = \min\{t, T\},$ the function $1_{T_n > 0}$ is the indicator function of the set $\{\omega; \;T_n(\omega) > 0\},$ and uniform integrability means
 \[
-    \sup_{t \geq 0} \int_{T_n > 0}\|Z_{t\wedge T_n}\|\;\mathrm{d}\mathbb{P} < \infty.
+    \lim_{k\rightarrow \infty}\sup_{t \geq 0} \int_{\{T_n > 0\}\cap\{\|Z_{t\wedge T_n}\| \geq k\}}\|Z_{t\wedge T_n}\|\;\mathrm{d}\mathbb{P} = 0.
 \]
+
 The class of local martingales includes time-changed Brownian motions and It\^o diffusion processes. For more on It\^o diffusion, see also \cite{Oksendal2003}.
 
 With the decomposition $Y_t = Y_0 + F_t + Z_t$ described above, we recall from \cite[Lemma 18.7]{Metivier1982} that
@@ -439,21 +440,22 @@ Since the number of jumps is countable, we find, by an approximation procedure (
 We also have
 \begin{equation}
     \label{estimatejumpfv}
-    \sum_{s\in J_{Y}} \|\Delta F_t\| \leq V(\{F_t\}_t; I) < \infty.
+    \sum_{s\in J_{Y}} \|\Delta F_s\| \leq V(\{F_t\}_t; I) < \infty.
 \end{equation}
 
 In the more general case of semi-martingale, the process $\{Y_t\}_{t\geq 0}$ has finite quadratic variation \cite[Section II.6]{Protter2005} on the bounded interval $I=[0, T],$ and we find, using that $[Y, Y]_0 = Y_0 Y_0^\tr$ and $\Delta [Y, Y]_t = \Delta Y_t \Delta Y_t^\tr$ (see \cite[Theorem II.22]{Protter2005}), that
 \begin{equation}
     \label{estimatejumpsemimartingale}
-    \sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \leq \|[Y, Y]_T\| < \infty.
+    \sum_{s\in J_{Y}} \|\Delta Y_s\|^2 \leq \|[Y, Y]_T\| < \infty.
 \end{equation}
 
-Since we are considering a bounded interval $I=[0, T],$ the local martingale $Z_t = Z_{t \land T},$ $0\leq t \leq T,$ where $t \land T = \min\{t, T\},$ is a square-integrable martingale, and the Doob Maximal inequality (see e.g. \cite[Theorem I.20]{Protter2005}) yields
+By Doob's maximal quadratic inequality (see e.g. \cite[Theorem I.20]{Protter2005}), if $Z_t = Z_{t \land T},$ $0\leq t \leq T,$ is a square-integrable martingale, then
 \begin{equation}
     \label{expectationZtsquaredfinite}
     \mathbb{E}\left[\sup_{t\in I} \|Z_t\|^2\right] \leq 4\mathbb{E}[\|Z_T\|^2] < \infty,
 \end{equation}
-which is finite by the definition of martingale. Since $F_0 = 0,$ the finite variation part is bounded by
+
+Since $F_0 = 0,$ the finite variation part is bounded by
 \[
     \sup_{t\in I} \|F_t\| \leq V(\{F_t\}_t; I),
 \]
@@ -475,7 +477,7 @@ and
 
 For the quadratic variation part of a local martingale $\{Z_t\}_{t\in I},$ the Burkholder-David-Gundy inequalities (see e.g. \cite[Theorem IV.48]{Protter2005} and \cite{MARINELLI20161}) relate the moments of the maximum of the local martingale with moments of its quadratic variation,
 \[
-    \frac{1}{\gamma_p}\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_t\|^p\right] \leq \tilde{\gamma}_p\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right],
+    \frac{1}{\gamma_p}\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right] \leq \mathbb{E}\left[\max_{0\leq s \leq t} \|Z_s\|^p\right] \leq \tilde{\gamma}_p\mathbb{E}\left[\|[Z, Z]_t\|^{p/2}\right],
 \]
 for $p \geq 1$ and suitable constants $\gamma_p, \tilde{\gamma}_p > 0.$ Thus, we obtain the bound
 \begin{equation}
@@ -491,7 +493,7 @@ for any $t\in I,$ and then
 This, together with \cref{estimatejumpsemimartingale}, also yields
 \begin{equation}
     \label{expectationsquaredjumps}
-    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_t\|^2 \right] \leq 4\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
+    \mathbb{E}\left[\sum_{s\in J_{Y}} \|\Delta Y_s\|^2 \right] \leq 4\gamma_2\mathbb{E}\left[\|Z_T\|^2\right] + \mathbb{E}\left[\|V(\{F_t\}_t; I)\|^2\right].
 \end{equation}
 
 The polarization identity
@@ -714,12 +716,14 @@ We now prove the desired strong order 1 convergence.
         \label{ftfyunifboundcadlagfvpartialyy}
         \left\|D_{yy} f(t, x, y)\right\| & \leq c_7,
     \end{align}
-    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_7 \geq 0$. Assume the semi-martingale noise $\{Y_t\}_{t\in I}$ is decomposed as $Y_t = Y_0 + F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process, $\{Z_t\}_{t\in I}$ is a local martingale, and $F_0 = Z_0 = 0,$ and assume they satisfy
+    in $(t, x, y)\in I\times \mathbb{R}^d\times \mathbb{R}^k$, for suitable constants $c_1, c_2, c_3, c_4, c_7 \geq 0$. Consider the semi-martingale noise $\{Y_t\}_{t\in I}$ decomposed as $Y_t = Y_0 + F_t + Z_t$, where $\{F_t\}_{t\in I}$ is an FV process, $\{Z_t\}_{t\in I}$ is a local martingale, and $F_0 = Z_0 = 0,$ and assume that $\{Z_{t \wedge T}\}_{t\geq 0}$ is a martingale, and they satisfy
     \begin{align}
         \label{Y0finiteexpectation}
         & \mathbb{E}\left[\|Y_0\|\right] < \infty, \\
         \label{expectFVFtfinite}
-        & \mathbb{E}\left[V(\{F_t\}_t; I)\right] < \infty.
+        & \mathbb{E}\left[V(\{F_t\}_t; I)^2\right] < \infty, \\
+        \label{Zmartingale}
+        & \mathbb{E}\left[\|Z_T\|^2\right] < \infty.
     \end{align}   
     Then, the Euler scheme is strongly convergent of order 1, i.e.
     \begin{equation}
@@ -833,7 +837,7 @@ We now prove the desired strong order 1 convergence.
             + c_4\mathbb{E}\left[ V(\{F_t\}_t; I) \right] + c_4\mathbb{E}\left[\sum_{l_1,l_2=1}^k V(\{[Z^{(l_1)}, Z^{(l_2)}]_t\}; I)\right]^{1/2} \\
             + \frac{c_7}{2} \mathbb{E}\left[\sum_{0 < s \leq T}\left\| \Delta Y_s \right\|^2\right] + \frac{c_7}{2} \sum_{i=1}^n \sum_{l_1, l_2 = 1, \ldots, d} V(\{[Y^{(l_1)}, Y^{(l_2)}]_t\}; [0, t_j]).
     \end{multline*}
-    Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{eqquadraticvarcovarfiniteexpectation}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
+    Thanks to \cref{EX0strongbound}, \cref{CMmeanbound}, \cref{LtLXbound}, \cref{XNtmeanboundLXMt}, \cref{Y0finiteexpectation}, \cref{expectFVFtfinite}, \cref{Zmartingale}, \cref{expectationYtfinite}, \cref{expectationZtsquaredfinite}, \cref{eqquadraticvarcovarfiniteexpectation}, \cref{expectationofquadraticvariation}, and \cref{expectationsquaredjumps}, the constant $C_T$ above is finite and independent of $N.$ Plugging \cref{lasttermestimateforstrongconv} into \cref{expectedestimateglobalerrorintegral} and applying \cref{estimatesecondterminglobalstrongerrorintegral} and \cref{EX0X0Nunif} yield the desired strong order 1 estimate \cref{ordersemimartingaleunif}.
 \end{proof}
 
 \begin{remark}
