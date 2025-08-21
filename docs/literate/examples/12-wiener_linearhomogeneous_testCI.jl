@@ -119,119 +119,121 @@ nothing # hide
 
 method = RandomEuler()
 
-# Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
+# ### Investigation of the statistics of the approximations
 
-m = 1000
-nothing # hide
+# We first write a function to grab the statistics
 
-# ### Order of convergence
+function getstatistics(rng, suite, ns, nk, m)
+    ps = zeros(nk)
+    allerrors = zeros(nk, length(ns))
+    allstderrs = zeros(nk, length(ns))
+    @time for k in 1:nk
+        resultk = solve(rng, suite)
+        ps[k] = resultk.p
+        allerrors[k, :] .= resultk.errors
+        allstderrs[k, :] .= resultk.stderrs
+    end
+    meanerror = mean(allerrors, dims=1)
 
-# With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
+    percent_e1_in = 100 * count(( meanerror[1] .> allerrors[:, 1] .- 1.96allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 1.96allstderrs[:, 1] )) / nk
 
-suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+    percent_e2_in = 100 * count(( meanerror[2] .> allerrors[:, 2] .- 1.96allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 1.96allstderrs[:, 2] )) / nk
 
-# Then we are ready to compute the errors via [`solve`](@ref):
+    percent_e_in = 100 * count(
+        ( meanerror[1] .> allerrors[:, 1] .- 1.96allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 1.96allstderrs[:, 1] ) .&
+        ( meanerror[2] .> allerrors[:, 2] .- 1.96allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 1.96allstderrs[:, 2] ) 
+        ) / nk
 
-nk = 2000
-@assert iseven(nk)
-ps = zeros(nk)
-allerrors = zeros(nk, length(ns))
-@time for k in 1:nk
-    resultk = solve(rng, suite)
-    ps[k] = resultk.p
-    allerrors[k, :] .= resultk.errors
-end
-nothing # hide
+    percent_ehalf_in = 100 * count(
+        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 1.96allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 1.96allstderrs[1:div(nk,2), 1] ) .&
+        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 1.96allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 1.96allstderrs[div(nk,2)+1:nk, 2] ) 
+        ) / nk * 2
 
-@time result = solve(rng, suite)
+    percent_ehalf_in2536 = 100 * count(
+        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 2.536allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 2.536allstderrs[1:div(nk,2), 1] ) .&
+        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.536allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.536allstderrs[div(nk,2)+1:nk, 2] ) 
+        ) / nk * 2
 
-percent_p_in = 100 * count(( ps .> result.pmin ) .& ( ps .< result.pmax )) / nk
-
-rect = Shape(
-    [
-        (result.errors[1] - 2result.stderrs[1], result.errors[2] - 2result.stderrs[2]),
-        (result.errors[1] - 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
-        (result.errors[1] + 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
-        (result.errors[1] + 2result.stderrs[1], result.errors[2] - 2result.stderrs[2])
-    ]
-)
-
-begin
-    scatter(allerrors[:, 1], allerrors[:, 2])
-    plot!(rect, alpha = 0.2)
+    return ps, allerrors, allstderrs, meanerror, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536
 end
 
-cor(allerrors) # strongly correlated!
-
-begin
-    scatter(allerrors[1:div(nk,2), 1], allerrors[div(nk,2)+1:nk, 2])
-    plot!(rect, alpha = 0.2)
+function printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+    println("percent p in: $percent_p_in%")
+    println("percent E1 in: $percent_e1_in%")
+    println("percent E2 in: $percent_e2_in%")
+    println("percent E in: $percent_e_in%")
+    println("percent E in independent: $percent_ehalf_in%")
+    println("percent E in independent larger: $percent_ehalf_in2536%")
 end
 
-cor([allerrors[1:div(nk,2), 1] allerrors[div(nk,2)+1:nk, 2]]) # weakly correlated
+function showplots(allerrors, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+    rect = Shape(
+        [
+            (result.errors[1] - 2result.stderrs[1], result.errors[2] - 2result.stderrs[2]),
+            (result.errors[1] - 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
+            (result.errors[1] + 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
+            (result.errors[1] + 2result.stderrs[1], result.errors[2] - 2result.stderrs[2])
+        ]
+    )
 
-percent_e1_in = 100 * count(( allerrors[:, 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[:, 1] .< result.errors[1] + 2result.stderrs[1] )) / nk
-percent_e2_in = 100 * count(( allerrors[:, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[:, 2] .< result.errors[2] + 2result.stderrs[2] )) / nk
+    plt = plot(title="Errors all (m=$m, nk=$nk, $percent_e_in%)", titlefont=10, xlabel="E1", ylabel="E2")
+    begin
+        scatter!(plt, allerrors[:, 1], allerrors[:, 2], label="errors")
+        plot!(plt, rect, alpha = 0.2, label="CI")
+    end
+    display(plt)
 
-percent_e_in = 100 * count(
-    ( allerrors[:, 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[:, 1] .< result.errors[1] + 2result.stderrs[1] ) .&
-    ( allerrors[:, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[:, 2] .< result.errors[2] + 2result.stderrs[2] ) 
-    ) / nk
+    plt = plot(title="Errors split (m=$m, nk=$nk, $percent_ehalf_in%)", titlefont=10, xlabel="E1", ylabel="E2")
+    begin
+        scatter!(plt, allerrors[1:div(nk,2), 1], allerrors[div(nk,2)+1:nk, 2], label="errors")
+        plot!(plt, rect, alpha = 0.2, label="CI")
+    end
+    display(plt)
 
-percent_ehalf_in = 100 * count(
-    ( allerrors[1:div(nk,2), 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[1:div(nk,2), 1] .< result.errors[1] + 2result.stderrs[1] ) .&
-    ( allerrors[div(nk,2)+1:nk, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[div(nk,2)+1:nk, 2] .< result.errors[2] + 2result.stderrs[2] ) 
-    ) / nk * 2
+    plt = plot(title="Histogram of E_1 (m=$m, nk=$nk, $percent_e1_in%)", titlefont=10, xlabel="E_1")
+    begin
+        histogram!(plt, allerrors[:, 1], label="error 1")
+        vline!(plt, [mean(allerrors[:, 1])], color=:steelblue, linewidth=4, label="mean")
+        vline!(plt, [result.errors[1]], label="sample")
+        vline!(plt, [result.errors[1] - 2result.stderrs[1], result.errors[1] + 2result.stderrs[1]], label="CI from sample")
+    end
+    display(plt)
 
-begin
-    histogram(allerrors[:, 1], title="Histogram of E_1", titlefontsize=12)
-    vline!([result.errors[1]])
-    vline!([result.errors[1] - 2result.stderrs[1], result.errors[1] + 2result.stderrs[1]])
+    plt = plot(title="Histogram of E_2 (m=$m, nk=$nk, $percent_e2_in%)", titlefont=10, label="error 2")
+    begin
+        histogram!(plt, allerrors[:, 2], label="error 2")
+        vline!(plt, [mean(allerrors[:, 2])], color=:steelblue, linewidth=4, label="mean")
+        vline!(plt, [result.errors[2]], label="sample")
+        vline!(plt, [result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]], label="CI from sample")
+    end
+    display(plt)
 end
 
-begin
-    histogram(allerrors[:, 2], title="Histogram of E_2", titlefontsize=12)
-    vline!([result.errors[2]])
-    vline!([result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]])
+# We loop varying the number of samples in each run and the number of test runs.
+
+ms = (10, 20, 100, 200, 500)
+nks = (200, 200, 500, 500, 1000)
+
+@assert all(iseven, nks)
+
+for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
+    
+    @info "==="
+    @info "Run $nrun with m=$m and nk=$nk"
+    suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+
+    ps, allerrors, allstderrs, meanerror, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536 = getstatistics(rng, suite, ns, nk, m)
+
+    @show cor(allerrors) # strongly correlated!
+
+    @show cor([allerrors[1:div(nk,2), 1] allerrors[div(nk,2)+1:nk, 2]]) # weakly correlated
+
+    printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+
+    @time result = solve(rng, suite)
+
+    percent_p_in = 100 * count(( ps .> result.pmin ) .& ( ps .< result.pmax )) / nk
+    println("Percent p in $percent_p_in")
+
+    showplots(allerrors, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
 end
-
-histogram(allerrors[:, 2], title="Histogram of E_2", titlefontsize=12)
-
-# The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
-# 
-
-table = generate_error_table(result, suite, info)
-
-println(table) # hide
-nothing # hide
- 
-# The calculated order of convergence is given by `result.p`:
-
-println("Order of convergence `C Δtᵖ` with p = $(round(result.p, sigdigits=2)) and 95% confidence interval ($(round(result.pmin, sigdigits=3)), $(round(result.pmax, sigdigits=3)))")
-nothing # hide
-
-# 
-# 
-# ### Plots
-# 
-# We create a plot with the rate of convergence with the help of a plot recipe for `ConvergenceResult`:
-
-plt = plot(result)
-
-#
-
-#savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/order_wiener_linearhomogenous.pdf")) # hide
-nothing # hide
-
-# For the sake of illustration, we plot the approximations of a sample target solution:
-
-plt = plot(suite, ns=nsample)
-
-#
-
-#savefig(plt, joinpath(@__DIR__() * "../../../../latex/img/approximation_linearhomogenous.pdf")) # hide
-nothing # hide
-
-# Finally, we also visualize the noise associated with this sample solution:
-
-plot(suite, xshow=false, yshow=true, label="Wiener noise")
