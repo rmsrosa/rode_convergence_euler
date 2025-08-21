@@ -80,11 +80,6 @@ ns = 2 .^ (4:3:8)
 
 nsample = ns[[1, 2]]
 
-# Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
-
-m = 100
-nothing # hide
-
 # and add some information about the simulation, for the caption of the convergence figure.
 
 info = (
@@ -124,6 +119,11 @@ nothing # hide
 
 method = RandomEuler()
 
+# Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
+
+m = 1000
+nothing # hide
+
 # ### Order of convergence
 
 # With all the parameters set up, we build the [`ConvergenceSuite`](@ref):       
@@ -132,17 +132,70 @@ suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, 
 
 # Then we are ready to compute the errors via [`solve`](@ref):
 
-nk = 500
+nk = 2000
+@assert iseven(nk)
 ps = zeros(nk)
-for k in 1:nk
+allerrors = zeros(nk, length(ns))
+@time for k in 1:nk
     resultk = solve(rng, suite)
     ps[k] = resultk.p
+    allerrors[k, :] .= resultk.errors
 end
 nothing # hide
 
 @time result = solve(rng, suite)
 
-percent_in = 100 * count(( ps .> result.pmin ) .& ( ps .< result.pmax )) / nk
+percent_p_in = 100 * count(( ps .> result.pmin ) .& ( ps .< result.pmax )) / nk
+
+rect = Shape(
+    [
+        (result.errors[1] - 2result.stderrs[1], result.errors[2] - 2result.stderrs[2]),
+        (result.errors[1] - 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
+        (result.errors[1] + 2result.stderrs[1], result.errors[2] + 2result.stderrs[2]),
+        (result.errors[1] + 2result.stderrs[1], result.errors[2] - 2result.stderrs[2])
+    ]
+)
+
+begin
+    scatter(allerrors[:, 1], allerrors[:, 2])
+    plot!(rect, alpha = 0.2)
+end
+
+cor(allerrors) # strongly correlated!
+
+begin
+    scatter(allerrors[1:div(nk,2), 1], allerrors[div(nk,2)+1:nk, 2])
+    plot!(rect, alpha = 0.2)
+end
+
+cor([allerrors[1:div(nk,2), 1] allerrors[div(nk,2)+1:nk, 2]]) # weakly correlated
+
+percent_e1_in = 100 * count(( allerrors[:, 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[:, 1] .< result.errors[1] + 2result.stderrs[1] )) / nk
+percent_e2_in = 100 * count(( allerrors[:, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[:, 2] .< result.errors[2] + 2result.stderrs[2] )) / nk
+
+percent_e_in = 100 * count(
+    ( allerrors[:, 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[:, 1] .< result.errors[1] + 2result.stderrs[1] ) .&
+    ( allerrors[:, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[:, 2] .< result.errors[2] + 2result.stderrs[2] ) 
+    ) / nk
+
+percent_ehalf_in = 100 * count(
+    ( allerrors[1:div(nk,2), 1] .> result.errors[1] - 2result.stderrs[1] ) .& ( allerrors[1:div(nk,2), 1] .< result.errors[1] + 2result.stderrs[1] ) .&
+    ( allerrors[div(nk,2)+1:nk, 2] .> result.errors[2] - 2result.stderrs[2] ) .& ( allerrors[div(nk,2)+1:nk, 2] .< result.errors[2] + 2result.stderrs[2] ) 
+    ) / nk * 2
+
+begin
+    histogram(allerrors[:, 1], title="Histogram of E_1", titlefontsize=12)
+    vline!([result.errors[1]])
+    vline!([result.errors[1] - 2result.stderrs[1], result.errors[1] + 2result.stderrs[1]])
+end
+
+begin
+    histogram(allerrors[:, 2], title="Histogram of E_2", titlefontsize=12)
+    vline!([result.errors[2]])
+    vline!([result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]])
+end
+
+histogram(allerrors[:, 2], title="Histogram of E_2", titlefontsize=12)
 
 # The computed strong error for each resolution in `ns` is stored in `result.errors`, and a raw LaTeX table can be displayed for inclusion in the article:
 # 
