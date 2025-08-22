@@ -167,27 +167,27 @@ function calculate_trajerrors!(rng, trajerrors::Matrix{T}, trajstderrs::Matrix{T
         # solve approximate solutions at selected time steps and update strong errors
         for (i, nsi) in enumerate(ns)
 
-            nstep = div(ntgt, nsi)
-            kstep = ks[i]
+            nstepi = div(ntgt, nsi)
+            kstepi = ks[i]
 
             if D <: UnivariateDistribution && P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi), params, method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstepi:1+nstepi*nsi), params, method)
             elseif D <: UnivariateDistribution
-                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
+                solve!(view(xnt, 1:nsi+1), t0, tf, xt[1], f, view(yt, 1:nstepi:1+nstepi*nsi, :), params, method)
             elseif P <: UnivariateProcess
-                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi), params, method)
+                solve!(view(xnt, 1:nsi+1, 1:kstepi:size(xnt,2)), t0, tf, view(xt, 1, 1:kstepi:size(xnt,2)), f, view(yt, 1:nstepi:1+nstepi*nsi), params, method)
             else
-                solve!(view(xnt, 1:nsi+1, 1:kstep:size(xnt,2)), t0, tf, view(xt, 1, 1:kstep:size(xnt,2)), f, view(yt, 1:nstep:1+nstep*nsi, :), params, method)
+                solve!(view(xnt, 1:nsi+1, 1:kstepi:size(xnt,2)), t0, tf, view(xt, 1, 1:kstepi:size(xnt,2)), f, view(yt, 1:nstepi:1+nstepi*nsi, :), params, method)
             end
 
             for n in 2:nsi+1
                 if D <: UnivariateDistribution
-                    trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstep])
-                    trajstderrs[n, i] += abs2(xnt[n] - xt[1 + (n-1) * nstep])
+                    trajerrors[n, i] += abs(xnt[n] - xt[1 + (n-1) * nstepi])
+                    trajstderrs[n, i] += abs2(xnt[n] - xt[1 + (n-1) * nstepi])
                 else
-                    for j in 1:kstep:size(xnt,2)
-                        trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
-                        trajstderrs[n, i] += abs2(xnt[n, j] - xt[1 + (n-1) * nstep, j]) * kstep
+                    for j in 1:kstepi:size(xnt,2)
+                        trajerrors[n, i] += abs(xnt[n, j] - xt[1 + (n-1) * nstepi, j]) * kstepi
+                        trajstderrs[n, i] += abs2(xnt[n, j] - xt[1 + (n-1) * nstepi, j]) * kstepi
                     end
                 end
             end
@@ -219,11 +219,15 @@ function solve(rng::AbstractRNG, suite::ConvergenceSuite{T}) where {T}
 
     calculate_trajerrors!(rng, trajerrors, trajstderrs, suite)
     
+    clevel = 0.95 # 95% confidence level
+    elevel = clevel^(1/length(suite.ns)) # assuming independence
+    elevel = 1.0 - ( 1.0 - clevel ) / length(suite.ns) # not assuming independence, using Bonfaroni inequality
+    escore = quantile(Normal(), (1 + elevel) / 2)
     errors = maximum(trajerrors, dims=1)[1, :]
     stderrs = maximum(trajstderrs, dims=1)[1, :]
     errorsminmax = Dict(
-        :min => maximum(trajerrors .- trajstderrs, dims=1)[1,:],
-        :max => maximum(trajerrors .+ trajstderrs, dims=1)[1,:]
+        :min => maximum(trajerrors .- escore .* trajstderrs, dims=1)[1,:],
+        :max => maximum(trajerrors .+ escore .* trajstderrs, dims=1)[1,:]
     )
     deltas = (suite.tf - suite.t0) ./ suite.ns
 
