@@ -125,8 +125,8 @@ method = RandomEuler()
 
 function getstatistics(rng, suite, ns, nk, m)
     ps = zeros(nk)
-    psmins = zeros(nk)
-    psmaxs = zeros(nk)
+    pmins = zeros(nk)
+    pmaxs = zeros(nk)
     allerrors = zeros(nk, length(ns))
     allstderrs = zeros(nk, length(ns))
     @time for k in 1:nk
@@ -134,8 +134,8 @@ function getstatistics(rng, suite, ns, nk, m)
         ps[k] = resultk.p
         allerrors[k, :] .= resultk.errors
         allstderrs[k, :] .= resultk.stderrs
-        psmins[k] = resultk.pmin
-        psmaxs[k] = resultk.pmax
+        pmins[k] = resultk.pmin
+        pmaxs[k] = resultk.pmax
     end
     meanerror = mean(allerrors, dims=1)
     pmean = mean(ps)
@@ -159,7 +159,7 @@ function getstatistics(rng, suite, ns, nk, m)
         ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.536allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.536allstderrs[div(nk,2)+1:nk, 2] ) 
         ) / nk * 2
 
-    percent_p_in = 100 * count(( pmean .> psmins ) .& ( pmean .< psmaxs )) / nk
+    percent_p_in = 100 * count(( pmean .> pmins ) .& ( pmean .< pmaxs )) / nk
 
     deltas = (suite.tf - suite.t0) ./ suite.ns
     A = [one.(deltas) log.(deltas)]
@@ -167,11 +167,16 @@ function getstatistics(rng, suite, ns, nk, m)
 
     Llnerrors = L * log.(allerrors')
 
-    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536
+    Llnerrorsshuffled = L * log.([allerrors[:,1] shuffle(allerrors[:,2])]')
+
+    percent_p_shuffled_in = 100 * count( ( pmean .> Llnerrorsshuffled[2, :] .- (ps .- pmins) ) .& ( pmean .< Llnerrorsshuffled[2, :] .+ (pmaxs .- ps) ) )/ nk
+
+    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsshuffled, percent_p_in, percent_p_shuffled_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536
 end
 
-function printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+function printpercents(percent_p_in, percent_p_shuffled_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
     println("percent p in: $percent_p_in%")
+    println("percent p shuffled in: $percent_p_shuffled_in%")
     println("percent E1 in: $percent_e1_in%")
     println("percent E2 in: $percent_e2_in%")
     println("percent E in: $percent_e_in%")
@@ -179,7 +184,7 @@ function printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in,
     println("percent E in independent larger: $percent_ehalf_in2536%")
 end
 
-function showplots(allerrors, Llnerrors, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
+function showplots(allerrors, Llnerrors, Llnerrorsshuffled, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
     rect = Shape(
         [
             (result.errors[1] - 2result.stderrs[1], result.errors[2] - 2result.stderrs[2]),
@@ -223,10 +228,11 @@ function showplots(allerrors, Llnerrors, pmean, result, m, nk, percent_e1_in, pe
 
     plt = plot(title="C, p (m=$m, nk=$nk, $percent_p_in%)", titlefont=10, xlabel="C", ylabel="p")
     begin
-        scatter!(plt, Llnerrors[1, :], Llnerrors[2, :], label="C, p")
-        hline!(plt, [pmean])
-        hline!(plt, [result.pmin, result.pmax])
-        hline!(plt, [result.p])
+        scatter!(plt, Llnerrors[1, :], Llnerrors[2, :], label="correlated")
+        scatter!(plt, Llnerrorsshuffled[1, :], Llnerrorsshuffled[2, :], label="shuffled")
+        hline!(plt, [pmean], label="p mean")
+        hline!(plt, [result.pmin, result.pmax], label="sample p CI")
+        hline!(plt, [result.p], label="sample p")
     end
     display(plt)
 end
@@ -244,7 +250,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
     @info "Run $nrun with m=$m and nk=$nk"
     suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
-    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536 = getstatistics(rng, suite, ns, nk, m)
+    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsshuffled, percent_p_in, percent_p_shuffled_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536 = getstatistics(rng, suite, ns, nk, m)
 
     @show cor(allerrors) # strongly correlated!
 
@@ -252,11 +258,11 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     @show cor(Llnerrors') # somehow correlated
 
-    printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+    printpercents(percent_p_in, percent_p_shuffled_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
 
     @time result = solve(rng, suite)
 
-    showplots(allerrors, Llnerrors, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
+    showplots(allerrors, Llnerrors, Llnerrorsshuffled, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
 end
 
 deltas = (suite.tf - suite.t0) ./ suite.ns
@@ -265,4 +271,7 @@ L = inv(A' * A) * A'
 
 Llnerrors = L * log.(allerrors')
 
+Llnerrorsshuffled = L * log.([allerrors[:,1] shuffle(allerrors[:,2])]')
+
 scatter(Llnerrors[1, :], Llnerrors[2, :], label="errors")
+scatter!(Llnerrorsshuffled[1, :], Llnerrorsshuffled[2, :], label="errors")
