@@ -125,6 +125,8 @@ method = RandomEuler()
 
 function getstatistics(rng, suite, ns, nk, m)
     ps = zeros(nk)
+    psmins = zeros(nk)
+    psmaxs = zeros(nk)
     allerrors = zeros(nk, length(ns))
     allstderrs = zeros(nk, length(ns))
     @time for k in 1:nk
@@ -132,8 +134,11 @@ function getstatistics(rng, suite, ns, nk, m)
         ps[k] = resultk.p
         allerrors[k, :] .= resultk.errors
         allstderrs[k, :] .= resultk.stderrs
+        psmins[k] = resultk.pmin
+        psmaxs[k] = resultk.pmax
     end
     meanerror = mean(allerrors, dims=1)
+    pmean = mean(ps)
 
     percent_e1_in = 100 * count(( meanerror[1] .> allerrors[:, 1] .- 1.96allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 1.96allstderrs[:, 1] )) / nk
 
@@ -154,7 +159,15 @@ function getstatistics(rng, suite, ns, nk, m)
         ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.536allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.536allstderrs[div(nk,2)+1:nk, 2] ) 
         ) / nk * 2
 
-    return ps, allerrors, allstderrs, meanerror, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536
+    percent_p_in = 100 * count(( pmean .> psmins ) .& ( pmean .< psmaxs )) / nk
+
+    deltas = (suite.tf - suite.t0) ./ suite.ns
+    A = [one.(deltas) log.(deltas)]
+    L = inv(A' * A) * A'
+
+    Llnerrors = L * log.(allerrors')
+
+    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536
 end
 
 function printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
@@ -166,7 +179,7 @@ function printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in,
     println("percent E in independent larger: $percent_ehalf_in2536%")
 end
 
-function showplots(allerrors, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+function showplots(allerrors, Llnerrors, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
     rect = Shape(
         [
             (result.errors[1] - 2result.stderrs[1], result.errors[2] - 2result.stderrs[2]),
@@ -207,6 +220,15 @@ function showplots(allerrors, result, m, nk, percent_e1_in, percent_e2_in, perce
         vline!(plt, [result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]], label="CI from sample")
     end
     display(plt)
+
+    plt = plot(title="C, p (m=$m, nk=$nk, $percent_p_in%)", titlefont=10, xlabel="C", ylabel="p")
+    begin
+        scatter!(plt, Llnerrors[1, :], Llnerrors[2, :], label="C, p")
+        hline!(plt, [pmean])
+        hline!(plt, [result.pmin, result.pmax])
+        hline!(plt, [result.p])
+    end
+    display(plt)
 end
 
 # We loop varying the number of samples in each run and the number of test runs.
@@ -222,18 +244,25 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
     @info "Run $nrun with m=$m and nk=$nk"
     suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
-    ps, allerrors, allstderrs, meanerror, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536 = getstatistics(rng, suite, ns, nk, m)
+    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536 = getstatistics(rng, suite, ns, nk, m)
 
     @show cor(allerrors) # strongly correlated!
 
     @show cor([allerrors[1:div(nk,2), 1] allerrors[div(nk,2)+1:nk, 2]]) # weakly correlated
 
+    @show cor(Llnerrors') # somehow correlated
+
     printpercents(percent_p_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
 
     @time result = solve(rng, suite)
 
-    percent_p_in = 100 * count(( ps .> result.pmin ) .& ( ps .< result.pmax )) / nk
-    println("Percent p in $percent_p_in")
-
-    showplots(allerrors, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536)
+    showplots(allerrors, Llnerrors, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_ehalf_in2536, percent_p_in)
 end
+
+deltas = (suite.tf - suite.t0) ./ suite.ns
+A = [one.(deltas) log.(deltas)]
+L = inv(A' * A) * A'
+
+Llnerrors = L * log.(allerrors')
+
+scatter(Llnerrors[1, :], Llnerrors[2, :], label="errors")
