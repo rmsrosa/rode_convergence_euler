@@ -48,6 +48,9 @@ include(joinpath(@__DIR__(), "literate.jl"))
             "noises/homlin.md",
             "noises/fBm.md"
         ],
+        "CI" => [
+            "examples/12-wiener_linearhomogeneous_testCI.md"
+        ],
         "api.md",
     ],
     authors = "Peter Kloeden and Ricardo Rosa",
