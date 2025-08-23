@@ -22,8 +22,6 @@
 # ```math
 #   X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.
 # ```
-
-# ## Computing a solution with the exact distribution
 #
 # As seen in the first example of this documentation, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
 # ```math
@@ -42,7 +40,7 @@
 #   X_{t_j} = X_0 e^{I_j}.
 # ```
 # 
-# ## Numerical approximation
+# ## Statistical tests
 # 
 # ### Setting up the problem
 # 
@@ -140,18 +138,18 @@ function getstatistics(rng, suite, ns, nk, m)
     percent_e2_in = 100 * count(( meanerror[2] .> allerrors[:, 2] .- 1.96allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 1.96allstderrs[:, 2] )) / nk
 
     percent_e_in = 100 * count(
-        ( meanerror[1] .> allerrors[:, 1] .- 2.536allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 2.536allstderrs[:, 1] ) .&
-        ( meanerror[2] .> allerrors[:, 2] .- 2.536allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 2.536allstderrs[:, 2] ) 
+        ( meanerror[1] .> allerrors[:, 1] .- 2.24allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 2.24allstderrs[:, 1] ) .&
+        ( meanerror[2] .> allerrors[:, 2] .- 2.24allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 2.24allstderrs[:, 2] ) 
         ) / nk
 
     percent_ehalf_in = 100 * count(
-        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 2.536allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 2.536allstderrs[1:div(nk,2), 1] ) .&
-        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.536allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.536allstderrs[div(nk,2)+1:nk, 2] ) 
+        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 2.24allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 2.24allstderrs[1:div(nk,2), 1] ) .&
+        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.24allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.24allstderrs[div(nk,2)+1:nk, 2] ) 
         ) / nk * 2
 
     percent_edealigned_in = 100 * count(
-        ( meanerror[1] .> allerrors[begin:end-1, 1] .- 2.536allstderrs[begin:end-1, 1] ) .& ( meanerror[1] .< allerrors[begin:end-1, 1] .+ 2.536allstderrs[begin:end-1, 1] ) .&
-        ( meanerror[2] .> allerrors[begin+1:end, 2] .- 2.536allstderrs[begin+1:end, 2] ) .& ( meanerror[2] .< allerrors[begin+1:end, 2] .+ 2.536allstderrs[begin+1:end, 2] ) 
+        ( meanerror[1] .> allerrors[begin:end-1, 1] .- 2.24allstderrs[begin:end-1, 1] ) .& ( meanerror[1] .< allerrors[begin:end-1, 1] .+ 2.24allstderrs[begin:end-1, 1] ) .&
+        ( meanerror[2] .> allerrors[begin+1:end, 2] .- 2.24allstderrs[begin+1:end, 2] ) .& ( meanerror[2] .< allerrors[begin+1:end, 2] .+ 2.24allstderrs[begin+1:end, 2] ) 
         ) / ( nk - 1 )
 
     deltas = (suite.tf - suite.t0) ./ suite.ns
@@ -186,21 +184,19 @@ function showplots(
 )
     rect = Shape(
         [
-            (result.errors[1] - 2.536result.stderrs[1], result.errors[2] - 2.536result.stderrs[2]),
-            (result.errors[1] - 2.536result.stderrs[1], result.errors[2] + 2.536result.stderrs[2]),
-            (result.errors[1] + 2.536result.stderrs[1], result.errors[2] + 2.536result.stderrs[2]),
-            (result.errors[1] + 2.536result.stderrs[1], result.errors[2] - 2.536result.stderrs[2])
+            (result.errors[1] - 2.24result.stderrs[1], result.errors[2] - 2.24result.stderrs[2]),
+            (result.errors[1] - 2.24result.stderrs[1], result.errors[2] + 2.24result.stderrs[2]),
+            (result.errors[1] + 2.24result.stderrs[1], result.errors[2] + 2.24result.stderrs[2]),
+            (result.errors[1] + 2.24result.stderrs[1], result.errors[2] - 2.24result.stderrs[2])
         ]
     )
 
     plt_errors = plot(title="Errors all (m=$m, nk=$nk)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
-    begin
-        scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
-        scatter!(plt_errors, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors dealigned ($(round(percent_edealigned_in, digits=2))% in CI)")
-        scatter!(plt_errors, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
-        plot!(plt_errors, rect, alpha=0.2, label="CI")
-    end
-    # display(plt_errors)
+    
+    scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
+    scatter!(plt_errors, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors dealigned ($(round(percent_edealigned_in, digits=2))% in CI)")
+    scatter!(plt_errors, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
+    plot!(plt_errors, rect, alpha=0.2, label="CI")
 
     plt_errors_split = plot(title="Errors split (m=$m, nk=$nk) \n ($(round(percent_ehalf_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
@@ -208,7 +204,6 @@ function showplots(
         scatter!(plt_errors_split, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_split, rect, alpha=0.2, label="CI")
     end
-    # display(plt_errors_split)
 
     plt_errors_dealigned = plot(title="Errors dealigned (m=$m, nk=$nk) \n ($(round(percent_edealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
@@ -216,7 +211,6 @@ function showplots(
         scatter!(plt_errors_dealigned, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_dealigned, rect, alpha=0.2, label="CI")
     end
-    # display(plt_errors_dealigned)
 
     plt_hist_e1 = plot(title="Histogram of ϵ₁ (m=$m, nk=$nk) \n ($(round(percent_e1_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
     begin
@@ -225,7 +219,6 @@ function showplots(
         vline!(plt_hist_e1, [result.errors[1]], label="sample")
         vline!(plt_hist_e1, [result.errors[1] - 2result.stderrs[1], result.errors[1] + 2result.stderrs[1]], label="CI from sample")
     end
-    # display(plt_hist_e1)
 
     plt_hist_e2 = plot(title="Histogram of ϵ₂ (m=$m, nk=$nk) \n ($(round(percent_e2_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₂")
     begin
@@ -234,28 +227,26 @@ function showplots(
         vline!(plt_hist_e2, [result.errors[2]], label="sample")
         vline!(plt_hist_e2, [result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]], label="CI from sample")
     end
-    # display(plt_hist_e2)
 
     sn = 50
-    s1 = L * log.(max.(0.0, [result.errors[1] .+ 2.536result.stderrs[1] * range(-1, 1, length=sn) ( result.errors[2] - 2.536result.stderrs[2] ) .* ones(sn)]'))
-    s2 = L * log.(max.(0.0, [( result.errors[1] + 2.536result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.536result.stderrs[2] * range(-1, 1, length=sn)]'))
-    s3 = L * log.(max.(0.0, [result.errors[1] .+ 2.536result.stderrs[1] * reverse(range(-1, 1, length=sn)) ( result.errors[2] + 2.536result.stderrs[2] ) .* ones(sn)]'))
-    s4 = L * log.(max.(0.0, [( result.errors[1] - 2.536result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.536result.stderrs[2] * range(-1, 1, length=sn)]'))
+    s1 = L * log.(max.(0.0, [result.errors[1] .+ 2.24result.stderrs[1] * range(-1, 1, length=sn) ( result.errors[2] - 2.24result.stderrs[2] ) .* ones(sn)]'))
+    s2 = L * log.(max.(0.0, [( result.errors[1] + 2.24result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.24result.stderrs[2] * range(-1, 1, length=sn)]'))
+    s3 = L * log.(max.(0.0, [result.errors[1] .+ 2.24result.stderrs[1] * reverse(range(-1, 1, length=sn)) ( result.errors[2] + 2.24result.stderrs[2] ) .* ones(sn)]'))
+    s4 = L * log.(max.(0.0, [( result.errors[1] - 2.24result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.24result.stderrs[2] * range(-1, 1, length=sn)]'))
     sides = hcat(s1, s2, s3, s4)
 
     temean = L * log.(mean(allerrors, dims=1)')
 
-    plt_Cp = plot(title="(C, p) sample from (ϵ₁, ϵ₂) (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="C", ylabel="p")
+    plt_Cp = plot(title="(C, p) sample from (ϵ₁, ϵ₂) (m=$m, nk=$nk)", titlefont=10, xlabel="C", ylabel="p")
     begin
         scatter!(plt_Cp, Llnerrors[1, :], Llnerrors[2, :], alpha=0.2, label="correlated")
         scatter!(plt_Cp, Llnerrorsdealigned[1, :], Llnerrorsdealigned[2, :], alpha=0.2, label="dealigned")
         plot!(plt_Cp, sides[1, :], sides[2, :], label="transformed errors CI")
         scatter!(plt_Cp, Tuple(temean), markersize=4, color=:orange, label="transformed error mean")
         hline!(plt_Cp, [pmean], label="p mean")
-        hline!(plt_Cp, [result.pmin, result.pmax], label="sample p CI")
+        hline!(plt_Cp, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
         hline!(plt_Cp, [result.p], label="sample p")
     end
-    # display(plt_Cp)
 
     plts = (
         errors = plt_errors,
@@ -294,7 +285,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     printpercents(percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
 
-    @time result = solve(rng, suite)
+    result = solve(rng, suite)
 
     plts = showplots(allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L)
 
@@ -323,12 +314,8 @@ plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
 
 #
 
-plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
+plot(size=(800, 400), allplts[3].errors, allplts[3].cp)
 
 #
 
-plot(size=(800, 400), allplts[3].error, allplts[3].cp)
-
-nothing
-
-#
+nothing # hide
