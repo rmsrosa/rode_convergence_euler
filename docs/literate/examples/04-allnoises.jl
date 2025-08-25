@@ -49,7 +49,7 @@ nsample = ns[[1, 2, 3]]
 
 # The number of simulations for the Monte Carlo estimate is set to
 
-m = 92
+m = 400
 nothing # hide
 
 # Now we define all the noise parameters
