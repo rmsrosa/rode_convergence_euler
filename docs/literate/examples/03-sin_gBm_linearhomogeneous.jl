@@ -64,7 +64,7 @@ nsample = ns[[1, 2, 3, 4]]
 
 # The number of simulations for the Monte Carlo estimate is set to
 
-m = 200
+m = 400
 nothing # hide
 
 # We add some information about the simulation, for the caption of the convergence figure.
