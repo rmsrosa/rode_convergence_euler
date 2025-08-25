@@ -157,7 +157,7 @@ nsample = ns[[1, 2, 3, 4]]
 
 # Finally, we set up the number of samples for the Monte Carlo estimate of the strong error:
 
-m = 1000
+m = 1200
 nothing # hide
 
 # and add some information about the simulation, for the caption of the convergence figure.
