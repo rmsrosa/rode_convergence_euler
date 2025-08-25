@@ -164,14 +164,21 @@ function getstatistics(rng, suite, ns, nk, m)
 
     percent_p_in = 100 * count(( pmean .> pmins ) .& ( pmean .< pmaxs )) / nk
 
-    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L
+    pstd = std(ps)
+    percent_p_alt_in = 100 * count(( pmean .> ps .- 1.96pstd ) .& ( pmean .< ps .+ 1.96pstd )) / nk
+
+    pdlgnstd = std(Llnerrorsdealigned[2, :])
+    percent_p_alt_dealigned_in = 100 * count(( pmean .> Llnerrorsdealigned[2, :] .- 1.96pdlgnstd ) .& ( pmean .< Llnerrorsdealigned[2, :] .+ 1.96pdlgnstd )) / nk
+
+    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L
 end
 
 function printpercents(
-    percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in
+    percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in
 )
     println("percent p in: $percent_p_in%")
     println("percent p dealigned in: $percent_p_dealigned_in%")
+    println("percent p alt dealigned in: $percent_p_alt_dealigned_in%")
     println("percent E1 in: $percent_e1_in%")
     println("percent E2 in: $percent_e2_in%")
     println("percent E in: $percent_e_in%")
@@ -180,7 +187,7 @@ function printpercents(
 end
 
 function showplots(
-    allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L
+    ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L
 )
     rect = Shape(
         [
@@ -248,13 +255,22 @@ function showplots(
         hline!(plt_Cp, [result.p], label="sample p")
     end
 
+    plt_hist_p = plot(title="Histogram of p (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
+    begin
+        histogram!(plt_hist_p, ps, label="p")
+        vline!(plt_hist_p, [pmean], color=:steelblue, linewidth=4, label="p mean")
+        vline!(plt_hist_p, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
+        vline!(plt_hist_p, [result.p], label="sample p")
+    end
+
     plts = (
         errors = plt_errors,
         split = plt_errors_split,
         dealigned = plt_errors_dealigned,
         hist1 = plt_hist_e1,
         hist2 = plt_hist_e2,
-        cp = plt_Cp
+        cp = plt_Cp,
+        histp = plt_hist_p
     )
 
     return plts
@@ -275,7 +291,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
     @info "Run $nrun with m=$m and nk=$nk"
     suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
-    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L = getstatistics(rng, suite, ns, nk, m)
+    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L = getstatistics(rng, suite, ns, nk, m)
 
     @show cor(allerrors) # strongly correlated!
 
@@ -283,16 +299,16 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     @show cor(Llnerrors') # somehow correlated
 
-    printpercents(percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
+    printpercents(percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
 
     result = solve(rng, suite)
 
-    plts = showplots(allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L)
+    plts = showplots(ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L)
 
     append!(allplts, [plts])
 end
 
-# Histograms
+# Error Histograms
 
 plot(size=(800, 400), allplts[1].hist1, allplts[1].hist1)
 
@@ -316,6 +332,14 @@ plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
 
 plot(size=(800, 400), allplts[3].errors, allplts[3].cp)
 
-#
+# p histograms
+
+plot(allplts[1].histp)
+
+# 
+plot(allplts[2].histp)
+
+# 
+plot(allplts[3].histp)
 
 nothing # hide

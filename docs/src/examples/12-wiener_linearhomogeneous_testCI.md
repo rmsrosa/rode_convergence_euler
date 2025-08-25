@@ -27,8 +27,6 @@ The explicit solution is
   X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.
 ```
 
-## Computing a solution with the exact distribution
-
 As seen in the first example of this documentation, once an Euler approximation is computed, along with realizations $\{W_{t_i}\}_{i=0}^n$ of a sample path of the noise, we consider an exact sample solution given by
 ```math
     X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},
@@ -46,7 +44,7 @@ with $I_0 = 0$, and setting
   X_{t_j} = X_0 e^{I_j}.
 ```
 
-## Numerical approximation
+## Statistical tests
 
 ### Setting up the problem
 
@@ -165,18 +163,18 @@ function getstatistics(rng, suite, ns, nk, m)
     percent_e2_in = 100 * count(( meanerror[2] .> allerrors[:, 2] .- 1.96allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 1.96allstderrs[:, 2] )) / nk
 
     percent_e_in = 100 * count(
-        ( meanerror[1] .> allerrors[:, 1] .- 2.536allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 2.536allstderrs[:, 1] ) .&
-        ( meanerror[2] .> allerrors[:, 2] .- 2.536allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 2.536allstderrs[:, 2] )
+        ( meanerror[1] .> allerrors[:, 1] .- 2.24allstderrs[:, 1] ) .& ( meanerror[1] .< allerrors[:, 1] .+ 2.24allstderrs[:, 1] ) .&
+        ( meanerror[2] .> allerrors[:, 2] .- 2.24allstderrs[:, 2] ) .& ( meanerror[2] .< allerrors[:, 2] .+ 2.24allstderrs[:, 2] )
         ) / nk
 
     percent_ehalf_in = 100 * count(
-        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 2.536allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 2.536allstderrs[1:div(nk,2), 1] ) .&
-        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.536allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.536allstderrs[div(nk,2)+1:nk, 2] )
+        ( meanerror[1] .> allerrors[1:div(nk,2), 1] .- 2.24allstderrs[1:div(nk,2), 1] ) .& ( meanerror[1] .< allerrors[1:div(nk,2), 1] .+ 2.24allstderrs[1:div(nk,2), 1] ) .&
+        ( meanerror[2] .> allerrors[div(nk,2)+1:nk, 2] .- 2.24allstderrs[div(nk,2)+1:nk, 2] ) .& ( meanerror[2] .< allerrors[div(nk,2)+1:nk, 2] .+ 2.24allstderrs[div(nk,2)+1:nk, 2] )
         ) / nk * 2
 
     percent_edealigned_in = 100 * count(
-        ( meanerror[1] .> allerrors[begin:end-1, 1] .- 2.536allstderrs[begin:end-1, 1] ) .& ( meanerror[1] .< allerrors[begin:end-1, 1] .+ 2.536allstderrs[begin:end-1, 1] ) .&
-        ( meanerror[2] .> allerrors[begin+1:end, 2] .- 2.536allstderrs[begin+1:end, 2] ) .& ( meanerror[2] .< allerrors[begin+1:end, 2] .+ 2.536allstderrs[begin+1:end, 2] )
+        ( meanerror[1] .> allerrors[begin:end-1, 1] .- 2.24allstderrs[begin:end-1, 1] ) .& ( meanerror[1] .< allerrors[begin:end-1, 1] .+ 2.24allstderrs[begin:end-1, 1] ) .&
+        ( meanerror[2] .> allerrors[begin+1:end, 2] .- 2.24allstderrs[begin+1:end, 2] ) .& ( meanerror[2] .< allerrors[begin+1:end, 2] .+ 2.24allstderrs[begin+1:end, 2] )
         ) / ( nk - 1 )
 
     deltas = (suite.tf - suite.t0) ./ suite.ns
@@ -191,14 +189,21 @@ function getstatistics(rng, suite, ns, nk, m)
 
     percent_p_in = 100 * count(( pmean .> pmins ) .& ( pmean .< pmaxs )) / nk
 
-    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L
+    pstd = std(ps)
+    percent_p_alt_in = 100 * count(( pmean .> ps .- 1.96pstd ) .& ( pmean .< ps .+ 1.96pstd )) / nk
+
+    pdlgnstd = std(Llnerrorsdealigned[2, :])
+    percent_p_alt_dealigned_in = 100 * count(( pmean .> Llnerrorsdealigned[2, :] .- 1.96pdlgnstd ) .& ( pmean .< Llnerrorsdealigned[2, :] .+ 1.96pdlgnstd )) / nk
+
+    return ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L
 end
 
 function printpercents(
-    percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in
+    percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in
 )
     println("percent p in: $percent_p_in%")
     println("percent p dealigned in: $percent_p_dealigned_in%")
+    println("percent p alt dealigned in: $percent_p_alt_dealigned_in%")
     println("percent E1 in: $percent_e1_in%")
     println("percent E2 in: $percent_e2_in%")
     println("percent E in: $percent_e_in%")
@@ -207,51 +212,38 @@ function printpercents(
 end
 
 function showplots(
-    allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L
+    ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L
 )
     rect = Shape(
         [
-            (result.errors[1] - 2.536result.stderrs[1], result.errors[2] - 2.536result.stderrs[2]),
-            (result.errors[1] - 2.536result.stderrs[1], result.errors[2] + 2.536result.stderrs[2]),
-            (result.errors[1] + 2.536result.stderrs[1], result.errors[2] + 2.536result.stderrs[2]),
-            (result.errors[1] + 2.536result.stderrs[1], result.errors[2] - 2.536result.stderrs[2])
+            (result.errors[1] - 2.24result.stderrs[1], result.errors[2] - 2.24result.stderrs[2]),
+            (result.errors[1] - 2.24result.stderrs[1], result.errors[2] + 2.24result.stderrs[2]),
+            (result.errors[1] + 2.24result.stderrs[1], result.errors[2] + 2.24result.stderrs[2]),
+            (result.errors[1] + 2.24result.stderrs[1], result.errors[2] - 2.24result.stderrs[2])
         ]
     )
 
     plt_errors = plot(title="Errors all (m=$m, nk=$nk)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
-    begin
-        scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
-        scatter!(plt_errors, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors dealigned ($(round(percent_edealigned_in, digits=2))% in CI)")
-        scatter!(plt_errors, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
-        plot!(plt_errors, rect, alpha=0.2, label="CI")
-    end
-````
 
-display(plt_errors)
+    scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
+    scatter!(plt_errors, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors dealigned ($(round(percent_edealigned_in, digits=2))% in CI)")
+    scatter!(plt_errors, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
+    plot!(plt_errors, rect, alpha=0.2, label="CI")
 
-````@example 12-wiener_linearhomogeneous_testCI
     plt_errors_split = plot(title="Errors split (m=$m, nk=$nk) \n ($(round(percent_ehalf_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
         scatter!(plt_errors_split, allerrors[1:div(nk,2), 1], allerrors[div(nk,2)+1:nk, 2], alpha=0.2, label="errors")
         scatter!(plt_errors_split, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_split, rect, alpha=0.2, label="CI")
     end
-````
 
-display(plt_errors_split)
-
-````@example 12-wiener_linearhomogeneous_testCI
     plt_errors_dealigned = plot(title="Errors dealigned (m=$m, nk=$nk) \n ($(round(percent_edealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
         scatter!(plt_errors_dealigned, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors")
         scatter!(plt_errors_dealigned, Tuple(mean(allerrors, dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_dealigned, rect, alpha=0.2, label="CI")
     end
-````
 
-display(plt_errors_dealigned)
-
-````@example 12-wiener_linearhomogeneous_testCI
     plt_hist_e1 = plot(title="Histogram of ϵ₁ (m=$m, nk=$nk) \n ($(round(percent_e1_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
     begin
         histogram!(plt_hist_e1, allerrors[:, 1], label="error ϵ₁")
@@ -259,11 +251,7 @@ display(plt_errors_dealigned)
         vline!(plt_hist_e1, [result.errors[1]], label="sample")
         vline!(plt_hist_e1, [result.errors[1] - 2result.stderrs[1], result.errors[1] + 2result.stderrs[1]], label="CI from sample")
     end
-````
 
-display(plt_hist_e1)
-
-````@example 12-wiener_linearhomogeneous_testCI
     plt_hist_e2 = plot(title="Histogram of ϵ₂ (m=$m, nk=$nk) \n ($(round(percent_e2_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₂")
     begin
         histogram!(plt_hist_e2, allerrors[:, 2], label="error ϵ₂")
@@ -271,42 +259,43 @@ display(plt_hist_e1)
         vline!(plt_hist_e2, [result.errors[2]], label="sample")
         vline!(plt_hist_e2, [result.errors[2] - 2result.stderrs[2], result.errors[2] + 2result.stderrs[2]], label="CI from sample")
     end
-````
 
-display(plt_hist_e2)
-
-````@example 12-wiener_linearhomogeneous_testCI
     sn = 50
-    s1 = L * log.(max.(0.0, [result.errors[1] .+ 2.536result.stderrs[1] * range(-1, 1, length=sn) ( result.errors[2] - 2.536result.stderrs[2] ) .* ones(sn)]'))
-    s2 = L * log.(max.(0.0, [( result.errors[1] + 2.536result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.536result.stderrs[2] * range(-1, 1, length=sn)]'))
-    s3 = L * log.(max.(0.0, [result.errors[1] .+ 2.536result.stderrs[1] * reverse(range(-1, 1, length=sn)) ( result.errors[2] + 2.536result.stderrs[2] ) .* ones(sn)]'))
-    s4 = L * log.(max.(0.0, [( result.errors[1] - 2.536result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.536result.stderrs[2] * range(-1, 1, length=sn)]'))
+    s1 = L * log.(max.(0.0, [result.errors[1] .+ 2.24result.stderrs[1] * range(-1, 1, length=sn) ( result.errors[2] - 2.24result.stderrs[2] ) .* ones(sn)]'))
+    s2 = L * log.(max.(0.0, [( result.errors[1] + 2.24result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.24result.stderrs[2] * range(-1, 1, length=sn)]'))
+    s3 = L * log.(max.(0.0, [result.errors[1] .+ 2.24result.stderrs[1] * reverse(range(-1, 1, length=sn)) ( result.errors[2] + 2.24result.stderrs[2] ) .* ones(sn)]'))
+    s4 = L * log.(max.(0.0, [( result.errors[1] - 2.24result.stderrs[1] ) .* ones(sn) result.errors[2] .+ 2.24result.stderrs[2] * range(-1, 1, length=sn)]'))
     sides = hcat(s1, s2, s3, s4)
 
     temean = L * log.(mean(allerrors, dims=1)')
 
-    plt_Cp = plot(title="(C, p) sample from (ϵ₁, ϵ₂) (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="C", ylabel="p")
+    plt_Cp = plot(title="(C, p) sample from (ϵ₁, ϵ₂) (m=$m, nk=$nk)", titlefont=10, xlabel="C", ylabel="p")
     begin
         scatter!(plt_Cp, Llnerrors[1, :], Llnerrors[2, :], alpha=0.2, label="correlated")
         scatter!(plt_Cp, Llnerrorsdealigned[1, :], Llnerrorsdealigned[2, :], alpha=0.2, label="dealigned")
         plot!(plt_Cp, sides[1, :], sides[2, :], label="transformed errors CI")
         scatter!(plt_Cp, Tuple(temean), markersize=4, color=:orange, label="transformed error mean")
         hline!(plt_Cp, [pmean], label="p mean")
-        hline!(plt_Cp, [result.pmin, result.pmax], label="sample p CI")
+        hline!(plt_Cp, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
         hline!(plt_Cp, [result.p], label="sample p")
     end
-````
 
-display(plt_Cp)
+    plt_hist_p = plot(title="Histogram of p (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
+    begin
+        histogram!(plt_hist_p, ps, label="p")
+        vline!(plt_hist_p, [pmean], color=:steelblue, linewidth=4, label="p mean")
+        vline!(plt_hist_p, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
+        vline!(plt_hist_p, [result.p], label="sample p")
+    end
 
-````@example 12-wiener_linearhomogeneous_testCI
     plts = (
         errors = plt_errors,
         split = plt_errors_split,
         dealigned = plt_errors_dealigned,
         hist1 = plt_hist_e1,
         hist2 = plt_hist_e2,
-        cp = plt_Cp
+        cp = plt_Cp,
+        histp = plt_hist_p
     )
 
     return plts
@@ -329,7 +318,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
     @info "Run $nrun with m=$m and nk=$nk"
     suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
 
-    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L = getstatistics(rng, suite, ns, nk, m)
+    ps, allerrors, allstderrs, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in, L = getstatistics(rng, suite, ns, nk, m)
 
     @show cor(allerrors) # strongly correlated!
 
@@ -337,17 +326,17 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     @show cor(Llnerrors') # somehow correlated
 
-    printpercents(percent_p_in, percent_p_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
+    printpercents(percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
 
-    @time result = solve(rng, suite)
+    result = solve(rng, suite)
 
-    plts = showplots(allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L)
+    plts = showplots(ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_p_dealigned_in, percent_edealigned_in, L)
 
     append!(allplts, [plts])
 end
 ````
 
-Histograms
+Error Histograms
 
 ````@example 12-wiener_linearhomogeneous_testCI
 plot(size=(800, 400), allplts[1].hist1, allplts[1].hist1)
@@ -372,13 +361,23 @@ plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
 ````
 
 ````@example 12-wiener_linearhomogeneous_testCI
-plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
+plot(size=(800, 400), allplts[3].errors, allplts[3].cp)
+````
+
+p histograms
+
+````@example 12-wiener_linearhomogeneous_testCI
+plot(allplts[1].histp)
 ````
 
 ````@example 12-wiener_linearhomogeneous_testCI
-plot(size=(800, 400), allplts[3].error, allplts[3].cp)
+plot(allplts[2].histp)
+````
 
-nothing
+````@example 12-wiener_linearhomogeneous_testCI
+plot(allplts[3].histp)
+
+nothing # hide
 ````
 
 ---
