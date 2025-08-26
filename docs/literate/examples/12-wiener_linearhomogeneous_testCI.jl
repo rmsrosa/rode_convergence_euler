@@ -77,8 +77,8 @@ params = nothing
 
 # The number of mesh points for the target solution and the approximations
 
-ntgt = 2^10
-ns = 2 .^ (4:4:8)
+ntgt = 2^8
+ns = 2 .^ (4:2:6)
 
 # Notice we just chose two mesh sizes, so we can easily visualize the distributions.
 #
@@ -114,7 +114,7 @@ method = RandomEuler()
 
 # ### Investigation of the statistics of the approximations
 
-# We first write some helper functions to grab the statistics, print some information, and draw some plots.
+# We first write some helper functions to grab the statistics, print some information, and build some plots.
 
 function getstatistics(rng, suite, ns, nk, m)
     ps = zeros(nk)
@@ -182,7 +182,7 @@ function printpercents(
     println("percent E1 in: $percent_e1_in%")
     println("percent E2 in: $percent_e2_in%")
     println("percent E in: $percent_e_in%")
-    println("percent E in independent: $percent_ehalf_in%")
+    println("percent E in half-half: $percent_ehalf_in%")
     println("percent E in dealigned larger: $percent_edealigned_in%")
 end
 
@@ -257,8 +257,9 @@ function showplots(
 
     plt_hist_p = plot(title="Histogram of p (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
     begin
+        histogram!(plt_hist_p, Llnerrorsdealigned[2, :], label="p dealigned")
         histogram!(plt_hist_p, ps, label="p")
-        vline!(plt_hist_p, [pmean], color=:steelblue, linewidth=4, label="p mean")
+        vline!(plt_hist_p, [pmean], linewidth=4, label="p mean")
         vline!(plt_hist_p, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
         vline!(plt_hist_p, [result.p], label="sample p")
     end
@@ -276,10 +277,10 @@ function showplots(
     return plts
 end
 
-# Now, with the helper functions, we run a loop varying the number of samples in each run and the number of test runs. With that, we plot samples of the errors and show the relevant statistics.
+# Now, with the helper functions, we run a loop varying the number of samples in each run and the number of test runs, showing some relevant statistics.
 
-ms = (100, 200, 1000)
-nks = (200, 400, 500)
+ms = (200, 600, 2000)
+nks = (2000, 2000, 2000)
 
 @assert all(iseven, nks)
 
