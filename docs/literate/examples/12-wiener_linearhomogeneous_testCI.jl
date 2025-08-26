@@ -277,9 +277,9 @@ end
 
 # ## Statistics
 #
-# Now, with the helper functions, we run a loop varying the number of samples in each run and the number of test runs, showing some relevant statistics.
+# Now, with the helper functions, we run a loop varying the number $m$ of samples in each run and the number $nk$ of test runs, showing some relevant statistics.
 
-ms = (200, 600, 1000, 2000)
+ms = (200, 500, 1000, 2000)
 nks = (2000, 2000, 2000, 2000)
 
 @assert all(iseven, nks)
@@ -300,6 +300,8 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     @show cor(Llnerrors') # somehow correlated
 
+    @show cor(Llnerrorsdealigned') # weakly correlated
+
     printpercents(percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
 
     result = solve(rng, suite)
@@ -311,25 +313,27 @@ end
 
 # ## Visualizations
 
+# We now visualize some statistics, including histograms and sample distribution. In those plots, we report the percentage of confidence intervals and regions that include the mean.
+
 # ### Histograms of the marginal strong errors
 
 # We start with the histograms of each of the strong errors at each mesh resolution, with $\epsilon_1$ corresponding to $\Delta t = 2^4$ and with $\epsilon_2$ corresponding to $\Delta t = 2^6.$ These are the marginals of the joint distribution $(\epsilon_1, \epsilon_2).$ 
 
 # Notice that in the first two plots, with lower samples, the distribution of the sample means is not quite normal and only a bit more than 90% of the corresponding 95% CIs contain the mean, or rather a better approximation of the mean with orders of magnitude more samples. The last two plots, with more samples, the histogram resembles more a Gaussian distribution and the CI is close to the expected 95% level.
 
-plot(size=(800, 400), allplts[1].hist1, allplts[1].hist1)
+plot(size=(800, 400), allplts[1].hist1, allplts[1].hist2)
 
 #
 
-plot(size=(800, 400), allplts[2].hist1, allplts[2].hist1)
+plot(size=(800, 400), allplts[2].hist1, allplts[2].hist2)
 
 #
 
-plot(size=(800, 400), allplts[3].hist1, allplts[3].hist1)
+plot(size=(800, 400), allplts[3].hist1, allplts[3].hist2)
 
 #
 
-plot(size=(800, 400), allplts[4].hist1, allplts[4].hist1)
+plot(size=(800, 400), allplts[4].hist1, allplts[4].hist2)
 
 # ### Density of the joint distribution of strong errors and their transformed distributions
 
@@ -355,7 +359,7 @@ plot(size=(800, 400), allplts[4].errors, allplts[4].cp)
 
 # ### Histrogram of the order of convergence
 
-# Finally, we plot the histograms for $p$, obtained both from the correlated and the decorrelated strong errors. Notice that the distribution for $p$ resembles a normal distribution and building a CI from that works fine, although the theory does not assure this. Nevertheless, it requires a lot more samples, being computationally expensive and. The CI from the push-forward method underestimates the confidence level, but it more trustworthy. 
+# Finally, we plot the histograms for $p$, obtained both from the correlated and the decorrelated strong errors. Notice that the distributions for $p$ resembles a normal distribution even for low samples, and building a CI from the decorrelated samples works fine, in this example, despite the fact that the theory does not guarantee that. But it works only with the uncorrelad samples! Nevertheless, it requires a lot more samples, being computationally quite expensive, especially with more complicate equations. The CI from the push-forward method underestimates the confidence level, but it is more trustworthy and less demanding.
 
 plot(allplts[1].histp)
 
@@ -367,5 +371,7 @@ plot(allplts[3].histp)
 
 #
 plot(allplts[4].histp)
+
+#
 
 nothing # hide
