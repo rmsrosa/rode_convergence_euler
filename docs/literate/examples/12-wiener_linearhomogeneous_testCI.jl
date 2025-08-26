@@ -40,9 +40,7 @@
 #   X_{t_j} = X_0 e^{I_j}.
 # ```
 # 
-# ## Statistical tests
-# 
-# ### Setting up the problem
+# ## Setting up the problem
 # 
 # First we load the necessary packages
 
@@ -112,7 +110,7 @@ nothing # hide
 
 method = RandomEuler()
 
-# ### Investigation of the statistics of the approximations
+# ## Defining helper functions
 
 # We first write some helper functions to grab the statistics, print some information, and build some plots.
 
@@ -277,6 +275,8 @@ function showplots(
     return plts
 end
 
+# ## Statistics
+#
 # Now, with the helper functions, we run a loop varying the number of samples in each run and the number of test runs, showing some relevant statistics.
 
 ms = (200, 600, 2000)
@@ -309,7 +309,9 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
     append!(allplts, [plts])
 end
 
-# Error Histograms
+# ## Visualizations
+
+# We start with the histograms of the strong errors at each mesh resolution, with $\epsilon_1$ corresponding to $\Delta t = 2^4$ and with $\epsilon_2$ corresponding to $\Delta t = 2^6.$ Notice that in the first two plots, with lower samples, the distribution of the sample means is not quite normal and only a bit more than 90% of the corresponding 95% CIs contain the mean, or rather a better approximation of the mean with orders of magnitude more samples. The last plot, with more samples, the histogram resembles more a Gaussian distribution and the CI matches the expected 95% level.
 
 plot(size=(800, 400), allplts[1].hist1, allplts[1].hist1)
 
