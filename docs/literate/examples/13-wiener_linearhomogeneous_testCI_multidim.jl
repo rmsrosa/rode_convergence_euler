@@ -1,8 +1,5 @@
 # # Testing the confidence regions and intervals 2
 #
-# ```@meta
-# Draft = false
-# ```
 #
 # We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.
 #
