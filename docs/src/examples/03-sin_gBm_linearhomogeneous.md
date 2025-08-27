@@ -78,7 +78,7 @@ nsample = ns[[1, 2, 3, 4]]
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 03-sin_gBm_linearhomogeneous
-m = 200
+m = 400
 nothing # hide
 ````
 

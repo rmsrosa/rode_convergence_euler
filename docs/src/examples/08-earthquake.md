@@ -309,7 +309,7 @@ ns = 2 .^ (6:9)
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 08-earthquake
-m = 100
+m = 160
 nothing # hide
 ````
 

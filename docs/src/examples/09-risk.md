@@ -166,7 +166,7 @@ nsample = ns[[1, 2, 3, 4]]
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 09-risk
-m = 400
+m = 1400
 nothing # hide
 ````
 

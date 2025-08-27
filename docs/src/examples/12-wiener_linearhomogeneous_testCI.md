@@ -2,7 +2,7 @@
 EditURL = "../../literate/examples/12-wiener_linearhomogeneous_testCI.jl"
 ```
 
-# Testing the confidence regions and intervals
+# Testing the confidence regions and intervals 1
 
 ```@meta
 Draft = false
@@ -10,7 +10,9 @@ Draft = false
 
 We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.
 
-Thus, we consider a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.
+The Random ODE is a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.
+
+In this first example, we consider only two mesh resolutions, for full visualization.
 
 ## The equation
 
@@ -44,9 +46,7 @@ with $I_0 = 0$, and setting
   X_{t_j} = X_0 e^{I_j}.
 ```
 
-## Statistical tests
-
-### Setting up the problem
+## Setting up the problem
 
 First we load the necessary packages
 
@@ -94,8 +94,8 @@ params = nothing
 The number of mesh points for the target solution and the approximations
 
 ````@example 12-wiener_linearhomogeneous_testCI
-ntgt = 2^10
-ns = 2 .^ (4:4:8)
+ntgt = 2^8
+ns = 2 .^ (4:2:6)
 ````
 
 Notice we just chose two mesh sizes, so we can easily visualize the distributions.
@@ -136,9 +136,9 @@ The method for which we want to estimate the rate of convergence is, naturally, 
 method = RandomEuler()
 ````
 
-### Investigation of the statistics of the approximations
+## Defining helper functions
 
-We first write some helper functions to grab the statistics, print some information, and draw some plots.
+We first write some helper functions to grab the statistics, print some information, and build some plots.
 
 ````@example 12-wiener_linearhomogeneous_testCI
 function getstatistics(rng, suite, ns, nk, m)
@@ -207,7 +207,7 @@ function printpercents(
     println("percent E1 in: $percent_e1_in%")
     println("percent E2 in: $percent_e2_in%")
     println("percent E in: $percent_e_in%")
-    println("percent E in independent: $percent_ehalf_in%")
+    println("percent E in half-half: $percent_ehalf_in%")
     println("percent E in dealigned larger: $percent_edealigned_in%")
 end
 
@@ -282,8 +282,9 @@ function showplots(
 
     plt_hist_p = plot(title="Histogram of p (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁")
     begin
+        histogram!(plt_hist_p, Llnerrorsdealigned[2, :], label="p dealigned")
         histogram!(plt_hist_p, ps, label="p")
-        vline!(plt_hist_p, [pmean], color=:steelblue, linewidth=4, label="p mean")
+        vline!(plt_hist_p, [pmean], linewidth=4, label="p mean")
         vline!(plt_hist_p, [result.pmin, result.pmax], label="sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)")
         vline!(plt_hist_p, [result.p], label="sample p")
     end
@@ -302,11 +303,13 @@ function showplots(
 end
 ````
 
-Now, with the helper functions, we run a loop varying the number of samples in each run and the number of test runs. With that, we plot samples of the errors and show the relevant statistics.
+## Statistics
+
+Now, with the helper functions, we run a loop varying the number $m$ of samples in each run and the number $nk$ of test runs, showing some relevant statistics.
 
 ````@example 12-wiener_linearhomogeneous_testCI
-ms = (100, 200, 1000)
-nks = (200, 400, 500)
+ms = (200, 500, 1000, 2000)
+nks = (2000, 2000, 2000, 2000)
 
 @assert all(iseven, nks)
 
@@ -326,6 +329,8 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     @show cor(Llnerrors') # somehow correlated
 
+    @show cor(Llnerrorsdealigned') # weakly correlated
+
     printpercents(percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_e1_in, percent_e2_in, percent_e_in, percent_ehalf_in, percent_edealigned_in)
 
     result = solve(rng, suite)
@@ -336,21 +341,39 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 end
 ````
 
-Error Histograms
+## Visualizations
+
+We now visualize some statistics, including histograms and sample distribution. In those plots, we report the percentage of confidence intervals and regions that include the mean.
+
+### Histograms of the marginal strong errors
+
+We start with the histograms of each of the strong errors at each mesh resolution, with $\epsilon_1$ corresponding to $\Delta t = 2^4$ and with $\epsilon_2$ corresponding to $\Delta t = 2^6.$ These are the marginals of the joint distribution $(\epsilon_1, \epsilon_2).$
+
+Notice that in the first two plots, with lower samples, the distribution of the sample means is not quite normal and only a bit more than 90% of the corresponding 95% CIs contain the mean, or rather a better approximation of the mean with orders of magnitude more samples. The last two plots, with more samples, the histogram resembles more a Gaussian distribution and the CI is close to the expected 95% level.
 
 ````@example 12-wiener_linearhomogeneous_testCI
-plot(size=(800, 400), allplts[1].hist1, allplts[1].hist1)
+plot(size=(800, 400), allplts[1].hist1, allplts[1].hist2)
 ````
 
 ````@example 12-wiener_linearhomogeneous_testCI
-plot(size=(800, 400), allplts[2].hist1, allplts[2].hist1)
+plot(size=(800, 400), allplts[2].hist1, allplts[2].hist2)
 ````
 
 ````@example 12-wiener_linearhomogeneous_testCI
-plot(size=(800, 400), allplts[3].hist1, allplts[3].hist1)
+plot(size=(800, 400), allplts[3].hist1, allplts[3].hist2)
 ````
 
-Sample errors and transformed samples
+````@example 12-wiener_linearhomogeneous_testCI
+plot(size=(800, 400), allplts[4].hist1, allplts[4].hist2)
+````
+
+### Density of the joint distribution of strong errors and their transformed distributions
+
+In the following, we plot, on the left panel, the sample points of the joint distribution $(\epsilon_1, \epsilon_2).$ Because the way they were computed (using pathwise samples for the noise process in the finer mesh bridged from the one in the coarset mesh), this joint distribution is highly correlated (about 0.9 correlation, as calculated above). We can see this from the plots. We also plot a decorrelated sample obtained from shifting the indices of $\epsilon_2.$ Another option is to take the first half of $\epsilon_1$ and the second half of $\epsilon_2,$ to make them completely independent, but the result is about the same. We also illustrate one confidence region, from a single random sample, which is supposed to include the mean of the joint distribution, obtained by averaging the strong errors, which themselves are averagings of pathwise erros.
+
+On the right panel, we see the corresponding transformed samples $(C, p) = (A^{\textrm{tr}}A)^{-1}A^{\textrm{tr}}(\epsilon_1, \epsilon_2)$ and transformed confidence region.
+
+The confidence interval for the order of convergence $p$ is the projection, onto the $p$ axis, of the confidence region in the $(C, p)$ plane. It includes not only the samples within the confidence region but all of those in the band $p_{\min} \leq p \leq p_{\max},$ increasing considerably the confidence level.
 
 ````@example 12-wiener_linearhomogeneous_testCI
 plot(size=(800, 400), allplts[1].errors, allplts[1].cp)
@@ -364,7 +387,13 @@ plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
 plot(size=(800, 400), allplts[3].errors, allplts[3].cp)
 ````
 
-p histograms
+````@example 12-wiener_linearhomogeneous_testCI
+plot(size=(800, 400), allplts[4].errors, allplts[4].cp)
+````
+
+### Histrogram of the order of convergence
+
+Finally, we plot the histograms for $p$, obtained both from the correlated and the decorrelated strong errors. Notice that the distributions for $p$ resembles a normal distribution even for low samples, and building a CI from the decorrelated samples works fine, in this example, despite the fact that the theory does not guarantee that. But it works only with the uncorrelad samples! Nevertheless, it requires a lot more samples, being computationally quite expensive, especially with more complicate equations. The CI from the push-forward method underestimates the confidence level, but it is more trustworthy and less demanding.
 
 ````@example 12-wiener_linearhomogeneous_testCI
 plot(allplts[1].histp)
@@ -376,7 +405,13 @@ plot(allplts[2].histp)
 
 ````@example 12-wiener_linearhomogeneous_testCI
 plot(allplts[3].histp)
+````
 
+````@example 12-wiener_linearhomogeneous_testCI
+plot(allplts[4].histp)
+````
+
+````@example 12-wiener_linearhomogeneous_testCI
 nothing # hide
 ````
 

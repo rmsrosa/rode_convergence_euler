@@ -64,7 +64,7 @@ nsample = ns[[1, 2, 3]]
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 04-allnoises
-m = 92
+m = 400
 nothing # hide
 ````
 

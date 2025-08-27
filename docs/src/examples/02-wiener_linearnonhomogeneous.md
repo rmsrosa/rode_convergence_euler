@@ -137,7 +137,7 @@ nsample = ns[[1, 2, 3, 4]]
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 02-wiener_linearnonhomogeneous
-m = 80
+m = 100
 nothing # hide
 ````
 

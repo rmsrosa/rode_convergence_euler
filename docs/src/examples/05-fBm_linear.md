@@ -66,7 +66,7 @@ nsample = ns[[1, 2, 3, 4]]
 The number of simulations for the Monte Carlo estimate is set to
 
 ````@example 05-fBm_linear
-m = 500
+m = 600
 nothing # hide
 ````
 
