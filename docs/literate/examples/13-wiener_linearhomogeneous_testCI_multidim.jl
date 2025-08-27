@@ -204,13 +204,9 @@ function printpercents(
 end
 
 function showplots(
-    ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L
+    ps, escore, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L
 )
 
-    clevel = 0.95 # 95% confidence level
-    elevel = clevel^(1/length(suite.ns)) # assuming independence
-    elevel = 1.0 - ( 1.0 - clevel ) / length(suite.ns) # not assuming independence, using Bonfaroni inequality
-    escore = quantile(Normal(), (1 + elevel) / 2)
     rect = Shape(
         [
             (result.errors[1] - escore * result.stderrs[1], result.errors[2] - escore * result.stderrs[2]),
@@ -327,7 +323,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     result = solve(rng, suite)
 
-    plts = showplots(ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L)
+    plts = showplots(ps, escore, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L)
 
     append!(allplts, [plts])
 end
