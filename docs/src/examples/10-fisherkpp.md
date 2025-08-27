@@ -99,7 +99,8 @@ nothing # hide
 The discretized initial condition is then
 
 ````@example 10-fisherkpp
-u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
+diracs = Tuple(Dirac(u₀(j / l)) for j in 0:l)
+u0law = product_distribution(diracs...)
 ````
 
 For the discretization of the equation we use finite differences with the classic second-order discretization of the second derivative:
@@ -254,7 +255,8 @@ Now that we are done with testing, we set up the mesh parameters for the converg
 
 ````@example 10-fisherkpp
 l = 512 # 2^9
-u0law = product_distribution(Tuple(Dirac(u₀(j / l)) for j in 0:l)...)
+diracs = Tuple(Dirac(u₀(j / l)) for j in 0:l)
+u0law = product_distribution(diracs...)
 ntgt = 2^18
 ns = [2^5, 2^7, 2^9]
 ````
@@ -277,7 +279,7 @@ all(mod(ntgt, n) == 0 for n in ns) && ntgt ≥ last(ns)^2
 The number of simulations for the Monte-Carlo estimate of the rate of strong convergence
 
 ````@example 10-fisherkpp
-m = 40
+m = 80
 nothing # hide
 ````
 
