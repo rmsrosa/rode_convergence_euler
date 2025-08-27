@@ -6,7 +6,9 @@
 #
 # We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.
 #
-# Thus, we consider a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.
+# The Random ODE is a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.
+
+# In this first example, we consider only two mesh resolutions, for full visualization.
 
 # ## The equation
 
