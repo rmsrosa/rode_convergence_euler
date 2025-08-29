@@ -4,10 +4,6 @@ EditURL = "../../literate/examples/12-wiener_linearhomogeneous_testCI.jl"
 
 # Testing the confidence regions and intervals 1
 
-```@meta
-Draft = false
-```
-
 We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.
 
 The Random ODE is a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.

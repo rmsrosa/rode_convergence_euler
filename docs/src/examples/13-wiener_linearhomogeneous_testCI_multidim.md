@@ -4,9 +4,6 @@ EditURL = "../../literate/examples/13-wiener_linearhomogeneous_testCI_multidim.j
 
 # Testing the confidence regions and intervals 2
 
-```@meta
-Draft = false
-```
 
 We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.
 
@@ -229,13 +226,9 @@ function printpercents(
 end
 
 function showplots(
-    ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L
+    ps, escore, allerrors, allerrorssplit, allerrorsdealigned, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L
 )
 
-    clevel = 0.95 # 95% confidence level
-    elevel = clevel^(1/length(suite.ns)) # assuming independence
-    elevel = 1.0 - ( 1.0 - clevel ) / length(suite.ns) # not assuming independence, using Bonfaroni inequality
-    escore = quantile(Normal(), (1 + elevel) / 2)
     rect = Shape(
         [
             (result.errors[1] - escore * result.stderrs[1], result.errors[2] - escore * result.stderrs[2]),
@@ -245,26 +238,33 @@ function showplots(
         ]
     )
 
-    plt_errors = plot(title="Errors all (m=$m, nk=$nk)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
+    plt_errors = plot(title="Errors ϵ₁ and ϵ₂(m=$m, nk=$nk)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
         scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
-        scatter!(plt_errors, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors dealigned ($(round(percent_e_dealigned_in, digits=2))% in CI)")
+        scatter!(plt_errors, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], alpha=0.2, label="errors dealigned ($(round(percent_e_dealigned_in, digits=2))% in CI)")
         scatter!(plt_errors, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label="error mean")
         plot!(plt_errors, rect, alpha=0.2, label="CI")
     end
 
     plt_errors_split = plot(title="Errors split (m=$m, nk=$nk) \n ($(round(percent_e_split_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
-        scatter!(plt_errors_split, allerrors[1:div(nk,2), 1], allerrors[div(nk,2)+1:nk, 2], alpha=0.2, label="errors")
+        scatter!(plt_errors_split, allerrorssplit[:, 1], allerrorssplit[:, 2], alpha=0.2, label="errors")
         scatter!(plt_errors_split, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_split, rect, alpha=0.2, label="CI")
     end
 
     plt_errors_dealigned = plot(title="Errors dealigned (m=$m, nk=$nk) \n ($(round(percent_e_dealigned_in, digits=2))% in CI)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂")
     begin
-        scatter!(plt_errors_dealigned, allerrors[begin:end-1, 1], allerrors[begin+1:end, 2], alpha=0.2, label="errors")
+        scatter!(plt_errors_dealigned, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], alpha=0.2, label="errors")
         scatter!(plt_errors_dealigned, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label="error mean")
         plot!(plt_errors_dealigned, rect, alpha=0.2, label="CI")
+    end
+
+    plt_errors3d = plot(title="Errors ϵ₁, ϵ₂, and ϵ₃ (m=$m, nk=$nk)", titlefont=10, xlabel="ϵ₁", ylabel="ϵ₂", zlabel="ϵ₃")
+    begin
+        scatter3d!(plt_errors3d, allerrors[:, 1], allerrors[:, 2], allerrors[:, 3], alpha=0.2, label="errors ($(round(percent_e_in, digits=2))% in CI)")
+        scatter3d!(plt_errors3d, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], allerrorsdealigned[:, 3], alpha=0.2, label="errors dealigned ($(round(percent_e_dealigned_in, digits=2))% in CI)")
+        scatter3d!(plt_errors3d, Tuple(mean(view(allerrors, :, 1:3), dims=1)), markersize=4, label="error mean")
     end
 
     plt_hist_e = [
@@ -311,6 +311,7 @@ function showplots(
         errors = plt_errors,
         split = plt_errors_split,
         dealigned = plt_errors_dealigned,
+        errors3d = plt_errors3d,
         hist = plt_hist_e,
         cp = plt_Cp,
         histp = plt_hist_p
@@ -325,8 +326,8 @@ end
 Now, with the helper functions, we run a loop varying the number $m$ of samples in each run and the number $nk$ of test runs, showing some relevant statistics.
 
 ````@example 13-wiener_linearhomogeneous_testCI_multidim
-ms = (500, 1000, 2000)
-nks = (1000, 1000, 2000)
+ms = (400, 800, 1600)
+nks = (1000, 1000, 1000)
 
 @assert all(iseven, nks)
 
@@ -354,7 +355,7 @@ for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
 
     result = solve(rng, suite)
 
-    plts = showplots(ps, allerrors, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L)
+    plts = showplots(ps, escore, allerrors, allerrorssplit, allerrorsdealigned, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L)
 
     append!(allplts, [plts])
 end
@@ -380,13 +381,23 @@ plot(size=(800, 400*div(length(ns), 2)), allplts[2].hist...)
 plot(size=(800, 400*div(length(ns), 2)), allplts[3].hist...)
 ````
 
-````@example 13-wiener_linearhomogeneous_testCI_multidim
-plot(size=(800, 400*div(length(ns), 2)), allplts[4].hist...)
-````
-
 ### Density of the joint distribution of strong errors of the transformed distributions
 
-In the following, we plot, on the left panel, the sample points of the joint distribution $(\epsilon_1, \epsilon_2)$ of the strong errors of the first two mesh resolutions.
+First we visualise the joint distribution of the samples of the first three strong errors $(\epsilon_1, \epsilon_2, \epsilon_3).$
+
+````@example 13-wiener_linearhomogeneous_testCI_multidim
+plot(allplts[1].errors3d)
+````
+
+````@example 13-wiener_linearhomogeneous_testCI_multidim
+plot(allplts[2].errors3d)
+````
+
+````@example 13-wiener_linearhomogeneous_testCI_multidim
+plot(allplts[3].errors3d)
+````
+
+Now we plot, on the left panel, the sample points of the joint distribution $(\epsilon_1, \epsilon_2)$ of the strong errors of the first two mesh resolutions.
 
 On the right panel, we see the corresponding transformed samples $(C, p) = (A^{\textrm{tr}}A)^{-1}A^{\textrm{tr}}(\epsilon_1, \ldots, \epsilon_{i_{\max}})$.
 
@@ -403,6 +414,8 @@ plot(size=(800, 400), allplts[2].errors, allplts[2].cp)
 ````@example 13-wiener_linearhomogeneous_testCI_multidim
 plot(size=(800, 400), allplts[3].errors, allplts[3].cp)
 ````
+
+The plot for the errors only displayed the first two errors. We may also plot a 3d scatter plot of three of the strong errors, i.e. corresponding to three of the four meshes, as, for example,
 
 ### Histrogram of the order of convergence
 
