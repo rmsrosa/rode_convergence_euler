@@ -67,12 +67,10 @@ noise = WienerProcess(t0, tf, y0)
 
 params = nothing
 
-# The number of mesh points for the target solution and the approximations
+# The number of mesh points for the approximations
 
-ntgt = 2^12
-ns = 2 .^ (4:2:10)
+ns = 2 .^ (5:8)
 
-# Notice we just chose two mesh sizes, so we can easily visualize the distributions.
 #
 
 # The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted [`RandomEuler`](@ref):
@@ -103,6 +101,8 @@ begin # linear homogenous with Wiener noise
     end
 
     target = CustomUnivariateMethod(target_solver!, rng)
+
+    ntgt = 2^10
 end
 
 begin # linear non-homogeneous with Wiener noise
@@ -131,18 +131,31 @@ begin # linear non-homogeneous with Wiener noise
     end
 
     target = CustomUnivariateMethod(target_solver!, rng)
+
+    ntgt = 2^10
 end
 
 begin # linear homogenous with sine of Wiener noise
     f(t, x, y, p) = sin(y) * x
 
-    μ = 1.0
-    σ = 0.2
-    y0 = 1.0
-    noise = GeometricBrownianMotionProcess(t0, tf, y0, μ, σ)
-    ntgt = 2^18
+    noise = GeometricBrownianMotionProcess(t0, tf, 1.0, 1.0, 0.2)
 
     target = RandomEuler()
+    ntgt = 2^16
+end
+
+begin
+    f(t, x, y, p) = - sum(abs, y) * x + prod(y)
+
+    noise = ProductProcess(
+        OrnsteinUhlenbeckProcess(t0, tf, 0.2, 0.3, 0.5),
+        GeometricBrownianMotionProcess(t0, tf, 0.2, 0.3, 0.5),
+        CompoundPoissonProcess(t0, tf, 5.0, Exponential(0.5)),
+        ExponentialHawkesProcess(t0, tf, 0.5, 0.5, 0.5, Exponential(0.5))
+    )
+
+    target = RandomEuler()
+    ntgt = 2^16
 end
 
 nothing # hide
@@ -162,11 +175,26 @@ suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, 
 
 deltas = (suite.tf - suite.t0) ./ suite.ns
 
-allerrors = mapreduce(i -> solve(rng, suite).errors', vcat, 1:nk)
+@time allerrors = mapreduce(i -> solve(rng, suite).errors', vcat, 1:nk)
+
+# 
 
 logallerrors = log.(allerrors)
 
 allmeans = mean(allerrors, dims=1)
+
+#
+
+means_num = 100
+@assert mod(nk, means_num) == 0
+means_size = div(nk, means_num)
+@assert means_num * means_size == nk
+partialmeans = mapreduce(n -> mean(allerrors[n+1:n+1+means_size, :], dims=1), vcat, 0:means_num-1)
+
+meansofmeans = mean(partialmeans, dims=1)
+stdmeans = std(partialmeans, dims=1)
+
+#
 
 plt = begin
     plot(title="Pathwise and mean errors", titlefont=12, xscale=:log10, yscale=:log10, xlabel="\$\\Delta t\$", ylabel="\$\\textrm{error}\$", legend=:topleft, xlims=(last(deltas)/2, 2first(deltas)))
@@ -191,6 +219,8 @@ plt = begin
     plot(size=(800, 300*div(length(ns), 2)), plts...)
 end
 
+#
+
 plt = begin
     plts = Any[]
     for ncol in axes(allerrors, 2)
@@ -202,6 +232,8 @@ plt = begin
     end
     plot(size=(800, 300*div(length(ns), 2)), plts...)
 end
+
+#
 
 plt = begin
     plts = Any[]
@@ -220,18 +252,35 @@ plt = begin
     plot(size=(800, 300*div(length(ns), 2)), plts...)
 end
 
+#
+
 plt = begin
     plts = Any[]
     for ncol in axes(allerrors, 2)
         fittedlognormal = fit(LogNormal, allerrors[:, ncol])
         fittedexponential = fit(Exponential, allerrors[:, ncol])
-        pltcol = plot(title="Histogram and fit of log of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$", titlefont=8, legend=:topleft, xlims=(0.0, 2*mean(allerrors[:, ncol])))
+        pltcol = plot(title="Histogram and fit of log of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$", titlefont=8, legend=:topleft, xlims=(0.0, mean(allerrors[:, ncol]) + 2std(allerrors[:, ncol])))
         histogram!(pltcol, allerrors[1:nktenths, ncol], normalize=:pdf, label="$nktenths samples")
         plot!(pltcol, x -> pdf(fittedlognormal, x), label="fitted logNormal")
         plot!(pltcol, x -> pdf(fittedexponential, x), label="fitted Exponential")
         push!(plts, pltcol)
     end
+    plot(size=(800, 300*div(length(ns), 2)), plts..., legend=:topright)
+end
+
+#
+
+plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        pltcol = plot(title="Histogram of  error means for \$\\delta= 2^{$(ns[ncol])}\$", titlefont=8)
+        histogram!(pltcol, partialmeans[:, ncol], nbins = 40, label="$means_num means from $means_size samples")
+        push!(plts, pltcol)
+    end
     plot(size=(800, 300*div(length(ns), 2)), plts...)
 end
 
+#
+
 nothing # hide
+
