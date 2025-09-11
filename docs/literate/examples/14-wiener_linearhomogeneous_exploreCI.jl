@@ -82,6 +82,8 @@ method = RandomEuler()
 begin # linear homogenous with Wiener noise
     f(t, x, y, p) = y * x
 
+    ns = 2 .^ (4:10)
+
     target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
         axes(xt) == axes(yt) || throw(
             DimensionMismatch("The vectors `xt` and `yt` must match indices")
@@ -102,7 +104,7 @@ begin # linear homogenous with Wiener noise
 
     target = CustomUnivariateMethod(target_solver!, rng)
 
-    ntgt = 2^10
+    ntgt = 2^12
 end
 
 begin # linear non-homogeneous with Wiener noise
@@ -281,6 +283,39 @@ plt = begin
 end
 
 #
+
+plt = begin
+    plot(log.(deltas), log.(allerrors[1:100, :]'), alpha=0.5, legend=false)
+    plot!(log.(deltas), l -> l + 1, color=:black, linewidth=2)
+    plot!(log.(deltas), l -> l - 1.5, color=:black, linewidth=2)
+    plot!(log.(deltas), l -> l - 4, color=:black, linewidth=2)
+    plot!(log.(deltas), l -> l/2 - 10, color=:red, alpha=0.5, linewidth=2)
+    plot!(log.(deltas), l -> 2l - 1, color=:blue, alpha=0.5, linewidth=2)
+end
+
+#
+
+A = [one.(deltas) log.(deltas)]
+L = inv(A' * A) * A'
+lCps = reduce(hcat, [L * log.(allerrors[n, :]) for n in axes(allerrors, 1)])
+
+extrema(lCps[2, :])
+pmeans = mean(lCps[2, :])
+Nps = fit(Normal, lCps[2, :])
+
+plt = begin
+    plot(title="Order of convergence of individual path samples")
+    histogram(lCps[2, :], label="\$p(\\omega)\$", normalize=:pdf)
+    vline!([pmeans], linewidth=2, label="\$\\mathbb{E}[p] = $(round(pmeans, digits=2))\$")
+    plot!(p -> pdf(Nps, p), label="fitted \$\\mathcal{N}($(round(Nps.μ, digits=2)), $(round(Nps.σ, digits=2))^2)\$")
+end
+
+pbounds = [minimum( ( log.(allerrors[n, :]) .- maximum(lCps[1, :]) ) ./ log.(deltas) ) for n in axes(allerrors, 1)]
+
+plt = begin
+    plot(title="Not right quantity to look at")
+    histogram(pbounds)
+end
 
 nothing # hide
 
