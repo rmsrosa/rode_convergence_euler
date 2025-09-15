@@ -319,3 +319,19 @@ end
 
 nothing # hide
 
+pboundsev = [minimum( ( log.(allerrors[n, 1:k]) .- maximum(lCps[1, 1:k]) ) ./ log.(deltas[1:k]) ) for n in axes(allerrors, 1), k in 2:7]
+
+begin
+    histogram(pboundsev[:, 1], alpha=0.1)
+    histogram!(pboundsev[:, 2], alpha=0.1)
+    histogram!(pboundsev[:, 3], alpha=0.1)
+    histogram!(pboundsev[:, 4], alpha=0.1)
+    histogram!(pboundsev[:, 5], alpha=0.1)
+    histogram!(pboundsev[:, 5], alpha=0.1)
+end
+
+#
+
+nothing
+
+#
