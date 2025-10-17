@@ -50,7 +50,8 @@ include(joinpath(@__DIR__(), "literate.jl"))
         ],
         "CI testing" => [
             "examples/12-wiener_linearhomogeneous_testCI.md",
-            "examples/13-wiener_linearhomogeneous_testCI_multidim.md"
+            "examples/13-wiener_linearhomogeneous_testCI_multidim.md",
+            "examples/14-wiener_linearhomogeneous_exploreCI.md"
         ],
         "api.md",
     ],
