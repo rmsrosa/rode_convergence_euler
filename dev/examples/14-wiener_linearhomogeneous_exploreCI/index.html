@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Testing the confidence regions and intervals 3 · Euler method for RODEs</title><meta name="title" content="Testing the confidence regions and intervals 3 · Euler method for RODEs"/><meta property="og:title" content="Testing the confidence regions and intervals 3 · Euler method for RODEs"/><meta property="twitter:title" content="Testing the confidence regions and intervals 3 · Euler method for RODEs"/><meta name="description" content="Documentation for Euler method for RODEs."/><meta property="og:description" content="Documentation for Euler method for RODEs."/><meta property="twitter:description" content="Documentation for Euler method for RODEs."/><meta property="og:url" content="https://github.com/rmsrosa/rode_convergence_euler/examples/14-wiener_linearhomogeneous_exploreCI/"/><meta property="twitter:url" content="https://github.com/rmsrosa/rode_convergence_euler/examples/14-wiener_linearhomogeneous_exploreCI/"/><link rel="canonical" href="https://github.com/rmsrosa/rode_convergence_euler/examples/14-wiener_linearhomogeneous_exploreCI/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Euler method for RODEs</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Overview</a></li><li><span class="tocitem">Theory</span><ul><li><a class="tocitem" href="../../theory/results/">Main results</a></li><li><a class="tocitem" href="../../theory/idea/">Main idea</a></li><li><a class="tocitem" href="../../theory/extras/">Extras</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><input class="collapse-toggle" id="menuitem-3-1" type="checkbox"/><label class="tocitem" for="menuitem-3-1"><span class="docs-label">Basic Linear RODEs</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../01-wiener_linearhomogeneous/">Homogenous linear RODE with a Wiener process noise coefficient</a></li><li><a class="tocitem" href="../02-wiener_linearnonhomogeneous/">Non-homogenous linear RODE with a Wiener process noise coefficient</a></li><li><a class="tocitem" href="../03-sin_gBm_linearhomogeneous/">Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient</a></li></ul></li><li><a class="tocitem" href="../04-allnoises/">Linear system with all implemented noises</a></li><li><a class="tocitem" href="../05-fBm_linear/">Linear RODE with fractional Brownian motion</a></li><li><a class="tocitem" href="../06-popdyn/">Population dynamics with harvest</a></li><li><a class="tocitem" href="../07-toggle_switch/">A toggle-switch model for gene expression</a></li><li><a class="tocitem" href="../08-earthquake/">Mechanical structural under random Earthquake-like seismic disturbances</a></li><li><a class="tocitem" href="../09-risk/">An actuarial risk model</a></li><li><a class="tocitem" href="../10-fisherkpp/">Random Fisher-KPP partial differential equation</a></li><li><a class="tocitem" href="../11-combined_convergences/">Combined plot</a></li></ul></li><li><span class="tocitem">Noises</span><ul><li><a class="tocitem" href="../../noises/noiseintro/">Noises</a></li><li><a class="tocitem" href="../../noises/homlin/">Homogeneous linear Itô process noise</a></li><li><a class="tocitem" href="../../noises/fBm/">Simulating fractional Brownian motion</a></li></ul></li><li><span class="tocitem">CI testing</span><ul><li><a class="tocitem" href="../12-wiener_linearhomogeneous_testCI/">Testing the confidence regions and intervals 1</a></li><li><a class="tocitem" href="../13-wiener_linearhomogeneous_testCI_multidim/">Testing the confidence regions and intervals 2</a></li><li class="is-active"><a class="tocitem" href>Testing the confidence regions and intervals 3</a><ul class="internal"><li><a class="tocitem" href="#The-equation"><span>The equation</span></a></li><li><a class="tocitem" href="#Setting-up-the-problem"><span>Setting up the problem</span></a></li><li><a class="tocitem" href="#Statistics"><span>Statistics</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">CI testing</a></li><li class="is-active"><a href>Testing the confidence regions and intervals 3</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Testing the confidence regions and intervals 3</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/rmsrosa/rode_convergence_euler" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/rmsrosa/rode_convergence_euler" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Testing-the-confidence-regions-and-intervals-3"><a class="docs-heading-anchor" href="#Testing-the-confidence-regions-and-intervals-3">Testing the confidence regions and intervals 3</a><a id="Testing-the-confidence-regions-and-intervals-3-1"></a><a class="docs-heading-anchor-permalink" href="#Testing-the-confidence-regions-and-intervals-3" title="Permalink"></a></h1><p>We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.</p><p>The Random ODE is a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.</p><p>Now we consider an arbitrary number of mesh resolutions.</p><h2 id="The-equation"><a class="docs-heading-anchor" href="#The-equation">The equation</a><a id="The-equation-1"></a><a class="docs-heading-anchor-permalink" href="#The-equation" title="Permalink"></a></h2><p>We consider the RODE</p><p class="math-container">\[  \begin{cases}
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
+  \left. X_t \right|_{t = 0} = X_0,
+  \end{cases}\]</p><p>where <span>$\{W_t\}_{t\geq 0}$</span> is a standard Wiener process. The explicit solution is</p><p class="math-container">\[  X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.\]</p><p>As seen in the first example of this documentation, once an Euler approximation is computed, along with realizations <span>$\{W_{t_i}\}_{i=0}^n$</span> of a sample path of the noise, we consider an exact sample solution given by</p><p class="math-container">\[    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},\]</p><p>for realizations <span>$Z_i$</span> drawn from a normal distribution and scaled by the standard deviation <span>$\sqrt{(t_{i+1} - t_i)^3/12}$</span>. This is implemented by computing the integral recursively, via</p><p class="math-container">\[    \begin{cases}
+        I_j = I_{j-1} + \frac{1}{2}\left(W_{t_{j-1}} + W_{t_j}\right)(t_{j} - t_{j-1}) + Z_j, \\
+        Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
+        R_j \sim \mathcal{N}(0, 1), \\
+    \end{cases}\]</p><p>with <span>$I_0 = 0$</span>, and setting</p><p class="math-container">\[  X_{t_j} = X_0 e^{I_j}.\]</p><h2 id="Setting-up-the-problem"><a class="docs-heading-anchor" href="#Setting-up-the-problem">Setting up the problem</a><a id="Setting-up-the-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-up-the-problem" title="Permalink"></a></h2><p>First we load the necessary packages</p><pre><code class="language-julia hljs">using Plots
+using Random
+using Distributions
+using RODEConvergence</code></pre><p>Then we set up some variables, starting by choosing the <code>Xoshiro256++</code> pseudo-random number generator, and setting its seed for the sake of reproducibility:</p><pre><code class="language-julia hljs">rng = Xoshiro(123)</code></pre><p>Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a standard <a href="https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal">Distributions.Normal</a> random variable:</p><pre><code class="language-julia hljs">t0, tf = 0.0, 1.0
+x0law = Normal()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Distributions.Normal{Float64}(μ=0.0, σ=1.0)</code></pre><p>The noise is a <a href="../../api/#RODEConvergence.WienerProcess"><code>WienerProcess</code></a> starting at <span>$y_0 = 0$</span>:</p><pre><code class="language-julia hljs">y0 = 0.0
+noise = WienerProcess(t0, tf, y0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">WienerProcess{Float64}(0.0, 1.0, 0.0)</code></pre><p>There is no parameter in the equation, so we just set <code>params</code> to <code>nothing</code>.</p><pre><code class="language-julia hljs">params = nothing</code></pre><p>The number of mesh points for the approximations</p><pre><code class="language-julia hljs">ns = 2 .^ (5:8)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{Int64}:
+  32
+  64
+ 128
+ 256</code></pre><p>The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted <a href="../../api/#RODEConvergence.RandomEuler"><code>RandomEuler</code></a>:</p><pre><code class="language-julia hljs">method = RandomEuler()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">RandomEuler{Float64, Distributions.Univariate}(Float64[])</code></pre><p>We now have some choises of equations to test out.</p><pre><code class="language-julia hljs">begin ## linear homogenous with Wiener noise
+    f(t, x, y, p) = y * x
+
+    ns = 2 .^ (4:10)
+
+    target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
+        axes(xt) == axes(yt) || throw(
+            DimensionMismatch(&quot;The vectors `xt` and `yt` must match indices&quot;)
+        )
+
+        n = size(xt, 1)
+        dt = (tf - t0) / (n - 1)
+        i1 = firstindex(xt)
+        xt[i1] = x0
+        integral = zero(T)
+        zscale = sqrt(dt^3 / 12)
+        for i in Iterators.drop(eachindex(xt, yt), 1)
+            integral += (yt[i] + yt[i1]) * dt / 2 + zscale * randn(rng)
+            xt[i] = x0 * exp(integral)
+            i1 = i
+        end
+    end
+
+    target = CustomUnivariateMethod(target_solver!, rng)
+
+    ntgt = 2^12
+end
+
+begin ## linear non-homogeneous with Wiener noise
+    f(t, x, y, p) = - x + y
+
+    # The *target* solution as described above is implemented as
+    target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
+        axes(xt) == axes(yt) || throw(
+            DimensionMismatch(&quot;The vectors `xt` and `yt` must match indices&quot;)
+        )
+
+        n = size(xt, 1)
+        dt = (tf - t0) / (n - 1)
+        i1 = firstindex(xt)
+        xt[i1] = x0
+        integral = zero(T)
+        ti1 = zero(T)
+        zscale = sqrt(dt^3 / 12)
+        for i in Iterators.drop(eachindex(xt, yt), 1)
+            ti = ti1 + dt
+            integral += (yt[i] - yt[i1]) * (exp(ti) - exp(ti1)) / dt +  zscale * randn(rng)
+            xt[i] = exp(-ti) * (x0 - integral) + yt[i]
+            ti1 = ti
+            i1 = i
+        end
+    end
+
+    target = CustomUnivariateMethod(target_solver!, rng)
+
+    ntgt = 2^10
+end
+
+begin ## linear homogenous with sine of Wiener noise
+    f(t, x, y, p) = sin(y) * x
+
+    noise = GeometricBrownianMotionProcess(t0, tf, 1.0, 1.0, 0.2)
+
+    target = RandomEuler()
+    ntgt = 2^16
+end
+
+begin
+    f(t, x, y, p) = - sum(abs, y) * x + prod(y)
+
+    noise = ProductProcess(
+        OrnsteinUhlenbeckProcess(t0, tf, 0.2, 0.3, 0.5),
+        GeometricBrownianMotionProcess(t0, tf, 0.2, 0.3, 0.5),
+        CompoundPoissonProcess(t0, tf, 5.0, Exponential(0.5)),
+        ExponentialHawkesProcess(t0, tf, 0.5, 0.5, 0.5, Exponential(0.5))
+    )
+
+    target = RandomEuler()
+    ntgt = 2^16
+end</code></pre><h2 id="Statistics"><a class="docs-heading-anchor" href="#Statistics">Statistics</a><a id="Statistics-1"></a><a class="docs-heading-anchor-permalink" href="#Statistics" title="Permalink"></a></h2><p>Now, with the helper functions, we run a loop varying the number <span>$m$</span> of samples in each run and the number <span>$nk$</span> of test runs, showing some relevant statistics.</p><pre><code class="language-julia hljs">m = 1
+nk = 10000
+
+nktenths = div(nk, 10)
+nkfortieth = div(nk, 40)
+nkhundredths = div(nk, 100)
+
+suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+
+deltas = (suite.tf - suite.t0) ./ suite.ns
+
+@time allerrors = mapreduce(i -&gt; solve(rng, suite).errors&#39;, vcat, 1:nk)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10000×7 Matrix{Float64}:
+ 0.034588    0.0332348   0.0148731    …  0.00167533   0.000906995
+ 0.00350366  0.00195087  0.000721746     0.000108405  6.06482e-5
+ 0.0233795   0.0111936   0.00715596      0.000825212  0.000291453
+ 0.0272287   0.00933148  0.00594742      0.00106511   0.00043214
+ 0.00307598  0.00180301  0.000921039     0.000118992  6.94217e-5
+ 0.00820463  0.00400803  0.00202483   …  0.000342559  0.000107584
+ 0.0022233   0.00143584  0.000608864     0.000131602  6.11307e-5
+ 0.0243874   0.0119086   0.00889488      0.00127886   0.000426953
+ 0.0323656   0.0183606   0.00900697      0.000602713  0.000385757
+ 0.00381985  0.00142289  0.00139676      0.000203599  5.33787e-5
+ ⋮                                    ⋱  ⋮            
+ 0.0426571   0.0177881   0.00387094      0.000803199  0.000810363
+ 0.0122743   0.00407009  0.0022611       0.000495511  0.000126227
+ 0.0144092   0.013967    0.00927954      0.000492989  0.000227238
+ 0.0156585   0.0202177   0.0081986       0.000771954  0.000406595
+ 0.00363168  0.00192584  0.000870993  …  0.000111173  6.31862e-5
+ 0.0216847   0.0223077   0.0071473       0.000637114  0.000606374
+ 0.00940982  0.00743633  0.00658847      0.000379586  0.000100533
+ 0.0320884   0.0164777   0.0105353       0.000994605  0.000717784
+ 0.0548989   0.015056    0.0147024       0.00216307   0.000896211</code></pre><pre><code class="language-julia hljs">logallerrors = log.(allerrors)
+
+allmeans = mean(allerrors, dims=1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1×7 Matrix{Float64}:
+ 0.0220961  0.0114369  0.00585344  0.00296678  …  0.000750733  0.000373083</code></pre><pre><code class="language-julia hljs">means_num = 100
+@assert mod(nk, means_num) == 0
+means_size = div(nk, means_num)
+@assert means_num * means_size == nk
+partialmeans = mapreduce(n -&gt; mean(allerrors[n+1:n+1+means_size, :], dims=1), vcat, 0:means_num-1)
+
+meansofmeans = mean(partialmeans, dims=1)
+stdmeans = std(partialmeans, dims=1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1×7 Matrix{Float64}:
+ 0.00157856  0.000802647  0.000499506  …  3.55732e-5  1.96984e-5  8.57439e-6</code></pre><pre><code class="language-julia hljs">plt = begin
+    plot(title=&quot;Pathwise and mean errors&quot;, titlefont=12, xscale=:log10, yscale=:log10, xlabel=&quot;\$\\Delta t\$&quot;, ylabel=&quot;\$\\textrm{error}\$&quot;, legend=:topleft, xlims=(last(deltas)/2, 2first(deltas)))
+    scatter!(deltas, allerrors[1, :], color=:gray, alpha=0.1, label=&quot;pathwise errors ($nktenths samples)&quot;)
+    scatter!(deltas, allerrors[2:nktenths, :]&#39;, label=false, color=:gray, alpha=0.01)
+    scatter!(deltas, mean(allerrors[1:nkhundredths, :], dims=1)&#39;, label=&quot;mean errors ($nkhundredths samples)&quot;, color=1, alpha=0.8)
+    scatter!(deltas, mean(allerrors[1:nkfortieth, :], dims=1)&#39;, label=&quot;mean errors ($nkfortieth samples)&quot;, color=2, alpha=0.8)
+    scatter!(deltas, allmeans&#39;, label=&quot;mean errors ($nk samples)&quot;, color=3, alpha=0.8)
+end</code></pre><img src="cd3f0885.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        pltcol = plot(title=&quot;Histogram of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$&quot;, titlefont=8)
+        histogram!(pltcol, allerrors[1:nktenths, ncol], label=&quot;$nktenths samples&quot;)
+        histogram!(pltcol, allerrors[1:nkfortieth, ncol], label=&quot;$nkfortieth samples&quot;)
+        histogram!(pltcol, allerrors[1:nkhundredths, ncol], label=&quot;$nkhundredths samples&quot;)
+        push!(plts, pltcol)
+    end
+    plot(size=(800, 300*div(length(ns), 2)), plts...)
+end</code></pre><img src="c26f32d3.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        pltcol = plot(title=&quot;Histogram of log of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$&quot;, titlefont=8, legend=:topleft)
+        histogram!(pltcol, logallerrors[1:nktenths, ncol], label=&quot;$nktenths samples&quot;)
+        histogram!(pltcol, logallerrors[1:nkfortieth, ncol], label=&quot;$nkfortieth samples&quot;)
+        histogram!(pltcol, logallerrors[1:nkhundredths, ncol], label=&quot;$nkhundredths samples&quot;)
+        push!(plts, pltcol)
+    end
+    plot(size=(800, 300*div(length(ns), 2)), plts...)
+end</code></pre><img src="4b9793c6.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        fitteddists = [
+            (dist, fit(dist, logallerrors[:, ncol]) ) for dist in (Normal, Cauchy)
+        ]
+        pltcol = plot(title=&quot;Histogram and fit of log of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$&quot;, titlefont=8, legend=:topleft)
+        histogram!(pltcol, logallerrors[1:nktenths, ncol], normalize=:pdf, label=&quot;$nktenths samples&quot;)
+        for fitteddist in fitteddists
+            plot!(pltcol, x -&gt; pdf(fitteddist[2], x), label=&quot;fitted $(fitteddist[1])&quot;)
+        end
+        plot!(pltcol, x -&gt; pdf(Logistic(mean(logallerrors[:, ncol]), √3*var(logallerrors[:, ncol])/π), x), label=&quot;adjusted Logistic&quot;)
+        push!(plts, pltcol)
+    end
+    plot(size=(800, 300*div(length(ns), 2)), plts...)
+end</code></pre><img src="c6adc358.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        fittedlognormal = fit(LogNormal, allerrors[:, ncol])
+        fittedexponential = fit(Exponential, allerrors[:, ncol])
+        pltcol = plot(title=&quot;Histogram and fit of log of pathwise errors for \$\\delta= 2^{$(ns[ncol])}\$&quot;, titlefont=8, legend=:topleft, xlims=(0.0, mean(allerrors[:, ncol]) + 2std(allerrors[:, ncol])))
+        histogram!(pltcol, allerrors[1:nktenths, ncol], normalize=:pdf, label=&quot;$nktenths samples&quot;)
+        plot!(pltcol, x -&gt; pdf(fittedlognormal, x), label=&quot;fitted logNormal&quot;)
+        plot!(pltcol, x -&gt; pdf(fittedexponential, x), label=&quot;fitted Exponential&quot;)
+        push!(plts, pltcol)
+    end
+    plot(size=(800, 300*div(length(ns), 2)), plts..., legend=:topright)
+end</code></pre><img src="88915865.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plts = Any[]
+    for ncol in axes(allerrors, 2)
+        pltcol = plot(title=&quot;Histogram of  error means for \$\\delta= 2^{$(ns[ncol])}\$&quot;, titlefont=8)
+        histogram!(pltcol, partialmeans[:, ncol], nbins = 40, label=&quot;$means_num means from $means_size samples&quot;)
+        push!(plts, pltcol)
+    end
+    plot(size=(800, 300*div(length(ns), 2)), plts...)
+end</code></pre><img src="5652b66d.svg" alt="Example block output"/><pre><code class="language-julia hljs">plt = begin
+    plot(log.(deltas), log.(allerrors[1:100, :]&#39;), alpha=0.5, legend=false)
+    plot!(log.(deltas), l -&gt; l + 1, color=:black, linewidth=2)
+    plot!(log.(deltas), l -&gt; l - 1.5, color=:black, linewidth=2)
+    plot!(log.(deltas), l -&gt; l - 4, color=:black, linewidth=2)
+    plot!(log.(deltas), l -&gt; l/2 - 10, color=:red, alpha=0.5, linewidth=2)
+    plot!(log.(deltas), l -&gt; 2l - 1, color=:blue, alpha=0.5, linewidth=2)
+end</code></pre><img src="b0f292bd.svg" alt="Example block output"/><pre><code class="language-julia hljs">A = [one.(deltas) log.(deltas)]
+L = inv(A&#39; * A) * A&#39;
+lCps = reduce(hcat, [L * log.(allerrors[n, :]) for n in axes(allerrors, 1)])
+
+extrema(lCps[2, :])
+pmeans = mean(lCps[2, :])
+Nps = fit(Normal, lCps[2, :])
+
+plt = begin
+    plot(title=&quot;Order of convergence of individual path samples&quot;)
+    histogram(lCps[2, :], label=&quot;\$p(\\omega)\$&quot;, normalize=:pdf)
+    vline!([pmeans], linewidth=2, label=&quot;\$\\mathbb{E}[p] = $(round(pmeans, digits=2))\$&quot;)
+    plot!(p -&gt; pdf(Nps, p), label=&quot;fitted \$\\mathcal{N}($(round(Nps.μ, digits=2)), $(round(Nps.σ, digits=2))^2)\$&quot;)
+end
+
+pbounds = [minimum( ( log.(allerrors[n, :]) .- maximum(lCps[1, :]) ) ./ log.(deltas) ) for n in axes(allerrors, 1)]
+
+plt = begin
+    plot(title=&quot;Not right quantity to look at&quot;)
+    histogram(pbounds)
+end
+
+
+pboundsev = [minimum( ( log.(allerrors[n, 1:k]) .- maximum(lCps[1, 1:k]) ) ./ log.(deltas[1:k]) ) for n in axes(allerrors, 1), k in 2:7]
+
+begin
+    histogram(pboundsev[:, 1], alpha=0.1)
+    histogram!(pboundsev[:, 2], alpha=0.1)
+    histogram!(pboundsev[:, 3], alpha=0.1)
+    histogram!(pboundsev[:, 4], alpha=0.1)
+    histogram!(pboundsev[:, 5], alpha=0.1)
+    histogram!(pboundsev[:, 5], alpha=0.1)
+end</code></pre><img src="b91dc5fb.svg" alt="Example block output"/><pre><code class="language-julia hljs">nothing</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13-wiener_linearhomogeneous_testCI_multidim/">« Testing the confidence regions and intervals 2</a><a class="docs-footer-nextpage" href="../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 17 October 2025 22:38">Friday 17 October 2025</span>. Using Julia version 1.12.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

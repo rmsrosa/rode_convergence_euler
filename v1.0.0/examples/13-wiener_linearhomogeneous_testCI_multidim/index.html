@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Testing the confidence regions and intervals 2 · Euler method for RODEs</title><meta name="title" content="Testing the confidence regions and intervals 2 · Euler method for RODEs"/><meta property="og:title" content="Testing the confidence regions and intervals 2 · Euler method for RODEs"/><meta property="twitter:title" content="Testing the confidence regions and intervals 2 · Euler method for RODEs"/><meta name="description" content="Documentation for Euler method for RODEs."/><meta property="og:description" content="Documentation for Euler method for RODEs."/><meta property="twitter:description" content="Documentation for Euler method for RODEs."/><meta property="og:url" content="https://github.com/rmsrosa/rode_convergence_euler/examples/13-wiener_linearhomogeneous_testCI_multidim/"/><meta property="twitter:url" content="https://github.com/rmsrosa/rode_convergence_euler/examples/13-wiener_linearhomogeneous_testCI_multidim/"/><link rel="canonical" href="https://github.com/rmsrosa/rode_convergence_euler/examples/13-wiener_linearhomogeneous_testCI_multidim/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Euler method for RODEs</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Overview</a></li><li><span class="tocitem">Theory</span><ul><li><a class="tocitem" href="../../theory/results/">Main results</a></li><li><a class="tocitem" href="../../theory/idea/">Main idea</a></li><li><a class="tocitem" href="../../theory/extras/">Extras</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><input class="collapse-toggle" id="menuitem-3-1" type="checkbox"/><label class="tocitem" for="menuitem-3-1"><span class="docs-label">Basic Linear RODEs</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../01-wiener_linearhomogeneous/">Homogenous linear RODE with a Wiener process noise coefficient</a></li><li><a class="tocitem" href="../02-wiener_linearnonhomogeneous/">Non-homogenous linear RODE with a Wiener process noise coefficient</a></li><li><a class="tocitem" href="../03-sin_gBm_linearhomogeneous/">Homogenous linear RODE with the sine of a Geometric Brownian motion coefficient</a></li></ul></li><li><a class="tocitem" href="../04-allnoises/">Linear system with all implemented noises</a></li><li><a class="tocitem" href="../05-fBm_linear/">Linear RODE with fractional Brownian motion</a></li><li><a class="tocitem" href="../06-popdyn/">Population dynamics with harvest</a></li><li><a class="tocitem" href="../07-toggle_switch/">A toggle-switch model for gene expression</a></li><li><a class="tocitem" href="../08-earthquake/">Mechanical structural under random Earthquake-like seismic disturbances</a></li><li><a class="tocitem" href="../09-risk/">An actuarial risk model</a></li><li><a class="tocitem" href="../10-fisherkpp/">Random Fisher-KPP partial differential equation</a></li><li><a class="tocitem" href="../11-combined_convergences/">Combined plot</a></li></ul></li><li><span class="tocitem">Noises</span><ul><li><a class="tocitem" href="../../noises/noiseintro/">Noises</a></li><li><a class="tocitem" href="../../noises/homlin/">Homogeneous linear Itô process noise</a></li><li><a class="tocitem" href="../../noises/fBm/">Simulating fractional Brownian motion</a></li></ul></li><li><span class="tocitem">CI testing</span><ul><li><a class="tocitem" href="../12-wiener_linearhomogeneous_testCI/">Testing the confidence regions and intervals 1</a></li><li class="is-active"><a class="tocitem" href>Testing the confidence regions and intervals 2</a><ul class="internal"><li><a class="tocitem" href="#The-equation"><span>The equation</span></a></li><li><a class="tocitem" href="#Setting-up-the-problem"><span>Setting up the problem</span></a></li><li><a class="tocitem" href="#Defining-helper-functions"><span>Defining helper functions</span></a></li><li><a class="tocitem" href="#Statistics"><span>Statistics</span></a></li><li><a class="tocitem" href="#Visualizations"><span>Visualizations</span></a></li></ul></li><li><a class="tocitem" href="../14-wiener_linearhomogeneous_exploreCI/">Testing the confidence regions and intervals 3</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">CI testing</a></li><li class="is-active"><a href>Testing the confidence regions and intervals 2</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Testing the confidence regions and intervals 2</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/rmsrosa/rode_convergence_euler" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/rmsrosa/rode_convergence_euler" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Testing-the-confidence-regions-and-intervals-2"><a class="docs-heading-anchor" href="#Testing-the-confidence-regions-and-intervals-2">Testing the confidence regions and intervals 2</a><a id="Testing-the-confidence-regions-and-intervals-2-1"></a><a class="docs-heading-anchor-permalink" href="#Testing-the-confidence-regions-and-intervals-2" title="Permalink"></a></h1><p>We consider a simple and quick-to-solve Random ODE to test the confidence regions and intervals. With a simple model, we can easily run a million simulations to test the statistics.</p><p>The Random ODE is a simple homogeneous linear equation in which the coefficient is a Wiener process and for which we know the distribution of the exact solution.</p><p>Now we consider an arbitrary number of mesh resolutions.</p><h2 id="The-equation"><a class="docs-heading-anchor" href="#The-equation">The equation</a><a id="The-equation-1"></a><a class="docs-heading-anchor-permalink" href="#The-equation" title="Permalink"></a></h2><p>We consider the RODE</p><p class="math-container">\[  \begin{cases}
+    \displaystyle \frac{\mathrm{d}X_t}{\mathrm{d} t} = W_t X_t, \qquad 0 \leq t \leq T, \\
+  \left. X_t \right|_{t = 0} = X_0,
+  \end{cases}\]</p><p>where <span>$\{W_t\}_{t\geq 0}$</span> is a standard Wiener process. The explicit solution is</p><p class="math-container">\[  X_t = e^{\int_0^t W_s \;\mathrm{d}s} X_0.\]</p><p>As seen in the first example of this documentation, once an Euler approximation is computed, along with realizations <span>$\{W_{t_i}\}_{i=0}^n$</span> of a sample path of the noise, we consider an exact sample solution given by</p><p class="math-container">\[    X_{t_j} = X_0 e^{\sum_{i = 0}^{j-1}\left(\frac{1}{2}\left(W_{t_i} + W_{t_{i+1}}\right)(t_{i+1} - t_i) + Z_i\right)},\]</p><p>for realizations <span>$Z_i$</span> drawn from a normal distribution and scaled by the standard deviation <span>$\sqrt{(t_{i+1} - t_i)^3/12}$</span>. This is implemented by computing the integral recursively, via</p><p class="math-container">\[    \begin{cases}
+        I_j = I_{j-1} + \frac{1}{2}\left(W_{t_{j-1}} + W_{t_j}\right)(t_{j} - t_{j-1}) + Z_j, \\
+        Z_j = \sqrt{\frac{(t_{j} - t_{j-1})^3}{12}} R_j, \\
+        R_j \sim \mathcal{N}(0, 1), \\
+    \end{cases}\]</p><p>with <span>$I_0 = 0$</span>, and setting</p><p class="math-container">\[  X_{t_j} = X_0 e^{I_j}.\]</p><h2 id="Setting-up-the-problem"><a class="docs-heading-anchor" href="#Setting-up-the-problem">Setting up the problem</a><a id="Setting-up-the-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-up-the-problem" title="Permalink"></a></h2><p>First we load the necessary packages</p><pre><code class="language-julia hljs">using Plots
+using Random
+using Distributions
+using RODEConvergence</code></pre><p>Then we set up some variables, starting by choosing the <code>Xoshiro256++</code> pseudo-random number generator, and setting its seed for the sake of reproducibility:</p><pre><code class="language-julia hljs">rng = Xoshiro(123)</code></pre><p>We set the right hand side of the equation:</p><pre><code class="language-julia hljs">f(t, x, y, p) = y * x</code></pre><p>Next we set up the time interval and the initial distribution law for the initial value problem, which we take it to be a standard <a href="https://juliastats.org/Distributions.jl/latest/univariate/#Distributions.Normal">Distributions.Normal</a> random variable:</p><pre><code class="language-julia hljs">t0, tf = 0.0, 1.0
+x0law = Normal()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Distributions.Normal{Float64}(μ=0.0, σ=1.0)</code></pre><p>The noise is a <a href="../../api/#RODEConvergence.WienerProcess"><code>WienerProcess</code></a> starting at <span>$y_0 = 0$</span>:</p><pre><code class="language-julia hljs">y0 = 0.0
+noise = WienerProcess(t0, tf, y0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">WienerProcess{Float64}(0.0, 1.0, 0.0)</code></pre><p>There is no parameter in the equation, so we just set <code>params</code> to <code>nothing</code>.</p><pre><code class="language-julia hljs">params = nothing</code></pre><p>The number of mesh points for the target solution and the approximations</p><pre><code class="language-julia hljs">ntgt = 2^12
+ns = 2 .^ (4:2:10)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{Int64}:
+   16
+   64
+  256
+ 1024</code></pre><p>Notice we just chose two mesh sizes, so we can easily visualize the distributions.</p><p>The <em>target</em> solution as described above is implemented as</p><pre><code class="language-julia hljs">target_solver! = function (xt::Vector{T}, t0::T, tf::T, x0::T, f::F, yt::Vector{T}, params::Q, rng::AbstractRNG) where {T, F, Q}
+    axes(xt) == axes(yt) || throw(
+        DimensionMismatch(&quot;The vectors `xt` and `yt` must match indices&quot;)
+    )
+
+    n = size(xt, 1)
+    dt = (tf - t0) / (n - 1)
+    i1 = firstindex(xt)
+    xt[i1] = x0
+    integral = zero(T)
+    zscale = sqrt(dt^3 / 12)
+    for i in Iterators.drop(eachindex(xt, yt), 1)
+        integral += (yt[i] + yt[i1]) * dt / 2 + zscale * randn(rng)
+        xt[i] = x0 * exp(integral)
+        i1 = i
+    end
+end</code></pre><p>and with that we construct the <a href="../../api/#RODEConvergence.CustomMethod"><code>CustomMethod</code></a> that solves the problem with this <code>target_solver!</code>:</p><pre><code class="language-julia hljs">target = CustomUnivariateMethod(target_solver!, rng)</code></pre><p>The method for which we want to estimate the rate of convergence is, naturally, the Euler method, denoted <a href="../../api/#RODEConvergence.RandomEuler"><code>RandomEuler</code></a>:</p><pre><code class="language-julia hljs">method = RandomEuler()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">RandomEuler{Float64, Distributions.Univariate}(Float64[])</code></pre><h2 id="Defining-helper-functions"><a class="docs-heading-anchor" href="#Defining-helper-functions">Defining helper functions</a><a id="Defining-helper-functions-1"></a><a class="docs-heading-anchor-permalink" href="#Defining-helper-functions" title="Permalink"></a></h2><p>We first write some helper functions to grab the statistics, print some information, and build some plots.</p><pre><code class="language-julia hljs">function getstatistics(rng, suite, ns, nk, m)
+    ps = zeros(nk)
+    pmins = zeros(nk)
+    pmaxs = zeros(nk)
+    allerrors = zeros(nk, length(ns))
+    allstderrs = zeros(nk, length(ns))
+    @time for k in 1:nk
+        resultk = solve(rng, suite)
+        ps[k] = resultk.p
+        allerrors[k, :] .= resultk.errors
+        allstderrs[k, :] .= resultk.stderrs
+        pmins[k] = resultk.pmin
+        pmaxs[k] = resultk.pmax
+    end
+    meanerror = mean(allerrors, dims=1)
+    pmean = mean(ps)
+
+    percent_ei_in = 100 * [ count(( meanerror[i] .&gt; allerrors[:, i] .- 1.96allstderrs[:, i] ) .&amp; ( meanerror[i] .&lt; allerrors[:, i] .+ 1.96allstderrs[:, i] )) for i in eachindex(axes(meanerror, 2), axes(allstderrs, 2)) ] / nk
+
+    clevel = 0.95 # 95% confidence level
+    elevel = clevel^(1/length(suite.ns)) # assuming independence
+    elevel = 1.0 - ( 1.0 - clevel ) / length(suite.ns) # not assuming independence, using Bonfaroni inequality
+    escore = quantile(Normal(), (1 + elevel) / 2)
+
+    percent_e_in = 100 * count(
+        reduce(
+            &amp;,
+            ae - escore * ast .&lt; meanerror&#39; .&lt; ae + escore * ast
+        ) for (ae, ast) in zip(eachrow(allerrors), eachrow(allstderrs))
+    ) / nk
+
+    nkji = div(size(allerrors,1), size(allerrors,2))
+    allerrorssplit = hcat((allerrors[nkji*(i-1)+1:nkji*i, i] for i in axes(allerrors, 2))...)
+    allstderrssplit = hcat((allstderrs[nkji*(i-1)+1:nkji*i, i] for i in axes(allstderrs, 2))...)
+
+    percent_e_split_in = 100 * count(
+        reduce(
+            &amp;,
+            ae - escore * ast .&lt; meanerror&#39; .&lt; ae + escore * ast
+        ) for (ae, ast) in zip(eachrow(allerrorssplit), eachrow(allstderrssplit))
+    ) / nkji
+
+    allerrorsdealigned = hcat([circshift(allerrors[:, i], i-1) for i in 1:4]...)
+    allstderrsdealigned = hcat([circshift(allstderrs[:, i], i-1) for i in 1:4]...)
+
+    percent_e_dealigned_in = 100 * count(
+        reduce(
+            &amp;,
+            ae - escore * ast .&lt; meanerror&#39; .&lt; ae + escore * ast
+        ) for (ae, ast) in zip(eachrow(allerrorsdealigned), eachrow(allstderrsdealigned))
+    ) / nk
+
+    deltas = (suite.tf - suite.t0) ./ suite.ns
+    A = [one.(deltas) log.(deltas)]
+    L = inv(A&#39; * A) * A&#39;
+
+    Llnerrors = L * log.(allerrors&#39;)
+
+    Llnerrorsdealigned = L * log.(allerrorsdealigned&#39;)
+
+    percent_p_dealigned_in = 100 * count( ( pmean .&gt; Llnerrorsdealigned[2, :] .- (ps .- pmins) ) .&amp; ( pmean .&lt; Llnerrorsdealigned[2, :] .+ (pmaxs .- ps) ) ) / nk
+
+    percent_p_in = 100 * count(( pmean .&gt; pmins ) .&amp; ( pmean .&lt; pmaxs )) / nk
+
+    pstd = std(ps)
+    percent_p_alt_in = 100 * count(( pmean .&gt; ps .- 1.96pstd ) .&amp; ( pmean .&lt; ps .+ 1.96pstd )) / nk
+
+    pdlgnstd = std(Llnerrorsdealigned[2, :])
+    percent_p_alt_dealigned_in = 100 * count(( pmean .&gt; Llnerrorsdealigned[2, :] .- 1.96pdlgnstd ) .&amp; ( pmean .&lt; Llnerrorsdealigned[2, :] .+ 1.96pdlgnstd )) / nk
+
+    return ps, escore, allerrors, allstderrs, allerrorssplit, allerrorsdealigned, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_ei_in, percent_e_in, percent_e_split_in, percent_e_dealigned_in, L
+end
+
+function printpercents(
+    percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_ei_in, percent_e_in, percent_e_split_in, percent_e_dealigned_in
+)
+    println(&quot;percent p in: $percent_p_in%&quot;)
+    println(&quot;percent p dealigned in: $percent_p_dealigned_in%&quot;)
+    println(&quot;percent p alt dealigned in: $percent_p_alt_dealigned_in%&quot;)
+    for i in eachindex(percent_ei_in)
+        println(&quot;percent E$i in: $(percent_ei_in[i])%&quot;)
+    end
+    println(&quot;percent E in: $percent_e_in%&quot;)
+    println(&quot;percent E in split: $percent_e_split_in%&quot;)
+    println(&quot;percent E in dealigned: $percent_e_dealigned_in%&quot;)
+end
+
+function showplots(
+    ps, escore, allerrors, allerrorssplit, allerrorsdealigned, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L
+)
+
+    rect = Shape(
+        [
+            (result.errors[1] - escore * result.stderrs[1], result.errors[2] - escore * result.stderrs[2]),
+            (result.errors[1] - escore * result.stderrs[1], result.errors[2] + escore * result.stderrs[2]),
+            (result.errors[1] + escore * result.stderrs[1], result.errors[2] + escore * result.stderrs[2]),
+            (result.errors[1] + escore * result.stderrs[1], result.errors[2] - escore * result.stderrs[2])
+        ]
+    )
+
+    plt_errors = plot(title=&quot;Errors ϵ₁ and ϵ₂(m=$m, nk=$nk)&quot;, titlefont=10, xlabel=&quot;ϵ₁&quot;, ylabel=&quot;ϵ₂&quot;)
+    begin
+        scatter!(plt_errors, allerrors[:, 1], allerrors[:, 2], alpha=0.2, label=&quot;errors ($(round(percent_e_in, digits=2))% in CI)&quot;)
+        scatter!(plt_errors, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], alpha=0.2, label=&quot;errors dealigned ($(round(percent_e_dealigned_in, digits=2))% in CI)&quot;)
+        scatter!(plt_errors, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label=&quot;error mean&quot;)
+        plot!(plt_errors, rect, alpha=0.2, label=&quot;CI&quot;)
+    end
+
+    plt_errors_split = plot(title=&quot;Errors split (m=$m, nk=$nk) \n ($(round(percent_e_split_in, digits=2))% in CI)&quot;, titlefont=10, xlabel=&quot;ϵ₁&quot;, ylabel=&quot;ϵ₂&quot;)
+    begin
+        scatter!(plt_errors_split, allerrorssplit[:, 1], allerrorssplit[:, 2], alpha=0.2, label=&quot;errors&quot;)
+        scatter!(plt_errors_split, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label=&quot;error mean&quot;)
+        plot!(plt_errors_split, rect, alpha=0.2, label=&quot;CI&quot;)
+    end
+
+    plt_errors_dealigned = plot(title=&quot;Errors dealigned (m=$m, nk=$nk) \n ($(round(percent_e_dealigned_in, digits=2))% in CI)&quot;, titlefont=10, xlabel=&quot;ϵ₁&quot;, ylabel=&quot;ϵ₂&quot;)
+    begin
+        scatter!(plt_errors_dealigned, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], alpha=0.2, label=&quot;errors&quot;)
+        scatter!(plt_errors_dealigned, Tuple(mean(view(allerrors, :, 1:2), dims=1)), markersize=4, label=&quot;error mean&quot;)
+        plot!(plt_errors_dealigned, rect, alpha=0.2, label=&quot;CI&quot;)
+    end
+
+    plt_errors3d = plot(title=&quot;Errors ϵ₁, ϵ₂, and ϵ₃ (m=$m, nk=$nk)&quot;, titlefont=10, xlabel=&quot;ϵ₁&quot;, ylabel=&quot;ϵ₂&quot;, zlabel=&quot;ϵ₃&quot;)
+    begin
+        scatter3d!(plt_errors3d, allerrors[:, 1], allerrors[:, 2], allerrors[:, 3], alpha=0.2, label=&quot;errors ($(round(percent_e_in, digits=2))% in CI)&quot;)
+        scatter3d!(plt_errors3d, allerrorsdealigned[:, 1], allerrorsdealigned[:, 2], allerrorsdealigned[:, 3], alpha=0.2, label=&quot;errors dealigned ($(round(percent_e_dealigned_in, digits=2))% in CI)&quot;)
+        scatter3d!(plt_errors3d, Tuple(mean(view(allerrors, :, 1:3), dims=1)), markersize=4, label=&quot;error mean&quot;)
+    end
+
+    plt_hist_e = [
+        begin
+            plot(title=&quot;Histogram of ϵ$i (m=$m, nk=$nk) \n ($(round(percent_ei_in[i], digits=2))% in CI)&quot;, titlefont=10, xlabel=&quot;ϵ$i&quot;)
+            histogram!(allerrors[:, i], label=&quot;error ϵ$i&quot;)
+            vline!([mean(allerrors[:, i])], color=:steelblue, linewidth=4, label=&quot;mean&quot;)
+            vline!([result.errors[i]], label=&quot;sample&quot;)
+            vline!([result.errors[i] - 2result.stderrs[i], result.errors[i] + 2result.stderrs[i]], label=&quot;CI from sample&quot;)
+        end
+        for i in eachindex(axes(allerrors, 2))
+    ]
+
+    #sn = 50
+    #s1 = L * log.(max.(0.0, [result.errors[1] .+ escore * result.stderrs[1] * range(-1, 1, length=sn) ( result.errors[2] - escore * result.stderrs[2] ) .* ones(sn)]&#39;))
+    #s2 = L * log.(max.(0.0, [( result.errors[1] + escore * result.stderrs[1] ) .* ones(sn) result.errors[2] .+ escore * result.stderrs[2] * range(-1, 1, length=sn)]&#39;))
+    #s3 = L * log.(max.(0.0, [result.errors[1] .+ escore * result.stderrs[1] * reverse(range(-1, 1, length=sn)) ( result.errors[2] + escore * result.stderrs[2] ) .* ones(sn)]&#39;))
+    #s4 = L * log.(max.(0.0, [( result.errors[1] - escore * result.stderrs[1] ) .* ones(sn) result.errors[2] .+ escore * result.stderrs[2] * range(-1, 1, length=sn)]&#39;))
+    #sides = hcat(s1, s2, s3, s4)
+
+    temean = L * log.(mean(allerrors, dims=1)&#39;)
+
+    plt_Cp = plot(title=&quot;(C, p) sample from ϵ (m=$m, nk=$nk)&quot;, titlefont=10, xlabel=&quot;C&quot;, ylabel=&quot;p&quot;)
+    begin
+        scatter!(plt_Cp, Llnerrors[1, :], Llnerrors[2, :], alpha=0.2, label=&quot;correlated&quot;)
+        scatter!(plt_Cp, Llnerrorsdealigned[1, :], Llnerrorsdealigned[2, :], alpha=0.2, label=&quot;dealigned&quot;)
+        #plot!(plt_Cp, sides[1, :], sides[2, :], label=&quot;transformed errors CI&quot;)
+        scatter!(plt_Cp, Tuple(temean), markersize=4, color=:orange, label=&quot;transformed error mean&quot;)
+        hline!(plt_Cp, [pmean], label=&quot;p mean&quot;)
+        hline!(plt_Cp, [result.pmin, result.pmax], label=&quot;sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)&quot;)
+        hline!(plt_Cp, [result.p], label=&quot;sample p&quot;)
+    end
+
+    plt_hist_p = plot(title=&quot;Histogram of p (m=$m, nk=$nk) \n ($(round(percent_p_dealigned_in, digits=2))% in CI)&quot;, titlefont=10, xlabel=&quot;ϵ₁&quot;)
+    begin
+        histogram!(plt_hist_p, Llnerrorsdealigned[2, :], label=&quot;p dealigned&quot;)
+        histogram!(plt_hist_p, ps, label=&quot;p&quot;)
+        vline!(plt_hist_p, [pmean], linewidth=4, label=&quot;p mean&quot;)
+        vline!(plt_hist_p, [result.pmin, result.pmax], label=&quot;sample p CI ($(round(percent_p_dealigned_in, digits=2))% in CI)&quot;)
+        vline!(plt_hist_p, [result.p], label=&quot;sample p&quot;)
+    end
+
+    plts = (
+        errors = plt_errors,
+        split = plt_errors_split,
+        dealigned = plt_errors_dealigned,
+        errors3d = plt_errors3d,
+        hist = plt_hist_e,
+        cp = plt_Cp,
+        histp = plt_hist_p
+    )
+
+    return plts
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">showplots (generic function with 1 method)</code></pre><h2 id="Statistics"><a class="docs-heading-anchor" href="#Statistics">Statistics</a><a id="Statistics-1"></a><a class="docs-heading-anchor-permalink" href="#Statistics" title="Permalink"></a></h2><p>Now, with the helper functions, we run a loop varying the number <span>$m$</span> of samples in each run and the number <span>$nk$</span> of test runs, showing some relevant statistics.</p><pre><code class="language-julia hljs">ms = (400, 800, 1600)
+nks = (1000, 1000, 1000)
+
+@assert all(iseven, nks)
+
+allplts = Any[]
+
+for (nrun, m, nk) in zip(eachindex(ms), ms, nks)
+
+    @info &quot;===&quot;
+    @info &quot;Run $nrun with m=$m and nk=$nk&quot;
+    suite = ConvergenceSuite(t0, tf, x0law, f, noise, params, target, method, ntgt, ns, m)
+
+    ps, escore, allerrors, allstderrs, allerrorssplit, allerrorsdealigned, meanerror, pmean, Llnerrors, Llnerrorsdealigned, percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_ei_in, percent_e_in, percent_e_split_in, percent_e_dealigned_in, L = getstatistics(rng, suite, ns, nk, m)
+
+    @show cor(allerrors) # strongly correlated!
+
+    @show cor(allerrorssplit) # weakly correlated
+
+    @show cor(allerrorsdealigned) # weakly correlated
+
+    @show cor(Llnerrors&#39;) # somehow correlated
+
+    @show cor(Llnerrorsdealigned&#39;) # weakly correlated
+
+    printpercents(percent_p_in, percent_p_dealigned_in, percent_p_alt_dealigned_in, percent_ei_in, percent_e_in, percent_e_split_in, percent_e_dealigned_in)
+
+    result = solve(rng, suite)
+
+    plts = showplots(ps, escore, allerrors, allerrorssplit, allerrorsdealigned, Llnerrors, Llnerrorsdealigned, pmean, result, m, nk, percent_ei_in, percent_e_in, percent_e_split_in, percent_p_dealigned_in, percent_e_dealigned_in, L)
+
+    append!(allplts, [plts])
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[ Info: ===
+[ Info: Run 1 with m=400 and nk=1000
+ 26.449965 seconds (172.11 k allocations: 206.868 MiB, 0.18% gc time)
+cor(allerrors) = [1.0 0.9705505172416334 0.9643541989718961 0.9621934611085015; 0.9705505172416334 1.0 0.9719800031589322 0.9656392560760294; 0.9643541989718961 0.9719800031589322 1.0 0.974224307854825; 0.9621934611085015 0.9656392560760294 0.974224307854825 1.0]
+cor(allerrorssplit) = [1.0 -0.0025306980685457737 0.09734647609277154 0.017989350057743023; -0.0025306980685457737 1.0 0.03326863459545171 0.002960563104343979; 0.09734647609277154 0.03326863459545171 1.0 0.02242727328070293; 0.017989350057743023 0.002960563104343979 0.02242727328070293 1.0]
+cor(allerrorsdealigned) = [1.0 0.012353046792147404 0.003915869842998666 -0.04138440572727088; 0.012353046792147404 1.0 -0.002367455575510119 0.007290954805841701; 0.003915869842998666 -0.002367455575510119 1.0 -0.0016691741448486693; -0.04138440572727088 0.007290954805841701 -0.0016691741448486693 1.0]
+cor(Llnerrors&#39;) = [1.0 0.12584535004221312; 0.12584535004221312 1.0]
+cor(Llnerrorsdealigned&#39;) = [1.0 0.9527747119161571; 0.9527747119161571 1.0]
+percent p in: 100.0%
+percent p dealigned in: 99.9%
+percent p alt dealigned in: 95.1%
+percent E1 in: 90.3%
+percent E2 in: 90.0%
+percent E3 in: 90.1%
+percent E4 in: 90.6%
+percent E in: 92.2%
+percent E in split: 80.8%
+percent E in dealigned: 81.7%
+[ Info: ===
+[ Info: Run 2 with m=800 and nk=1000
+ 53.636477 seconds (172.00 k allocations: 206.863 MiB, 0.05% gc time)
+cor(allerrors) = [1.0 0.9669697627885926 0.9617651711382407 0.9571961313452868; 0.9669697627885926 1.0 0.9721375828510537 0.9620252283661136; 0.9617651711382407 0.9721375828510537 1.0 0.9704562109515474; 0.9571961313452868 0.9620252283661136 0.9704562109515474 1.0]
+cor(allerrorssplit) = [1.0 0.016007593342482078 -0.10278286886810155 -0.031129141200714073; 0.016007593342482078 1.0 0.016320472436240463 0.0672565677902107; -0.10278286886810155 0.016320472436240463 1.0 0.005980291576012199; -0.031129141200714073 0.0672565677902107 0.005980291576012199 1.0]
+cor(allerrorsdealigned) = [1.0 0.025859150977547804 -0.02076452987680885 -0.06302663997582882; 0.025859150977547804 1.0 0.021329369937355454 -0.03702961015347029; -0.02076452987680885 0.021329369937355454 1.0 0.022819977000100022; -0.06302663997582882 -0.03702961015347029 0.022819977000100022 1.0]
+cor(Llnerrors&#39;) = [1.0 0.09434209905968942; 0.09434209905968942 1.0]
+cor(Llnerrorsdealigned&#39;) = [1.0 0.9557771117564445; 0.9557771117564445 1.0]
+percent p in: 100.0%
+percent p dealigned in: 100.0%
+percent p alt dealigned in: 94.2%
+percent E1 in: 92.5%
+percent E2 in: 92.3%
+percent E3 in: 92.1%
+percent E4 in: 91.9%
+percent E in: 95.4%
+percent E in split: 88.8%
+percent E in dealigned: 87.3%
+[ Info: ===
+[ Info: Run 3 with m=1600 and nk=1000
+105.525813 seconds (172.00 k allocations: 206.863 MiB, 0.01% gc time)
+cor(allerrors) = [1.0 0.9693307552466505 0.9602301613993494 0.9583449495799153; 0.9693307552466505 1.0 0.9670334452892287 0.9645906145837028; 0.9602301613993494 0.9670334452892287 1.0 0.9697758863055619; 0.9583449495799153 0.9645906145837028 0.9697758863055619 1.0]
+cor(allerrorssplit) = [1.0 -0.023744608648916678 -0.0031170699517114376 -0.02326692334400742; -0.023744608648916678 1.0 0.16023960262516954 -0.025227488823415058; -0.0031170699517114376 0.16023960262516954 1.0 -0.021536232268612343; -0.02326692334400742 -0.025227488823415058 -0.021536232268612343 1.0]
+cor(allerrorsdealigned) = [1.0 -0.03367578841166664 -0.04875731666505965 0.02609664742074762; -0.03367578841166664 1.0 -0.0327049515570865 -0.043973488506517285; -0.04875731666505965 -0.0327049515570865 1.0 -0.02691280494602071; 0.02609664742074762 -0.043973488506517285 -0.02691280494602071 1.0]
+cor(Llnerrors&#39;) = [1.0 0.13993619131030968; 0.13993619131030968 1.0]
+cor(Llnerrorsdealigned&#39;) = [1.0 0.9539650727071125; 0.9539650727071125 1.0]
+percent p in: 100.0%
+percent p dealigned in: 100.0%
+percent p alt dealigned in: 94.7%
+percent E1 in: 93.6%
+percent E2 in: 94.0%
+percent E3 in: 94.1%
+percent E4 in: 93.0%
+percent E in: 96.5%
+percent E in split: 91.2%
+percent E in dealigned: 92.0%</code></pre><h2 id="Visualizations"><a class="docs-heading-anchor" href="#Visualizations">Visualizations</a><a id="Visualizations-1"></a><a class="docs-heading-anchor-permalink" href="#Visualizations" title="Permalink"></a></h2><p>We now visualize some statistics, including histograms and sample distribution. In those plots, we report the percentage of confidence intervals and regions that include the mean.</p><h3 id="Histograms-of-the-marginal-strong-errors"><a class="docs-heading-anchor" href="#Histograms-of-the-marginal-strong-errors">Histograms of the marginal strong errors</a><a id="Histograms-of-the-marginal-strong-errors-1"></a><a class="docs-heading-anchor-permalink" href="#Histograms-of-the-marginal-strong-errors" title="Permalink"></a></h3><p>We start with the histograms of each of the strong errors at each mesh resolution. These are the marginals of the joint distribution <span>$(\epsilon_1, \ldots, \epsilon_{i_{\max}).$</span></p><pre><code class="language-julia hljs">plot(size=(800, 400*div(length(ns), 2)), allplts[1].hist...)</code></pre><img src="2ded8e66.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(size=(800, 400*div(length(ns), 2)), allplts[2].hist...)</code></pre><img src="685b28e6.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(size=(800, 400*div(length(ns), 2)), allplts[3].hist...)</code></pre><img src="3741b4bb.svg" alt="Example block output"/><h3 id="Density-of-the-joint-distribution-of-strong-errors-of-the-transformed-distributions"><a class="docs-heading-anchor" href="#Density-of-the-joint-distribution-of-strong-errors-of-the-transformed-distributions">Density of the joint distribution of strong errors of the transformed distributions</a><a id="Density-of-the-joint-distribution-of-strong-errors-of-the-transformed-distributions-1"></a><a class="docs-heading-anchor-permalink" href="#Density-of-the-joint-distribution-of-strong-errors-of-the-transformed-distributions" title="Permalink"></a></h3><p>First we visualise the joint distribution of the samples of the first three strong errors <span>$(\epsilon_1, \epsilon_2, \epsilon_3).$</span></p><pre><code class="language-julia hljs">plot(allplts[1].errors3d)</code></pre><img src="436e7b79.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(allplts[2].errors3d)</code></pre><img src="a932b5dc.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(allplts[3].errors3d)</code></pre><img src="89a50f8d.svg" alt="Example block output"/><p>Now we plot, on the left panel, the sample points of the joint distribution <span>$(\epsilon_1, \epsilon_2)$</span> of the strong errors of the first two mesh resolutions.</p><p>On the right panel, we see the corresponding transformed samples <span>$(C, p) = (A^{\textrm{tr}}A)^{-1}A^{\textrm{tr}}(\epsilon_1, \ldots, \epsilon_{i_{\max}})$</span>.</p><p>The confidence interval for the order of convergence <span>$p$</span> is the projection, onto the <span>$p$</span> axis, of the confidence region in the <span>$(C, p)$</span> plane. It includes not only the samples within the confidence region but all of those in the band <span>$p_{\min} \leq p \leq p_{\max},$</span> increasing considerably the confidence level.</p><pre><code class="language-julia hljs">plot(size=(800, 400), allplts[1].errors, allplts[1].cp)</code></pre><img src="7f045df1.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(size=(800, 400), allplts[2].errors, allplts[2].cp)</code></pre><img src="e2f4c2c5.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(size=(800, 400), allplts[3].errors, allplts[3].cp)</code></pre><img src="fc1ed787.svg" alt="Example block output"/><p>The plot for the errors only displayed the first two errors. We may also plot a 3d scatter plot of three of the strong errors, i.e. corresponding to three of the four meshes, as, for example,</p><h3 id="Histrogram-of-the-order-of-convergence"><a class="docs-heading-anchor" href="#Histrogram-of-the-order-of-convergence">Histrogram of the order of convergence</a><a id="Histrogram-of-the-order-of-convergence-1"></a><a class="docs-heading-anchor-permalink" href="#Histrogram-of-the-order-of-convergence" title="Permalink"></a></h3><p>Finally, we plot the histograms for <span>$p$</span>, obtained both from the correlated and the decorrelated strong errors. Notice that the distributions for <span>$p$</span> resembles a normal distribution even for low samples, and building a CI from the decorrelated samples works fine, in this example, despite the fact that the theory does not guarantee that. But it works only with the uncorrelad samples! Nevertheless, it requires a lot more samples, being computationally quite expensive, especially with more complicate equations. The CI from the push-forward method underestimates the confidence level, but it is more trustworthy and less demanding.</p><pre><code class="language-julia hljs">plot(allplts[1].histp)</code></pre><img src="8bbceba4.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(allplts[2].histp)</code></pre><img src="89caf36e.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(allplts[3].histp)</code></pre><img src="ddb836dd.svg" alt="Example block output"/><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../12-wiener_linearhomogeneous_testCI/">« Testing the confidence regions and intervals 1</a><a class="docs-footer-nextpage" href="../14-wiener_linearhomogeneous_exploreCI/">Testing the confidence regions and intervals 3 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 17 October 2025 22:04">Friday 17 October 2025</span>. Using Julia version 1.12.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
