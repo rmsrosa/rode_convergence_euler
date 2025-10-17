@@ -1,46 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2022)
+This is BibTeX, Version 0.99d (TeX Live 2020)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: rode_convergence_euler.aux
 The style file: plain.bst
 Database file #1: rode_convergence_euler.bib
-You've used 43 entries,
+You've used 48 entries,
             2118 wiz_defined-function locations,
-            802 strings with 11872 characters,
-and the built_in function-call counts, 12913 in all, are:
-= -- 1263
-> -- 604
+            830 strings with 12288 characters,
+and the built_in function-call counts, 14448 in all, are:
+= -- 1430
+> -- 689
 < -- 1
-+ -- 241
-- -- 194
-* -- 890
-:= -- 2233
-add.period$ -- 135
-call.type$ -- 43
-change.case$ -- 215
++ -- 276
+- -- 222
+* -- 987
+:= -- 2501
+add.period$ -- 153
+call.type$ -- 48
+change.case$ -- 243
 chr.to.int$ -- 0
-cite$ -- 43
-duplicate$ -- 491
-empty$ -- 1031
-format.name$ -- 194
-if$ -- 2671
+cite$ -- 48
+duplicate$ -- 551
+empty$ -- 1139
+format.name$ -- 222
+if$ -- 2976
 int.to.chr$ -- 0
-int.to.str$ -- 43
-missing$ -- 55
-newline$ -- 218
-num.names$ -- 86
-pop$ -- 221
+int.to.str$ -- 48
+missing$ -- 65
+newline$ -- 243
+num.names$ -- 96
+pop$ -- 256
 preamble$ -- 1
-purify$ -- 183
+purify$ -- 207
 quote$ -- 0
-skip$ -- 318
+skip$ -- 350
 stack$ -- 0
-substring$ -- 700
-swap$ -- 52
+substring$ -- 757
+swap$ -- 57
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 144
+type$ -- 154
 warning$ -- 0
-while$ -- 122
-width$ -- 45
-write$ -- 475
+while$ -- 141
+width$ -- 50
+write$ -- 536

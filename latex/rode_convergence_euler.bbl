@@ -1,72 +1,71 @@
 \begin{thebibliography}{10}
 
 \bibitem{AitSahaliaJacod2014}
-Yacine A\"it-Sahalia and Jean Jacod.
-\newblock Chapter 1. from diffusions to semimartingales.
+Y.~A\"it-Sahalia and J.~Jacod.
+\newblock {Chapter 1. From Diffusions to Semimartingales}.
 \newblock In {\em High-Frequency Financial Econometrics}. Princeton University
-  Press, 07 2014.
+  Press, 2014.
 
 \bibitem{AB2006}
-Charalambos~D. Aliprantis and Kim~C. Border.
+C.~D. Aliprantis and K.~C. Border.
 \newblock {\em Infinite Dimensional Analysis: a Hitchhiker's Guide}.
 \newblock Springer, Berlin, Heidelberg, 2006.
+
+\bibitem{Asai2016}
+Y.~Asai.
+\newblock {\em {Numerical Methods for Random Ordinary Differential Equations
+  and their Applications in Biology and Medicine}}.
+\newblock doctoral thesis, Johann Wolfgang Goethe Universit\"at, Frankfurt am
+  Main, 2016.
 
 \bibitem{AsaiKloeden2016}
 Y.~Asai and P.~E. Kloeden.
 \newblock Numerical schemes for random odes with affine noise.
 \newblock {\em Numer. Algorithms}, 72(1):155--171, 2016.
 
-\bibitem{Asai2016}
-Yusuke Asai.
-\newblock {\em Numerical methods for random ordinary differential equations and
-  their applications in biology and medicine}.
-\newblock doctoral thesis, Johann Wolfgang Goethe University Franfurt am Main,
-  2016.
-
 \bibitem{BENDER200381}
-Christian Bender.
+C.~Bender.
 \newblock An {I}t\^o formula for generalized functionals of a fractional
   {B}rownian motion with arbitrary {H}urst parameter.
 \newblock {\em Stochastic Process. Appl.}, 104(1):81--106, 2003.
 
 \bibitem{JSSv098i16}
-Mathieu Besan\c{c}on, Theodore Papamarkou, David Anthoff, Alex Arslan, Simon
-  Byrne, Dahua Lin, and John Pearson.
+M.~Besan\c{c}on, T.~Papamarkou, D.~Anthoff, A.~Arslan, S.~Byrne, D.~Lin, and
+  J.~Pearson.
 \newblock {Distributions.jl: Definition and modeling of probability
   distributions in the JuliaStats ecosystem}.
 \newblock {\em Journal of Statistical Software}, 98(16):1--30, 2021.
 
 \bibitem{Julia2017}
-Jeff Bezanson, Alan Edelman, Stefan Karpinski, and Viral~B. Shah.
-\newblock Julia: A fresh approach to numerical computing.
+J.~Bezanson, A.~Edelman, S.~Karpinski, and V.~B. Shah.
+\newblock {Julia: A Fresh Approach to Numerical Computing}.
 \newblock {\em SIAM Rev.}, 59(1):65--98, 2017.
 
 \bibitem{BHOB2008}
-Francesca Biagini, Yaozhong Hu, Bernt {\O}ksendal, and Tusheng Zhang.
+F.~Biagini, Y.~Hu, B.~{\O}ksendal, and T.~Zhang.
 \newblock {\em Stochastic Calculus for Fractional Brownian Motion and
   Applications}.
 \newblock Probability and Its Applications. Springer-Verlag, London, 2008.
 
 \bibitem{BlackmanVigna2021}
-David Blackman and Sebastiano Vigna.
+D.~Blackman and S.~Vigna.
 \newblock Scrambled linear pseudorandom number generators.
 \newblock {\em ACM Trans. Math. Software}, 47(4), September 2021.
 
 \bibitem{BogdanoffGoldbergBernard1961}
-John~L. Bogdanoff, John~E. Goldberg, and M.~C. Bernard.
+J.~L. Bogdanoff, J.~E. Goldberg, and M.~C. Bernard.
 \newblock {Response of a simple structure to a random earthquake-type
   disturbance}.
 \newblock {\em Bulletin of the Seismological Society of America},
-  51(2):293--310, 04 1961.
+  51(2):293--310, 1961.
 
 \bibitem{BrigoMercurio2006}
-Damiano Brigo and Fabio Mercurio.
+D.~Brigo and F.~Mercurio.
 \newblock {\em Interest-Rate Models: Theory and Practice}.
 \newblock Springer Finance. Springer-Verlag, Berlin, Heidelberg, 2001.
 
 \bibitem{PlotsJL2023}
-Simon Christ, Daniel Schwabeneder, Christopher Rackauckas, Michael~Krabbe
-  Borregaard, and Thomas Breloff.
+S.~Christ, D.~Schwabeneder, C.~Rackauckas, M.~K. Borregaard, and T.~Breloff.
 \newblock {Plots.jl -- a user extendable plotting API for the Julia programming
   language}.
 \newblock {\em Journal of Open Research Software}, 2023.
@@ -74,27 +73,32 @@ Simon Christ, Daniel Schwabeneder, Christopher Rackauckas, Michael~Krabbe
 \bibitem{CoddingtonLevinson1985}
 A.~Coddington and N.~Levinson.
 \newblock {\em Theory of Ordinary Differential Equations}.
-\newblock International series in pure and applied mathematics. R.E. Krieger,
+\newblock International Series in Pure and Applied Mathematics. R.E. Krieger,
   1984.
+
+\bibitem{DeGrootSchervish2018}
+M.~H. DeGroot and M.~J. Schervish.
+\newblock {\em Probability and Statistics}.
+\newblock Pearson Education, 4th edition, 2018.
 
 \bibitem{DiekerMandjes2003}
 A.B. Dieker and M.~Mandjes.
-\newblock {On spectral simulation offFractional Brownian motion}.
+\newblock {On spectral simulation of Fractional Brownian motion}.
 \newblock {\em Probab. Engrg. Inform. Sci.}, 17(3):417--434, 2003.
 
 \bibitem{Fisher1937}
-R.~A. Fisher~{Sc. D., F. R. S.}
+R.~A. Fisher.
 \newblock {The wave of advance of advantageous genes}.
 \newblock {\em Annals Eugen.}, 7(4):355--369, 1937.
 
 \bibitem{FreidlinWentzell1992}
-Mark~I. Freidlin and Alexander~D. Wentzell.
+M.~I. Freidlin and A.~D. Wentzell.
 \newblock {Reaction-diffusion equations with randomly perturbed boundary
   conditions}.
-\newblock {\em Ann. Probab.}, 20(2):963 -- 986, 1992.
+\newblock {\em Ann. Probab.}, 20(2):963--986, 1992.
 
 \bibitem{GerberShiu1998}
-Hans~U. Gerber and Elias~S.W. Shiu.
+H.~U. Gerber and E.~S.~W. Shiu.
 \newblock On the time value of ruin.
 \newblock {\em N. Am. Actuar. J.}, 2(1):48--72, 1998.
 
@@ -105,34 +109,51 @@ L.~Gr{\"u}ne and P.~E. Kloeden.
 \newblock {\em Numer. Math.}, 89(4):669--690, 2001.
 
 \bibitem{HanKloeden2017}
-Xiaoying Han and Peter~E. Kloeden.
+X.~Han and P.~E. Kloeden.
 \newblock {\em Random Ordinary Differential Equations and Their Numerical
   Solution}.
 \newblock Springer Publishing Company, Incorporated, 1st edition, 2017.
 
+\bibitem{HastieTibshiraniFriedman2009}
+T.~Hastie, R.~Tibshirani, and J.~Friedman.
+\newblock {\em The Elements of Statistical Learning}.
+\newblock {Springer Series in Statistics}. Springer, New York, NY, 2nd edition,
+  2009.
+
 \bibitem{HeWangYan1992}
-Sheng-Wu He, Jia-Gang Wang, and Jia an~Yan.
+S.-W. He, J.-G. Wang, and J.-A. Yan.
 \newblock {\em Semimartingale Theory and Stochastic Calculus}.
 \newblock Taylor \& Francis Group, New York, 1992.
 
 \bibitem{HighamKloeden2021}
-Desmond Higham and Peter Kloeden.
+D.~Higham and P.~E. Kloeden.
 \newblock {\em An Introduction to the Numerical Simulation of Stochastic
   Differential Equations}.
 \newblock Society for Industrial and Applied Mathematics, Philadelphia, PA,
   2021.
 
 \bibitem{HousnerJenning1964}
-George~W. Housner and Paul~C. Jennings.
+G.~W. Housner and P.~C. Jennings.
 \newblock Generation of artificial earthquakes.
 \newblock {\em Journal of the Engineering Mechanics Division}, 90(1):113--150,
   1964.
 
+\bibitem{JamesWittenHastieTibshirani2021}
+G.~James, D.~Witten, T.~Hastie, and R.~Tibshirani.
+\newblock {\em An Introduction to Statistical Learning}.
+\newblock {Springer Texts in Statistics}. Springer, New York, NY, 2nd edition,
+  2021.
+
 \bibitem{JentzenKloeden2011}
-Arnulf Jentzen and Peter~E. Kloeden.
+A.~Jentzen and P.~E. Kloeden.
 \newblock {\em Taylor Approximations for Stochastic Partial Differential
   Equations}.
 \newblock Society for Industrial and Applied Mathematics, 2011.
+
+\bibitem{JohnsonWichern2007}
+R.~A. Johnson and D.~W. Wichern.
+\newblock {\em Applied Multivariate Statistical Analysis}.
+\newblock Pearson Prentice-Hall, 6th edition, 2007.
 
 \bibitem{Kanai1957}
 K.~Kanai.
@@ -140,7 +161,7 @@ K.~Kanai.
 \newblock {\em Bull. Earthq. Res. Inst.}, 35:309--325, 1957.
 
 \bibitem{KaratzasShreve2014}
-Ioannis Karatzas and Steven~E. Shreve.
+I.~Karatzas and S.~E. Shreve.
 \newblock {\em {Brownian Motion and Stochastic Calculus}}.
 \newblock {Graduate Texts in Mathematics}. Springer, New York, NY, 2nd edition,
   2014.
@@ -149,13 +170,19 @@ Ioannis Karatzas and Steven~E. Shreve.
 P.~Kloeden and R.~Rosa.
 \newblock Numerical examples of strong order of convergence of the euler method
   for random ordinary differential equations.
-\newblock \url{https://github.com/rmsrosa/rode_convergence_euler}, 2024.
+\newblock \url{https://github.com/rmsrosa/rode_convergence_euler} and
+  \url{https://rmsrosa.github.io/rode_convergence_euler}, 2025.
 
 \bibitem{KloedenJentzen2007}
-Peter~E Kloeden and Arnulf Jentzen.
+P.~E. Kloeden and A.~Jentzen.
 \newblock Pathwise convergent higher order numerical schemes for random
   ordinary differential equations.
-\newblock {\em Proc. Roy. Soc. Edinburgh Sect. A.}, 463:2229--2944, 2007.
+\newblock {\em Proc. Roy. Soc. London Sect. A.}, 463:2229--2944, 2007.
+
+\bibitem{KloedenPlatenSchurz2012}
+P.~E. Kloeden, E.~Platen, and H.~Schurz.
+\newblock {\em Numerical Solution of SDE Through Computer Experiments}.
+\newblock {Universitext}. Springer-Verlag, Berlin Heidelberg, 2012.
 
 \bibitem{KPP1937}
 A.~Kolmogorov, I.~Petrovskii, and N.~Piscunov.
@@ -164,22 +191,22 @@ A.~Kolmogorov, I.~Petrovskii, and N.~Piscunov.
 \newblock {\em Byul. Moskovskogo Gos. Univ.}, 1(6):1--25, 1937.
 
 \bibitem{MandelbrotVanNess1968}
-Benoit~B. Mandelbrot and John~W. Van~Ness.
+B.~B. Mandelbrot and J.~W.~Van Ness.
 \newblock {Fractional Brownian motions, fractional noises and applications}.
 \newblock {\em SIAM Rev.}, 10(4):422--437, 1968.
 
 \bibitem{MARINELLI20161}
-Carlo Marinelli and Michael Röckner.
+C.~Marinelli and M.~R\"ockner.
 \newblock {On the maximal inequalities of Burkholder, Davis and Gundy}.
 \newblock {\em Expositiones Mathematicae}, 34(1):1--26, 2016.
 
 \bibitem{MerdanBekiryaziciKesemenKhaniyev2017}
-Mehmet Merdan, Zafer Bekiryazici, Tulay Kesemen, and Tahir Khaniyev.
+M.~Merdan, Z.~Bekiryazici, T.~Kesemen, and T.~Khaniyev.
 \newblock Comparison of stochastic and random models for bacterial resistance.
 \newblock {\em Adv. Difference Equ.}, 2017(1):133, 2017.
 
 \bibitem{Metivier1982}
-Michel M\'etivier.
+M.~M\'etivier.
 \newblock {\em Semimartingales}.
 \newblock De Gruyter, Berlin, New York, 1982.
 
@@ -191,42 +218,41 @@ Y.~S. Mishura.
   Heidelberg, 2011.
 
 \bibitem{NeckelRupp2013}
-Tobias Neckel and Florian Rupp.
+T.~Neckel and F.~Rupp.
 \newblock {\em Random Differential Equations in Scientific Computing}.
-\newblock De Gruyter Open Poland, Versita Ltd, 78 York Street, London W1H 1DP,
-  Great Britain., 2013.
+\newblock De Gruyter, London, 2013.
 
 \bibitem{Oksendal2003}
-Bernt {\O}ksendal.
+B.~{\O}ksendal.
 \newblock {\em Stochastic Differential Equations : An Introduction with
   Applications}.
 \newblock Springer-Verlag, Berlin, Heidelberg, 2003.
 
 \bibitem{Protter2005}
-Philip~E. Protter.
+P.~E. Protter.
 \newblock {\em Stochastic Integration and Differential Equations}.
 \newblock Springer-Verlag, Berlin, Heidelberg, 2nd edition, 2005.
 
 \bibitem{DifferentialEquations.jl-2017}
-Christopher Rackauckas and Qing Nie.
+C.~Rackauckas and Q.~Nie.
 \newblock {DifferentialEquations.jl -- A performant and feature-rich ecosystem
   for solving differential equations in Julia}.
 \newblock {\em The Journal of Open Research Software}, 5(1), 2017.
 
 \bibitem{SalakoShen2020}
-Rachidi~B. Salako and Wenxian Shen.
+R.~B. Salako and W.~Shen.
 \newblock {Long time behavior of random and nonautonomous Fisher--KPP
   equations: Part I---stability of equilibria and spreading speeds}.
 \newblock {\em J. of Dynam. Differential Equations}, 33(2):1035--1070, 2021.
 
 \bibitem{StrasserTheisMarr2012}
-Michael Strasser, Fabian~J. Theis, and Carsten Marr.
+M.~Strasser, F.~J. Theis, and C.~Marr.
 \newblock Stability and multiattractor dynamics of a toggle switch based on a
   two-stage model of stochastic gene expression.
 \newblock {\em Biophysical Journal}, 102(1):19--29, 2012.
 
 \bibitem{Sugiyama1969}
-Shohei Sugiyama.
+S.~Sugiyama.
 \newblock Stability problems on difference and functional-differential
   equations.
 \newblock {\em Proceedings of the Japan Academy}, 45(7):526--529, 1969.
@@ -239,13 +265,13 @@ H~Tajimi.
   Engineering, Tokyo, Japan, 1960}, pages 781--797, 1960.
 
 \bibitem{VerdCrombachJaeger2014}
-Berta Verd, Anton Crombach, and Johannes Jaeger.
+B.~Verd, A.~Crombach, and J.~Jaeger.
 \newblock Classification of transient behaviours in a time-dependent toggle
   switch model.
 \newblock {\em BMC Systems Biology}, 8(1):43, 2014.
 
 \bibitem{WangCaoHanKloeden2021}
-Peng Wang, Yanzhao Cao, Xiaoying Han, and Peter Kloeden.
+P.~Wang, Y.~Cao, X.~Han, and P.~E. Kloeden.
 \newblock Mean-square convergence of numerical methods for random ordinary
   differential equations.
 \newblock {\em Numer. Algorithms}, 87(1):299--333, 2021.
